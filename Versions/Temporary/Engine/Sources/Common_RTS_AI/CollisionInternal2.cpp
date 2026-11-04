@@ -74,9 +74,9 @@ FindIntersection( CVec2 *pvResult, const CVec2 &vPoint1, const CVec2 &vDir1, con
 	const float dx = vPoint1.x - vPoint2.x;
 	const float dy = vPoint1.y - vPoint2.y;
 	const float d = vDir1.x * vDir2.y - vDir2.x * vDir1.y;
-	if ( fabs( d ) < FP_EPSILON )
+	if ( std::fabs( d ) < FP_EPSILON )
 	{
-		if ( fabs( dx / vDir2.x - dy / vDir2.y ) < FP_EPSILON )
+		if ( std::fabs( dx / vDir2.x - dy / vDir2.y ) < FP_EPSILON )
 		{
 			if ( pvResult )
 			{
@@ -91,7 +91,8 @@ FindIntersection( CVec2 *pvResult, const CVec2 &vPoint1, const CVec2 &vDir1, con
 		return EIT_PARALLEL;
 	}
 	const float a = ( -dx * vDir2.y + dy * vDir2.x ) / d;
-	const float b = ( fabs( vDir2.x ) < FP_EPSILON ) ? ( dy + a * vDir1.y ) / vDir2.y : ( dx + a * vDir1.x ) / vDir2.x;
+	const float b =
+			( std::fabs( vDir2.x ) < FP_EPSILON ) ? ( dy + a * vDir1.y ) / vDir2.y : ( dx + a * vDir1.x ) / vDir2.x;
 	if ( pvResult )
 	{
 		*pvResult = vPoint1 + a * vDir1;
@@ -578,8 +579,8 @@ CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePathUnit *pUni
 	                          GetAngleCos( pUnit1->GetMoveDirection(), vPoint2 - pUnit1->GetCenterPlain() );
 	const float fDiffAngle2 = GetAngleCos( pUnit2->GetMoveDirection(), vPoint1 - pUnit2->GetCenterPlain() ) -
 	                          GetAngleCos( pUnit2->GetMoveDirection(), vPoint2 - pUnit2->GetCenterPlain() );
-	if ( fabs( fDiffAngle1 ) > fabs( fDiffAngle2 ) && fDiffAngle1 > 0 ||
-	     fabs( fDiffAngle1 ) < fabs( fDiffAngle2 ) && fDiffAngle2 < 0 )
+	if ( std::fabs( fDiffAngle1 ) > std::fabs( fDiffAngle2 ) && fDiffAngle1 > 0 ||
+	     std::fabs( fDiffAngle1 ) < std::fabs( fDiffAngle2 ) && fDiffAngle2 < 0 )
 	{
 		CPtr<CGivingPlaceCollision> pCollision1 = new CGivingPlaceCollision();
 		pCollision1->Init( pUnit1, pUnit2, -1, vPoint1, nTileSize );

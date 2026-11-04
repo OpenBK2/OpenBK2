@@ -280,10 +280,10 @@ static void CreateReferenceBasisFunc( CArray2D<float> *pRes, int nHalfSize )
 	p.SetSizes( nSize, nSize );
 	for ( int y = 0; y < nSize; ++y )
 	{
-		float fY = 1 - abs( y - nHalfSize ) * ( 1.0f / nHalfSize );
+		float fY = 1 - std::abs( y - nHalfSize ) * ( 1.0f / nHalfSize );
 		for ( int x = 0; x < nSize; ++x )
 		{
-			float fX = 1 - abs( x - nHalfSize ) * ( 1.0f / nHalfSize );
+			float fX = 1 - std::abs( x - nHalfSize ) * ( 1.0f / nHalfSize );
 			p[y][x] = fY * fX;
 		}
 	}

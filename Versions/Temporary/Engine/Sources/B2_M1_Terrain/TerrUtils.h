@@ -126,14 +126,14 @@ public:
 	//
 	bool operator==( const CVec3Ex &v ) const
 	{
-		return ( ( fabs( x - v.x ) < DEF_EPS ) && ( fabs( y - v.y ) < DEF_EPS ) && ( fabs( z - v.z ) < DEF_EPS ) &&
-		         ( flag == v.flag ) );
+		return ( ( std::fabs( x - v.x ) < DEF_EPS ) && ( std::fabs( y - v.y ) < DEF_EPS ) &&
+		         ( std::fabs( z - v.z ) < DEF_EPS ) && ( flag == v.flag ) );
 	}
 
 	bool operator!=( const CVec3Ex &v ) const
 	{
-		return ( ( fabs( x - v.x ) >= DEF_EPS ) || ( fabs( y - v.y ) >= DEF_EPS ) || ( fabs( z - v.z ) >= DEF_EPS ) ||
-		         ( flag != v.flag ) );
+		return ( ( std::fabs( x - v.x ) >= DEF_EPS ) || ( std::fabs( y - v.y ) >= DEF_EPS ) ||
+		         ( std::fabs( z - v.z ) >= DEF_EPS ) || ( flag != v.flag ) );
 	}
 
 	//
@@ -203,14 +203,14 @@ public:
 	//
 	bool operator==( const CVec3fEx &v ) const
 	{
-		return ( ( fabs( x - v.x ) < DEF_EPS ) && ( fabs( y - v.y ) < DEF_EPS ) && ( fabs( z - v.z ) < DEF_EPS ) &&
-		         ( flag == v.flag ) );
+		return ( ( std::fabs( x - v.x ) < DEF_EPS ) && ( std::fabs( y - v.y ) < DEF_EPS ) &&
+		         ( std::fabs( z - v.z ) < DEF_EPS ) && ( flag == v.flag ) );
 	}
 
 	bool operator!=( const CVec3fEx &v ) const
 	{
-		return ( ( fabs( x - v.x ) >= DEF_EPS ) || ( fabs( y - v.y ) >= DEF_EPS ) || ( fabs( z - v.z ) >= DEF_EPS ) ||
-		         ( flag != v.flag ) );
+		return ( ( std::fabs( x - v.x ) >= DEF_EPS ) || ( std::fabs( y - v.y ) >= DEF_EPS ) ||
+		         ( std::fabs( z - v.z ) >= DEF_EPS ) || ( flag != v.flag ) );
 	}
 
 	//
@@ -291,14 +291,14 @@ public:
 	//
 	bool operator==( const CVec3dEx &v ) const
 	{
-		return ( ( fabs( x - v.x ) < DEF_EPS ) && ( fabs( y - v.y ) < DEF_EPS ) && ( fabs( z - v.z ) < DEF_EPS ) &&
-		         ( flag == v.flag ) );
+		return ( ( std::fabs( x - v.x ) < DEF_EPS ) && ( std::fabs( y - v.y ) < DEF_EPS ) &&
+		         ( std::fabs( z - v.z ) < DEF_EPS ) && ( flag == v.flag ) );
 	}
 
 	bool operator!=( const CVec3dEx &v ) const
 	{
-		return ( ( fabs( x - v.x ) >= DEF_EPS ) || ( fabs( y - v.y ) >= DEF_EPS ) || ( fabs( z - v.z ) >= DEF_EPS ) ||
-		         ( flag != v.flag ) );
+		return ( ( std::fabs( x - v.x ) >= DEF_EPS ) || ( std::fabs( y - v.y ) >= DEF_EPS ) ||
+		         ( std::fabs( z - v.z ) >= DEF_EPS ) || ( flag != v.flag ) );
 	}
 
 	//
@@ -360,7 +360,7 @@ struct SIntersectPoint
 
 	bool operator==( const SIntersectPoint &v ) const
 	{
-		return fabs( fDist - v.fDist ) < DEF_EPS;
+		return std::fabs( fDist - v.fDist ) < DEF_EPS;
 	}
 };
 
@@ -388,7 +388,7 @@ inline bool PushBackUnique<CVec3>( std::vector<CVec3> *arr, const CVec3 &elem )
 {
 	for ( std::vector<CVec3>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
-		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
+		if ( ( std::fabs( it->x - elem.x ) < DEF_EPS ) && ( std::fabs( it->y - elem.y ) < DEF_EPS ) )
 		{
 			return false;
 		}
@@ -402,7 +402,7 @@ inline bool PushBackUnique<CVec3fEx>( std::vector<CVec3fEx> *arr, const CVec3fEx
 {
 	for ( std::vector<CVec3fEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
-		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
+		if ( ( std::fabs( it->x - elem.x ) < DEF_EPS ) && ( std::fabs( it->y - elem.y ) < DEF_EPS ) )
 		{
 			return false;
 		}
@@ -416,7 +416,7 @@ inline bool PushBackUnique<CVec3dEx>( std::vector<CVec3dEx> *arr, const CVec3dEx
 {
 	for ( std::vector<CVec3dEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
-		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
+		if ( ( std::fabs( it->x - elem.x ) < DEF_EPS ) && ( std::fabs( it->y - elem.y ) < DEF_EPS ) )
 		{
 			return false;
 		}
@@ -457,7 +457,7 @@ inline int AddUnique<CVec3>( std::vector<CVec3> *arr, const CVec3 &elem )
 {
 	for ( int i = 0; i < arr->size(); ++i )
 	{
-		if ( ( fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
+		if ( ( std::fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( std::fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
 		{
 			return i;
 		}
@@ -471,7 +471,7 @@ inline int AddUnique<CVec3fEx>( std::vector<CVec3fEx> *arr, const CVec3fEx &elem
 {
 	for ( int i = 0; i < arr->size(); ++i )
 	{
-		if ( ( fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
+		if ( ( std::fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( std::fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
 		{
 			return i;
 		}
@@ -485,7 +485,7 @@ inline int AddUnique<CVec3dEx>( std::vector<CVec3dEx> *arr, const CVec3dEx &elem
 {
 	for ( int i = 0; i < arr->size(); ++i )
 	{
-		if ( ( fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
+		if ( ( std::fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( std::fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
 		{
 			return i;
 		}
@@ -514,12 +514,12 @@ inline bool IsCCW( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3, const CVec
 
 inline bool IsTrgSingular( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx &p3 )
 {
-	return ( abs( ( p1.x - p2.x ) * ( p3.y - p2.y ) - ( p1.y - p2.y ) * ( p3.x - p2.x ) ) < DEF_EPS );
+	return ( std::abs( ( p1.x - p2.x ) * ( p3.y - p2.y ) - ( p1.y - p2.y ) * ( p3.x - p2.x ) ) < DEF_EPS );
 }
 
 inline bool IsTrgSingular( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 {
-	return ( fabs( ( p1.x - p2.x ) * ( p3.y - p2.y ) - ( p1.y - p2.y ) * ( p3.x - p2.x ) ) < DEF_EPS2 );
+	return ( std::fabs( ( p1.x - p2.x ) * ( p3.y - p2.y ) - ( p1.y - p2.y ) * ( p3.x - p2.x ) ) < DEF_EPS2 );
 }
 
 inline void GetTrueNormal( CVec3 *pNorm, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
@@ -541,7 +541,7 @@ inline void GetBaryCoords( const float px,
                            CVec2 *pBary )
 {
 	float d = ( p1x - p0x ) * ( p2y - p0y ) - ( p1y - p0y ) * ( p2x - p0x );
-	if ( fabs( d ) > DEF_EPS )
+	if ( std::fabs( d ) > DEF_EPS )
 	{
 		d = 1.0 / d;
 		pBary->x = ( ( px - p0x ) * ( p2y - p0y ) - ( py - p0y ) * ( p2x - p0x ) ) * d;
@@ -557,7 +557,7 @@ inline void GetBaryCoords( const float px,
 inline void GetBaryCoords( const CVec3 &p, const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, CVec2 *pBary )
 {
 	float d = ( p1.x - p0.x ) * ( p2.y - p0.y ) - ( p1.y - p0.y ) * ( p2.x - p0.x );
-	if ( fabs( d ) > DEF_EPS )
+	if ( std::fabs( d ) > DEF_EPS )
 	{
 		d = 1.0 / d;
 		pBary->x = ( ( p.x - p0.x ) * ( p2.y - p0.y ) - ( p.y - p0.y ) * ( p2.x - p0.x ) ) * d;
@@ -566,7 +566,7 @@ inline void GetBaryCoords( const CVec3 &p, const CVec3 &p0, const CVec3 &p1, con
 	else
 	{
 		d = ( p1.y - p0.y ) * ( p2.z - p0.z ) - ( p1.z - p0.z ) * ( p2.y - p0.y );
-		if ( fabs( d ) > DEF_EPS )
+		if ( std::fabs( d ) > DEF_EPS )
 		{
 			d = 1.0 / d;
 			pBary->x = ( ( p.y - p0.y ) * ( p2.z - p0.z ) - ( p.z - p0.z ) * ( p2.y - p0.y ) ) * d;
@@ -575,7 +575,7 @@ inline void GetBaryCoords( const CVec3 &p, const CVec3 &p0, const CVec3 &p1, con
 		else
 		{
 			d = ( p1.z - p0.z ) * ( p2.x - p0.x ) - ( p1.x - p0.x ) * ( p2.z - p0.z );
-			if ( fabs( d ) > DEF_EPS )
+			if ( std::fabs( d ) > DEF_EPS )
 			{
 				d = 1.0 / d;
 				pBary->x = ( ( p.z - p0.z ) * ( p2.x - p0.x ) - ( p.x - p0.x ) * ( p2.z - p0.z ) ) * d;
@@ -629,11 +629,11 @@ inline bool IsBaryIn( const CVec2 &v )
 
 inline float GetPointDistOnSegment( const CVec3 &p, const CVec3 &p1, const CVec3 &p2 )
 {
-	if ( fabs( p2.x - p1.x ) > DEF_EPS )
+	if ( std::fabs( p2.x - p1.x ) > DEF_EPS )
 	{
 		return ( p.x - p1.x ) / ( p2.x - p1.x );
 	}
-	else if ( fabs( p2.y - p1.y ) > DEF_EPS )
+	else if ( std::fabs( p2.y - p1.y ) > DEF_EPS )
 	{
 		return ( p.y - p1.y ) / ( p2.y - p1.y );
 	}
@@ -654,7 +654,7 @@ inline void GetLineEq( const float x1, const float y1, const float x2, const flo
 		*c = 0;
 		return;
 	}
-	const float sq = 1.0 / sqrt( fpMod );
+	const float sq = 1.0 / std::sqrt( fpMod );
 	*a = ta * sq;
 	*b = tb * sq;
 	*c = tc * sq;
@@ -674,7 +674,7 @@ GetLineEq( const double x1, const double y1, const double x2, const double y2, d
 		*c = 0;
 		return;
 	}
-	const double sq = 1.0 / sqrt( fpMod );
+	const double sq = 1.0 / std::sqrt( fpMod );
 	*a = ta * sq;
 	*b = tb * sq;
 	*c = tc * sq;
@@ -731,7 +731,7 @@ inline float GetDistToSegment( const CVec2 &v, const CVec2 &v1, const CVec2 &v2 
 // return error between source point and point on segment
 inline float GetErrorDist( const CVec3fEx &v, const CVec3fEx &v1, const CVec3fEx &v2, float *pRes )
 {
-	if ( fabs( v2.x - v1.x ) > DEF_EPS )
+	if ( std::fabs( v2.x - v1.x ) > DEF_EPS )
 	{
 		const float t = ( v.x - v1.x ) / ( v2.x - v1.x );
 		( *pRes ) = t;
@@ -742,7 +742,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3fEx &v1, const CVec3fEx
 		}
 		return (std::min)( fabs2( v.x - v1.x ) + fabs2( v.y - v1.y ), fabs2( v.x - v2.x ) + fabs2( v.y - v2.y ) );
 	}
-	else if ( fabs( v2.y - v1.y ) > DEF_EPS )
+	else if ( std::fabs( v2.y - v1.y ) > DEF_EPS )
 	{
 		const float t = ( v.y - v1.y ) / ( v2.y - v1.y );
 		( *pRes ) = t;
@@ -758,7 +758,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3fEx &v1, const CVec3fEx
 
 inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, float *pRes )
 {
-	if ( fabs( v2.x - v1.x ) > DEF_EPS )
+	if ( std::fabs( v2.x - v1.x ) > DEF_EPS )
 	{
 		const float t = ( v.x - v1.x ) / ( v2.x - v1.x );
 		const float y = v1.y + ( v2.y - v1.y ) * t - v.y;
@@ -770,7 +770,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, 
 		return (std::min)( ( v.x - v1.x ) * ( v.x - v1.x ) + ( y - v1.y ) * ( y - v1.y ),
 		                   ( v.x - v2.x ) * ( v.x - v2.x ) + ( y - v2.y ) * ( y - v2.y ) );
 	}
-	else if ( fabs( v2.y - v1.y ) > DEF_EPS )
+	else if ( std::fabs( v2.y - v1.y ) > DEF_EPS )
 	{
 		const float t = ( v.y - v1.y ) / ( v2.y - v1.y );
 		const float x = v1.x + ( v2.x - v1.x ) * t - v.x;
@@ -790,7 +790,7 @@ inline bool IsInside( const CTriangleEx &trg, const CVec3dEx &vert /*, bool bInc
 	int nCount = 0;
 	{
 		const double d = trg.coeffs[0].x * vert.x + trg.coeffs[0].y * vert.y + trg.coeffs[0].z;
-		if ( fabs( d ) < DEF_EPS )
+		if ( std::fabs( d ) < DEF_EPS )
 		{
 			return false;
 		}
@@ -806,7 +806,7 @@ inline bool IsInside( const CTriangleEx &trg, const CVec3dEx &vert /*, bool bInc
 	}
 	{
 		const double d = trg.coeffs[1].x * vert.x + trg.coeffs[1].y * vert.y + trg.coeffs[1].z;
-		if ( fabs( d ) < DEF_EPS )
+		if ( std::fabs( d ) < DEF_EPS )
 		{
 			return false;
 		}
@@ -822,7 +822,7 @@ inline bool IsInside( const CTriangleEx &trg, const CVec3dEx &vert /*, bool bInc
 	}
 	{
 		const double d = trg.coeffs[2].x * vert.x + trg.coeffs[2].y * vert.y + trg.coeffs[2].z;
-		if ( fabs( d ) < DEF_EPS )
+		if ( std::fabs( d ) < DEF_EPS )
 		{
 			return false;
 		}
@@ -845,7 +845,7 @@ inline bool IsInside( const std::vector<CVec3> &lineCoeffs, const CVec3 &vert )
 	for ( std::vector<CVec3>::const_iterator it = lineCoeffs.begin(); it != lineCoeffs.end(); ++it )
 	{
 		const float d = it->x * vert.x + it->y * vert.y + it->z;
-		if ( fabs( d ) < DEF_FLOAT_EPS )
+		if ( std::fabs( d ) < DEF_FLOAT_EPS )
 		{
 			++nCountL;
 			++nCountR;
@@ -865,7 +865,7 @@ inline bool IsInside( const std::vector<CVec3> &lineCoeffs, const CVec3 &vert )
 inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
 {
 	const double fDet = (double)( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
-	if ( fabs( fDet ) > DEF_EPS )
+	if ( std::fabs( fDet ) > DEF_EPS )
 	{
 		const double fInvDet = 1.0 / fDet;
 		const double t = ( (double)( v1.x - p1.x ) * ( v2.y - v1.y ) - ( v1.y - p1.y ) * ( v2.x - v1.x ) ) * fInvDet;
@@ -881,7 +881,7 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 		// projections, tried in that order; the last two were both called fDet
 		// and so shadowed the first.
 		const double fDetYZ = (double)( p2.y - p1.y ) * ( v2.z - v1.z ) - ( p2.z - p1.z ) * ( v2.y - v1.y );
-		if ( fabs( fDetYZ ) > DEF_EPS )
+		if ( std::fabs( fDetYZ ) > DEF_EPS )
 		{
 			const double fInvDet = 1.0 / fDetYZ;
 			const double t = ( (double)( v1.y - p1.y ) * ( v2.z - v1.z ) - ( v1.z - p1.z ) * ( v2.y - v1.y ) ) * fInvDet;
@@ -894,7 +894,7 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 		else
 		{
 			const double fDetXZ = (double)( p2.x - p1.x ) * ( v2.z - v1.z ) - ( p2.z - p1.z ) * ( v2.x - v1.x );
-			if ( fabs( fDetXZ ) > DEF_EPS )
+			if ( std::fabs( fDetXZ ) > DEF_EPS )
 			{
 				const double fInvDet = 1.0 / fDetXZ;
 				const double t = ( (double)( v1.x - p1.x ) * ( v2.z - v1.z ) - ( v1.z - p1.z ) * ( v2.x - v1.x ) ) * fInvDet;
@@ -912,7 +912,7 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 inline bool IsIntersect( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx &v1, const CVec3dEx &v2 )
 {
 	const double fDet = (double)( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
-	if ( fabs( fDet ) > DEF_EPS )
+	if ( std::fabs( fDet ) > DEF_EPS )
 	{
 		const double fInvDet = 1.0 / fDet;
 
@@ -929,7 +929,7 @@ inline bool IsIntersect( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx 
 inline bool IsIntersectOneOf( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
 {
 	const double fDet = (double)( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
-	if ( fabs( fDet ) > DEF_EPS )
+	if ( std::fabs( fDet ) > DEF_EPS )
 	{
 		const double fInvDet = 1.0 / fDet;
 		const double t = ( (double)( v1.x - p1.x ) * ( v2.y - v1.y ) - ( v1.y - p1.y ) * ( v2.x - v1.x ) ) * fInvDet;
@@ -946,7 +946,7 @@ inline void
 AddIntersection( std::vector<CVec3> *pIntersection, const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
 {
 	const float fDet = ( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
-	if ( fabs( fDet ) > DEF_EPS )
+	if ( std::fabs( fDet ) > DEF_EPS )
 	{
 		const float fInvDet = 1.0 / fDet;
 		const float t = ( ( v1.x - p1.x ) * ( v2.y - v1.y ) - ( v1.y - p1.y ) * ( v2.x - v1.x ) ) * fInvDet;
@@ -963,7 +963,7 @@ inline void AddIntersectionOneSide(
 		std::vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
 {
 	const float fDet = ( v2.x - v1.x ) * ( p2.y - p1.y ) - ( v2.y - v1.y ) * ( p2.x - p1.x );
-	if ( fabs( fDet ) > DEF_EPS )
+	if ( std::fabs( fDet ) > DEF_EPS )
 	{
 		const float fInvDet = 1.0 / fDet;
 		const float t = ( ( p1.x - v1.x ) * ( p2.y - p1.y ) - ( p1.y - v1.y ) * ( p2.x - p1.x ) ) * fInvDet;
@@ -979,7 +979,7 @@ inline void AddIntersection(
 		std::vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
 {
 	const float fDet = ( v2.x - v1.x ) * ( p2.y - p1.y ) - ( v2.y - v1.y ) * ( p2.x - p1.x );
-	if ( fabs( fDet ) > DEF_EPS )
+	if ( std::fabs( fDet ) > DEF_EPS )
 	{
 		const float fInvDet = 1.0 / fDet;
 		const float t = ( ( p1.x - v1.x ) * ( p2.y - p1.y ) - ( p1.y - v1.y ) * ( p2.x - p1.x ) ) * fInvDet;

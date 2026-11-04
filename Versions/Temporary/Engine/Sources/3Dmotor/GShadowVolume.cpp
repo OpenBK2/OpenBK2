@@ -306,7 +306,7 @@ public:
 			for ( int nX = 0; nX < nWidth; ++nX )
 			{
 				float fX = ( nX + 0.5f - nWidth * 0.5f ) * ( 2.0f / nWidth );
-				float fLeng = sqrt( sqr( fX ) + sqr( fY ) + 1 );
+				float fLeng = std::sqrt( sqr( fX ) + sqr( fY ) + 1 );
 				float fZ = fRadius / fLeng;
 				float fZt = 1 / fZ; //( fZAdd + fZMul * fZ ) / ( fWAdd + fWMul * fZ );
 				int nZValue = Float2IntScale( fZt, fZBufScale );
@@ -767,7 +767,7 @@ int CShadowVolumeBuilder::AddPoint( const CVec3 &a )
 int CShadowVolumeBuilder::AddBackPoint( const CVec3 &a )
 {
 	CVec3 v = a - vCenter;
-	float fLeng = fabs( v.x ) + fabs( v.y ) + fabs( v.z ) + 1e-20f;
+	float fLeng = std::fabs( v.x ) + std::fabs( v.y ) + std::fabs( v.z ) + 1e-20f;
 	v = vCenter + v * ( fRadius * FP_SQRT_3 / fLeng );
 	return AddPoint( v );
 }
@@ -976,7 +976,7 @@ void CShadowVolumeBuilder::BuildResult()
 float CShadowVolumeBuilder::CalcPointNorm( const CVec3 &p1 )
 {
 	CVec3 v = p1 - vCenter;
-	return fabs( v.x ) + fabs( v.y ) + fabs( v.z );
+	return std::fabs( v.x ) + std::fabs( v.y ) + std::fabs( v.z );
 }
 
 void CShadowVolumeBuilder::AddTriangle( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )

@@ -128,14 +128,14 @@ public:
 	//
 	bool IsSelectionValid() const
 	{
-		return ( fabs( fSelectionLength ) > FP_EPSILON );
+		return ( std::fabs( fSelectionLength ) > FP_EPSILON );
 	}
 
 	//
 	bool IsPointUnderCursor( const float fPoint ) const
 	{
 		//
-		return ( fabs( fPoint - fCursorTime ) < DEF_SEL_RAD );
+		return ( std::fabs( fPoint - fCursorTime ) < DEF_SEL_RAD );
 	}
 
 	bool IsPointInsideSelection( const float fPoint ) const
@@ -278,8 +278,8 @@ inline float CalcTimeSliderSpacing( float fLength, float fScale, int nWidth )
 		return 1.0f;
 	}
 	const float fSpacing =
-			pow( TSL_DEF_SPACING_SCALE_COEFF,
-	         (int)( log( fSpan * TSL_DEF_SPACING / nWidth ) / log( TSL_DEF_SPACING_SCALE_COEFF ) - 1 ) );
+			std::pow( TSL_DEF_SPACING_SCALE_COEFF,
+	              (int)( std::log( fSpan * TSL_DEF_SPACING / nWidth ) / std::log( TSL_DEF_SPACING_SCALE_COEFF ) - 1 ) );
 	// a span small enough to underflow the power would do the same as above
 	return ( fSpacing > 0.0f ) ? fSpacing : 1.0f;
 }

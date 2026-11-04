@@ -522,7 +522,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 	if ( bFitToAIGrid )
 	{
 		Normalize( &dir );
-		float fExactDir = atan2( dir.y, dir.x );
+		float fExactDir = std::atan2( dir.y, dir.x );
 		int nA = fExactDir / FP_PI4;
 		switch ( nA )
 		{
@@ -546,7 +546,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 		}
 		float fADiff = ADiff( fExactDir, fRayDir );
 		fRayDir = fExactDir;
-		nNumSections = ( fabs( fLen * cos( fADiff ) ) ) / fSectionLen;
+		nNumSections = ( std::fabs( fLen * std::cos( fADiff ) ) ) / fSectionLen;
 		if ( nNumSections == 0 )
 		{
 			nNumSections = 1;
@@ -555,7 +555,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 	else
 	{
 		Normalize( &dir );
-		fRayDir = atan2( dir.y, dir.x );
+		fRayDir = std::atan2( dir.y, dir.x );
 		nNumSections = fLen / fSectionLen;
 		if ( nNumSections == 0 )
 		{

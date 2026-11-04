@@ -36,7 +36,7 @@ int ScriptErrorOut( struct lua_State *state )
 static int Sqrt( struct lua_State *pState )
 {
 	Script script( pState );
-	script.PushNumber( sqrt( (double)script.GetObject( 1 ) ) );
+	script.PushNumber( std::sqrt( (double)script.GetObject( 1 ) ) );
 	return 1;
 }
 

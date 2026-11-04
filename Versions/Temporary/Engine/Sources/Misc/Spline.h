@@ -194,7 +194,7 @@ public:
 		float fLen1 = GetLength( 100 );
 		float fLen2 = GetLength( 200 );
 		int nStepCounter = 2;
-		while ( ( fabs( fLen1 - fLen2 ) > fTolerance ) && ( nStepCounter < nStepLimit ) )
+		while ( ( std::fabs( fLen1 - fLen2 ) > fTolerance ) && ( nStepCounter < nStepLimit ) )
 		{
 			++nStepCounter;
 			fLen1 = fLen2;
@@ -216,8 +216,8 @@ public:
 	{
 		const float dx = x.GetDiff1( t );
 		const float dy = y.GetDiff1( t );
-		const float denominator = fabs( dx * y.GetDiff2( t ) - dy * x.GetDiff2( t ) );
-		return denominator < 1e-5f ? 0 : pow( fabs2( dx ) + fabs2( dy ), 3.0f / 2.0f ) / denominator;
+		const float denominator = std::fabs( dx * y.GetDiff2( t ) - dy * x.GetDiff2( t ) );
+		return denominator < 1e-5f ? 0 : std::pow( fabs2( dx ) + fabs2( dy ), 3.0f / 2.0f ) / denominator;
 	}
 
 	// центр кривизны кривой, заданной параметрически:
@@ -232,7 +232,7 @@ public:
 		const float dx = x.GetDiff1( t );
 		const float dy = y.GetDiff1( t );
 		const float denominator = dx * y.GetDiff2( t ) - dy * x.GetDiff2( t );
-		if ( fabs( denominator ) < 1e-5f )
+		if ( std::fabs( denominator ) < 1e-5f )
 		{
 			return VNULL2;
 		}

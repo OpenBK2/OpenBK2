@@ -527,8 +527,8 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 			while ( iter != tiles.end() )
 			{
 				const SVector &tile = iter->tile;
-				if ( abs( tile.x - unitTileCenter.x ) <= nBoundTileRadius ||
-				     abs( tile.y - unitTileCenter.y ) <= nBoundTileRadius )
+				if ( std::abs( tile.x - unitTileCenter.x ) <= nBoundTileRadius ||
+				     std::abs( tile.y - unitTileCenter.y ) <= nBoundTileRadius )
 				{
 					iter = tiles.erase( iter );
 				}
@@ -537,7 +537,7 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 					const CVec2 vTileCenter = GetAIMap()->GetPointByTile( tile );
 					CVec2 vDiff = vTileCenter - vCenter;
 					Normalize( &vDiff );
-					if ( fabs( vDiff * GetUnit()->GetDirectionVector() ) > 1 / FP_SQRT_2 )
+					if ( std::fabs( vDiff * GetUnit()->GetDirectionVector() ) > 1 / FP_SQRT_2 )
 					{
 						iter = tiles.erase( iter );
 					}

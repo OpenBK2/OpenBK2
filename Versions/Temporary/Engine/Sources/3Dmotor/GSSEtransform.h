@@ -299,7 +299,7 @@ static ShortVector4 NormalizeAndShift( const ShortVector4 &v )
 
 	uint32_t idx = sumSquares >> 18;
 
-	short normalize = (std::min)( 0x7fff, Float2Int( ( 64 * ( 127 * 16 ) ) / sqrt( idx + 0.99f ) ) );
+	short normalize = (std::min)( 0x7fff, Float2Int( ( 64 * ( 127 * 16 ) ) / std::sqrt( idx + 0.99f ) ) );
 
 	// divide back by 2048 (2^11)
 	const size_t shift = 11;

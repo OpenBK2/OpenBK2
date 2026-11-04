@@ -188,13 +188,13 @@ inline EFragmentsSplit GetIntersectLevel( const SBound &bound, const SBound &tes
 	}
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
 	float fRDif = bound.s.fRadius - test.s.fRadius;
-	if ( fDif2 < fRDif * fabs( fRDif ) )
+	if ( fDif2 < fRDif * std::fabs( fRDif ) )
 	{
 		return FST_ACCEPT;
 	}
-	if ( fabs( ptDif.x ) + test.ptHalfBox.x < bound.ptHalfBox.x &&
-	     fabs( ptDif.y ) + test.ptHalfBox.y < bound.ptHalfBox.y &&
-	     fabs( ptDif.z ) + test.ptHalfBox.z < bound.ptHalfBox.z )
+	if ( std::fabs( ptDif.x ) + test.ptHalfBox.x < bound.ptHalfBox.x &&
+	     std::fabs( ptDif.y ) + test.ptHalfBox.y < bound.ptHalfBox.y &&
+	     std::fabs( ptDif.z ) + test.ptHalfBox.z < bound.ptHalfBox.z )
 	{
 		return FST_ACCEPT;
 	}
@@ -212,7 +212,7 @@ inline EFragmentsSplit GetIntersectLevel( const SSphere &bound, const SSphere &t
 	}
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
 	float fRDif = bound.fRadius - test.fRadius;
-	if ( fDif2 < fRDif * fabs( fRDif ) )
+	if ( fDif2 < fRDif * std::fabs( fRDif ) )
 	{
 		return FST_ACCEPT;
 	}

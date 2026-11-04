@@ -223,7 +223,7 @@ TEST( LightingKernels, CalcPointLightAttenuation )
 				const int g[3] = { got[k].nX, got[k].nY, got[k].nZ };
 				for ( int c = 0; c < 3; ++c )
 				{
-					const int d = abs( v[c] - g[c] );
+					const int d = std::abs( v[c] - g[c] );
 					if ( d > nWorst )
 					{
 						nWorst = d;
@@ -234,7 +234,7 @@ TEST( LightingKernels, CalcPointLightAttenuation )
 					// roughly a tenth of a percent plus one for the rounding mode, which
 					// is loose enough for the approximation and tight enough that a real
 					// regression, or a component going wrong outright, still fails.
-					const int nAllowed = 1 + ( abs( v[c] ) >> 10 );
+					const int nAllowed = 1 + ( std::abs( v[c] ) >> 10 );
 					EXPECT_LE( d, nAllowed ) << set.pszName << " n=" << n << " k=" << k << " component=" << c
 																	 << " reference=" << v[c];
 				}

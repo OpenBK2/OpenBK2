@@ -7,7 +7,7 @@
 namespace NGScene
 {
 static const float fFadeLimit = 0.01f;
-static const float fFadeLog = log( fFadeLimit );
+static const float fFadeLog = std::log( fFadeLimit );
 
 CDecalFader::CDecalFader( CObjectBase *_pDecal,
                           STime _tFadeInStart,
@@ -45,7 +45,7 @@ float CDecalFader::GetFadeValue( STime tCurrent ) const
 
 	if ( tCurrent > tFadeOutStart )
 	{
-		return exp( fFadeLog * ( tCurrent - tFadeOutStart ) / ( tFadeOutEnd - tFadeOutStart ) );
+		return std::exp( fFadeLog * ( tCurrent - tFadeOutStart ) / ( tFadeOutEnd - tFadeOutStart ) );
 	}
 
 	if ( tCurrent >= tFadeInEnd )
@@ -55,7 +55,7 @@ float CDecalFader::GetFadeValue( STime tCurrent ) const
 
 	if ( tCurrent > tFadeInStart )
 	{
-		return exp( fFadeLog * ( tFadeInEnd - tCurrent ) / ( tFadeInEnd - tFadeInStart ) );
+		return std::exp( fFadeLog * ( tFadeInEnd - tCurrent ) / ( tFadeInEnd - tFadeInStart ) );
 	}
 
 	return 0;

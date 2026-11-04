@@ -132,7 +132,7 @@ void CMOEntrenchmentPart::DeriveTransform( const CVec3 &_vPos, const uint16_t _w
 
 	Normalize( &vNormalProj );
 	Normalize( &vNormal );
-	fShearFactor = -sqrt( vNormal.x * vNormal.x + vNormal.y * vNormal.y ) / vNormal.z;
+	fShearFactor = -std::sqrt( vNormal.x * vNormal.x + vNormal.y * vNormal.y ) / vNormal.z;
 
 	// Set shear part
 	mShear.Set( 1.0f,

@@ -46,7 +46,7 @@ void CExecutorUnitBase::UpdateProgress( const SAbilitySwitchState _state, const 
 	bool bNearlySameProgress = false;
 	if ( state.dwStateValue == lastSent.state.dwStateValue )
 	{
-		if ( fabs( fOldProgress - fParam ) < 0.1f )
+		if ( std::fabs( fOldProgress - fParam ) < 0.1f )
 		{
 			bNearlySameProgress = true;
 		}

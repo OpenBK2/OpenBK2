@@ -115,7 +115,7 @@ static void PackFloatArrToRaw( std::vector<uint8_t> *pDst, const float *pData, c
 	while ( nCnt < nLength )
 	{
 		nZeroCnt = 0;
-		while ( ( nZeroCnt < MAX_PACK_ZERO_NUM ) && ( nCnt < nLength ) && ( fabs( pData[nCnt] ) < EPS_VALUE ) )
+		while ( ( nZeroCnt < MAX_PACK_ZERO_NUM ) && ( nCnt < nLength ) && ( std::fabs( pData[nCnt] ) < EPS_VALUE ) )
 		{
 			++nZeroCnt;
 			++nCnt;

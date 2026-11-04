@@ -315,7 +315,7 @@ void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float
 	const float fStep = FP_PI2 / nSubs + 0.001;
 	for ( float fA = fStep; fA < FP_PI2; fA += fStep )
 	{
-		base.push_back( CVec3( fRadius * cos( fA ), 0, fRadius * sin( fA ) ) );
+		base.push_back( CVec3( fRadius * std::cos( fA ), 0, fRadius * std::sin( fA ) ) );
 	}
 	for ( int i = base.size() - 1; i >= 0; --i )
 	{

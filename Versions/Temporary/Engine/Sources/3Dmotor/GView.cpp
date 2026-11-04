@@ -1628,8 +1628,9 @@ void CGameView::Draw( CTransformStack *pTS,
 			CVec3 vCameraDirection = matTransform.GetZAxis3();
 			Normalize( &vCameraDirection ); // It is not necessary but ...
 
-			float fYaw = atan2( -vCameraDirection.y, vCameraDirection.x );
-			float fPitch = -atan2( vCameraDirection.z, sqrt( sqr( vCameraDirection.x ) + sqr( vCameraDirection.y ) ) );
+			float fYaw = std::atan2( -vCameraDirection.y, vCameraDirection.x );
+			float fPitch =
+					-std::atan2( vCameraDirection.z, std::sqrt( sqr( vCameraDirection.x ) + sqr( vCameraDirection.y ) ) );
 
 			if ( fYaw < 0 )
 			{
@@ -2033,10 +2034,10 @@ CObjectBase *CGameView::AddSpotLight( const CVec3 &ptColor,
 static CVec3 GetLightDir( float fPitch, float fYaw )
 {
 	CVec3 vLightDir;
-	float fHor = sin( ToRadian( fPitch ) );
-	vLightDir.z = -cos( ToRadian( fPitch ) );
-	vLightDir.x = fHor * cos( ToRadian( fYaw ) );
-	vLightDir.y = fHor * sin( ToRadian( fYaw ) );
+	float fHor = std::sin( ToRadian( fPitch ) );
+	vLightDir.z = -std::cos( ToRadian( fPitch ) );
+	vLightDir.x = fHor * std::cos( ToRadian( fYaw ) );
+	vLightDir.y = fHor * std::sin( ToRadian( fYaw ) );
 	return vLightDir;
 }
 

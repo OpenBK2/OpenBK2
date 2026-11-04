@@ -59,7 +59,7 @@ bool CAnimatedBound::NeedUpdate()
 	SHMatrix pos;
 	Transpose( &pos, *pGlobal );
 	CVec3 ptCenter;
-	float fRadius = sqrt( CalcRadius2( bv, pos ) );
+	float fRadius = std::sqrt( CalcRadius2( bv, pos ) );
 	pos.RotateHVector( &ptCenter, bv.s.ptCenter );
 	// sphere discretisaion
 	SSphere newBV;

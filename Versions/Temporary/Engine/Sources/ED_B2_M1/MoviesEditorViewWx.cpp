@@ -1105,7 +1105,7 @@ private:
 	void OnSliderScroll( wxCommandEvent & )
 	{
 		pTimeline->SetStartTime( ( pTimeline->GetLength() * pTimeline->GetScale() ) * SliderPercent( pTimeSlider ) );
-		pTimeline->SetScale( pow( MOVED_DEF_SCALING, ( SliderPercent( pScaleSlider ) - 1.0f ) * MOVED_DEF_SCALING ) );
+		pTimeline->SetScale( std::pow( MOVED_DEF_SCALING, ( SliderPercent( pScaleSlider ) - 1.0f ) * MOVED_DEF_SCALING ) );
 		pTimeline->RefreshSpacing();
 		Notify( SScriptMovieEditorData::ME_CHANGE_TIME );
 	}

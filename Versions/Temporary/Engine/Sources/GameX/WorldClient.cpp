@@ -152,7 +152,7 @@ static bool ProjectWorldPointToScreen( CVec2 *pScreenPos,
 	CVec4 vProjected;
 	transform.Get().forward.RotateHVector( &vProjected, vWorldPos );
 
-	const float fW = fabs( vProjected.w );
+	const float fW = std::fabs( vProjected.w );
 	if ( fW < 0.000001f )
 	{
 		return false;
@@ -1852,7 +1852,7 @@ void CWorldClient::DoMouseMove( const CVec2 &vPos )
 		case EBS_STARTED:
 		case EBS_FIRST_POINT_SELECTED:
 		{
-			if ( abs( long( GameTimer()->GetAbsTime() - lastUpdate ) ) <= 100 ) //Ten times a second!
+			if ( std::abs( long( GameTimer()->GetAbsTime() - lastUpdate ) ) <= 100 ) //Ten times a second!
 			{
 				break;
 			}

@@ -45,7 +45,7 @@ public:
 	void Update( STime tCur, float fTargetSize )
 	{
 		float fDeltaT = (std::max)( 0.0f, ( (float)tCur - tPrev ) / 1024.0f );
-		fSize = fTargetSize - ( fTargetSize - fSize ) * exp( -fDeltaT / fOnTime );
+		fSize = fTargetSize - ( fTargetSize - fSize ) * std::exp( -fDeltaT / fOnTime );
 		tPrev = tCur;
 	}
 
@@ -62,7 +62,7 @@ public:
 
 inline float GefFadeLatency( float fLatency )
 {
-	return -fLatency / log( 0.01f );
+	return -fLatency / std::log( 0.01f );
 }
 
 } // namespace NGScene

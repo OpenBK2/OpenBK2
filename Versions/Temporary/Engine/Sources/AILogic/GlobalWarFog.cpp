@@ -677,11 +677,11 @@ bool CGlobalWarFog::IsTraceable( const SVector &tile1, const SVector &tile2 )
 		return false;
 	}
 	const SVector vOffset = tile2 - tile1;
-	if ( abs( vOffset.x ) < 2 && abs( vOffset.y ) < 2 )
+	if ( std::abs( vOffset.x ) < 2 && std::abs( vOffset.y ) < 2 )
 	{
 		return true;
 	}
-	else if ( abs( vOffset.x ) > GetMaxRadius() || abs( vOffset.y ) > GetMaxRadius() )
+	else if ( std::abs( vOffset.x ) > GetMaxRadius() || std::abs( vOffset.y ) > GetMaxRadius() )
 	{
 		CWarFogTracerInternal<SGetLastVisitor> traceableTracer( this, SGetLastVisitor() );
 		return traceableTracer.TraceRay( tile1, vOffset );

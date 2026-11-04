@@ -20,8 +20,8 @@ class CCSBound;
 
 inline float GetTanHyperbolic( float z )
 {
-	const float fExpZ = exp( z );
-	const float fExpMinusZ = exp( -z );
+	const float fExpZ = std::exp( z );
+	const float fExpMinusZ = std::exp( -z );
 	return ( fExpZ - fExpMinusZ ) / ( fExpZ + fExpMinusZ );
 }
 

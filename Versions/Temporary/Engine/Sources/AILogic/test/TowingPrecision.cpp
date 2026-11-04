@@ -261,7 +261,7 @@ TEST( TowingPrecision, FullApproachReachesAuthoredFrontAndRearHookPoints )
 		const float artilleryTowY = forwardTowed ? 31.0f : -31.0f;
 		const float truckTowY = -80.0f;
 		const CVec2 towDirection = forwardTowed ? artilleryFront : -artilleryFront;
-		const CVec2 destination = artilleryCenter + towDirection * ( fabs( artilleryTowY ) + fabs( truckTowY ) );
+		const CVec2 destination = artilleryCenter + towDirection * ( std::fabs( artilleryTowY ) + std::fabs( truckTowY ) );
 		CTestTruck truck;
 		truck.Init( CVec3( destination + CVec2( 150, 100 ), 0 ), 12000, map, nullptr, nullptr );
 		truck.SetGoForward( false );

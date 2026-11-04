@@ -426,15 +426,15 @@ const float Func( const float fX, const float fBound )
 	float func;
 	if ( fX <= f )
 	{
-		func = exp( k * ( fX - f ) );
+		func = std::exp( k * ( fX - f ) );
 	}
 	else
 	{
-		func = 2 - exp( -k * ( fX - f ) );
+		func = 2 - std::exp( -k * ( fX - f ) );
 	}
 
 	// сдвиг функции в ноль в нуле и в fBound в бесконечности
-	func = ( func - exp( -k * f ) ) / ( 2 - exp( -k * f ) ) * fBound;
+	func = ( func - std::exp( -k * f ) ) / ( 2 - std::exp( -k * f ) ) * fBound;
 
 	return func;
 }
@@ -612,8 +612,8 @@ void CGeneral::BombardmentSegment()
 				// делится на 1000, т.к. проверка раз в секунду
 				const float fProbNow = fProbability >= 1.0f
 				                           ? 1.0f
-				                           : 1 - exp( 1.0f / ( (float)SGeneralConsts::TIME_TO_ARTILLERY_FIRE / 1000.0f ) *
-				                                      log( 1.0f - fProbability ) );
+				                           : 1 - std::exp( 1.0f / ( (float)SGeneralConsts::TIME_TO_ARTILLERY_FIRE / 1000.0f ) *
+				                                           std::log( 1.0f - fProbability ) );
 
 				// нужно стрелять
 				const float fRand = NRandom::Random( 0.0f, 1.0f );

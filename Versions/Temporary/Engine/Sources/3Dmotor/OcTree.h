@@ -41,7 +41,7 @@ class COcTreeNode : public CObjectBase
 	//! get multiplier to fSize*sqrt(3) to calc maximal element size
 	float GetMaxElementSize() const
 	{
-		return 0.25f * fSize * sqrt( 3.0f );
+		return 0.25f * fSize * std::sqrt( 3.0f );
 	}
 
 	// Grow the root in place so references to its update lists and existing nodes
@@ -151,7 +151,7 @@ public:
 		pRes->ptCenter.x = ptBase.x + fSize * 0.5f;
 		pRes->ptCenter.y = ptBase.y + fSize * 0.5f;
 		pRes->ptCenter.z = ptBase.z + fSize * 0.5f;
-		pRes->fRadius = fSize * sqrt( 3.0f ) * 0.5f + GetMaxElementSize();
+		pRes->fRadius = fSize * std::sqrt( 3.0f ) * 0.5f + GetMaxElementSize();
 	}
 
 	void GetBound( SBound *pRes ) const

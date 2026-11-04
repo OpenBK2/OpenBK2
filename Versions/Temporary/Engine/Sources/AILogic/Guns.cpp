@@ -590,7 +590,7 @@ void CBasicGun::Shooting()
 			bShowBombEffect = false;
 		}
 		// check if actual shooting can be done ( some buildings, movement during aim can change conditions)
-		if ( fabs( z ) < SConsts::TILE_SIZE && eType != IGunsFactory::ROCKET_GUN )
+		if ( std::fabs( z ) < SConsts::TILE_SIZE && eType != IGunsFactory::ROCKET_GUN )
 		{
 			const float fZ = GetHeights()->GetVisZ( target.x, target.y );
 			if ( GetShell().IsSAMTrajectory() || CanShotBecauseOfObstacles( target, fZ ) )
@@ -706,7 +706,7 @@ const CVec2 CBasicGun::GetShootingPoint() const
 			float fTimeOfHit = 0.0f;
 
 			// Check if speeds are different enough (to avoid large numbers)
-			if ( fabs( f2A ) < 0.1f )
+			if ( std::fabs( f2A ) < 0.1f )
 			{
 				fTimeOfHit = -fC / fB;
 			}
@@ -719,7 +719,7 @@ const CVec2 CBasicGun::GetShootingPoint() const
 					return vEnemyPos; // If cannot hit, shoot directly
 				}
 
-				fDisc = sqrt( fDisc );
+				fDisc = std::sqrt( fDisc );
 
 				const float fT1 = ( -fB + fDisc ) / f2A;
 				const float fT2 = ( -fB - fDisc ) / f2A;

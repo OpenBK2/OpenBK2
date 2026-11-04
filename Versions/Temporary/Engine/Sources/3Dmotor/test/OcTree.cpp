@@ -43,9 +43,9 @@ void ExpectEnclosed( CTestNode *node, const CVec3 &center, float radius )
 		EXPECT_LE( fabs( center - sphere.ptCenter ) + radius, sphere.fRadius + 0.001f );
 		SBound box;
 		node->GetBound( &box );
-		EXPECT_LE( fabs( center.x - box.s.ptCenter.x ) + radius, box.ptHalfBox.x + 0.001f );
-		EXPECT_LE( fabs( center.y - box.s.ptCenter.y ) + radius, box.ptHalfBox.y + 0.001f );
-		EXPECT_LE( fabs( center.z - box.s.ptCenter.z ) + radius, box.ptHalfBox.z + 0.001f );
+		EXPECT_LE( std::fabs( center.x - box.s.ptCenter.x ) + radius, box.ptHalfBox.x + 0.001f );
+		EXPECT_LE( std::fabs( center.y - box.s.ptCenter.y ) + radius, box.ptHalfBox.y + 0.001f );
+		EXPECT_LE( std::fabs( center.z - box.s.ptCenter.z ) + radius, box.ptHalfBox.z + 0.001f );
 	}
 }
 

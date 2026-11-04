@@ -72,7 +72,7 @@ bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bInc
 		const CVec3dEx &v1 = rPoly[i];
 		const CVec3dEx &v2 = ( i < ( rPoly.size() - 1 ) ) ? rPoly[i + 1] : rPoly[0];
 		// find horizontal intersection
-		if ( fabs( v2.y - v1.y ) > DEF_EPS )
+		if ( std::fabs( v2.y - v1.y ) > DEF_EPS )
 		{
 			const double t = (double)( rV.y - v1.y ) / ( v2.y - v1.y );
 			// if point is placed on current segment
@@ -80,7 +80,7 @@ bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bInc
 			//if ( ( t >= 0.0f ) && ( t <= 1.0 ) )
 			{
 				const double x = (double)v1.x + ( v2.x - v1.x ) * t;
-				if ( fabs( x - rV.x ) < DEF_EPS ) // point is placed on the border
+				if ( std::fabs( x - rV.x ) < DEF_EPS ) // point is placed on the border
 				{
 					return bIncludeBorders;
 				}
@@ -90,13 +90,13 @@ bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bInc
 				}
 				else
 				{
-					if ( fabs( x - fLastX ) < DEF_EPS )
+					if ( std::fabs( x - fLastX ) < DEF_EPS )
 					{
 						continue;
 					}
 					if ( i == ( rPoly.size() - 1 ) )
 					{
-						if ( fabs( x - fFirstX ) < DEF_EPS )
+						if ( std::fabs( x - fFirstX ) < DEF_EPS )
 						{
 							continue;
 						}
@@ -119,7 +119,7 @@ bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bInc
 		}
 		else
 		{
-			if ( ( fabs( v1.y - rV.y ) < DEF_EPS ) && ( rV.x >= (std::min)( v1.x, v2.x ) ) &&
+			if ( ( std::fabs( v1.y - rV.y ) < DEF_EPS ) && ( rV.x >= (std::min)( v1.x, v2.x ) ) &&
 			     ( rV.x <= (std::max)( v1.x, v2.x ) ) )
 			{
 				return false;
@@ -142,14 +142,14 @@ bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 		const CVec3dEx &v1 = rPoly[i];
 		const CVec3dEx &v2 = ( i < ( rPoly.size() - 1 ) ) ? rPoly[i + 1] : rPoly[0];
 		// find horizontal intersection
-		if ( fabs( v2.y - v1.y ) > DEF_EPS )
+		if ( std::fabs( v2.y - v1.y ) > DEF_EPS )
 		{
 			const double t = (double)( rV.y - v1.y ) / ( v2.y - v1.y );
 			// if point is placed on current segment
 			if ( ( t > -DEF_EPS ) && ( t < ( 1.0 + DEF_EPS ) ) )
 			{
 				const double x = (double)v1.x + ( v2.x - v1.x ) * t;
-				if ( fabs( x - rV.x ) < DEF_EPS ) // point is placed on the border
+				if ( std::fabs( x - rV.x ) < DEF_EPS ) // point is placed on the border
 				{
 					return false;
 				}
@@ -159,13 +159,13 @@ bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 				}
 				else
 				{
-					if ( fabs( x - fLastX ) < DEF_EPS )
+					if ( std::fabs( x - fLastX ) < DEF_EPS )
 					{
 						continue;
 					}
 					if ( i == ( rPoly.size() - 1 ) )
 					{
-						if ( fabs( x - fFirstX ) < DEF_EPS )
+						if ( std::fabs( x - fFirstX ) < DEF_EPS )
 						{
 							continue;
 						}
@@ -188,7 +188,7 @@ bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 		}
 		else
 		{
-			if ( ( fabs( v1.y - rV.y ) < DEF_EPS ) && ( rV.x >= (std::min)( v1.x, v2.x ) ) &&
+			if ( ( std::fabs( v1.y - rV.y ) < DEF_EPS ) && ( rV.x >= (std::min)( v1.x, v2.x ) ) &&
 			     ( rV.x <= (std::max)( v1.x, v2.x ) ) )
 			{
 				return false;
@@ -209,7 +209,7 @@ void GetIntersection( std::vector<CVec3dEx> *pIntersection,
 		const CVec3dEx &v1 = rPoly[i];
 		const CVec3dEx &v2 = ( i < ( rPoly.size() - 1 ) ) ? rPoly[i + 1] : rPoly[0];
 		const double fDet = (double)( rV2.x - rV1.x ) * ( v2.y - v1.y ) - ( rV2.y - rV1.y ) * ( v2.x - v1.x );
-		if ( fabs( fDet ) > DEF_EPS )
+		if ( std::fabs( fDet ) > DEF_EPS )
 		{
 			const double fInvDet = 1.0 / fDet;
 			const double t = ( (double)( v1.x - rV1.x ) * ( v2.y - v1.y ) - ( v1.y - rV1.y ) * ( v2.x - v1.x ) ) * fInvDet;
@@ -236,7 +236,7 @@ void GetIntersection( std::vector<SIntersectPoint> *pIntersection,
 		const CVec3fEx &v1 = rPoly[i];
 		const CVec3fEx &v2 = ( i < ( rPoly.size() - 1 ) ) ? rPoly[i + 1] : rPoly[0];
 		const float fDet = ( rV2.x - rV1.x ) * ( v2.y - v1.y ) - ( rV2.y - rV1.y ) * ( v2.x - v1.x );
-		if ( fabs( fDet ) > DEF_EPS )
+		if ( std::fabs( fDet ) > DEF_EPS )
 		{
 			const float fInvDet = 1.0 / fDet;
 			const float t = ( ( v1.x - rV1.x ) * ( v2.y - v1.y ) - ( v1.y - rV1.y ) * ( v2.x - v1.x ) ) * fInvDet;
@@ -269,7 +269,7 @@ void GetIntersection( std::vector<SIntersectPoint> *pIntersection,
 	{
 		const float fDet = ( rV2.x - rV1.x ) * ( itVec2->vPos.y - itVec1->vPos.y ) -
 		                   ( rV2.y - rV1.y ) * ( itVec2->vPos.x - itVec1->vPos.x );
-		if ( fabs( fDet ) > DEF_EPS )
+		if ( std::fabs( fDet ) > DEF_EPS )
 		{
 			const float fInvDet = 1.0 / fDet;
 			const float t = ( ( itVec1->vPos.x - rV1.x ) * ( itVec2->vPos.y - itVec1->vPos.y ) -
@@ -305,7 +305,7 @@ void GetBorderIntersection( std::vector<CVec3> *pBorderIntersection,
 			const CVec3dEx &r2v1 = rTriangle2.points[i];
 			const CVec3dEx &r2v2 = i < 2 ? rTriangle2.points[i + 1] : rTriangle2.points[0];
 			const double fDet = (double)( r1v2.x - r1v1.x ) * ( r2v2.y - r2v1.y ) - ( r1v2.y - r1v1.y ) * ( r2v2.x - r2v1.x );
-			if ( fabs( fDet ) > DEF_EPS )
+			if ( std::fabs( fDet ) > DEF_EPS )
 			{
 				const double fInvDet = 1.0 / fDet;
 				const double t =
@@ -333,7 +333,7 @@ bool IsIntersect( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const
 		const CVec3dEx &vert1 = rPoly[i];
 		const CVec3dEx &vert2 = ( i < ( rPoly.size() - 1 ) ) ? rPoly[i + 1] : rPoly[0];
 		const double fDet = (double)( rV2.x - rV1.x ) * ( vert2.y - vert1.y ) - ( rV2.y - rV1.y ) * ( vert2.x - vert1.x );
-		if ( fabs( fDet ) > DEF_EPS )
+		if ( std::fabs( fDet ) > DEF_EPS )
 		{
 			const double fInvDet = 1.0 / fDet;
 			const double t =
@@ -398,7 +398,7 @@ void CreateConvexHull( std::vector<CVec3> *pResPoints, const std::vector<CVec3> 
 			const float d =
 					NMath::Sqrt( ( rSourcePoints[g].x - rSourcePoints[i].x ) * ( rSourcePoints[g].x - rSourcePoints[i].x ) +
 			                 ( rSourcePoints[g].y - rSourcePoints[i].y ) * ( rSourcePoints[g].y - rSourcePoints[i].y ) );
-			const float fDist = ( fabs( d ) > DEF_EPS ) ? ( 1.0f / d ) : 1.0f;
+			const float fDist = ( std::fabs( d ) > DEF_EPS ) ? ( 1.0f / d ) : 1.0f;
 			normVects[g][i].x = ( rSourcePoints[g].x - rSourcePoints[i].x ) * fDist;
 			normVects[g][i].y = ( rSourcePoints[g].y - rSourcePoints[i].y ) * fDist;
 			normVects[i][g] = -normVects[g][i];

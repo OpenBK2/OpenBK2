@@ -69,14 +69,14 @@ inline void AddUniquePrecipiceVertex( STerrainInfo::SPrecipiceNode *pNode, const
 	int nInd = 0;
 	for ( ; nInd < pNode->verts.size(); ++nInd )
 	{
-		if ( fabs( pNode->verts[nInd].z - fHeight ) < DEF_EPS )
+		if ( std::fabs( pNode->verts[nInd].z - fHeight ) < DEF_EPS )
 		{
 			if ( ( nInd == 0 ) || ( nInd == ( pNode->verts.size() - 1 ) ) )
 			{
 				return;
 			}
-			if ( ( fabs( pNode->verts[nInd].x - pNode->vPos.x ) < DEF_EPS ) &&
-			     ( fabs( pNode->verts[nInd].y - pNode->vPos.y ) < DEF_EPS ) )
+			if ( ( std::fabs( pNode->verts[nInd].x - pNode->vPos.x ) < DEF_EPS ) &&
+			     ( std::fabs( pNode->verts[nInd].y - pNode->vPos.y ) < DEF_EPS ) )
 			{
 				return;
 			}
@@ -361,7 +361,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 #endif
 
 				///if ( (fBottomHeight < node.verts[nFind2 - 1].z) && (fabs(fBottomHeight - vPos.z) < DEF_STAYED_ON_TERRAIN_ERROR) )
-				if ( fabs( fBottomHeight - vPos.z ) < DEF_STAYED_ON_TERRAIN_ERROR )
+				if ( std::fabs( fBottomHeight - vPos.z ) < DEF_STAYED_ON_TERRAIN_ERROR )
 				{
 
 					vPos.z = fBottomHeight;
@@ -545,7 +545,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			vNorm = precipiceNorms[k] / precipiceNormsCounts[k];
 			if ( fabs2( vNorm ) > DEF_EPS )
 			{
-				if ( fabs( fabs2( vNorm ) - 1.0f ) > DEF_EPS )
+				if ( std::fabs( fabs2( vNorm ) - 1.0f ) > DEF_EPS )
 				{
 					Normalize( &vNorm );
 				}

@@ -28,8 +28,8 @@ struct SMatrix2
 
 	SMatrix2( float fAngle )
 	{
-		float fSin = sin( fAngle );
-		float fCos = cos( fAngle );
+		float fSin = std::sin( fAngle );
+		float fCos = std::cos( fAngle );
 
 		m[0][0] = fCos;
 		m[0][1] = -fSin;
@@ -235,10 +235,10 @@ void CWindowMiniMap::SetBaseRotableParams()
 	{
 		float a1 = ( vMax.y - vMin.y ) * 0.5f;
 		float a2 = ( vMax.x - vMin.x ) * 0.5f;
-		float maxsize = sqrt( 2.0f ) * (std::max)( a1, a2 );
+		float maxsize = std::sqrt( 2.0f ) * (std::max)( a1, a2 );
 
-		vRotableCenter.x = sqrt( 2.0f ) * a2;
-		vRotableCenter.y = sqrt( 2.0f ) * a1;
+		vRotableCenter.x = std::sqrt( 2.0f ) * a2;
+		vRotableCenter.y = std::sqrt( 2.0f ) * a1;
 	}
 	if ( vRotableCenter.x == 0.0f && vRotableCenter.y == 0.0f )
 	{
@@ -775,7 +775,7 @@ void CWindowMiniMap::MakeTransformParams( const CVec2 &vPoint00,
 void CWindowMiniMap::MakeRotableTransformParams( const CVec2 &vDirView )
 {
 	bNeedScreenToMapRefresh = true;
-	float fAngleView = atan2( vDirView.y, vDirView.x ) - FP_PI2;
+	float fAngleView = std::atan2( vDirView.y, vDirView.x ) - FP_PI2;
 	float fDeltaAngle = fabsf( fAngleView - fPrevRotableAngle );
 	if ( fDeltaAngle < F_ANGLE_DELTA )
 	{

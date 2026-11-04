@@ -403,7 +403,7 @@ static const float ReadFloat( const char *p, const int nSize )
 			}
 			nPower *= nESign;
 
-			f *= pow( 10.0f, nPower );
+			f *= std::pow( 10.0f, nPower );
 		}
 	}
 

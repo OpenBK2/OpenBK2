@@ -1335,7 +1335,7 @@ bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl,
 	const CVec2 vExpl2D( vExpl.x, vExpl.y );
 	const CVec2 vUnitCenter( GetCenterPlain() );
 	const float fDist2 = fabs2( vUnitCenter - vExpl2D );
-	const float fZDiff = fabs( GetVisZ() - vExpl.z );
+	const float fZDiff = std::fabs( GetVisZ() - vExpl.z );
 
 	if ( !IsInBuilding() && !IsInSolidPlace() && fZDiff <= GetStats()->vAABBHalfSize.y )
 	{

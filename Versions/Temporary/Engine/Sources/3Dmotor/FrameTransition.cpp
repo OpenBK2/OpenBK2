@@ -190,7 +190,7 @@ inline void InitFrameTransitionParams()
 	const float fAngle = NWin32Random::Random( 0.0f, FP_PI * 2 );
 	if ( B_RANDOM_DIR )
 	{
-		V_TRANSITION_DIR.Set( cos( fAngle ), sin( fAngle ) );
+		V_TRANSITION_DIR.Set( std::cos( fAngle ), std::sin( fAngle ) );
 	}
 }
 

@@ -623,8 +623,8 @@ bool CScriptAreaState::SScriptArea::Pick( const CVec3 &rPoint ) const
 		{
 			std::list<CVec2> pointList;
 			//
-			float fHalfA = fabs( GetAABBHalfSize().x );
-			float fHalfB = fabs( GetAABBHalfSize().y );
+			float fHalfA = std::fabs( GetAABBHalfSize().x );
+			float fHalfB = std::fabs( GetAABBHalfSize().y );
 			CVec2 vCenter = GetCenter();
 			//
 			pointList.push_back( vCenter + CVec2( +fHalfA, +fHalfB ) );

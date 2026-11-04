@@ -521,13 +521,13 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 		fVisualDeathSelfRotation = fSelfRotSpeed * sqrtf( 2.0f * fVisualFallDistance / fDownAcceleration );
 		fVisualDeathDownwardsAngle = Clamp( pHeliStats ? pHeliStats->fDeathSpiralDownwardsAngleRad : 0.1f, 0.0f, FP_PI2 );
 	}
-	else if ( pHeliStats && fabs( fVisualMovementAngle ) > 0.001f )
+	else if ( pHeliStats && std::fabs( fVisualMovementAngle ) > 0.001f )
 	{
 		vVisualSpeed.z = -fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) * tanf( fVisualMovementAngle );
 	}
 
 	CVec3 vVisualNormal( fabs( vInterpolatedNormal ) > 0.001f ? vInterpolatedNormal : V3_AXIS_Z );
-	if ( pHeliStats && !bDeadSpiralStarted && !bAttackTilt && fabs( fVisualSideAngle ) > 0.001f )
+	if ( pHeliStats && !bDeadSpiralStarted && !bAttackTilt && std::fabs( fVisualSideAngle ) > 0.001f )
 	{
 		const CVec2 vSide( vVisualFrontDirection.y, -vVisualFrontDirection.x );
 		vVisualNormal += CVec3( vSide * tanf( fVisualSideAngle ), 0.0f );
@@ -541,7 +541,7 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 		pPlacement->rotation = CQuat( fDeathYaw, V3_AXIS_Z ) * CQuat( fVisualDeathSelfRotation, V3_AXIS_Z ) *
 		                       CQuat( -fVisualDeathDownwardsAngle, V3_AXIS_X );
 	}
-	else if ( ( bAttackTilt && bVisualAimPointSet ) || fabs( fVisualAttackAngle ) > 0.001f )
+	else if ( ( bAttackTilt && bVisualAimPointSet ) || std::fabs( fVisualAttackAngle ) > 0.001f )
 	{
 		// Smoothly enter and leave the attack pose, using only yaw (Z) and local forward pitch (X).
 		const float fYaw = float( wVisualDirection ) / 65536.0f * FP_2PI;

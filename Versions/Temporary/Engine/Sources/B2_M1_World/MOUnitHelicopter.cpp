@@ -138,7 +138,7 @@ void CMOUnitHelicopter::ChooseStandingDeviationTarget( const float fRadius )
 	const float fDiscriminant =
 			(std::max)( 0.0f,
 	                fDirectionDotOffset * fDirectionDotOffset + fRadius * fRadius - fabs2( vStandingDeviationOffset ) );
-	const float fDistanceToBoundary = -fDirectionDotOffset + float( sqrt( fDiscriminant ) );
+	const float fDistanceToBoundary = -fDirectionDotOffset + float( std::sqrt( fDiscriminant ) );
 	vStandingDeviationTarget = vStandingDeviationOffset + vDirection * fDistanceToBoundary;
 }
 

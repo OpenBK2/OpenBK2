@@ -9,12 +9,12 @@ CCameraMapIterator::CCameraMapIterator(
 	, nCurrX( 0 )
 	, nCurrY( 0 )
 {
-	const float fStepX = 2.0f * fDistance * tan( fFOV * 0.5f );
-	const float fStepY = vScreenSize.y * fStepX / ( vScreenSize.x * sin( fPitch ) );
+	const float fStepX = 2.0f * fDistance * std::tan( fFOV * 0.5f );
+	const float fStepY = vScreenSize.y * fStepX / ( vScreenSize.x * std::sin( fPitch ) );
 	//
 	const float fAngle = -fYaw;
-	const float fSin = sin( fAngle );
-	const float fCos = cos( fAngle );
+	const float fSin = std::sin( fAngle );
+	const float fCos = std::cos( fAngle );
 	//
 	CVec2 v1( 0, fMapSizeY );
 	CVec2 v2( fMapSizeX, 0 );
@@ -47,12 +47,12 @@ CCameraMapIterator::CCameraMapIterator(
 	vCurrAnchor = vStartAnchor;
 	//
 	nNumStepsX = rcBigRect.GetSizeX() / fStepX + 1;
-	if ( fmod( rcBigRect.GetSizeX(), fStepX ) > fStepX * 0.5f )
+	if ( std::fmod( rcBigRect.GetSizeX(), fStepX ) > fStepX * 0.5f )
 	{
 		nNumStepsX += 1;
 	}
 	nNumStepsY = rcBigRect.GetSizeY() / fStepY + 1;
-	if ( fmod( rcBigRect.GetSizeY(), fStepY ) > fStepY * 0.5f )
+	if ( std::fmod( rcBigRect.GetSizeY(), fStepY ) > fStepY * 0.5f )
 	{
 		nNumStepsY += 1;
 	}

@@ -95,8 +95,8 @@ void CWindDeformer::Recalc()
 
 	for ( int j = 0; j < s; ++j )
 	{
-		x = cos( angle + ( c[posInds[j]].x + c[posInds[j]].y ) * 0.2f );
-		y = sin( angle + ( c[posInds[j]].x + c[posInds[j]].y ) * 0.2f );
+		x = std::cos( angle + ( c[posInds[j]].x + c[posInds[j]].y ) * 0.2f );
+		y = std::sin( angle + ( c[posInds[j]].x + c[posInds[j]].y ) * 0.2f );
 
 		float factor = c[posInds[j]].z * 0.01f;
 		v[j].texLM.nU = x * NGfx::N_VEC_FULL_TEX_SIZE * factor;

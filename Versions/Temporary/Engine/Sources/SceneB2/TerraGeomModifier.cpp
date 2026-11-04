@@ -223,7 +223,7 @@ static bool IsBrushTrue( const int nX, const int nY, const CArray2D<float> &brus
 {
 	if ( ( nX >= 0 ) && ( nX < brush.GetSizeX() ) && ( nY >= 0 ) && ( nY < brush.GetSizeY() ) )
 	{
-		return ( fabs( brush[nY][nX] ) > DEF_EPS );
+		return ( std::fabs( brush[nY][nX] ) > DEF_EPS );
 	}
 	return false;
 }

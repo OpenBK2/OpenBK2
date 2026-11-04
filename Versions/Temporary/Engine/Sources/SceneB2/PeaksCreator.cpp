@@ -39,7 +39,7 @@ inline void CheckTrgInsidingAndPush(
 inline void CheckVerticalIntersectAndPush(
 		std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2, const float fY, const float fX1, const float fX2 )
 {
-	if ( fabs( v2.y - v1.y ) > EPS_VALUE )
+	if ( std::fabs( v2.y - v1.y ) > EPS_VALUE )
 	{
 		const float t = ( fY - v1.y ) / ( v2.y - v1.y );
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )
@@ -56,7 +56,7 @@ inline void CheckVerticalIntersectAndPush(
 inline void CheckHorizontalIntersectAndPush(
 		std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2, const float fX, const float fY1, const float fY2 )
 {
-	if ( fabs( v2.x - v1.x ) > EPS_VALUE )
+	if ( std::fabs( v2.x - v1.x ) > EPS_VALUE )
 	{
 		const float t = ( fX - v1.x ) / ( v2.x - v1.x );
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )
@@ -337,7 +337,7 @@ FindNearestVertexInTile( CVec3 *pRes, float *pAddHeight, const CVec3 &v, const C
 
 void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInters, const CVec3 &v1, const CVec3 &v2 )
 {
-	if ( fabs( fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) ) < EPS_VALUE )
+	if ( std::fabs( fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) ) < EPS_VALUE )
 	{
 		return;
 	}
@@ -369,8 +369,8 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 		nY2 = nTileY1;
 	}
 
-	const float fDx = fabs( v2.x - v1.x );
-	const float fDy = fabs( v2.y - v1.y );
+	const float fDx = std::fabs( v2.x - v1.x );
+	const float fDy = std::fabs( v2.y - v1.y );
 	const float fInvDx = ( fDx > EPS_VALUE ) ? ( 1.0f / ( v2.x - v1.x ) ) : 0.0f;
 	const float fInvDy = ( fDy > EPS_VALUE ) ? ( 1.0f / ( v2.y - v1.y ) ) : 0.0f;
 	float t;
@@ -387,7 +387,7 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 				if ( fDx > EPS_VALUE )
 				{
 					t = ( curVert.x - v1.x ) * fInvDx;
-					if ( ( t > 0 ) && ( t < 1.0f ) && ( fabs( v1.y + ( v2.y - v1.y ) * t - curVert.y ) < DEF_EPS ) )
+					if ( ( t > 0 ) && ( t < 1.0f ) && ( std::fabs( v1.y + ( v2.y - v1.y ) * t - curVert.y ) < DEF_EPS ) )
 					{
 						curVert.z = v1.z + ( v2.z - v1.z ) * t - addHeights[k];
 						//addHeights[k] = v1.z + ( v2.z - v1.z ) * t;
@@ -399,7 +399,7 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 				else
 				{
 					t = ( curVert.y - v1.y ) * fInvDy;
-					if ( ( t > 0 ) && ( t < 1.0f ) && ( fabs( v1.x + ( v2.x - v1.x ) * t - curVert.x ) < DEF_EPS ) )
+					if ( ( t > 0 ) && ( t < 1.0f ) && ( std::fabs( v1.x + ( v2.x - v1.x ) * t - curVert.x ) < DEF_EPS ) )
 					{
 						curVert.z = v1.z + ( v2.z - v1.z ) * t - addHeights[k];
 						//addHeights[k] = v1.z + ( v2.z - v1.z ) * t;
@@ -562,8 +562,8 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 				const float fNextSecTexY = (float)( k + 1 ) * DEF_PENDENT_SECTEX_COEFF;
 
 				const float fAngle = DEF_PENDENT_PART1_ANGLE_COEFF * k;
-				const float fCosAng = cos( fAngle );
-				const float fSinAng = sin( fAngle );
+				const float fCosAng = std::cos( fAngle );
+				const float fSinAng = std::sin( fAngle );
 
 				if ( k < DEF_PENDENT_PART1_NUM )
 				{

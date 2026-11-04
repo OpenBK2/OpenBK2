@@ -124,16 +124,16 @@ public:
 	// from anchor to eye
 	const CVec3 GetDirection() const
 	{
-		return CVec3( sin( ToRadian( this->fYaw ) ) * cos( ToRadian( this->fPitch ) ),
-		              -cos( ToRadian( this->fYaw ) ) * cos( ToRadian( this->fPitch ) ),
-		              sin( ToRadian( this->fPitch ) ) );
+		return CVec3( std::sin( ToRadian( this->fYaw ) ) * std::cos( ToRadian( this->fPitch ) ),
+		              -std::cos( ToRadian( this->fYaw ) ) * std::cos( ToRadian( this->fPitch ) ),
+		              std::sin( ToRadian( this->fPitch ) ) );
 	}
 
 	const float GetDistance() const
 	{
 		const CVec3 vDir = GetDirection();
-		NI_VERIFY( fabs( vDir.z ) > FP_EPSILON, "Unable to calculate camera distance", return 0.0f );
-		return fabs( vPosition.z / vDir.z );
+		NI_VERIFY( std::fabs( vDir.z ) > FP_EPSILON, "Unable to calculate camera distance", return 0.0f );
+		return std::fabs( vPosition.z / vDir.z );
 	}
 
 	const CVec3 GetAnchor() const

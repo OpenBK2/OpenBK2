@@ -163,8 +163,8 @@ void CDebugSegment::SetPosition( const CSegment &aiSegment )
 // ************************************************************************************************************************ //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const int CDebugCircle::N_SPLICE = 32;
-const float CDebugCircle::F_AI_TURN_X = cos( 2 * PI / N_SPLICE );
-const float CDebugCircle::F_AI_TURN_Y = sin( 2 * PI / N_SPLICE );
+const float CDebugCircle::F_AI_TURN_X = std::cos( 2 * PI / N_SPLICE );
+const float CDebugCircle::F_AI_TURN_Y = std::sin( 2 * PI / N_SPLICE );
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugCircle::Init( const CCircle &aiCircle )

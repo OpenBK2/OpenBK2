@@ -136,7 +136,7 @@ namespace
 			CVec3 v = vCenter - pSrcPos[k];
 			float f = fabs2( v );
 			float fCut = (std::max)( 0.0f, sqr( fRadius ) - f ) * ( 1 / sqr( fRadius ) );
-			float fAttenuation = fCut / ( f * fScale + F_PL_MIN_DISTANCE_NORMALIZED ) / sqrt( f );
+			float fAttenuation = fCut / ( f * fScale + F_PL_MIN_DISTANCE_NORMALIZED ) / std::sqrt( f );
 			NGfx::SMMXWord &n = pRes[k];
 			n.nX = Float2Int( v.x * fAttenuation * N_PL_ATTENUATION_SCALE );
 			n.nY = Float2Int( v.y * fAttenuation * N_PL_ATTENUATION_SCALE );

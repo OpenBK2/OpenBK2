@@ -46,7 +46,7 @@ static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const std::vector
 		}
 		if ( fa > 0 )
 		{
-			fA = asin( fa );
+			fA = std::asin( fa );
 		}
 		else
 		{

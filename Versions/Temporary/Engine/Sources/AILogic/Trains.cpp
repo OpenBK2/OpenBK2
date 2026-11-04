@@ -83,9 +83,9 @@ void CTrainLocomotive::Init( const CVec2 &center,
 	           fmt::format( "Not MechUnit stats in unit \"{}\" (locomotive)", NDb::GetResName( GetStats() ) ) );
 	if ( pMechStats )
 	{
-		fFrontOffset = fabs( pMechStats->vFrontWheel.y );
-		fBackOffset = fabs( pMechStats->vBackWheel.y );
-		fBackLink = fabs( pMechStats->vTowPoint.y );
+		fFrontOffset = std::fabs( pMechStats->vFrontWheel.y );
+		fBackOffset = std::fabs( pMechStats->vBackWheel.y );
+		fBackLink = std::fabs( pMechStats->vTowPoint.y );
 	}
 	cars.clear();
 	fTrainLength = fBackOffset;
@@ -783,7 +783,7 @@ void CLocomotivePath::Segment( const NTimer::STime timeDiff )
 		bFinished = true;
 	}
 
-	if ( fabs( fCurPos - fEndPos ) <= fStep ) // Arrived to end point?
+	if ( std::fabs( fCurPos - fEndPos ) <= fStep ) // Arrived to end point?
 	{
 		bFinished = true;
 

@@ -243,7 +243,7 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 							const CVec3 vOrigin( rViewMatrix._14, rViewMatrix._24, rViewMatrix._34 );
 							const CVec3 vCenterPoint = pSelectedVSO->points[pParentState->currentSelection.nIndex].vPos;
 							// fNear - сократили
-							const float fDY = ( nDY * tan( fFOV / 2.0f ) /* *fNear */ ) / ( dimensions.x * 1.0f );
+							const float fDY = ( nDY * std::tan( fFOV / 2.0f ) /* *fNear */ ) / ( dimensions.x * 1.0f );
 							const float fDZ = 2.0f * vUPVector.z * fDY *
 							                  fabs( vOrigin.x - vCenterPoint.x, vOrigin.y - vCenterPoint.y ) /
 							                  ( fabs( vDirection.x, vDirection.y ) /* *fNear */ );

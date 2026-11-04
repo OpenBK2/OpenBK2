@@ -76,7 +76,7 @@ void CRainAnimator::Recalc()
 	float T = pTime->GetValue() / 1024.0f * 100;
 
 	float fStart = ( pTime->GetValue() - tStart ) / 1024 * FP_PI;
-	int nPowerCheck = Float2Int( N_WEATHER_POWER_GRADATIONS * ( fStart > FP_PI ? 1 : 0.5f - cos( fStart ) * 0.5f ) );
+	int nPowerCheck = Float2Int( N_WEATHER_POWER_GRADATIONS * ( fStart > FP_PI ? 1 : 0.5f - std::cos( fStart ) * 0.5f ) );
 
 	CVec3 vRainWind( 0.1f, 0.2f, -FP_RAIN_DROP_SPEED );
 	CVec3 vParticleDir = -vRainWind / FP_RAIN_DROP_SPEED;

@@ -606,7 +606,7 @@ protected:
 	//
 	bool InOnGround( const float fExplTerrainZ ) const
 	{
-		return fabs( GetExplCoordinates().z - fExplTerrainZ ) <= SConsts::TILE_SIZE;
+		return std::fabs( GetExplCoordinates().z - fExplTerrainZ ) <= SConsts::TILE_SIZE;
 	}
 
 public:

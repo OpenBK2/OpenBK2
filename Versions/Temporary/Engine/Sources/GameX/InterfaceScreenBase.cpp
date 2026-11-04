@@ -257,7 +257,7 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 		pCamera->GetPlacement( &fDist, &fPitch, &fYaw );
 		float fNear, fFar, fFOV;
 		pCamera->GetCameraParams( &fNear, &fFar, &fFOV );
-		const float fScreenWidth = fDist * tan( ToRadian( fFOV / 2.0f ) );
+		const float fScreenWidth = fDist * std::tan( ToRadian( fFOV / 2.0f ) );
 
 		CVec3 vAnchor = pCamera->GetAnchor();
 		CVec3 vPosition = pCamera->GetPos();

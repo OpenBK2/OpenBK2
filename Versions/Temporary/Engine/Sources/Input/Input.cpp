@@ -789,7 +789,7 @@ void PumpMessages( bool bFocus )
 				if ( iTempEvent->sMessage.nParam != -1 )
 				{
 					sMessageX.nParam =
-							cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+							std::cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
 				}
 
 				messages.push_back( sMessageX );
@@ -801,7 +801,7 @@ void PumpMessages( bool bFocus )
 				if ( iTempEvent->sMessage.nParam != -1 )
 				{
 					sMessageY.nParam =
-							sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+							std::sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
 				}
 				messages.push_back( sMessageY );
 			}

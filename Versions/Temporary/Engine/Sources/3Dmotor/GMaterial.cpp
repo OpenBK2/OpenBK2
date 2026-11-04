@@ -279,8 +279,8 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 	float fMul = 1.0f / NGfx::N_VEC_FULL_TEX_SIZE;
 	float Time = GetCurrentTimeMilliseconds() * 0.001f * fAngVel;
 
-	float si = sin( Time );
-	float co = cos( Time );
+	float si = std::sin( Time );
+	float co = std::cos( Time );
 
 	pRC->SetVSConst( 38, CVec4( fMul * co, fMul * si, -fMul * si, fMul * co ) );
 	pRC->SetVSConst( 39, CVec4( ( -co + si ) * 0.5f + 0.5f, ( -co - si ) * 0.5f + 0.5f, 0.0f, 0.0f ) );
@@ -340,8 +340,8 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					float WindTime = 0.0f;
 					WindTime = GetCurrentTimeMilliseconds() * 0.003f;
 
-					float _co = 2.0f * cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
-					float _si = 2.0f * sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+					float _co = 2.0f * std::cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+					float _si = 2.0f * std::sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 
 					pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );
 				}
@@ -376,8 +376,8 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 				float WindTime = 0.0f;
 				WindTime = GetCurrentTimeMilliseconds() * 0.003f;
 
-				float _co = 2.0f * cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
-				float _si = 2.0f * sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+				float _co = 2.0f * std::cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+				float _si = 2.0f * std::sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 
 				pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );
 			}
@@ -1008,7 +1008,7 @@ bool CAnimWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 	fRot = p1.pFastInfo->tTime / 4000.0f;
 
 	float fHorseOffset = p1.pFastInfo->tTime * 0.00015f * 0.25f;
-	fHorseOffset -= floor( fHorseOffset );
+	fHorseOffset -= std::floor( fHorseOffset );
 
 	pRC->SetVSConst( 29, p1.pFastInfo->vColor );
 	pRC->SetVSConst( 30, CVec4( lightInfo.fWarFogBlend, 1 - lightInfo.fWarFogBlend, 0, 0 ) );
@@ -1582,7 +1582,7 @@ void CCloudsH5Material::Precache()
 CVec3 CCloudsH5Material::CalcShift()
 {
 	float fShift = GetCurrentTimeMilliseconds() / ( 1024.0f ) * fWrapsPerSecond;
-	fShift = fShift - floor( fShift );
+	fShift = fShift - std::floor( fShift );
 	return CVec3( 0, fShift, 0 );
 }
 

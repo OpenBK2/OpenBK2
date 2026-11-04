@@ -962,7 +962,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		}
 		bool bPlaceSegment = false;
 		bool bNewDir = bForwardMoving;
-		uint16_t wDirRange = abs( wLastTrackDir - placement.dir );
+		uint16_t wDirRange = std::abs( wLastTrackDir - placement.dir );
 		if ( nLastTrackTime < 0 || ( Singleton<IGameTimer>()->GetGameTime() - nLastTrackTime > pStats->nTrackLifetime ) ||
 		     ( wDirRange > 32768 ? wDirRange < ( 65536 - 8192 ) : wDirRange > 8192 ) )
 		{

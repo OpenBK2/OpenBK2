@@ -51,8 +51,8 @@ void CTerraGen::AddDynamicDebris(
 	const CVec2 _v3( vPos.x + vSize.x * fExtCoeff, vPos.y + vSize.y * fExtCoeff );
 	const CVec2 _v4( vPos.x + vSize.x * fExtCoeff, vPos.y - vSize.y * fExtCoeff );
 
-	const float fCos = cos( fAngle );
-	const float fSin = sin( fAngle );
+	const float fCos = std::cos( fAngle );
+	const float fSin = std::sin( fAngle );
 
 	CVec3 v1( (float)( _v1.x - vPos.x ) * fCos - (float)( _v1.y - vPos.y ) * fSin + vPos.x,
 	          (float)( _v1.x - vPos.x ) * fSin + (float)( _v1.y - vPos.y ) * fCos + vPos.y,

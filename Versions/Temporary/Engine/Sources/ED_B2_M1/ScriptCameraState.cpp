@@ -1113,9 +1113,9 @@ void CScriptCameraState::Draw( IPaintContext *pPaintDC )
 		}
 		//
 		CVec3 vNewDir( VNULL3 );
-		CVec3 vDir = CVec3( sin( ToRadian( it->fYaw ) ) * cos( ToRadian( it->fPitch ) ),
-		                    -cos( ToRadian( it->fYaw ) ) * cos( ToRadian( it->fPitch ) ),
-		                    sin( ToRadian( it->fPitch ) ) );
+		CVec3 vDir = CVec3( std::sin( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
+		                    -std::cos( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
+		                    std::sin( ToRadian( it->fPitch ) ) );
 
 		if ( vDir.z != 0 )
 		{
@@ -1375,16 +1375,16 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 		}
 		//
 		CVec3 vPos = it->vPosition;
-		CVec3 vDir = CVec3( sin( ToRadian( it->fYaw ) ) * cos( ToRadian( it->fPitch ) ),
-		                    -cos( ToRadian( it->fYaw ) ) * cos( ToRadian( it->fPitch ) ),
-		                    sin( ToRadian( it->fPitch ) ) );
+		CVec3 vDir = CVec3( std::sin( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
+		                    -std::cos( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
+		                    std::sin( ToRadian( it->fPitch ) ) );
 		vDir = CVec3( -vDir.y, vDir.x, 0 ); // rotate new vDir 90 degree over OZ
 		Normalize( &vDir );
 
 		CQuat qRotation = CQuat( ToRadian( it->fYaw ), V3_AXIS_Z );
 		qRotation *= CQuat( ToRadian( -90.0 - it->fPitch ), vDir );
 
-		CVec3 vScale( 0.8 * tan( ToRadian( it->fFOV / 2 ) ), 0.8 * tan( ToRadian( it->fFOV / 2 ) ), 1 );
+		CVec3 vScale( 0.8 * std::tan( ToRadian( it->fFOV / 2 ) ), 0.8 * std::tan( ToRadian( it->fFOV / 2 ) ), 1 );
 		vScale *= 2;
 
 		int nObjectSceneID =
@@ -1539,7 +1539,7 @@ int CScriptCameraState::SelectCameraByMovieParams( int nMovieID, float fTime ) c
 	      itKey != movie.posKeys.end();
 	      ++itKey )
 	{
-		if ( fabs( itKey->fStartTime - fTime ) <= DEF_SEL_RAD )
+		if ( std::fabs( itKey->fStartTime - fTime ) <= DEF_SEL_RAD )
 		{
 			return itKey->nPositionIndex;
 		}

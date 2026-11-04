@@ -51,10 +51,10 @@ void CTerraGen::Load( const NDb::STerrain *_pDesc, CDataStream *pStream )
 	needTexExportAfterGeomModifying.FillZero();
 
 	// init pre-light
-	const float fHor = sin( ToRadian( pDesc->pPreLight->fPitch ) );
-	vPreLightDir.z = -cos( ToRadian( pDesc->pPreLight->fPitch ) );
-	vPreLightDir.x = fHor * cos( ToRadian( pDesc->pLight->fYaw ) ); // use main light yaw angle !
-	vPreLightDir.y = fHor * sin( ToRadian( pDesc->pLight->fYaw ) );
+	const float fHor = std::sin( ToRadian( pDesc->pPreLight->fPitch ) );
+	vPreLightDir.z = -std::cos( ToRadian( pDesc->pPreLight->fPitch ) );
+	vPreLightDir.x = fHor * std::cos( ToRadian( pDesc->pLight->fYaw ) ); // use main light yaw angle !
+	vPreLightDir.y = fHor * std::sin( ToRadian( pDesc->pLight->fYaw ) );
 
 	// prepare data for terra objects
 	//terraObjsPatchesHash.SetSizes( pDesc->nNumPatchesX, pDesc->nNumPatchesY );

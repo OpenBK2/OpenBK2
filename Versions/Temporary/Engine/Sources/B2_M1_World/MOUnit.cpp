@@ -272,7 +272,7 @@ bool CMOUnit::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &upda
 	SAbilityInfo &info = pos->second;
 
 	bool bResult = true;
-	if ( fabs( info.fParam = update.info.fCurValue ) < MIN_DIFFERENCE &&
+	if ( std::fabs( info.fParam = update.info.fCurValue ) < MIN_DIFFERENCE &&
 	     info.abilityState.dwStateValue == update.info.state.dwStateValue )
 	{
 		bResult = false;

@@ -296,7 +296,7 @@ float QuatToDirection( const CQuat &qRot )
 	SHMatrix mRot;
 	qRot.DecompEulerMatrix( &mRot );
 	mRot.RotateVector( &vRot, V3_AXIS_Z );
-	float fAngle = atan2( vRot.y, vRot.x ); // -pi...+pi
+	float fAngle = std::atan2( vRot.y, vRot.x ); // -pi...+pi
 
 	// угол возвращается в AI системе отчсчета (отсчитывается против часовой стрелки от (0,1,0))
 	if ( fAngle < 0 ) // 0..2pi
@@ -316,7 +316,7 @@ float QuatToDirection( const CQuat &qRot )
 
 	// в AI еденицах
 	const float F_EPS_ANGLE = 0.01f;
-	if ( fabs( fAngle ) < F_EPS_ANGLE )
+	if ( std::fabs( fAngle ) < F_EPS_ANGLE )
 	{
 		fDir = 0xFFFF;
 	}

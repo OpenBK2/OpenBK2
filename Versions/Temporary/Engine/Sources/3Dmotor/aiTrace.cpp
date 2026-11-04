@@ -11,7 +11,7 @@ void CTracer::InitProjection( const CVec3 &_ptOrigin, const CVec3 &_ptDir )
 {
 	CVec3 v = _ptDir, vAxis1, vAxis2;
 	ASSERT( fabs2( v ) > 0 );
-	if ( fabs( v.x ) > fabs( v.y ) && fabs( v.x ) > fabs( v.z ) )
+	if ( std::fabs( v.x ) > std::fabs( v.y ) && std::fabs( v.x ) > std::fabs( v.z ) )
 	{
 		vAxis1 = v ^ CVec3( 0, 1, 0 );
 	}

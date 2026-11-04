@@ -129,7 +129,7 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 		{
 			fR += FP_PI2;
 		}
-		CVec3 dv( cos( fR ), sin( fR ), 0.01f );
+		CVec3 dv( std::cos( fR ), std::sin( fR ), 0.01f );
 		polyline[k + 1] = v + dv * F_ARROW_SIZE;
 		k += 2;
 	}

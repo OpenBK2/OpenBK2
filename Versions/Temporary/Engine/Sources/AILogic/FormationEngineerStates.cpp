@@ -2092,9 +2092,9 @@ void CFormationGunCrewState::Segment()
 					bReloadInProgress = false;
 				}
 			}
-			else if ( abs( wCurTurretVerDir - wTurretVerDir ) > 0 )
+			else if ( std::abs( wCurTurretVerDir - wTurretVerDir ) > 0 )
 			{
-				if ( abs( wCurTurretHorDir - wTurretHorDir ) > 0 )
+				if ( std::abs( wCurTurretHorDir - wTurretHorDir ) > 0 )
 				{
 					eGunOperateSubState = EGOSS_AIM;
 				}
@@ -2656,7 +2656,7 @@ void CFormationGunCrewState::SendThatAreNotOnPlace( const bool bNoAnimation )
 				{
 					NI_ASSERT( dynamic_cast<CArtilleryCrewPath *>( crewMember.pUnit->GetSmoothPath() ) != 0, "wrong path" );
 					CArtilleryCrewPath *pPath = checked_cast<CArtilleryCrewPath *>( crewMember.pUnit->GetSmoothPath() );
-					pPath->SetParams( crewMember.vServePoint, sqrt( fDiff2 ) / SConsts::AI_SEGMENT_DURATION );
+					pPath->SetParams( crewMember.vServePoint, std::sqrt( fDiff2 ) / SConsts::AI_SEGMENT_DURATION );
 
 					if ( !crewMember.pUnit->IsInSolidPlace() )
 					{

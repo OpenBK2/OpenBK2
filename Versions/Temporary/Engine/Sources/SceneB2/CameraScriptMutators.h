@@ -91,16 +91,18 @@ public:
 
 		const float fStartYaw = ToRadian( placementStart.fYaw );
 		const float fStartPitch = ToRadian( placementStart.fPitch );
-		const CVec3 vStartDir(
-				sin( -fStartYaw ) * cos( -fStartPitch ), cos( -fStartYaw ) * cos( -fStartPitch ), sin( -fStartPitch ) );
-		fLengStart = fabs( placementStart.vPosition.z / vStartDir.z );
+		const CVec3 vStartDir( std::sin( -fStartYaw ) * std::cos( -fStartPitch ),
+		                       std::cos( -fStartYaw ) * std::cos( -fStartPitch ),
+		                       std::sin( -fStartPitch ) );
+		fLengStart = std::fabs( placementStart.vPosition.z / vStartDir.z );
 		vAnchorStart = placementStart.vPosition + vStartDir * fLengStart;
 		//
 		const float fFinishYaw = ToRadian( placementFinish.fYaw );
 		const float fFinishPitch = ToRadian( placementFinish.fPitch );
-		const CVec3 vFinishDir(
-				sin( -fFinishYaw ) * cos( -fFinishPitch ), cos( -fFinishYaw ) * cos( -fFinishPitch ), sin( -fFinishPitch ) );
-		fLengFinish = fabs( placementFinish.vPosition.z / vFinishDir.z );
+		const CVec3 vFinishDir( std::sin( -fFinishYaw ) * std::cos( -fFinishPitch ),
+		                        std::cos( -fFinishYaw ) * std::cos( -fFinishPitch ),
+		                        std::sin( -fFinishPitch ) );
+		fLengFinish = std::fabs( placementFinish.vPosition.z / vFinishDir.z );
 		const CVec3 vFinishAnchor = placementFinish.vPosition + vFinishDir * fLengFinish;
 		vAnchorDir = vFinishAnchor - vAnchorStart;
 	}
@@ -240,17 +242,19 @@ public:
 
 		const float fStartYaw = ToRadian( placementStart.fYaw );
 		const float fStartPitch = ToRadian( placementStart.fPitch );
-		vStartDir =
-				CVec3( sin( -fStartYaw ) * cos( -fStartPitch ), cos( -fStartYaw ) * cos( -fStartPitch ), sin( -fStartPitch ) );
-		fLengStart = fabs( placementStart.vPosition.z / vStartDir.z );
+		vStartDir = CVec3( std::sin( -fStartYaw ) * std::cos( -fStartPitch ),
+		                   std::cos( -fStartYaw ) * std::cos( -fStartPitch ),
+		                   std::sin( -fStartPitch ) );
+		fLengStart = std::fabs( placementStart.vPosition.z / vStartDir.z );
 		vStartDir *= fLengStart * fSpline1;
 		vAnchorStart = placementStart.vPosition + vStartDir;
 		//
 		const float fFinishYaw = ToRadian( placementFinish.fYaw );
 		const float fFinishPitch = ToRadian( placementFinish.fPitch );
-		vFinishDir = CVec3(
-				sin( -fFinishYaw ) * cos( -fFinishPitch ), cos( -fFinishYaw ) * cos( -fFinishPitch ), sin( -fFinishPitch ) );
-		fLengFinish = fabs( placementFinish.vPosition.z / vFinishDir.z );
+		vFinishDir = CVec3( std::sin( -fFinishYaw ) * std::cos( -fFinishPitch ),
+		                    std::cos( -fFinishYaw ) * std::cos( -fFinishPitch ),
+		                    std::sin( -fFinishPitch ) );
+		fLengFinish = std::fabs( placementFinish.vPosition.z / vFinishDir.z );
 		vFinishDir *= fLengFinish * fSpline2;
 		vAnchorFinish = placementFinish.vPosition + vFinishDir;
 

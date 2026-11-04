@@ -110,7 +110,7 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 					const float fDist3 = GetDistToSegment( CVec2( fX, fY ), vt3, vt4 );
 					const float fDist4 = GetDistToSegment( CVec2( fX, fY ), vt4, vt1 );
 
-					const float fDist = sqrt( (std::min)( (std::min)( fDist1, fDist2 ), (std::min)( fDist3, fDist4 ) ) );
+					const float fDist = std::sqrt( (std::min)( (std::min)( fDist1, fDist2 ), (std::min)( fDist3, fDist4 ) ) );
 					const float fCoeff =
 							GetObjTerraProfile( Clamp( ( fDist - DEF_CONST_DIST ) * DEF_INV_INTERPOLATE_DIST, 0.0f, 1.0f ) );
 					terrainInfo.heights[nIndY][nIndX] =

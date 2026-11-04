@@ -202,7 +202,7 @@ bool CVSOManager::SVSOCircle::GetTangentPoint( const CVec2 &v, CVec2 *pTangentPo
 	else
 	{
 		const float fLeg2 = fDistance2 - fRadius2;
-		const float fCossin = float( sqrt( fLeg2 ) ) * r / fDistance2;
+		const float fCossin = float( std::sqrt( fLeg2 ) ) * r / fDistance2;
 		const float fCos2 = fLeg2 / fDistance2;
 
 		if ( classifyRotation == CR_COUNTERCLOCKWISE )
@@ -979,7 +979,7 @@ bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin,
 	CVec2 vEndTangentPoint( VNULL2 );
 
 	if ( ( rCircleBegin.classifyRotation != rCircleEnd.classifyRotation ) &&
-	     ( fabs( rCircleBegin.r - rCircleEnd.r ) < FP_EPSILON ) )
+	     ( std::fabs( rCircleBegin.r - rCircleEnd.r ) < FP_EPSILON ) )
 	{
 		CVec2 vAdditionalRadius = GetNormal( rCircleEnd.center - rCircleBegin.center );
 		Normalize( &vAdditionalRadius );

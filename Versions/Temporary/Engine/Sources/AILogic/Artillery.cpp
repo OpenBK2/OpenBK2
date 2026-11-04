@@ -1060,7 +1060,7 @@ const uint32_t CArtillery::GetNormale( const CVec2 &vArtCenter ) const
 		const CVec2 vOwnCenter = GetCenterPlain();
 		const CVec3 vArtCenter3D( vOwnCenter, GetHeights()->GetVisZ( vOwnCenter.x, vOwnCenter.y ) );
 		const SMechUnitRPGStats *pArt = checked_cast<const SMechUnitRPGStats *>( GetStats() );
-		NI_VERIFY( fabs( pArt->vTowPoint.y ) >= FP_EPSILON,
+		NI_VERIFY( std::fabs( pArt->vTowPoint.y ) >= FP_EPSILON,
 		           fmt::format( "DESIGNERS BUG: invalid tow point for unit {}", NDb::GetResName( pArt ) ),
 		           return CAIUnit::GetNormale() );
 

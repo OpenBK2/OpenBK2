@@ -87,7 +87,7 @@ struct STextureIterator
 	{
 		int nXSize = tex[0].GetSizeX(), nYSize = tex[0].GetSizeY();
 		nMip = 0;
-		while ( ( fabs( fDU ) > 1.9 || fabs( fDV ) > 1.9 ) && nMip < tex.size() - 1 )
+		while ( ( std::fabs( fDU ) > 1.9 || std::fabs( fDV ) > 1.9 ) && nMip < tex.size() - 1 )
 		{
 			fDU /= 2;
 			fDV /= 2;
@@ -361,7 +361,7 @@ class CSWSpot : public ISWRects
 		pTextureData = pTexture->GetValue();
 
 		CVec3 vGeom[4];
-		float fCos = cos( fAngle ), fSin = sin( fAngle );
+		float fCos = std::cos( fAngle ), fSin = std::sin( fAngle );
 		CVec3 ptRight( ptSize.x * fCos, ptSize.x * fSin, 0 );
 		CVec3 ptUp( -ptSize.y * fSin, ptSize.y * fCos, 0 );
 		CVec3 ptCenter( ptPos, 0 );

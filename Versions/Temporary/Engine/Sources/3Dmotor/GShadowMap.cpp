@@ -196,7 +196,7 @@ static void SetPlane( SPolygon *pRes, const CVec4 &a, const CVec4 &b, const CVec
 	{
 		fDist = -fDist;
 	}
-	pRes->vPlane.Set( vNormal * fabs( a.w ), fDist );
+	pRes->vPlane.Set( vNormal * std::fabs( a.w ), fDist );
 	Normalize( &pRes->vPlane );
 }
 
@@ -445,7 +445,7 @@ static float SetBits( float f, int nBits, int nBitVal )
 static float CalcNLP( float f )
 {
 	float fR = 7 + f * f;
-	return f * log( fR ) / log( 2.0f ) / sqrt( fR );
+	return f * std::log( fR ) / std::log( 2.0f ) / std::sqrt( fR );
 }
 
 static void SolveNLP( float fMin, float fMax, float *pfA, float *pfB )
@@ -496,7 +496,7 @@ struct SAreaCalcInfo
 
 static float CalcArea( float fRot, const SAreaCalcInfo &info, CVec4 *pX, CVec4 *pY )
 {
-	float fSin = sin( ToRadian( fRot ) ), fCos = cos( ToRadian( fRot ) );
+	float fSin = std::sin( ToRadian( fRot ) ), fCos = std::cos( ToRadian( fRot ) );
 
 	CVec3 vX, vY;
 	vX = fCos * info.vXBase + fSin * info.vYBase;

@@ -111,7 +111,7 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax,
 					4
 	*/
 	NI_ASSERT( nMax, "рассчеты делаются для положительного числа только" );
-	int nSize = sqrt( float( nMax - 1.0f ) ) + 1;
+	int nSize = std::sqrt( float( nMax - 1.0f ) ) + 1;
 	positions->clear();
 
 	int iLimit = nSize;
@@ -173,7 +173,7 @@ GetRandomTankPit( const STankPitInfo &info, const class CVec2 &vSize, const bool
 	{
 		const SMechUnitRPGStats *pStats = ( *pPits )[i];
 		const float fResize = vSize.y / pStats->vAABBHalfSize.y;
-		const float fCurDiff = fabs( fResize - 1 );
+		const float fCurDiff = std::fabs( fResize - 1 );
 		if ( -1 == nBestIndex || fDiff > fCurDiff )
 		{
 			*pfResize = fResize;

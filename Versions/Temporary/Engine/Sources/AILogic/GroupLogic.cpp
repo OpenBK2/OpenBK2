@@ -360,8 +360,8 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 		fMaxY = (std::max)( fMaxY, center.y );
 	}
 
-	int numRows = ceil( ( fMaxX - fMinX ) / SConsts::GROUP_DISTANCE );
-	int numColumns = ceil( ( fMaxY - fMinY ) / SConsts::GROUP_DISTANCE );
+	int numRows = std::ceil( ( fMaxX - fMinX ) / SConsts::GROUP_DISTANCE );
+	int numColumns = std::ceil( ( fMaxY - fMinY ) / SConsts::GROUP_DISTANCE );
 	numRows = (std::max)( numRows, 1 );
 	numColumns = (std::max)( numColumns, 1 );
 	std::vector<CVec2> centers( numRows * numColumns );

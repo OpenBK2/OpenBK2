@@ -372,9 +372,9 @@ void CTerraGen::UpdateRiverHeights( STerrainInfo::SRiver *pRiver,
 		                                 : ( fBottomPreHeight + DEF_RIVER_WATER_LEVEL ) ) +
 		                           0.5f;
 		const float fInvRiverWidth = 1.0f / AI2Vis( pInstance->points[i].fWidth );
-		const int nAlphaCellsNumL = DEF_WATER_ALPHA_INIT + Float2Int( fabs( fTerraHeightL - fWaterHeight ) *
+		const int nAlphaCellsNumL = DEF_WATER_ALPHA_INIT + Float2Int( std::fabs( fTerraHeightL - fWaterHeight ) *
 		                                                              fInvRiverWidth * DEF_WATER_ALPHA_FROM_HEIGHT_COEFF );
-		const int nAlphaCellsNumR = DEF_WATER_ALPHA_INIT + Float2Int( fabs( fTerraHeightR - fWaterHeight ) *
+		const int nAlphaCellsNumR = DEF_WATER_ALPHA_INIT + Float2Int( std::fabs( fTerraHeightR - fWaterHeight ) *
 		                                                              fInvRiverWidth * DEF_WATER_ALPHA_FROM_HEIGHT_COEFF );
 
 		//const CVec2 vPoint( pRiver->precVertsL[i].x, pRiver->precVertsL[i].y );
@@ -1106,11 +1106,11 @@ void CTerraGen::UpdateRiversDepthes()
 								GetTerraHeightNative( itCurRiver->precVertsR[nInvInd].x, itCurRiver->precVertsR[nInvInd].y );
 						const float fInvRiverWidth = 1.0f / AI2Vis( pRiverInstance->points[i].fWidth );
 						const int nAlphaCellsNumL =
-								DEF_WATER_ALPHA_INIT +
-								Float2Int( fabs( fTerraHeightL - fWaterHeight ) * fInvRiverWidth * DEF_WATER_ALPHA_FROM_HEIGHT_COEFF );
+								DEF_WATER_ALPHA_INIT + Float2Int( std::fabs( fTerraHeightL - fWaterHeight ) * fInvRiverWidth *
+						                                      DEF_WATER_ALPHA_FROM_HEIGHT_COEFF );
 						const int nAlphaCellsNumR =
-								DEF_WATER_ALPHA_INIT +
-								Float2Int( fabs( fTerraHeightR - fWaterHeight ) * fInvRiverWidth * DEF_WATER_ALPHA_FROM_HEIGHT_COEFF );
+								DEF_WATER_ALPHA_INIT + Float2Int( std::fabs( fTerraHeightR - fWaterHeight ) * fInvRiverWidth *
+						                                      DEF_WATER_ALPHA_FROM_HEIGHT_COEFF );
 
 						//const CVec2 vPoint( itCurRiver->precVertsL[i].x, itCurRiver->precVertsL[i].y );
 						//const float fOpacity = IsPointOnMap( vPoint ) ? pRiverInstance->points[i].fOpacity : 0.0f;
@@ -1226,7 +1226,7 @@ inline bool IsPointUnderTrg( const CVec3 &v,
 	CVec2 vBary;
 	GetBaryCoords( v, p1, p2, p3, &vBary );
 	if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) &&
-	     ( fabs( vNorm.z ) > DEF_EPS ) )
+	     ( std::fabs( vNorm.z ) > DEF_EPS ) )
 	{
 		const float fPlaneZ = ( -fDist - v.x * vNorm.x - v.y * vNorm.y ) / vNorm.z;
 		fDiff = fPlaneZ - v.z;
@@ -1242,7 +1242,7 @@ inline void GetIntersectionOfPlaneAndSegment(
 		std::vector<CVec3> *pIntersVerts, const CVec3 &v1, const CVec3 &v2, const CVec3 &vNorm, const float fDist )
 {
 	const float d = ( v2 - v1 ) * vNorm;
-	if ( fabs( d ) > DEF_EPS )
+	if ( std::fabs( d ) > DEF_EPS )
 	{
 		const float t = -( vNorm * v1 + fDist ) / d;
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )
@@ -1343,7 +1343,7 @@ inline void GetIntersectionOfTrgAndSegment( std::vector<CVec3> &pIntersVerts,
                                             const CVec3 &p3 )
 {
 	const float d = ( v2 - v1 ) * vNorm;
-	if ( fabs( d ) > DEF_EPS )
+	if ( std::fabs( d ) > DEF_EPS )
 	{
 		const float t = -( vNorm * v1 + fDist ) / d;
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )

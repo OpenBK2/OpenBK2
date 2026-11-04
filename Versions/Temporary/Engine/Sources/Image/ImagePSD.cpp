@@ -173,7 +173,7 @@ public:
 					else
 					{
 						++itRLE;
-						for ( int k = 0; k <= abs( cRLEcount ); ++k )
+						for ( int k = 0; k <= std::abs( cRLEcount ); ++k )
 						{
 							dst2D[i].push_back( *itRLE );
 						} // End of "k"-loop

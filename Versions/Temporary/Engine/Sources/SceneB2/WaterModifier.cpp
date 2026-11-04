@@ -268,19 +268,19 @@ static void InitCornersHash()
 
 static int GetPointIndOnRect( const NDb::SVSOPoint &p, const CVec2 &p1, const CVec2 &p2 )
 {
-	if ( fabs( p1.y - p.vPos.y ) < DEF_EPS )
+	if ( std::fabs( p1.y - p.vPos.y ) < DEF_EPS )
 	{
 		return AREA_BOTTOM_SIDE;
 	}
-	if ( fabs( p2.x - p.vPos.x ) < DEF_EPS )
+	if ( std::fabs( p2.x - p.vPos.x ) < DEF_EPS )
 	{
 		return AREA_RIGHT_SIDE;
 	}
-	if ( fabs( p2.y - p.vPos.y ) < DEF_EPS )
+	if ( std::fabs( p2.y - p.vPos.y ) < DEF_EPS )
 	{
 		return AREA_TOP_SIDE;
 	}
-	if ( fabs( p1.x - p.vPos.x ) < DEF_EPS )
+	if ( std::fabs( p1.x - p.vPos.x ) < DEF_EPS )
 	{
 		return AREA_LEFT_SIDE;
 	}
@@ -324,7 +324,7 @@ bool GetIntersectWithArea(
 
 	// check bottom side
 	d = po2.y - po1.y;
-	if ( fabs( d ) > EPS_VALUE )
+	if ( std::fabs( d ) > EPS_VALUE )
 	{
 		t = ( p1.y - po1.y ) / d;
 		if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )
@@ -342,7 +342,7 @@ bool GetIntersectWithArea(
 	{
 		// check top side
 		d = po2.y - po1.y;
-		if ( fabs( d ) > EPS_VALUE )
+		if ( std::fabs( d ) > EPS_VALUE )
 		{
 			t = ( p2.y - po1.y ) / d;
 			if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )
@@ -361,7 +361,7 @@ bool GetIntersectWithArea(
 	{
 		// check left side
 		d = po2.x - po1.x;
-		if ( fabs( d ) > EPS_VALUE )
+		if ( std::fabs( d ) > EPS_VALUE )
 		{
 			t = ( p1.x - po1.x ) / d;
 			if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )
@@ -380,7 +380,7 @@ bool GetIntersectWithArea(
 	{
 		// check right side
 		d = po2.x - po1.x;
-		if ( fabs( d ) > EPS_VALUE )
+		if ( std::fabs( d ) > EPS_VALUE )
 		{
 			t = ( p2.x - po1.x ) / d;
 			if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )

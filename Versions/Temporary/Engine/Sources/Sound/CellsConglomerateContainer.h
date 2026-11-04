@@ -105,7 +105,7 @@ public:
 				const CHearableCells &cells = conglomerate[nY][nX];
 				for ( CHearableCells::const_iterator it = cells.begin(); it != cells.end(); ++it )
 				{
-					func( abs( center.x - it->x ) + abs( center.y - it->y ) + abs( center.z - it->z ), *it );
+					func( std::abs( center.x - it->x ) + std::abs( center.y - it->y ) + std::abs( center.z - it->z ), *it );
 				}
 			}
 		}

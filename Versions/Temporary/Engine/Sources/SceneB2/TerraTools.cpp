@@ -293,8 +293,8 @@ void ScanFillInArea(
 void DrawLine(
 		CArray2D<uint8_t> *pArray, const int nX1, const int nY1, const int nX2, const int nY2, const uint8_t nColor )
 {
-	const int nDx = abs( nX2 - nX1 );
-	const int nDy = abs( nY2 - nY1 );
+	const int nDx = std::abs( nX2 - nX1 );
+	const int nDy = std::abs( nY2 - nY1 );
 	const int nSx = nX2 >= nX1 ? 1 : -1;
 	const int nSy = nY2 >= nY1 ? 1 : -1;
 	if ( nDy <= nDx )

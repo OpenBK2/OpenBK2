@@ -119,8 +119,8 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 			vSize = _vSize;
 			vCenter = _vCenter;
 
-			fSin = sin( fAngle );
-			fCos = cos( fAngle );
+			fSin = std::sin( fAngle );
+			fCos = std::cos( fAngle );
 		}
 
 		CVec2 Transform( const CVec2 &_vPos ) const

@@ -100,7 +100,7 @@ inline static void Normalize2( float v[2] )
 {
 	float s;
 
-	s = sqrt( v[0] * v[0] + v[1] * v[1] );
+	s = std::sqrt( v[0] * v[0] + v[1] * v[1] );
 	v[0] = v[0] / s;
 	v[1] = v[1] / s;
 }
@@ -198,7 +198,7 @@ int CPerlinNoise::Create(
 	}
 
 	// normalize noise
-	const float fInvDisp = fabs( fMax - fMin ) > DEF_NOISE_EPS ? ( 1.0f / ( fMax - fMin ) ) : 1.0f;
+	const float fInvDisp = std::fabs( fMax - fMin ) > DEF_NOISE_EPS ? ( 1.0f / ( fMax - fMin ) ) : 1.0f;
 	for ( int g = 0; g < noise.GetSizeY(); ++g )
 	{
 		for ( int i = 0; i < noise.GetSizeX(); ++i )
@@ -310,7 +310,7 @@ int CPerlinNoise::CreateTiled(
 	}
 
 	// normalize noise
-	const float fInvDisp = fabs( fMax - fMin ) > DEF_NOISE_EPS ? ( 1.0f / ( fMax - fMin ) ) : 1.0f;
+	const float fInvDisp = std::fabs( fMax - fMin ) > DEF_NOISE_EPS ? ( 1.0f / ( fMax - fMin ) ) : 1.0f;
 	for ( int g = 0; g < noise.GetSizeY(); ++g )
 	{
 		for ( int i = 0; i < noise.GetSizeX(); ++i )

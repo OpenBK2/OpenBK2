@@ -124,7 +124,7 @@ bool SEntrenchmentInfo::GetEntrenchmentSegmentPositionOnTerrain( CVec3 *pPos,
 	*pScale = CVec3( fKScale, 1.0f, 1.0f );
 	//
 	Normalize( &vTerraDir );
-	float fVertAngle = atan2( vTerraDir.z, sqrt( sqr( vTerraDir.x ) + sqr( vTerraDir.y ) ) );
+	float fVertAngle = std::atan2( vTerraDir.z, std::sqrt( sqr( vTerraDir.x ) + sqr( vTerraDir.y ) ) );
 	//
 	CVec3 vrAxis = VNULL3;
 	qXYRot.Rotate( &vrAxis, -V3_AXIS_Y );

@@ -960,7 +960,7 @@ struct SVector
 
 	const CVec2 Norm() const
 	{
-		if ( float revR = sqrt( float( x * x + y * y ) ) )
+		if ( float revR = std::sqrt( float( x * x + y * y ) ) )
 		{
 			revR = 1 / revR;
 			return CVec2( float( x ) * revR, float( y ) * revR );
@@ -1011,7 +1011,7 @@ struct SVector
 
 		if ( signX != 0 && signX * signY >= 0 )
 		{
-			if ( abs( x ) > abs( y ) )
+			if ( std::abs( x ) > std::abs( y ) )
 			{
 				x = signX;
 			}
@@ -1023,7 +1023,7 @@ struct SVector
 		}
 		else
 		{
-			if ( abs( y ) > abs( x ) )
+			if ( std::abs( y ) > std::abs( x ) )
 			{
 				y = signY;
 			}
@@ -1077,7 +1077,7 @@ struct SVector
 
 		if ( signX != 0 && signX * signY <= 0 )
 		{
-			if ( abs( x ) > abs( y ) )
+			if ( std::abs( x ) > std::abs( y ) )
 			{
 				x = signX;
 			}
@@ -1089,7 +1089,7 @@ struct SVector
 		}
 		else
 		{
-			if ( abs( y ) > abs( x ) )
+			if ( std::abs( y ) > std::abs( x ) )
 			{
 				y = signY;
 			}
@@ -1873,7 +1873,7 @@ public:
 
 	friend float fabs( const CQuat &q )
 	{
-		return static_cast<float>( sqrt( fabs2( q ) ) );
+		return static_cast<float>( std::sqrt( fabs2( q ) ) );
 	}
 
 	const CVec4 &GetInternalVector() const
@@ -2511,7 +2511,8 @@ struct SBound
 		{
 			return false;
 		}
-		return fabs( vTest.x ) <= ptHalfBox.x && fabs( vTest.y ) < ptHalfBox.y && fabs( vTest.z ) < ptHalfBox.z;
+		return std::fabs( vTest.x ) <= ptHalfBox.x && std::fabs( vTest.y ) < ptHalfBox.y &&
+		       std::fabs( vTest.z ) < ptHalfBox.z;
 	}
 };
 
@@ -2522,8 +2523,8 @@ inline bool DoesIntersect( const SBound &a, const SBound &b )
 	{
 		return false;
 	}
-	if ( fabs( ptDif.x ) > a.ptHalfBox.x + b.ptHalfBox.x || fabs( ptDif.y ) > a.ptHalfBox.y + b.ptHalfBox.y ||
-	     fabs( ptDif.z ) > a.ptHalfBox.z + b.ptHalfBox.z )
+	if ( std::fabs( ptDif.x ) > a.ptHalfBox.x + b.ptHalfBox.x || std::fabs( ptDif.y ) > a.ptHalfBox.y + b.ptHalfBox.y ||
+	     std::fabs( ptDif.z ) > a.ptHalfBox.z + b.ptHalfBox.z )
 	{
 		return false;
 	}
@@ -2950,11 +2951,11 @@ inline void CQuat::FromAngleAxis( float fAngle, const CVec3 &vAxis, const bool b
 	NI_ASSERT( bNormalizeAxis || fabs( fabs( vAxis ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
 
 	fAngle *= 0.5f;
-	const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( vAxis ) : sin( fAngle );
+	const float fSinAlpha = bNormalizeAxis ? std::sin( fAngle ) / fabs( vAxis ) : std::sin( fAngle );
 	vec4.x = vAxis.x * fSinAlpha;
 	vec4.y = vAxis.y * fSinAlpha;
 	vec4.z = vAxis.z * fSinAlpha;
-	vec4.w = cos( fAngle );
+	vec4.w = std::cos( fAngle );
 }
 
 inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis )
@@ -2962,11 +2963,11 @@ inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, floa
 	NI_ASSERT( bNormalizeAxis || fabs( fabs( fAxisX, fAxisY, fAxisZ ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
 
 	fAngle *= 0.5f;
-	const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : sin( fAngle );
+	const float fSinAlpha = bNormalizeAxis ? std::sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : std::sin( fAngle );
 	vec4.x = fAxisX * fSinAlpha;
 	vec4.y = fAxisY * fSinAlpha;
 	vec4.z = fAxisZ * fSinAlpha;
-	vec4.w = cos( fAngle );
+	vec4.w = std::cos( fAngle );
 }
 
 // create quaternion from Euler matrix
@@ -2986,28 +2987,28 @@ inline void CQuat::FromEulerMatrix( const SHMatrix &m )
 	switch ( n )
 	{
 		case 0:
-			vec4.w = static_cast<float>( sqrt( qs2 ) );
+			vec4.w = static_cast<float>( std::sqrt( qs2 ) );
 			tmp = 0.25f / vec4.w;
 			vec4.x = ( m.zy - m.yz ) * tmp;
 			vec4.y = ( m.xz - m.zx ) * tmp;
 			vec4.z = ( m.yx - m.xy ) * tmp;
 			break;
 		case 1:
-			vec4.x = static_cast<float>( sqrt( qx2 ) );
+			vec4.x = static_cast<float>( std::sqrt( qx2 ) );
 			tmp = 0.25f / vec4.x;
 			vec4.w = ( m.zy - m.yz ) * tmp;
 			vec4.y = ( m.xy + m.yx ) * tmp;
 			vec4.z = ( m.xz + m.zx ) * tmp;
 			break;
 		case 2:
-			vec4.y = static_cast<float>( sqrt( qy2 ) );
+			vec4.y = static_cast<float>( std::sqrt( qy2 ) );
 			tmp = 0.25f / vec4.y;
 			vec4.w = ( m.xz - m.zx ) * tmp;
 			vec4.z = ( m.yz + m.zy ) * tmp;
 			vec4.x = ( m.yx + m.xy ) * tmp;
 			break;
 		case 3:
-			vec4.z = static_cast<float>( sqrt( qz2 ) );
+			vec4.z = static_cast<float>( std::sqrt( qz2 ) );
 			tmp = 0.25f / vec4.z;
 			vec4.w = ( m.yx - m.xy ) * tmp;
 			vec4.x = ( m.zx + m.xz ) * tmp;
@@ -3030,12 +3031,12 @@ inline void CQuat::FromEulerAngles( float yaw, float pitch, float roll )
 	const float fHalfPitch = pitch * 0.5f;
 	const float fHalfRoll = roll * 0.5f;
 
-	const float fCosYaw = cos( fHalfYaw );
-	const float fSinYaw = sin( fHalfYaw );
-	const float fCosPitch = cos( fHalfPitch );
-	const float fSinPitch = sin( fHalfPitch );
-	const float fCosRoll = cos( fHalfRoll );
-	const float fSinRoll = sin( fHalfRoll );
+	const float fCosYaw = std::cos( fHalfYaw );
+	const float fSinYaw = std::sin( fHalfYaw );
+	const float fCosPitch = std::cos( fHalfPitch );
+	const float fSinPitch = std::sin( fHalfPitch );
+	const float fCosRoll = std::cos( fHalfRoll );
+	const float fSinRoll = std::sin( fHalfRoll );
 
 	vec4.x = fSinRoll * fCosPitch * fCosYaw - fCosRoll * fSinPitch * fSinYaw;
 	vec4.y = fCosRoll * fSinPitch * fCosYaw + fSinRoll * fCosPitch * fSinYaw;
@@ -3168,7 +3169,7 @@ inline bool CQuat::Inverse( const CQuat &q )
 	float norm = fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w );
 	if ( norm > FP_EPSILON2 )
 	{
-		norm = 1.0f / static_cast<float>( sqrt( norm ) );
+		norm = 1.0f / static_cast<float>( std::sqrt( norm ) );
 		vec4.x = -q.vec4.x * norm;
 		vec4.y = -q.vec4.y * norm;
 		vec4.z = -q.vec4.z * norm;
@@ -3187,7 +3188,7 @@ inline bool CQuat::Inverse()
 	float norm = fabs2( vec4.x, vec4.y, vec4.z, vec4.w );
 	if ( norm > FP_EPSILON2 )
 	{
-		norm = 1.0f / static_cast<float>( sqrt( norm ) );
+		norm = 1.0f / static_cast<float>( std::sqrt( norm ) );
 		vec4.x *= -norm;
 		vec4.y *= -norm;
 		vec4.z *= -norm;
@@ -3208,8 +3209,8 @@ inline void CQuat::DecompAngleAxis( float *pfAngle, CVec3 *pvAxis ) const
 	float len = fabs2( vec4.x, vec4.y, vec4.z );
 	if ( len > 1e-8f )
 	{
-		*pfAngle = 2.0f * acos( vec4.w );
-		len = 1.0f / float( sqrt( len ) );
+		*pfAngle = 2.0f * std::acos( vec4.w );
+		len = 1.0f / float( std::sqrt( len ) );
 		pvAxis->x = vec4.x * len;
 		pvAxis->y = vec4.y * len;
 		pvAxis->z = vec4.z * len;
@@ -3231,8 +3232,8 @@ inline void CQuat::DecompAngleAxis( float *pfAngle, float *pfAxisX, float *pfAxi
 	float len = vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z;
 	if ( len > 1e-8f )
 	{
-		*pfAngle = 2.0f * acos( vec4.w );
-		len = 1.0f / float( sqrt( len ) );
+		*pfAngle = 2.0f * std::acos( vec4.w );
+		len = 1.0f / float( std::sqrt( len ) );
 		*pfAxisX = vec4.x * len;
 		*pfAxisY = vec4.y * len;
 		*pfAxisZ = vec4.z * len;
@@ -3312,12 +3313,12 @@ inline const CQuat CQuat::Exp() const
 	// exp(q) = cos(A)+sin(A)*(x*i+y*j+z*k).  If sin(A) is near zero,
 	// use exp(q) = cos(A)+A*(x*i+y*j+z*k) since A/sin(A) has limit 1.
 	const double angle = fabs( vec4.x, vec4.y, vec4.z );
-	const double sn = sin( angle );
+	const double sn = std::sin( angle );
 	CQuat result;
 
-	result.vec4.w = float( cos( angle ) );
+	result.vec4.w = float( std::cos( angle ) );
 
-	if ( fabs( sn ) >= FP_QUAT_EPSILON )
+	if ( std::fabs( sn ) >= FP_QUAT_EPSILON )
 	{
 		const float coeff = float( sn / angle );
 		result.vec4.x = coeff * vec4.x;
@@ -3340,11 +3341,11 @@ inline const CQuat CQuat::Log() const
 	// If q = cos(A) + sin(A)*(x*i + y*j + z*k) where (x,y,z) is unit length, then
 	// log(q) = A*(x*i + y*j + z*k).  If sin(A) is near zero, use log(q) =
 	// sin(A)*(x*i + y*j + z*k) since sin(A)/A has limit 1.
-	if ( fabs( vec4.w ) < 1.0f )
+	if ( std::fabs( vec4.w ) < 1.0f )
 	{
-		const double angle = acos( vec4.w );
-		const double sn = sin( angle );
-		if ( fabs( sn ) >= FP_QUAT_EPSILON )
+		const double angle = std::acos( vec4.w );
+		const double sn = std::sin( angle );
+		if ( std::fabs( sn ) >= FP_QUAT_EPSILON )
 		{
 			const float coeff = float( angle / sn );
 			return CQuat( coeff * vec4.x, coeff * vec4.y, coeff * vec4.z, 0, 0, 0 );
@@ -3370,10 +3371,10 @@ inline void CQuat::Slerp( const float factor, const CQuat &p, const CQuat &q )
 	// calculate coefficients
 	if ( ( 1.0 - cosom ) > FP_QUAT_EPSILON ) // standard case (slerp)
 	{
-		const float omega = acos( cosom );
-		const float sinom = static_cast<float>( 1.0 / sin( omega ) );
-		scale0 = float( sin( ( 1.0 - factor ) * omega ) * sinom );
-		scale1 = float( sin( factor * omega ) * sinom );
+		const float omega = std::acos( cosom );
+		const float sinom = static_cast<float>( 1.0 / std::sin( omega ) );
+		scale0 = float( std::sin( ( 1.0 - factor ) * omega ) * sinom );
+		scale1 = float( std::sin( factor * omega ) * sinom );
 	}
 	else // "p" and "q" quaternions are very close. so we can do a linear interpolation
 	{
@@ -3425,7 +3426,7 @@ inline bool FindTangentPoints( const CVec2 &p, const CCircle &c, CVec2 *p1, CVec
 	else
 	{
 		const float leg2 = hyp2 - r2;
-		const float cossin = float( sqrt( leg2 ) ) * c.r / hyp2;
+		const float cossin = float( std::sqrt( leg2 ) ) * c.r / hyp2;
 		const float cos2 = leg2 / hyp2;
 
 		p1->x = v.x * cos2 - v.y * cossin + p.x;
@@ -3510,7 +3511,7 @@ inline const float CSegment::GetDistToPoint( const CVec2 &point ) const
 	}
 	else
 	{
-		return fabs( TriangleArea2( p1, p2, point ) ) / fabs( p2 - p1 );
+		return std::fabs( TriangleArea2( p1, p2, point ) ) / fabs( p2 - p1 );
 	}
 }
 
@@ -3574,13 +3575,13 @@ MISC_EXPORT bool IsInTheMinAngle( const uint16_t dir, const uint16_t dir1, const
 inline bool IsAlmostZero( const CVec2 &vec )
 {
 	const static float eps = 0.0001f;
-	return ( fabs( vec.x ) < eps && fabs( vec.y ) < eps );
+	return ( std::fabs( vec.x ) < eps && std::fabs( vec.y ) < eps );
 }
 
 inline bool IsAlmostZero( const float x, const float y )
 {
 	const static float eps = 0.0001f;
-	return ( fabs( x ) < eps && fabs( y ) < eps );
+	return ( std::fabs( x ) < eps && std::fabs( y ) < eps );
 }
 
 //*******************************************************************
@@ -3711,15 +3712,15 @@ inline void GetAngles( const CVec3 &vNormal, float *pfPhi, float *pfTheta )
 	// cos( phi ) = Z*N(x=0) = (0, 0, 1) * (0, Ny, Nz) / sqrt( Ny**2 + Nz**2 );
 	{
 		const float fLen2 = fabs2( vNormal.y, vNormal.z );
-		*pfPhi = fLen2 < 1e-8f ? 0 : vNormal.z / sqrt( fLen2 );
-		*pfPhi = -boost::math::sign( vNormal.y ) * acos( Clamp( *pfPhi, -1.0f, 1.0f ) );
+		*pfPhi = fLen2 < 1e-8f ? 0 : vNormal.z / std::sqrt( fLen2 );
+		*pfPhi = -boost::math::sign( vNormal.y ) * std::acos( Clamp( *pfPhi, -1.0f, 1.0f ) );
 	}
 	// theta - поворот в плоскости ZX относительно оси Y
 	// cos( theta ) = Z*N(y=0) = Nz / fabs( Nx, Nz )
 	{
 		const float fLen2 = fabs2( vNormal.x, vNormal.z );
-		*pfTheta = fLen2 < 1e-8f ? 0 : vNormal.z / sqrt( fLen2 );
-		*pfTheta = boost::math::sign( vNormal.x ) * acos( Clamp( *pfTheta, -1.0f, 1.0f ) );
+		*pfTheta = fLen2 < 1e-8f ? 0 : vNormal.z / std::sqrt( fLen2 );
+		*pfTheta = boost::math::sign( vNormal.x ) * std::acos( Clamp( *pfTheta, -1.0f, 1.0f ) );
 	}
 }
 
@@ -3737,7 +3738,7 @@ inline void MakeOrientation( CQuat *pQuat, const CVec3 &vNormal )
 
 inline int mDistance( const SVector &vec1, const SVector &vec2 )
 {
-	return (std::max)( abs( vec1.x - vec2.x ), abs( vec1.y - vec2.y ) );
+	return (std::max)( std::abs( vec1.x - vec2.x ), std::abs( vec1.y - vec2.y ) );
 }
 
 #pragma pack( pop )

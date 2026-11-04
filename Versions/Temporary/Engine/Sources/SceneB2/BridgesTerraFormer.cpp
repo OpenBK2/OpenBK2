@@ -110,7 +110,7 @@ void CTerraGen::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 					const float fDist1 = GetDistToSegment( CVec2( fX, fY ), vt1, vt2 );
 					const float fDist2 = GetDistToSegment( CVec2( fX, fY ), vt3, vt4 );
 
-					const float fDist = sqrt( (std::min)( fDist1, fDist2 ) );
+					const float fDist = std::sqrt( (std::min)( fDist1, fDist2 ) );
 					const float fCoeff =
 							GetBridgeTerraProfile( Clamp( ( fDist - DEF_CONST_DIST ) * DEF_INV_INTERPOLATE_DIST, 0.0f, 1.0f ) );
 					terrainInfo.heights[nIndY][nIndX] =

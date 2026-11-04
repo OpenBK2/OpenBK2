@@ -47,7 +47,7 @@ static void luaK_fixjump (FuncState *fs, int pc, int dest) {
     SETARG_S(*jmp, NO_JUMP);  /* point to itself to represent end of list */
   else {  /* jump is relative to position following jump instruction */
     int offset = dest-(pc+1);
-    if (abs(offset) > MAXARG_S)
+    if (std::abs(offset) > MAXARG_S)
       luaK_error(fs->ls, "control structure too long");
     SETARG_S(*jmp, offset);
   }

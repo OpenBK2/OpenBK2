@@ -203,10 +203,10 @@ CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
 {
 	if ( _pLight )
 	{
-		const float fHor = sin( ToRadian( _pLight->fPitch ) );
-		vSunDir.z = -cos( ToRadian( _pLight->fPitch ) );
-		vSunDir.x = fHor * cos( ToRadian( _pLight->fYaw ) );
-		vSunDir.y = fHor * sin( ToRadian( _pLight->fYaw ) );
+		const float fHor = std::sin( ToRadian( _pLight->fPitch ) );
+		vSunDir.z = -std::cos( ToRadian( _pLight->fPitch ) );
+		vSunDir.x = fHor * std::cos( ToRadian( _pLight->fYaw ) );
+		vSunDir.y = fHor * std::sin( ToRadian( _pLight->fYaw ) );
 		vSunDir = -vSunDir;
 	}
 	else
@@ -245,7 +245,7 @@ inline int FindRealIndex( const CVec2i &val, const std::vector<CVec2i> &arr )
 
 inline float GetTanHyperbolic( const float z )
 {
-	return ( exp( z ) - exp( -z ) ) / ( exp( z ) + exp( -z ) );
+	return ( std::exp( z ) - std::exp( -z ) ) / ( std::exp( z ) + std::exp( -z ) );
 }
 
 inline float GetPhase( const int x, const int y, const float fDeepWaveNumber )
@@ -289,7 +289,7 @@ void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode>> *pWa
 			float fAmpl;
 			if ( bIsCurWave )
 			{
-				fAmpl = Clamp( static_cast<float>( fabs( ( fCurWaveStart + fCurWaveLen ) - fCurOffset * 2.0f ) /
+				fAmpl = Clamp( static_cast<float>( std::fabs( ( fCurWaveStart + fCurWaveLen ) - fCurOffset * 2.0f ) /
 				                                   ( fCurWaveLen - fCurWaveStart ) ),
 				               0.0f,
 				               1.0f );
@@ -307,7 +307,7 @@ void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode>> *pWa
 			for ( int p = 0; p < nStages; ++p )
 			{
 				const float fCoeff = (float)p / ( nStages - 1 );
-				fDefPhase += sin( (float)i * ( 0.3f + 0.9f * fCoeff ) ) * ( 0.01f + 0.04f * fCoeff );
+				fDefPhase += std::sin( (float)i * ( 0.3f + 0.9f * fCoeff ) ) * ( 0.01f + 0.04f * fCoeff );
 			}
 
 			float fPhase = fDefPhase * DEF_WAVES_SCALE_FACTOR;
@@ -475,8 +475,8 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode>> *pWaterNodes,
 			continue;
 		}
 
-		const bool bNeedCycle = ( fabs( curBorder[0].vPos.x - curBorder[curBorder.size() - 1].vPos.x ) < DEF_EPS ) &&
-		                        ( fabs( curBorder[0].vPos.y - curBorder[curBorder.size() - 1].vPos.y ) < DEF_EPS );
+		const bool bNeedCycle = ( std::fabs( curBorder[0].vPos.x - curBorder[curBorder.size() - 1].vPos.x ) < DEF_EPS ) &&
+		                        ( std::fabs( curBorder[0].vPos.y - curBorder[curBorder.size() - 1].vPos.y ) < DEF_EPS );
 
 		if ( bNeedCycle )
 		{
@@ -747,7 +747,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 							const CVec3 &vSunDirAmbient = curParams.pLight->vAmbientColor;
 							const CVec3 &vSunDirDiffuse = curParams.pLight->vLightColor;
 
-							const float fCos = -cos( ToRadian( curParams.pLight->fPitch ) );
+							const float fCos = -std::cos( ToRadian( curParams.pLight->fPitch ) );
 							vCol.Lerp( fCos, vSunDirAmbient, vSunDirDiffuse );
 							vCol *= 255;
 						}
@@ -997,8 +997,8 @@ static void CreateAlphaMap( CArray2D<uint8_t> *pAlphaMap,
 		{
 			continue;
 		}
-		const bool bNeedCycle = ( fabs( curBorder[0].vPos.x - curBorder[curBorder.size() - 1].vPos.x ) < DEF_EPS ) &&
-		                        ( fabs( curBorder[0].vPos.y - curBorder[curBorder.size() - 1].vPos.y ) < DEF_EPS );
+		const bool bNeedCycle = ( std::fabs( curBorder[0].vPos.x - curBorder[curBorder.size() - 1].vPos.x ) < DEF_EPS ) &&
+		                        ( std::fabs( curBorder[0].vPos.y - curBorder[curBorder.size() - 1].vPos.y ) < DEF_EPS );
 
 		if ( bNeedCycle )
 		{
@@ -1491,7 +1491,7 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 		for ( int i = 0; i < waterNodes.GetSizeX(); ++i )
 		{
 			const CVec2 vPos( vOrg.x + (float)i * DEF_TILE_SIZE, vOrg.y + (float)g * DEF_TILE_SIZE );
-			RotateVector( &vRotPos, vPos, vCenter, cos( fWinterDirection ), sin( fWinterDirection ) );
+			RotateVector( &vRotPos, vPos, vCenter, std::cos( fWinterDirection ), std::sin( fWinterDirection ) );
 			const int nIndX = vRotPos.x * DEF_INV_TILE_SIZE;
 			const int nIndY = vRotPos.y * DEF_INV_TILE_SIZE;
 			if ( ( nIndX >= 0 ) && ( nIndX < seaMap.GetSizeX() ) && ( nIndY >= 0 ) && ( nIndY < seaMap.GetSizeY() ) &&
@@ -1511,8 +1511,8 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 				waterNodes[g][i]->SetAlpha( 2.0f ); // for interference properties
 				waterNodes[g][i]->bIsLargeAlpha = true;
 
-				waterNodes[g][i]->bBorderTexX = fabs( waterNodes[g][i]->vTex.x - fTexCoordOffsX ) < DEF_TEX_ERROR;
-				waterNodes[g][i]->bBorderTexY = fabs( waterNodes[g][i]->vTex.y - fTexCoordOffsY ) < DEF_TEX_ERROR;
+				waterNodes[g][i]->bBorderTexX = std::fabs( waterNodes[g][i]->vTex.x - fTexCoordOffsX ) < DEF_TEX_ERROR;
+				waterNodes[g][i]->bBorderTexY = std::fabs( waterNodes[g][i]->vTex.y - fTexCoordOffsY ) < DEF_TEX_ERROR;
 
 				waterNodes[g][i]->waveParams.resize( waves.size() );
 			}

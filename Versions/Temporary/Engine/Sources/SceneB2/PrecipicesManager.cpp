@@ -282,7 +282,7 @@ void CTerraGen::AddPrecipiceToCollector( const int nID,
 
 						fDist = ( node2.vPos.x - node1.vPos.x ) * ( addNode2.vPos.y - addNode1.vPos.y ) -
 						        ( node2.vPos.y - node1.vPos.y ) * ( addNode2.vPos.x - addNode1.vPos.x );
-						if ( fabs( fDist ) > DEF_EPS )
+						if ( std::fabs( fDist ) > DEF_EPS )
 						{
 							fDist = 1.0f / fDist;
 							const float t = ( ( addNode1.vPos.x - node1.vPos.x ) * ( addNode2.vPos.y - addNode1.vPos.y ) -

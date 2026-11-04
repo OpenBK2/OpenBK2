@@ -240,10 +240,10 @@ void CTrainCar::Init( const CVec2 &center,
 	           fmt::format( "Not MechUnit stats in unit \"{}\" (train car)", NDb::GetResName( GetStats() ) ) );
 	if ( pMechStats )
 	{
-		fFrontOffset = fabs( pMechStats->vFrontWheel.y );
-		fBackOffset = fabs( pMechStats->vBackWheel.y );
-		fFrontLink = fabs( pMechStats->vHookPoint.y );
-		fBackLink = fabs( pMechStats->vTowPoint.y );
+		fFrontOffset = std::fabs( pMechStats->vFrontWheel.y );
+		fBackOffset = std::fabs( pMechStats->vBackWheel.y );
+		fFrontLink = std::fabs( pMechStats->vHookPoint.y );
+		fBackLink = std::fabs( pMechStats->vTowPoint.y );
 	}
 
 	if ( nTrack != -1 ) // Snap car to track, if any

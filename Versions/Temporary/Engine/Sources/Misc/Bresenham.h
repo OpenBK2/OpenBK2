@@ -16,8 +16,8 @@ public:
 		, y1( _y1 )
 		, x2( _x2 )
 		, y2( _y2 )
-		, xlen( abs( x2 - x1 ) + 1 )
-		, ylen( abs( y2 - y1 ) + 1 )
+		, xlen( std::abs( x2 - x1 ) + 1 )
+		, ylen( std::abs( y2 - y1 ) + 1 )
 		, len( (std::max)( xlen, ylen ) )
 		, xinc( boost::math::sign( x2 - x1 ) )
 		, yinc( boost::math::sign( y2 - y1 ) )
@@ -115,8 +115,8 @@ class CBres
 
 		xinc = boost::math::sign( xlen );
 		yinc = boost::math::sign( ylen );
-		xlen = abs( xlen ) + 1;
-		ylen = abs( ylen ) + 1;
+		xlen = std::abs( xlen ) + 1;
+		ylen = std::abs( ylen ) + 1;
 		len = (std::max)( xlen, ylen );
 	}
 

@@ -207,7 +207,7 @@ std::pair<int, bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos 
 	{
 		nXSoFar += columnSizes[i];
 		const int nNextX = nXSoFar + columnSizes[i + 1];
-		if ( abs( nXSoFar - nX ) <= CInterfaceConsts::LIST_CONTROL_HEADER_RESIZE_OFFSET() )
+		if ( std::abs( nXSoFar - nX ) <= CInterfaceConsts::LIST_CONTROL_HEADER_RESIZE_OFFSET() )
 		{
 			if ( nXSoFar < nX && nNextX < nX && i + 1 < columnSizes.size() ) // next column is very narrow or 0
 			{

@@ -115,8 +115,8 @@ int CWindowChapterMapLayer::operator&( IBinSaver &saver )
 
 static float GetOctoDistance( float fX1, float fX2, float fY1, float fY2 )
 {
-	const float fH = abs( fX1 - fX2 );
-	const float fV = abs( fY1 - fY2 );
+	const float fH = std::abs( fX1 - fX2 );
+	const float fV = std::abs( fY1 - fY2 );
 	const float fOrto = (std::max)( fH, fV );
 
 	return (std::min)( fOrto, ( fH + fV ) * 0.666f );
@@ -357,8 +357,8 @@ void CWindowPotentialLines::Recalculate()
 					case 14:
 					{
 						pt.eType = EIT_CORNER_SW;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
+						const float fPart1 = s_nPotentialGridSize * std::fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
 						MakeLine2( nX, nY + fPart2, nX + fPart1, nY + s_nPotentialGridSize, funcDraw1 );
 						break;
 					}
@@ -366,8 +366,8 @@ void CWindowPotentialLines::Recalculate()
 					case 13:
 					{
 						pt.eType = EIT_CORNER_NW;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
+						const float fPart1 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
+						const float fPart2 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
 						MakeLine2( nX, nY + fPart2, nX + fPart1, nY, funcDraw1 );
 						break;
 					}
@@ -375,8 +375,8 @@ void CWindowPotentialLines::Recalculate()
 					case 12:
 					{
 						pt.eType = EIT_LINE_V;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
+						const float fPart1 = s_nPotentialGridSize * std::fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
 						MakeLine2( nX + fPart2, nY, nX + fPart1, nY + s_nPotentialGridSize, funcDraw1 );
 						break;
 					}
@@ -384,8 +384,8 @@ void CWindowPotentialLines::Recalculate()
 					case 11:
 					{
 						pt.eType = EIT_CORNER_NE;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
+						const float fPart1 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
+						const float fPart2 = s_nPotentialGridSize * std::fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX + fPart1, nY, nX + s_nPotentialGridSize, nY + fPart2, funcDraw1 );
 						break;
 					}
@@ -393,10 +393,10 @@ void CWindowPotentialLines::Recalculate()
 					case 10:
 					{
 						pt.eType = EIT_CROSS;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
-						const float fPart3 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
-						const float fPart4 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
+						const float fPart1 = s_nPotentialGridSize * std::fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
+						const float fPart3 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
+						const float fPart4 = s_nPotentialGridSize * std::fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX, nY + fPart2, nX + fPart1, nY + s_nPotentialGridSize, funcDraw1 );
 						MakeLine2( nX + fPart3, nY, nX + s_nPotentialGridSize, nY + fPart4, funcDraw1 );
 						break;
@@ -405,8 +405,8 @@ void CWindowPotentialLines::Recalculate()
 					case 9:
 					{
 						pt.eType = EIT_LINE_H;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
+						const float fPart1 = s_nPotentialGridSize * std::fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
+						const float fPart2 = s_nPotentialGridSize * std::fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX, nY + fPart1, nX + s_nPotentialGridSize, nY + fPart2, funcDraw1 );
 						break;
 					}
@@ -414,8 +414,8 @@ void CWindowPotentialLines::Recalculate()
 					case 8:
 					{
 						pt.eType = EIT_CORNER_SE;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
+						const float fPart1 = s_nPotentialGridSize * std::fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * std::fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX + fPart1, nY + s_nPotentialGridSize, nX + s_nPotentialGridSize, nY + fPart2, funcDraw1 );
 						break;
 					}

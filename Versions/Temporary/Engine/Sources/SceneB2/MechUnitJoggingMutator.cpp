@@ -23,8 +23,8 @@ float CMechUnitJoggingMutator::SJoggingParams2::GetValue( const NTimer::STime nD
 		{
 			return 0;
 		}
-		const float fAngle1 = fmod( (float)nDeltaTime * FP_2PI / s_fJogPeriod1, FP_2PI ) + s_fJogPhaze1;
-		const float fAngle2 = fmod( (float)nDeltaTime * FP_2PI / s_fJogPeriod2, FP_2PI ) + s_fJogPhaze2;
+		const float fAngle1 = std::fmod( (float)nDeltaTime * FP_2PI / s_fJogPeriod1, FP_2PI ) + s_fJogPhaze1;
+		const float fAngle2 = std::fmod( (float)nDeltaTime * FP_2PI / s_fJogPeriod2, FP_2PI ) + s_fJogPhaze2;
 		return s_fJogAmp1 * NMath::Cos( fAngle1 ) + s_fJogAmp2 * NMath::Cos( fAngle2 );
 	}
 	else
@@ -33,8 +33,8 @@ float CMechUnitJoggingMutator::SJoggingParams2::GetValue( const NTimer::STime nD
 		{
 			return 0;
 		}
-		const float fAngle1 = fmod( (float)nDeltaTime * FP_2PI / fPeriod1, FP_2PI ) + fPhaze1;
-		const float fAngle2 = fmod( (float)nDeltaTime * FP_2PI / fPeriod2, FP_2PI ) + fPhaze2;
+		const float fAngle1 = std::fmod( (float)nDeltaTime * FP_2PI / fPeriod1, FP_2PI ) + fPhaze1;
+		const float fAngle2 = std::fmod( (float)nDeltaTime * FP_2PI / fPeriod2, FP_2PI ) + fPhaze2;
 		return fAmp1 * NMath::Cos( fAngle1 ) + fAmp2 * NMath::Cos( fAngle2 );
 	}
 }
@@ -139,9 +139,9 @@ void CMechUnitJoggingMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPo
 			const CVec3 &vSpeed = propellerSpeedsRad[i];
 			CQuat qPropeller;
 			// Vector components are local X/Y/Z Euler angular velocities in radians per second.
-			qPropeller.FromEulerAngles( fmod( vSpeed.z * fSeconds, FP_2PI ),
-			                            fmod( vSpeed.y * fSeconds, FP_2PI ),
-			                            fmod( vSpeed.x * fSeconds, FP_2PI ) );
+			qPropeller.FromEulerAngles( std::fmod( vSpeed.z * fSeconds, FP_2PI ),
+			                            std::fmod( vSpeed.y * fSeconds, FP_2PI ),
+			                            std::fmod( vSpeed.x * fSeconds, FP_2PI ) );
 			NAnimation::SBoneTransform *pTransform = pPose->GetBone( propellerBoneIndices[i] );
 			CQuat qBoneOrientation;
 			memcpy( &qBoneOrientation, &( pTransform->Orientation ), sizeof( float ) * 4 );

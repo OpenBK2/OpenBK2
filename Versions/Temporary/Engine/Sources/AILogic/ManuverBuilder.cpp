@@ -25,7 +25,7 @@ CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPlanesFormation *pPo
 	if ( fDiveAngle != 0.0f )
 	{
 		const float fBetta = ( PI - fDiveAngle ) / 2.0f;
-		fStartAttackDist += ( vPos.z / tan( fDiveAngle ) );
+		fStartAttackDist += ( vPos.z / std::tan( fDiveAngle ) );
 	}
 	CVec3 vAttackPos( CVec2( vEnemy.x, vEnemy.y ) + fStartAttackDist * vDir, pref.GetPatrolHeight() );
 

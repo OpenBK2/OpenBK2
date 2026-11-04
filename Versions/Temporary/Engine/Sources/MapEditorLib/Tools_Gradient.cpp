@@ -132,7 +132,7 @@ bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated 
 	float fGranularity = ( range.max - range.min ) / ( heightList.size() - 1 );
 	int nIndex = int( ( fPosition - range.min ) / fGranularity );
 
-	if ( fabs( fPosition - ( fGranularity * nIndex ) ) <= FP_EPSILON )
+	if ( std::fabs( fPosition - ( fGranularity * nIndex ) ) <= FP_EPSILON )
 	{
 		( *pfValue ) = heightList[nIndex];
 	}

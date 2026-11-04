@@ -45,7 +45,7 @@ void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInf
 inline float ADiff( const float a, const float b )
 {
 	float r = a - b;
-	if ( fabs( r ) > FP_PI )
+	if ( std::fabs( r ) > FP_PI )
 	{
 		r += ( FP_2PI * ( r < 0.f ? 1.f : -1.f ) );
 	}
@@ -54,7 +54,7 @@ inline float ADiff( const float a, const float b )
 
 inline float AngleDiff( const CVec3 &v0, const CVec3 &v1 )
 {
-	return ADiff( atan2( v0.y, v0.x ), atan2( v1.y, v1.x ) );
+	return ADiff( std::atan2( v0.y, v0.x ), std::atan2( v1.y, v1.x ) );
 }
 
 inline CVec3 GetVecDir( float fDir )

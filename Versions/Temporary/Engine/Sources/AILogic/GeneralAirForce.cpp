@@ -291,7 +291,7 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 					}
 					else
 					{
-						fMinDist = sqr( fabs( line.DistToPoint( vCenter ) ) );
+						fMinDist = sqr( std::fabs( line.DistToPoint( vCenter ) ) );
 					}
 				}
 

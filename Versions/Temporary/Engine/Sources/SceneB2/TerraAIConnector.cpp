@@ -42,8 +42,8 @@ void AddRiverCliffBankTiles( std::list<SVector> *pTiles,
 
 	for ( int i = 0; i < nCount - 1; ++i )
 	{
-		const bool bCliffStart = fabs( verts[i].z - heights[i] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
-		const bool bCliffEnd = fabs( verts[i + 1].z - heights[i + 1] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
+		const bool bCliffStart = std::fabs( verts[i].z - heights[i] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
+		const bool bCliffEnd = std::fabs( verts[i + 1].z - heights[i + 1] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
 
 		if ( bCliffStart || bCliffEnd )
 		{

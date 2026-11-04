@@ -47,8 +47,8 @@ void CWindController::SetWindParams( const float _fWindDirection, const float _f
 	fWindIntensity = Clamp( _fWindIntensity, 0.0f, 10.0f );
 
 	const float fAngleRad = _fWindDirection * PI / 180;
-	fCoeffY = cos( fAngleRad );
-	fCoeffX = sin( fAngleRad );
+	fCoeffY = std::cos( fAngleRad );
+	fCoeffX = std::sin( fAngleRad );
 
 	// Cycle length: ~13 seconds with Intensity = 1, 3 seconds (continuous) with Intensity = 10
 	nCycleLength = 9000 + fWindIntensity * 1200;

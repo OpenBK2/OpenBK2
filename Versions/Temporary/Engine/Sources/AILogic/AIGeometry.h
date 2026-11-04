@@ -123,8 +123,8 @@ public:
 		xinc = boost::math::sign( xlen );
 		yinc = boost::math::sign( ylen );
 
-		xlen = abs( xlen ) + 1;
-		ylen = abs( ylen ) + 1;
+		xlen = std::abs( xlen ) + 1;
+		ylen = std::abs( ylen ) + 1;
 		len = (std::max)( xlen, ylen );
 
 		NI_ASSERT( xlen != 0 || ylen != 0, "Wrong line" );
@@ -135,10 +135,10 @@ public:
 		NI_ASSERT( startPoint != finishPoint, "Wrong ray" );
 
 		const int zlen = finishZ - startZ;
-		dxy = (std::max)( abs( finishPoint.x - startPoint.x ), abs( finishPoint.y - startPoint.y ) );
+		dxy = (std::max)( std::abs( finishPoint.x - startPoint.x ), std::abs( finishPoint.y - startPoint.y ) );
 
 		intPart = zlen / dxy;
-		rinc = abs( zlen % dxy );
+		rinc = std::abs( zlen % dxy );
 		zinc = boost::math::sign( zlen );
 
 		z = finishZ;
@@ -150,10 +150,10 @@ public:
 		NI_ASSERT( startPoint != finishPoint, "Wrong ray" );
 
 		const int zlen = finishZ - startZ;
-		dxy = (std::max)( abs( finishPoint.x - startPoint.x ), abs( finishPoint.y - startPoint.y ) );
+		dxy = (std::max)( std::abs( finishPoint.x - startPoint.x ), std::abs( finishPoint.y - startPoint.y ) );
 
 		intPart = zlen / dxy;
-		rinc = abs( zlen % dxy );
+		rinc = std::abs( zlen % dxy );
 		zinc = boost::math::sign( zlen );
 
 		z = finishZ + intPart;

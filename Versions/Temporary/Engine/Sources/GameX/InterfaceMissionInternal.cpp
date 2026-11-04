@@ -2420,7 +2420,7 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 
 			Singleton<IAILogic>()->GetMiniMapUnitsInfo( s_unitsForMiniMap );
 
-			if ( fabs( vCameraLine.z ) < FP_EPSILON )
+			if ( std::fabs( vCameraLine.z ) < FP_EPSILON )
 			{
 				pMiniMap->SetUnits( s_unitsForMiniMap );
 			}
