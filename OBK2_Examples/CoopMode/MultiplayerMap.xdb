@@ -8,4 +8,6 @@
 	<GameType>COOP</GameType>
 	<ForcedTechLevel>-1</ForcedTechLevel>
 	<AllowedNations />
+	<SpawnStartingUnits>true</SpawnStartingUnits>
+	<AddReinfsWithTimer>true</AddReinfsWithTimer>
 </MultiplayerMap>

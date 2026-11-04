@@ -1,6 +1,16 @@
 
 # AGENT LEARNINGS
 
+- A successful workspace build does not refresh the configured CMake install.
+  A new map flag was tested against old installed GameX, AILogic and Stats DLLs
+  even though its schema was updated. Compare deployed binary hashes, then
+  install matching runtime dependencies and schema before reporting an installed
+  fix. Use scoped install scripts to avoid replacing custom mission data.
+- CPtr keeps the allocation after the last owning CObj is released, but the
+  engine reconstructs an invalid default object there. After MP EndGame,
+  IsGameEnded on that retained transceiver may be false again. Result UI must
+  account for invalidation as well as the committed inactive mission state.
+
 - Game localization text files are UTF-16LE with a BOM: `NText::LoadUnicodeText`
   rejects UTF-8, including the UTF-8 text in older authoring examples. Validate
   new text archives through the game's VFS/database and NText reader. Preserve
@@ -269,6 +279,10 @@ context. Read `git diff` of every touched file before building.
   rebuild before database source regeneration can complete.
 - The schema lexer preserves `//` as a documentation token. Attribute declarations
   do not accept it; use `///` or a block comment if documenting `base.cll` attributes.
+- `SMultiplayerMap` chunk 10 belonged to the removed difficulty field. Pin later
+  fields to unused IDs (`SpawnStartingUnits` uses 11) rather than accepting the
+  automatic next ID. MP replays hold `SMapInfo`, so descriptor-only startup rules
+  also need a replay snapshot captured before deployment.
 
 ## COOP simulation and replay boundaries
 
@@ -347,3 +361,12 @@ context. Read `git diff` of every touched file before building.
 - `BackgroundSimpleTexture` does not implement `EPA_MARGIN` texture alignment.
   Use `BackgroundSimpleScallingTexture` for resized skins; the similarly named
   alignment setting leaves texture coordinates unset rather than scaling them.
+
+## Multiplayer reinforcement controls
+
+- Starting-army placement also activates the first reinforcement entry. Keep the
+  eligible starting recipe available, then skip spawning after entry activation;
+  returning no recipe would disable later calls on maps without a default entry.
+- `NTimer::STime` is unsigned. A test deadline of -1 is in the future, not already
+  elapsed. Advance the real serialized simulation clock instead of relying on a
+  signed-time assumption when testing reinforcement timers.

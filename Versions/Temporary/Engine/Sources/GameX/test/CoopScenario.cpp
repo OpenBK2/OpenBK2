@@ -204,10 +204,98 @@ TEST_F( CoopScenario, ScriptResultsAreExplicitFirstWinsAndResetForEachMission )
 	EXPECT_FALSE( tracker->IsPlayerPresent( 1 ) );
 }
 
+TEST_F( CoopScenario, StartingUnitPolicyKeepsRecipesAvailableInBothModes )
+{
+	auto *startingUnits = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+	ASSERT_NE( startingUnits, nullptr );
+	multiplayerConsts->sides.resize( 1 );
+	multiplayerConsts->sides[0].pPartyInfo = botParty;
+	multiplayerConsts->sides[0].techLevels.resize( 1 );
+	auto &tech = multiplayerConsts->sides[0].techLevels[0];
+	tech.pStartingUnits = startingUnits;
+	tech.reinforcements.push_back( botReinforcement );
+	map->players[0].reinforcementTypes.push_back( botReinforcement );
+	for ( const auto mode : { IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL, IAIScenarioTracker::EGT_MULTI_COOP } )
+	{
+		SCOPED_TRACE( int( mode ) );
+		tracker->SetGameType( mode );
+		tracker->MissionStart( map, 0 );
+		EXPECT_TRUE( tracker->GetSpawnStartingUnits() );
+		tracker->AddPlayer( 0 );
+		tracker->SetPlayerSide( 0, 0 );
+		tracker->SetPlayerParty( 0, 0 );
+		EXPECT_EQ( tracker->GetStartUnits( 0 ), startingUnits );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), botReinforcement );
+		tracker->SetSpawnStartingUnits( false );
+		// Placement owns the spawn policy so its initial reinforcement point can still be enabled.
+		EXPECT_EQ( tracker->GetStartUnits( 0 ), startingUnits );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), botReinforcement );
+		tracker->SetSpawnStartingUnits( true );
+		EXPECT_EQ( tracker->GetStartUnits( 0 ), startingUnits );
+		if ( tracker->IsCooperative() )
+		{
+			// The switch never grants automatic faction units to map-controlled bots.
+			EXPECT_EQ( tracker->GetStartUnits( 1 ), nullptr );
+			EXPECT_EQ( tracker->GetReinforcement( 1, botReinforcement->eType ), botReinforcement );
+		}
+		tracker->SetSpawnStartingUnits( false );
+		tracker->MissionStart( map, 0 );
+		EXPECT_TRUE( tracker->GetSpawnStartingUnits() );
+	}
+}
+
+TEST_F( CoopScenario, TimedCallPolicyPreservesExplicitGrantsAndMissionDefaults )
+{
+	for ( const auto mode : { IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL, IAIScenarioTracker::EGT_MULTI_COOP } )
+	{
+		SCOPED_TRACE( int( mode ) );
+		tracker->SetGameType( mode );
+		tracker->MissionStart( map, 0 );
+		tracker->AddPlayer( 0 );
+		EXPECT_TRUE( tracker->GetAddReinfsWithTimer() );
+		tracker->SetAddReinfsWithTimer( false );
+		EXPECT_FALSE( tracker->GetAddReinfsWithTimer() );
+		EXPECT_TRUE( tracker->GetSpawnStartingUnits() );
+		const int calls = tracker->GetReinforcementCallsLeft( 0 );
+		// Disabling timed income must not block script grants or spending existing calls.
+		tracker->IncreaseReinforcementCallsLeft( 0, 3 );
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), calls + 3 );
+		tracker->DecreaseReinforcementCallsLeft( 0, 1 );
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), calls + 2 );
+		tracker->MissionStart( map, 0 );
+		EXPECT_TRUE( tracker->GetAddReinfsWithTimer() );
+	}
+}
+
+TEST_F( CoopScenario, OlderTrackerSaveRestoresArmyAndTimedCallDefaultsOnAReusedObject )
+{
+	CObj<IScenarioTracker> restored = CreateScenarioTrackerMultiplayer();
+	ASSERT_NE( restored, nullptr );
+	EXPECT_TRUE( restored->GetSpawnStartingUnits() );
+	EXPECT_TRUE( restored->GetAddReinfsWithTimer() );
+	restored->SetSpawnStartingUnits( false );
+	restored->SetAddReinfsWithTimer( false );
+	CMemoryStream stream;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		auto mode = IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL;
+		saver->Add( 19, &mode );
+	}
+	stream.Seek( 0 );
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		restored->operator&( *saver );
+	}
+	EXPECT_TRUE( restored->GetSpawnStartingUnits() );
+	EXPECT_TRUE( restored->GetAddReinfsWithTimer() );
+}
+
 TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 {
 	tracker->SetMultiplayerDifficulty( 4 );
 	tracker->SetScriptOutcome( 1 );
+	tracker->SetSpawnStartingUnits( false );
+	tracker->SetAddReinfsWithTimer( false );
 	CMemoryStream stream;
 	{
 		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
@@ -222,6 +310,8 @@ TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 	EXPECT_TRUE( restored->IsCooperative() );
 	EXPECT_EQ( restored->GetDifficultyLevel(), 4 );
 	EXPECT_EQ( restored->GetScriptOutcome(), 1 );
+	EXPECT_FALSE( restored->GetSpawnStartingUnits() );
+	EXPECT_FALSE( restored->GetAddReinfsWithTimer() );
 	EXPECT_TRUE( restored->IsPlayerPresent( 3 ) );
 }
 
@@ -295,6 +385,61 @@ TEST_F( CoopScenario, ResultTeamsIncludeNamedBotsWithFinalKillsAndLosses )
 		EXPECT_EQ( replayFirst->nUnitsLost, 1 );
 		EXPECT_EQ( replayFirst->nScore, first->nScore );
 		EXPECT_EQ( restored->GetMultiplayerInfo()->players.size(), 2 );
+	}
+}
+
+TEST_F( CoopScenario, LocalCoopSurrenderDoesNotDeclareAnOutcomeForOtherPlayers )
+{
+	for ( const int localPlayer : { 0, 2 } )
+	{
+		SCOPED_TRACE( localPlayer );
+		tracker->MissionStart( map, 0 );
+		SetHumanRoster();
+		tracker->SetLocalPlayer( localPlayer );
+		RegisterKills( localPlayer, 1, 2 );
+		RegisterKills( 1, localPlayer, 1 );
+		const auto activeTeams = NGameX::BuildMultiplayerStatistics( tracker, multiplayerConsts );
+		EXPECT_TRUE( activeTeams.wonTeam.empty() );
+		EXPECT_TRUE( activeTeams.lostTeam.empty() );
+
+		// Surrender ends this client's mission without changing the shared Lua result.
+		tracker->MissionCancel();
+		EXPECT_FALSE( tracker->IsMissionActive() );
+		EXPECT_FALSE( tracker->IsMissionWon() );
+		EXPECT_EQ( tracker->GetScriptOutcome(), -1 );
+		const auto teams = NGameX::BuildMultiplayerStatistics( tracker, multiplayerConsts );
+		EXPECT_TRUE( teams.wonTeam.empty() );
+		ASSERT_EQ( teams.lostTeam.size(), 1 );
+		const auto &loser = teams.lostTeam.front();
+		EXPECT_EQ( loser.wszName, L"Human " + std::to_wstring( localPlayer ) );
+		EXPECT_EQ( loser.wszName, teams.wszLocalPlayerName );
+		EXPECT_EQ( loser.nUnitsKilled, 2 );
+		EXPECT_EQ( loser.nUnitsLost, 1 );
+		EXPECT_EQ( loser.nTeam, 0 );
+		EXPECT_EQ( tracker->GetMultiplayerInfo()->players.size(), 2 );
+		for ( const int player : { 0, 1, 2, 3 } )
+		{
+			EXPECT_TRUE( tracker->IsPlayerPresent( player ) );
+		}
+
+		CMemoryStream stream;
+		{
+			CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->AddPolymorphicBase( 1, tracker.GetPtr() );
+		}
+		CObj<IScenarioTracker> restored = CreateScenarioTrackerMultiplayer();
+		stream.Seek( 0 );
+		{
+			CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+			saver->AddPolymorphicBase( 1, restored.GetPtr() );
+		}
+		EXPECT_EQ( restored->GetScriptOutcome(), -1 );
+		const auto savedTeams = NGameX::BuildMultiplayerStatistics( restored, multiplayerConsts );
+		EXPECT_TRUE( savedTeams.wonTeam.empty() );
+		ASSERT_EQ( savedTeams.lostTeam.size(), 1 );
+		EXPECT_EQ( savedTeams.lostTeam.front().wszName, loser.wszName );
+		EXPECT_EQ( savedTeams.lostTeam.front().nUnitsKilled, loser.nUnitsKilled );
+		EXPECT_EQ( savedTeams.lostTeam.front().nUnitsLost, loser.nUnitsLost );
 	}
 }
 
@@ -602,6 +747,8 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	original.nDifficulty = 3;
 	original.nTechLevel = 2;
 	original.nScriptResult = 2;
+	original.bSpawnStartingUnits = false;
+	original.bAddReinfsWithTimer = false;
 	original.slots.resize( 5 );
 	original.slots[0].bPresent = true;
 	original.slots[2].bPresent = true;
@@ -620,12 +767,20 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	EXPECT_EQ( restored.nDifficulty, 3 );
 	EXPECT_EQ( restored.nTechLevel, 2 );
 	EXPECT_EQ( restored.nScriptResult, 2 );
+	EXPECT_FALSE( restored.bSpawnStartingUnits );
+	EXPECT_FALSE( restored.bAddReinfsWithTimer );
+	SMultiplayerReplayInfo copied;
+	EXPECT_TRUE( copied.bSpawnStartingUnits );
+	EXPECT_TRUE( copied.bAddReinfsWithTimer );
+	copied = restored;
+	EXPECT_FALSE( copied.bSpawnStartingUnits );
+	EXPECT_FALSE( copied.bAddReinfsWithTimer );
 	ASSERT_EQ( restored.slots.size(), 5 );
 	EXPECT_TRUE( restored.slots[2].bPresent );
 	EXPECT_FALSE( restored.slots[1].bPresent );
 }
 
-TEST( CoopReplay, MissingOutcomeChunkMeansUnfinished )
+TEST( CoopReplay, MissingOutcomeAndArmyPolicyChunksKeepLegacyDefaults )
 {
 	CMemoryStream stream;
 	{
@@ -634,7 +789,11 @@ TEST( CoopReplay, MissingOutcomeChunkMeansUnfinished )
 		saver->Add( 18, &nMode );
 	}
 	SMultiplayerReplayInfo restored;
+	EXPECT_TRUE( restored.bSpawnStartingUnits );
+	EXPECT_TRUE( restored.bAddReinfsWithTimer );
 	restored.nScriptResult = 2;
+	restored.bSpawnStartingUnits = false;
+	restored.bAddReinfsWithTimer = false;
 	stream.Seek( 0 );
 	{
 		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
@@ -642,6 +801,8 @@ TEST( CoopReplay, MissingOutcomeChunkMeansUnfinished )
 	}
 	EXPECT_EQ( restored.nMultiplayerMode, 1 );
 	EXPECT_EQ( restored.nScriptResult, 0 );
+	EXPECT_TRUE( restored.bSpawnStartingUnits );
+	EXPECT_TRUE( restored.bAddReinfsWithTimer );
 }
 
 struct SReplayCompletionState
@@ -669,8 +830,12 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	CObj<ICommandsHistory> history = dynamic_cast<ICommandsHistory *>( NObjectFactory::MakeObject( 0x1007AB80 ) );
 	ASSERT_NE( history, nullptr );
 	NSingleton::RegisterSingleton( tracker, IScenarioTracker::tidTypeID );
+	tracker->SetSpawnStartingUnits( false );
+	tracker->SetAddReinfsWithTimer( false );
 	history->StartNewGame( map );
 	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
+	tracker->SetSpawnStartingUnits( true );
+	tracker->SetAddReinfsWithTimer( true );
 	SetBotName( 1, u"Renamed after start" );
 	map->players[1].vMPStartPos = CVec2( 100, 200 );
 	map->players[3].ePlayerType = NDb::HUMAN;
@@ -691,6 +856,8 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 		return state.info;
 	};
 	const auto recorded = readHistoryInfo();
+	EXPECT_FALSE( recorded.bSpawnStartingUnits );
+	EXPECT_FALSE( recorded.bAddReinfsWithTimer );
 	EXPECT_TRUE( recorded.bCoopPlayersRecorded );
 	const auto players = NGameX::GetCoopReplayPlayers( recorded );
 	ASSERT_EQ( players.size(), 2 );
@@ -705,6 +872,8 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	history->StartNewGame( map );
 	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
 	const auto classic = readHistoryInfo();
+	EXPECT_TRUE( classic.bSpawnStartingUnits );
+	EXPECT_TRUE( classic.bAddReinfsWithTimer );
 	EXPECT_FALSE( classic.bCoopPlayersRecorded );
 	EXPECT_TRUE( classic.coopPlayers.empty() );
 }

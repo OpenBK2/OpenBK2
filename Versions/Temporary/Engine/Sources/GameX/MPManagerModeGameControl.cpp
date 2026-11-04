@@ -55,6 +55,8 @@ void CMPManagerMode::StartGame()
 	                                                              : IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	pScenarioTracker->MissionStart( gameDesc.pMPMap->pMap, gameDesc.nTechLevel );
 	pScenarioTracker->SetMultiplayerDifficulty( gameDesc.nDifficultyLevel );
+	pScenarioTracker->SetSpawnStartingUnits( gameDesc.pMPMap->bSpawnStartingUnits );
+	pScenarioTracker->SetAddReinfsWithTimer( gameDesc.pMPMap->bAddReinfsWithTimer );
 
 	dwLaggers = 0;
 	dwLaggersOld = 0;
@@ -306,14 +308,13 @@ void CMPManagerMode::CheckEndGameConditions()
 		return;
 	}
 
-	if ( NGameX::IsCoopGame( gameDesc ) )
+	// A scheduled local departure must finish even when COOP has no script result.
+	// This does not declare an outcome for the teammates who are still playing.
+	if ( bOutcomeKnown )
 	{
-		// Every peer stops on the script's simulation boundary. There is no AI peer
-		// to announce a loss, and local frame timing must not choose the final tick.
-		const int nWinner = Singleton<IScenarioTracker>()->GetScriptOutcome();
-		if ( nWinner >= 0 && pTransceiver && pTransceiver->IsGameEnded() )
+		if ( pTransceiver->IsGameEnded() )
 		{
-			if ( nWinner == slots[nOwnSlot].nTeam )
+			if ( bWinOnGameEnd )
 			{
 				WinGame();
 			}
@@ -325,11 +326,14 @@ void CMPManagerMode::CheckEndGameConditions()
 		return;
 	}
 
-	if ( bOutcomeKnown )
+	if ( NGameX::IsCoopGame( gameDesc ) )
 	{
-		if ( pTransceiver->IsGameEnded() )
+		// Every peer stops on the script's simulation boundary. There is no AI peer
+		// to announce a loss, and local frame timing must not choose the final tick.
+		const int nWinner = Singleton<IScenarioTracker>()->GetScriptOutcome();
+		if ( nWinner >= 0 && pTransceiver && pTransceiver->IsGameEnded() )
 		{
-			if ( bWinOnGameEnd )
+			if ( nWinner == slots[nOwnSlot].nTeam )
 			{
 				WinGame();
 			}

@@ -37,6 +37,8 @@ SMPStatisticsTeams BuildMultiplayerStatistics( IScenarioTracker *pTracker, const
 		return teams;
 	}
 	const bool bCooperative = pTracker->IsCooperative();
+	const bool bLocalDefeat =
+			bCooperative && pTracker->GetScriptOutcome() < 0 && !pTracker->IsMissionActive() && !pTracker->IsMissionWon();
 	const NDb::SMapInfo *pMap = pTracker->GetCurrentMission();
 	if ( !pMap )
 	{
@@ -59,14 +61,19 @@ SMPStatisticsTeams BuildMultiplayerStatistics( IScenarioTracker *pTracker, const
 		nWinningTeam = pTracker->GetScriptOutcome();
 		if ( nWinningTeam < 0 )
 		{
-			nWinningTeam = pTracker->IsMissionWon() ? 0 : 1;
+			// A surrendered client has a personal result; its teammates and the AI
+			// are still playing. Do not invent a winning side for their unfinished game.
+			if ( !bLocalDefeat )
+			{
+				return teams;
+			}
 		}
 	}
 	else if ( !pTracker->IsMissionWon() )
 	{
 		nWinningTeam = 1 - nWinningTeam;
 	}
-	if ( nWinningTeam < 0 || nWinningTeam > 1 )
+	if ( !bLocalDefeat && ( nWinningTeam < 0 || nWinningTeam > 1 ) )
 	{
 		return teams;
 	}
@@ -99,6 +106,10 @@ SMPStatisticsTeams BuildMultiplayerStatistics( IScenarioTracker *pTracker, const
 
 	for ( const auto &player : pMPInfo->players )
 	{
+		if ( bLocalDefeat && player.nIndex != pTracker->GetLocalPlayer() )
+		{
+			continue;
+		}
 		if ( bCooperative && pMap &&
 		     ( player.nIndex < 0 || player.nIndex >= pMap->players.size() ||
 		       pMap->players[player.nIndex].ePlayerType != NDb::HUMAN ||
@@ -108,7 +119,7 @@ SMPStatisticsTeams BuildMultiplayerStatistics( IScenarioTracker *pTracker, const
 		}
 		addPlayer( player.nIndex, player.wszName, player.nCountry, player.nTeam );
 	}
-	if ( bCooperative && pMap )
+	if ( bCooperative && pMap && !bLocalDefeat )
 	{
 		for ( int nPlayer = 0; nPlayer < pMap->players.size(); ++nPlayer )
 		{
@@ -252,22 +263,25 @@ void CInterfaceMPStatistics::FillTeams()
 
 void CInterfaceMPStatistics::PopulateList()
 {
-	// Winning team
+	// Personal COOP surrender has no winning team to display.
+	if ( !Singleton<IScenarioTracker>()->IsCooperative() || !wonTeam.empty() )
+	{
+		IWindow *pDelim = AddWindowCopy( pPlayerList, pPlayerListDelimiter );
+		pDelim->ShowWindow( true );
+		ITextView *pDelimTextWon = GetChildChecked<ITextView>( pDelim, "DelimiterWin", true );
+		ITextView *pDelimTextLost = GetChildChecked<ITextView>( pDelim, "DelimiterLose", true );
+		pDelimTextWon->ShowWindow( true );
+		pDelimTextLost->ShowWindow( false );
+		pPlayerList->PushBack( pDelim, false );
+
+		AddPlayerItemsToList( wonTeam );
+	}
+
+	// Losing team
 	IWindow *pDelim = AddWindowCopy( pPlayerList, pPlayerListDelimiter );
 	pDelim->ShowWindow( true );
 	ITextView *pDelimTextWon = GetChildChecked<ITextView>( pDelim, "DelimiterWin", true );
 	ITextView *pDelimTextLost = GetChildChecked<ITextView>( pDelim, "DelimiterLose", true );
-	pDelimTextWon->ShowWindow( true );
-	pDelimTextLost->ShowWindow( false );
-	pPlayerList->PushBack( pDelim, false );
-
-	AddPlayerItemsToList( wonTeam );
-
-	// Losing team
-	pDelim = AddWindowCopy( pPlayerList, pPlayerListDelimiter );
-	pDelim->ShowWindow( true );
-	pDelimTextWon = GetChildChecked<ITextView>( pDelim, "DelimiterWin", true );
-	pDelimTextLost = GetChildChecked<ITextView>( pDelim, "DelimiterLose", true );
 	pDelimTextWon->ShowWindow( false );
 	pDelimTextLost->ShowWindow( true );
 	pPlayerList->PushBack( pDelim, false );

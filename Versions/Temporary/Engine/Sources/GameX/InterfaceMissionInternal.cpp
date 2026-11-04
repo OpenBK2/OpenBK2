@@ -38,6 +38,7 @@
 #include "Misc/Win32Random.h"
 #include "MissionReinforcements.h"
 #include "MissionUnitFullInfo.h"
+#include "MPTransceiver.h"
 #include "MultiplayerCommandManager.h"
 #include "port/time.h"
 #include "SaveLoadHelper.h"
@@ -1549,6 +1550,11 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 				pScoreBoard->ShowWindow( true );
 			}
 		}
+		// This container holds only the reinforcement countdown and its prompt.
+		if ( IWindow *pReinfHint = pScreen->GetChild( "ReinfRecycleHint", true ) )
+		{
+			pReinfHint->ShowWindow( pScenarioTracker->IsMultiplayer() && pScenarioTracker->GetAddReinfsWithTimer() );
+		}
 
 		chatInput.pPanel = GetChildChecked<IWindow>( pScreen, "ChatInputPanel", true );
 		chatInput.pView = GetChildChecked<ITextView>( chatInput.pPanel, "PrefixView", true );
@@ -2629,8 +2635,17 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 		pTimeRemaining->SetText( NStr::ToUnicode( fmt::format( "{}:{:02}:{:02}", hours, minutes, seconds ) ) );
 	}
 
+	const bool bShowReinfTimer = pScenarioTracker->GetAddReinfsWithTimer();
+	if ( IWindow *pReinfHint = pScreen->GetChild( "ReinfRecycleHint", true ) )
+	{
+		pReinfHint->ShowWindow( bShowReinfTimer );
+	}
 	ITextView *timeForNextReinf = GetChildChecked<ITextView>( pScreen, "RecycleHintTime", true );
-	if ( timeForNextReinf != nullptr )
+	if ( timeForNextReinf )
+	{
+		timeForNextReinf->ShowWindow( bShowReinfTimer );
+	}
+	if ( timeForNextReinf && bShowReinfTimer )
 	{
 		const int totalSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
 		// A negative recycle time means no future reinforcement credit, not a countdown.
@@ -2639,8 +2654,6 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 												 : NStr::ToUnicode( fmt::format( "{}:{:02}", totalSeconds / 60, totalSeconds % 60 ) );
 		timeForNextReinf->SetText( L"<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" +
 		                           wszTime );
-
-		timeForNextReinf->ShowWindow( true );
 
 		IWindow *parent = timeForNextReinf->GetParentWindow();
 		parent->ShowWindow( true );
@@ -2981,7 +2994,14 @@ void CInterfaceMission::ShowMultiplayerResult( bool bWin )
 	{
 		// The manager has already stopped lockstep, committed the result and saved
 		// the replay. A local UI event must never finish an active COOP mission.
-		if ( bCoopResultShown || pScenarioTracker->IsMissionActive() || pScenarioTracker->GetScriptOutcome() < 0 )
+		CMPTransceiver *pMPTransceiver = dynamic_cast<CMPTransceiver *>( pTransceiver.GetPtr() );
+		// Surrender is a local defeat, not a script result for the whole team.
+		// EndGame releases the manager's owning CObj, invalidating this mission's CPtr.
+		// Accept defeat only after that network simulation ended or was released.
+		const bool bLocalDefeat = !bWin && !pScenarioTracker->IsMissionWon() && pMPTransceiver &&
+		                          ( !IsValid( pMPTransceiver ) || pMPTransceiver->IsGameEnded() );
+		if ( bCoopResultShown || pScenarioTracker->IsMissionActive() ||
+		     ( pScenarioTracker->GetScriptOutcome() < 0 && !bLocalDefeat ) )
 		{
 			return;
 		}

@@ -1328,7 +1328,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	}
 	else if ( GetScenarioTracker()->IsMultiplayer() )
 	{
-		// COOP keeps human starting armies; its tracker leaves bot armies to the map.
+		// Apply the map's starting-army rule; COOP bot armies remain map-controlled.
 		theReinfArray.PlaceInitialUnits();
 	}
 

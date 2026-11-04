@@ -154,6 +154,9 @@ struct SMultiplayerReplayInfo
 	int nScriptResult = 0;
 	std::vector<NGameX::SCoopPlayerInfo> coopPlayers;
 	bool bCoopPlayersRecorded = false;
+	// Snapshot of the multiplayer map rules used when the recorded mission started.
+	bool bSpawnStartingUnits = true;
+	bool bAddReinfsWithTimer = true;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -184,6 +187,24 @@ struct SMultiplayerReplayInfo
 		f.Add( 20, &nScriptResult );
 		f.Add( 21, &coopPlayers );
 		f.Add( 22, &bCoopPlayersRecorded );
+		if ( f.IsReading() && !f.HasChunk( 23 ) )
+		{
+			// Older recordings always included the automatic starting armies.
+			bSpawnStartingUnits = true;
+		}
+		else
+		{
+			f.Add( 23, &bSpawnStartingUnits );
+		}
+		if ( f.IsReading() && !f.HasChunk( 24 ) )
+		{
+			// Older recordings always accrued human multiplayer reinforcement calls over time.
+			bAddReinfsWithTimer = true;
+		}
+		else
+		{
+			f.Add( 24, &bAddReinfsWithTimer );
+		}
 		return 0;
 	}
 
@@ -225,6 +246,8 @@ struct SMultiplayerReplayInfo
 		nScriptResult = src.nScriptResult;
 		coopPlayers = src.coopPlayers;
 		bCoopPlayersRecorded = src.bCoopPlayersRecorded;
+		bSpawnStartingUnits = src.bSpawnStartingUnits;
+		bAddReinfsWithTimer = src.bAddReinfsWithTimer;
 		return *this;
 	}
 };

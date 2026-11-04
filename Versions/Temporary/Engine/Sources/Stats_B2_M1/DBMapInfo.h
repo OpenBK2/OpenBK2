@@ -823,6 +823,8 @@ namespace NDb
 		EMPMapGameType eGameType;
 		int nForcedTechLevel;
 		std::vector< int > allowedNations;
+		bool bSpawnStartingUnits;
+		bool bAddReinfsWithTimer;
 
 		SMultiplayerMap() :
 			__dwCheckSum( 0 ),
@@ -830,7 +832,9 @@ namespace NDb
 			nSizeY( 0 ),
 			nPlayers( 0 ),
 			eGameType( CLASSIC ),
-			nForcedTechLevel( -1 )
+			nForcedTechLevel( -1 ),
+			bSpawnStartingUnits( true ),
+			bAddReinfsWithTimer( true )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

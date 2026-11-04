@@ -1581,6 +1581,8 @@ void SMultiplayerMap::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "GameType", (uint8_t*)&eGameType - pThis, sizeof(eGameType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "ForcedTechLevel", (uint8_t*)&nForcedTechLevel - pThis, sizeof(nForcedTechLevel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "AllowedNations", &allowedNations, pThis );
+	NMetaInfo::ReportMetaInfo( "SpawnStartingUnits", (uint8_t*)&bSpawnStartingUnits - pThis, sizeof(bSpawnStartingUnits), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "AddReinfsWithTimer", (uint8_t*)&bAddReinfsWithTimer - pThis, sizeof(bAddReinfsWithTimer), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1595,6 +1597,8 @@ int SMultiplayerMap::operator&( IXmlSaver &saver )
 	saver.Add( "GameType", &eGameType );
 	saver.Add( "ForcedTechLevel", &nForcedTechLevel );
 	saver.Add( "AllowedNations", &allowedNations );
+	saver.Add( "SpawnStartingUnits", &bSpawnStartingUnits );
+	saver.Add( "AddReinfsWithTimer", &bAddReinfsWithTimer );
 
 	return 0;
 }
@@ -1612,6 +1616,14 @@ int SMultiplayerMap::operator&( IBinSaver &saver )
 		saver.Add( 8, &nForcedTechLevel );
 	}
 	saver.Add( 9, &allowedNations );
+	if ( !saver.IsReading() || saver.HasChunk( 11 ) )
+	{
+		saver.Add( 11, &bSpawnStartingUnits );
+	}
+	if ( !saver.IsReading() || saver.HasChunk( 12 ) )
+	{
+		saver.Add( 12, &bAddReinfsWithTimer );
+	}
 
 	return 0;
 }
@@ -1624,7 +1636,7 @@ uint32_t SMultiplayerMap::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations;
+	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations << bSpawnStartingUnits << bAddReinfsWithTimer;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

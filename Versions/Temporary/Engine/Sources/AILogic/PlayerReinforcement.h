@@ -2,6 +2,8 @@
 
 #include "Stats_B2_M1/DBMapInfo.h"
 
+#include "AILogic_export.h"
+
 class CCommonUnit;
 
 // holds reinforcement points and avaliable player's reinforcements
@@ -131,14 +133,15 @@ private:
 	                               const float fCmdParam );
 
 public:
-	CPlayerReinforcement();
+	AILOGIC_EXPORT CPlayerReinforcement();
 
 	void AddCallReinforcementCommand( NDb::EReinforcementType eType, const CVec2 &vPoint );
 	static const NDb::SDeployTemplate *GetDeployTemplate( const NDb::SReinforcementPosition &positionToDeploy,
 	                                                      NDb::EReinforcementType eType );
 	void EnablePosition( int nPositionID, bool bEnable );
 	const NDb::SReinforcementPosition *GetPosition( int nPositionID ) const;
-	void InitPlayerReinforcement( int nPlayer, const NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *_pConsts );
+	AILOGIC_EXPORT void
+	InitPlayerReinforcement( int nPlayer, const NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *_pConsts );
 	void CallReinforcement( NDb::EReinforcementType eType,
 	                        int nPointID,
 	                        int nScriptID,
@@ -148,24 +151,25 @@ public:
 	void CallReinforcement( NDb::EReinforcementType eType, const CVec2 &vPoint, int nScriptID );
 	void CallSuperWeapon();
 	void ShotSuperWeapon();
-	void Segment();
+	AILOGIC_EXPORT void Segment();
 
-	bool CanCallNow() const;
+	AILOGIC_EXPORT bool CanCallNow() const;
 	bool HasReinforcement( NDb::EReinforcementType eType ) const;
 	NTimer::STime GetRecycleTimeLeft() const;
 	int GetNEntries( NDb::EReinforcementType eType ) const;
 	const int GetUnitAvailability( const NDb::EDBUnitRPGType eUnit, const NDb::EReinforcementType eReinf );
 	int GetReinforcementCallsLeft() const;
 
-	void SetRecycleCoeff( const float fNewCoeff ); // -1 == doesn't recycle
+	AILOGIC_EXPORT void SetRecycleCoeff( const float fNewCoeff ); // -1 == doesn't recycle
 
 	int GetRandomPointID() const; // randomize appear point (generally for general)
 	CVec2 GetRandomPoint() const; // randomize appear point (generally for general)
 
 	bool HasGroundReinforcements() const;
 
-	void PlaceInitialUnits(); // Cheating method for placing a reinforcement and not reporting it
-	void GiveReinforcementCalls( int nCalls, bool bResetCounter ); // Adjust calls number (add/subtract) externally
+	AILOGIC_EXPORT void PlaceInitialUnits(); // Cheating method for placing a reinforcement and not reporting it
+	AILOGIC_EXPORT void GiveReinforcementCalls( int nCalls,
+	                                            bool bResetCounter ); // Adjust calls number (add/subtract) externally
 };
 
 class CPlayerReinforcementArray : public std::vector<CPlayerReinforcement>
