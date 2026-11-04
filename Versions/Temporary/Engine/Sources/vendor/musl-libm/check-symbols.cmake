@@ -41,9 +41,12 @@ function(symbol_names out)
     set(names)
     foreach(line IN LISTS ARGN)
         string(REGEX MATCH "[^ \t|]+$" name "${line}")
-        # 32-bit Windows decorates C names with a leading underscore.
+        # 32-bit Windows decorates C names with a leading underscore. Exactly
+        # one is removed, with SUBSTRING: REGEX REPLACE "^_" re-anchors after
+        # each match and would strip both of __real@, which then fails the
+        # allowlist below.
         if(STRIP_UNDERSCORE AND name MATCHES "^_[A-Za-z_]")
-            string(REGEX REPLACE "^_" "" name "${name}")
+            string(SUBSTRING "${name}" 1 -1 name)
         endif()
         list(APPEND names "${name}")
     endforeach()
