@@ -26,3 +26,5 @@ target_link_libraries(Misc PUBLIC Boost::math fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(Misc PRIVATE Comctl32 winapi)
 endif()
+
+add_subdirectory(test)
