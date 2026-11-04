@@ -269,7 +269,7 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 	if ( nOwnSlot >= 0 && !NGameX::IsHumanMultiplayerSlot( gameDesc, nOwnSlot ) )
 	{
 		auto *pFailure = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
-		pFailure->szDetail = "The host assigned an unavailable human player slot.";
+		pFailure->szDetail = "<val MP_JOIN_INVALID_HUMAN_SLOT>";
 		PushMessage( pFailure );
 		OnLeaveGame();
 		return true;

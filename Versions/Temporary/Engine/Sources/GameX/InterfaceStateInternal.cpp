@@ -7,6 +7,7 @@
 #include "GetConsts.h"
 #include "InterfaceScreenBase.h"
 #include "InterfaceStateInternal.h"
+#include "MessageParts.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
 #include "port/time.h"
@@ -79,21 +80,6 @@ struct STextEntryEqual
 	{
 		NI_VERIFY( value, "NULL text entry find", return false );
 		return szTextID == value->szName;
-	}
-};
-
-struct STagEntryEqual
-{
-	std::string szName;
-
-	STagEntryEqual( const std::string &_szName )
-	{
-		szName = _szName;
-	}
-
-	bool operator()( const NDb::SMLTag &value ) const
-	{
-		return szName == value.szName;
 	}
 };
 
@@ -330,31 +316,24 @@ const NDb::STexture *CInterfaceState::GetTextureEntry( const std::string &szID )
 
 const std::wstring &CInterfaceState::GetMLTag( const std::wstring &wszName ) const
 {
-	static std::wstring empty;
-
-	std::string szName = NStr::ToMBCS( wszName );
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
-	if ( !pUIConsts )
+	// Resolve message values through the same path as every existing <val> tag.
+	const std::wstring &wszTag = NGameX::GetMessagePart( pUIConsts, wszName );
+	if ( pUIConsts && wszName == L"outline" && wszTag.empty() )
 	{
-		return empty;
-	}
-	std::vector<NDb::SMLTag>::const_iterator it =
-			find_if( pUIConsts->tags.begin(), pUIConsts->tags.end(), STagEntryEqual( szName ) );
-	if ( it != pUIConsts->tags.end() )
-	{
-		if ( CHECK_TEXT_NOT_EMPTY_PRE( it->, Text ) )
+		for ( const auto &tag : pUIConsts->tags )
 		{
-			return GET_TEXT_PRE( it->, Text );
+			if ( tag.szName == "outline" )
+			{
+				// An explicitly configured empty outline still overrides the default.
+				return wszTag;
+			}
 		}
-	}
-	else if ( wszName == L"outline" )
-	{
 		// Older UI data has no outline tag; mods can override this default through UIConsts.Tags.
 		static const std::wstring wszOutline = L"<font outlinesize=1 outlinecolor=black forcefontsize = 1>";
 		return wszOutline;
 	}
-	NI_ASSERT( 0, fmt::format( "Designers: custom ML tag '{}' not found", szName ) );
-	return empty;
+	return wszTag;
 }
 
 const std::wstring &CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) const

@@ -120,7 +120,7 @@ SMPStatisticsTeams BuildMultiplayerStatistics( IScenarioTracker *pTracker, const
 			std::wstring wszName = NText::GetText( player.szLocalizedPlayerNameFileRef );
 			if ( wszName.empty() )
 			{
-				wszName = L"AI " + std::to_wstring( nPlayer + 1 );
+				wszName = L"<val AI_PLAYER_NAME_PREFIX>" + std::to_wstring( nPlayer + 1 );
 			}
 			int nCountry = -1;
 			if ( pMPConsts && player.pPartyInfo )

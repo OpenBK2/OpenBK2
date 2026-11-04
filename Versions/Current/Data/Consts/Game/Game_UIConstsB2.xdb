@@ -1606,4 +1606,5 @@
 	<ChapterMapArrows />
 	<ForbiddenWords href="" />
 	<ForbiddenWordsFileRef href="/Other/Text/Misc/Forbidden.txt" />
+	<MessageParts href="/Other/Text/Game/Messages/MessageParts.xdb" />
 </UIConstsB2>

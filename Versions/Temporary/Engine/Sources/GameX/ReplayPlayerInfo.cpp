@@ -68,7 +68,7 @@ std::vector<SReplayPlayerInfo> GetReplayPlayers( const SMultiplayerReplayInfo &i
 		}
 		if ( player.wszName.empty() )
 		{
-			player.wszName = L"Player 1";
+			player.wszName = L"<val PLAYER_NAME_PREFIX>1";
 		}
 		player.bSelectable = IsMapViewpoint( info, player );
 		player.eResult = GetPlayerResult( info, player.nTeam );
@@ -88,7 +88,7 @@ std::vector<SReplayPlayerInfo> GetReplayPlayers( const SMultiplayerReplayInfo &i
 		player.wszName = NStr::ToUnicode( slot.szName );
 		if ( player.wszName.empty() )
 		{
-			player.wszName = L"Player " + std::to_wstring( nPlayer + 1 );
+			player.wszName = L"<val PLAYER_NAME_PREFIX>" + std::to_wstring( nPlayer + 1 );
 		}
 		player.nTeam = slot.nTeam;
 		player.bSelectable = IsMapViewpoint( info, player );
@@ -102,7 +102,7 @@ std::vector<SReplayPlayerInfo> GetReplayPlayers( const SMultiplayerReplayInfo &i
 		player.wszName = bot.wszName;
 		if ( player.wszName.empty() )
 		{
-			player.wszName = L"AI " + std::to_wstring( bot.nPlayerIndex + 1 );
+			player.wszName = L"<val AI_PLAYER_NAME_PREFIX>" + std::to_wstring( bot.nPlayerIndex + 1 );
 		}
 		player.nTeam = 1;
 		player.bBot = true;

@@ -36,7 +36,8 @@ std::vector<SCoopPlayerInfo> CollectCoopMapPlayers( const NDb::SMapInfo *pMap )
 		player.wszName = NText::GetText( mapPlayer.szLocalizedPlayerNameFileRef );
 		if ( player.wszName.empty() )
 		{
-			player.wszName = L"AI " + std::to_wstring( nPlayer + 1 );
+			// Keep unnamed bots localizable when this presentation snapshot is replayed.
+			player.wszName = L"<val AI_PLAYER_NAME_PREFIX>" + std::to_wstring( nPlayer + 1 );
 		}
 		player.vMPStartPos = mapPlayer.vMPStartPos;
 	}
