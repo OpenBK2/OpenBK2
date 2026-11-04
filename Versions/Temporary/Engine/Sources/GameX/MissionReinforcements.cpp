@@ -763,7 +763,7 @@ void CMissionReinf::UpdateEnable()
 	}
 	nPrevReinfCount = nCount;
 
-	if ( pScenarioTracker->IsMultiplayer() )
+	if ( pScenarioTracker->IsMultiplayer() && pScenarioTracker->GetAddReinfsWithTimer() )
 	{
 		const int nSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
 		// Refresh disabled and zero timers too, rather than leaving the previous countdown visible.
@@ -773,6 +773,12 @@ void CMissionReinf::UpdateEnable()
 		const std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + wszTime;
 		pRoller1->SetTooltip( wszTooltip );
 		pRoller2->SetTooltip( wszTooltip );
+	}
+	else if ( pScenarioTracker->IsMultiplayer() )
+	{
+		// Restore authored tooltip details without showing an inactive countdown.
+		pRoller1->SetTooltip( pRoller1->GetDBTooltipStr() );
+		pRoller2->SetTooltip( pRoller2->GetDBTooltipStr() );
 	}
 
 	if ( Singleton<IScenarioTracker>()->IsMissionActive() )

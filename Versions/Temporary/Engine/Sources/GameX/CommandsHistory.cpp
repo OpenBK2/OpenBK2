@@ -76,6 +76,9 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		// Use the same tracker for the replay mode and its initial campaign state.
 		IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
 		replayInfo.nMultiplayerMode = pTracker && pTracker->IsCooperative() ? 1 : 0;
+		// Preserve map rules even if the resource changes before saving or playback.
+		replayInfo.bSpawnStartingUnits = !pTracker || pTracker->GetSpawnStartingUnits();
+		replayInfo.bAddReinfsWithTimer = !pTracker || pTracker->GetAddReinfsWithTimer();
 		// Resolve names once: replay presentation must survive later map/text edits.
 		replayInfo.bCoopPlayersRecorded = replayInfo.nMultiplayerMode == 1;
 		replayInfo.coopPlayers.clear();
@@ -402,6 +405,8 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	                                                                : IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	pScenarioTracker->MissionStart( replayInfo.pMap, replayInfo.nTechLevel );
 	pScenarioTracker->SetMultiplayerDifficulty( replayInfo.nDifficulty );
+	pScenarioTracker->SetSpawnStartingUnits( replayInfo.bSpawnStartingUnits );
+	pScenarioTracker->SetAddReinfsWithTimer( replayInfo.bAddReinfsWithTimer );
 
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
 	scenarioInfo.wszGameType =
@@ -447,7 +452,6 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName,
 	;
 	replayInfo.nTechLevel = gameDesc.nTechLevel;
 	replayInfo.bUnitExperience = gameDesc.bUnitExp;
-	replayInfo.nWinningSide = nWinningSide;
 	replayInfo.slots = slots;
 	// Taken from the running game rather than from the caller, because it is a
 	// property of what was recorded. A single-player replay has no lobby slots,
@@ -457,6 +461,8 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName,
 	replayInfo.bSinglePlayer = pTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE;
 	replayInfo.nMultiplayerMode = pTracker->IsCooperative() ? 1 : 0;
 	replayInfo.nScriptResult = pTracker->IsCooperative() ? pTracker->GetScriptOutcome() + 1 : 0;
+	// A personal surrender leaves COOP unfinished unless the map script already declared its result.
+	replayInfo.nWinningSide = pTracker->IsCooperative() ? pTracker->GetScriptOutcome() : nWinningSide;
 	// A campaign mission is entered through MissionStart, which leaves the
 	// campaign, the chapter and the difficulty as the campaign set them, where a
 	// custom mission goes through CustomMissionStart and sets them itself. The

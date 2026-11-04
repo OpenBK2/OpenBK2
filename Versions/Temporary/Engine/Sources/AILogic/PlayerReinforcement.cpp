@@ -157,8 +157,11 @@ void CPlayerReinforcement::InitPlayerReinforcement( int _nPlayer,
 	if ( pTracker->IsMultiplayer() && !theDipl.IsAIPlayer( nPlayer ) )
 	{
 		fRecycleTimeCoeff = pTracker->GetRecycleSpeedCoeff( pTracker->GetPlayerSide( nPlayer ) );
-		timeReinfIncrease = curTime + 1000.0f * fRecycleTimeCoeff;
-		pTracker->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );
+		if ( pTracker->GetAddReinfsWithTimer() )
+		{
+			timeReinfIncrease = curTime + 1000.0f * fRecycleTimeCoeff;
+			pTracker->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );
+		}
 	}
 }
 
@@ -597,7 +600,10 @@ void CPlayerReinforcement::Segment()
 {
 	// Reinforcement counter recycle
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
-	if ( pScenarioTracker->IsMultiplayer() && !theDipl.IsAIPlayer( nPlayer ) )
+	// The map may reserve reinforcement income for scripts and capture bonuses.
+	// Keep normal call cooldowns and queued reinforcement commands running below.
+	if ( pScenarioTracker->IsMultiplayer() && pScenarioTracker->GetAddReinfsWithTimer() &&
+	     !theDipl.IsAIPlayer( nPlayer ) )
 	{
 		if ( curTime > timeReinfIncrease )
 		{
@@ -694,8 +700,11 @@ void CPlayerReinforcement::SetRecycleCoeff( const float fNewCoeff )
 
 	if ( GetScenarioTracker()->IsMultiplayer() && !theDipl.IsAIPlayer( nPlayer ) )
 	{
-		timeReinfIncrease = ( timeReinfIncrease - curTime ) / fRecycleTimeCoeff * fNewCoeff + curTime;
-		GetScenarioTracker()->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );
+		if ( GetScenarioTracker()->GetAddReinfsWithTimer() )
+		{
+			timeReinfIncrease = ( timeReinfIncrease - curTime ) / fRecycleTimeCoeff * fNewCoeff + curTime;
+			GetScenarioTracker()->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );
+		}
 		//DebugTrace( "Recycle Coeff changed from %f to %f", fRecycleTimeCoeff, fNewCoeff );
 		fRecycleTimeCoeff = fNewCoeff;
 		return;
@@ -886,6 +895,13 @@ void CPlayerReinforcement::PlaceInitialUnits()
 
 	this->EnablePosition( pos->first, true );
 
+	// Eligible players still need their first reinforcement entry activated when
+	// the map disables the starting army, so later reinforcement calls remain available.
+	if ( !GetScenarioTracker()->GetSpawnStartingUnits() )
+	{
+		return;
+	}
+
 	const NDb::SReinforcementPosition &positionToDeploy = pos->second.first;
 
 	CDBPtr<NDb::SDeployTemplate> pTemplate = GetDeployTemplate( positionToDeploy, NDb::_RT_NONE ); // Get default template
@@ -926,7 +942,7 @@ void CPlayerReinforcement::GiveReinforcementCalls( int nCalls, bool bResetCounte
 		pScenarioTracker->DecreaseReinforcementCallsLeft( nPlayer, -nCalls );
 	}
 
-	if ( bResetCounter )
+	if ( bResetCounter && pScenarioTracker->GetAddReinfsWithTimer() )
 	{
 		timeReinfIncrease = curTime + 1000 * fRecycleTimeCoeff;
 		pScenarioTracker->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );

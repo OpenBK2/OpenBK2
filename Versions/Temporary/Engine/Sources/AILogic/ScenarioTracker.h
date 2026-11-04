@@ -75,6 +75,22 @@ struct IAIScenarioTracker : public CObjectBase
 
 	virtual void SetMultiplayerDifficulty( int nDifficulty ) {}
 
+	// The multiplayer map controls automatic starting armies independently of later reinforcements.
+	virtual void SetSpawnStartingUnits( bool bSpawn ) {}
+
+	virtual bool GetSpawnStartingUnits() const
+	{
+		return true;
+	}
+
+	// Disable only the automatic multiplayer call income; scripts may still grant calls directly.
+	virtual void SetAddReinfsWithTimer( bool bAdd ) {}
+
+	virtual bool GetAddReinfsWithTimer() const
+	{
+		return true;
+	}
+
 	// reinforcements
 	virtual const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const = 0;
 	virtual int GetReinforcementCallsLeft( int nPlayer ) = 0;

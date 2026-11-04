@@ -69,6 +69,18 @@ endif()
 
 add_unit_test(ReinforcementSelection)
 
+# Exercise real timed reinforcement income and explicit grants in both multiplayer modes.
+add_unit_test(ReinforcementTimer AILogic Common_RTS_AI Stats_B2_M1 GameX libdb System Misc Main zlib gr2)
+target_compile_definitions(ReinforcementTimer_test PRIVATE
+    REINFORCEMENT_TIMER_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(ReinforcementTimer_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(ReinforcementTimer_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET ReinforcementTimer_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:AILogic> $<TARGET_FILE:GameX>)
+endif()
+
 add_unit_test(RestStateMovement AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
 set_tests_properties(RestStateMovement_test PROPERTIES TIMEOUT 60)
 if(WIN32)
