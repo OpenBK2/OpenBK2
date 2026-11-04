@@ -12,7 +12,7 @@ the regenerated `types.xml` from this source revision.
 
 ## Map descriptor
 
-`MultiplayerMap.xdb` shows the three COOP-related properties. Adjust its map/name
+`MultiplayerMap.xdb` shows the mode and map settings. Adjust its map/name
 references and dimensions to your mission:
 
 | Field | Default | Meaning |
@@ -20,6 +20,8 @@ references and dimensions to your mission:
 | `GameType` | `CLASSIC` | Set to `COOP` for cooperative rules. |
 | `ForcedTechLevel` | `-1` | A zero-based MultiplayerConsts tech index; -1 permits the host's selection. |
 | `AllowedNations` | Empty | Zero-based MultiplayerConsts side indexes for human players. Empty permits every side available at the selected tech. |
+| `SpawnStartingUnits` | `true` | Spawn the automatic nation/tech-level starting army. Set to `false` to skip it in either CLASSIC or COOP. |
+| `AddReinfsWithTimer` | `true` | Periodically grant extra human reinforcement calls. Set to `false` to disable these grants and hide the HUD countdown in either mode. |
 
 `Players` remains the maximum number of **humans**, not the total number of map
 players. At least two humans must be connected and ready to start. If the host
@@ -59,8 +61,14 @@ Configure AI `PartyInfo`, `ReinforcementTypes`, `ScriptReinforcements`, spawn
 points, call counts and recycle coefficients on the map. Human nation and tech
 restrictions do not replace these bot settings. Place bot units in the editor or
 spawn them with the existing reinforcement script functions. Bots do not receive
-the automatic human MP starting army. Humans retain normal MP starting armies,
-base capture and reinforcement credits.
+the automatic human MP starting army. Humans receive normal MP starting armies
+unless `SpawnStartingUnits` is `false`. Map-placed and script-created units, base
+capture and reinforcement credits are unaffected. See the
+[starting units guide](../MultiplayerStartingUnits/README.md) for an example.
+
+`AddReinfsWithTimer` independently controls periodic extra human reinforcement
+calls. Disabling it leaves initial credits, explicit grants and normal cooldowns
+intact. See the [timed reinforcement guide](../MultiplayerReinforcementTimer/README.md).
 
 Set each bot's `LocalizedPlayerNameFileRef` to its general/player name text file.
 The match results list each bot on the winning or losing team, including its
@@ -106,6 +114,9 @@ Before using it, create the script groups and areas named in its comments.
 COOP victory and defeat use the single-player camera orbit, outcome music and
 fade before showing multiplayer statistics. World sounds and particle effects
 pause during this sequence; the camera, music and fade continue.
+Surrender also shows the defeat sequence and results for the departing player,
+without declaring a team outcome for the humans and AI still playing. That
+player's replay remains unfinished unless the script already declared a result.
 `FinalPositions[0]` is the victory
 camera anchor; `FinalPositions[1]`, when present, is the defeat anchor. Without
 these entries the camera orbits its current position. The usual key press skips

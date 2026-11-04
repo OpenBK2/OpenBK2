@@ -1,6 +1,12 @@
 
 # Changes to the game
 
+- Multiplayer maps can set `AddReinfsWithTimer` to `false` to disable periodic extra reinforcement calls and hide the HUD countdown in CLASSIC or COOP. Initial credits, explicit grants and normal cooldowns remain available. The default is `true`, and replays preserve the setting. Examples are in `OBK2_Examples/MultiplayerReinforcementTimer`.
+
+- Surrendering in COOP now shows the defeat camera and results instead of leaving a stopped mission on screen. A personal surrender does not declare a victory for the AI or a defeat for the remaining humans; its replay stays unfinished until the map script declares an outcome.
+
+- Multiplayer maps can set `SpawnStartingUnits` to `false` to skip the automatic nation/tech-level starting army in CLASSIC or COOP. It defaults to `true`, preserves existing maps, and is recorded in replays. Authoring examples are in `OBK2_Examples/MultiplayerStartingUnits`.
+
 - COOP hosts now choose difficulty from the selected map's `CustomDifficultyLevels` in game settings. The controls are hidden for CLASSIC maps and maps without difficulty choices. The selected index is synchronized, returned by Lua and saved in replays; `MultiplayerMap.DifficultyLevel` was removed. Replay AI markers now load their nation icons from the map player's `PartyInfo`. The difficulty GUI package and authoring examples are in `OBK2_Examples/MultiplayerDifficulty`.
 
 - Multiplayer and COOP messages now use localized `<val>` message parts, including mode names, chat team marking, lobby errors, replay results and disabled reinforcement timers. `UIConstsB2.MessageParts` links a catalogue of text files; general values and existing screen translations remain available before English backups. The English example archive and integration instructions are in `OBK2_Examples/MessageParts`.

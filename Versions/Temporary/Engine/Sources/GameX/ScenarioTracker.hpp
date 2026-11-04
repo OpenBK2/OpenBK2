@@ -548,6 +548,8 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	// Zero means no script result, including when loading older saves.
 	int nScriptResult = 0;
 	int nMultiplayerDifficulty = 0;
+	bool bSpawnStartingUnits = true;
+	bool bAddReinfsWithTimer = true;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -573,6 +575,24 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		f.Add( 22, &reinfCallsByType );
 		f.Add( 23, &nScriptResult );
 		f.Add( 24, &nMultiplayerDifficulty );
+		// Older saved trackers always spawned starting armies, including when this object is reused.
+		if ( f.IsReading() && !f.HasChunk( 25 ) )
+		{
+			bSpawnStartingUnits = true;
+		}
+		else
+		{
+			f.Add( 25, &bSpawnStartingUnits );
+		}
+		// Older saved missions used timed call income, even when reusing a tracker with it disabled.
+		if ( f.IsReading() && !f.HasChunk( 26 ) )
+		{
+			bAddReinfsWithTimer = true;
+		}
+		else
+		{
+			f.Add( 26, &bAddReinfsWithTimer );
+		}
 		return 0;
 	}
 
@@ -626,6 +646,26 @@ public:
 	void SetMultiplayerDifficulty( int nDifficulty ) override
 	{
 		nMultiplayerDifficulty = nDifficulty;
+	}
+
+	void SetSpawnStartingUnits( bool bSpawn ) override
+	{
+		bSpawnStartingUnits = bSpawn;
+	}
+
+	bool GetSpawnStartingUnits() const override
+	{
+		return bSpawnStartingUnits;
+	}
+
+	void SetAddReinfsWithTimer( bool bAdd ) override
+	{
+		bAddReinfsWithTimer = bAdd;
+	}
+
+	bool GetAddReinfsWithTimer() const override
+	{
+		return bAddReinfsWithTimer;
 	}
 
 	int GetDifficultyLevel() const override

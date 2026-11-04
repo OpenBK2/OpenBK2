@@ -130,6 +130,110 @@ TEST_F( MPDataChecksum, OlderBinaryMapKeepsClassicDefaultsAndUnrestrictedTechnol
 	EXPECT_EQ( map->eGameType, NDb::CLASSIC );
 	EXPECT_EQ( map->nForcedTechLevel, -1 );
 	EXPECT_TRUE( map->allowedNations.empty() );
+	EXPECT_TRUE( map->bSpawnStartingUnits );
+	EXPECT_TRUE( map->bAddReinfsWithTimer );
+}
+
+TEST_F( MPDataChecksum, MultiplayerArmyDefaultsSupportOldXmlAndIgnoreRetiredBinaryDifficulty )
+{
+	WriteScript( "legacy-starting-units.xdb", "<MultiplayerMap><Players>4</Players></MultiplayerMap>" );
+	CDBPtr<NDb::SMultiplayerMap> legacy = NDb::Get<NDb::SMultiplayerMap>( CDBID( "legacy-starting-units.xdb" ) );
+	ASSERT_NE( legacy, nullptr );
+	EXPECT_EQ( legacy->nPlayers, 4 );
+	EXPECT_TRUE( legacy->bSpawnStartingUnits );
+	EXPECT_TRUE( legacy->bAddReinfsWithTimer );
+	WriteScript( "disabled-starting-units.xdb",
+	             "<MultiplayerMap><SpawnStartingUnits>false</SpawnStartingUnits></MultiplayerMap>" );
+	CDBPtr<NDb::SMultiplayerMap> disabled = NDb::Get<NDb::SMultiplayerMap>( CDBID( "disabled-starting-units.xdb" ) );
+	ASSERT_NE( disabled, nullptr );
+	EXPECT_FALSE( disabled->bSpawnStartingUnits );
+	EXPECT_TRUE( disabled->bAddReinfsWithTimer );
+	WriteScript( "disabled-timed-calls.xdb",
+	             "<MultiplayerMap><AddReinfsWithTimer>false</AddReinfsWithTimer></MultiplayerMap>" );
+	CDBPtr<NDb::SMultiplayerMap> timedCalls = NDb::Get<NDb::SMultiplayerMap>( CDBID( "disabled-timed-calls.xdb" ) );
+	ASSERT_NE( timedCalls, nullptr );
+	EXPECT_TRUE( timedCalls->bSpawnStartingUnits );
+	EXPECT_FALSE( timedCalls->bAddReinfsWithTimer );
+
+	auto *map = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	ASSERT_NE( map, nullptr );
+	EXPECT_TRUE( map->bSpawnStartingUnits );
+	EXPECT_TRUE( map->bAddReinfsWithTimer );
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		// Zero in the retired difficulty chunk must not be interpreted as disabling units.
+		int difficulty = 0;
+		saver->Add( 10, &difficulty );
+	}
+	stream.Seek( 0 );
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		map->operator&( *saver );
+	}
+	EXPECT_TRUE( map->bSpawnStartingUnits );
+	EXPECT_TRUE( map->bAddReinfsWithTimer );
+}
+
+TEST_F( MPDataChecksum, StartingArmyAndTimedCallPoliciesUseSeparateBinaryChunks )
+{
+	auto *original = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	auto *restored = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	ASSERT_NE( original, nullptr );
+	ASSERT_NE( restored, nullptr );
+	// Opposite values also catch accidentally sharing or swapping the two chunks.
+	for ( const bool spawn : { false, true } )
+	{
+		original->bSpawnStartingUnits = spawn;
+		original->bAddReinfsWithTimer = !spawn;
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			original->operator&( *saver );
+		}
+		stream.Seek( 0 );
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+			EXPECT_FALSE( saver->HasChunk( 10 ) );
+			EXPECT_TRUE( saver->HasChunk( 11 ) );
+			EXPECT_TRUE( saver->HasChunk( 12 ) );
+			bool storedSpawn = !spawn;
+			bool storedTimedCalls = spawn;
+			saver->Add( 11, &storedSpawn );
+			saver->Add( 12, &storedTimedCalls );
+			EXPECT_EQ( storedSpawn, spawn );
+			EXPECT_EQ( storedTimedCalls, !spawn );
+			restored->operator&( *saver );
+		}
+		EXPECT_EQ( restored->bSpawnStartingUnits, spawn );
+		EXPECT_EQ( restored->bAddReinfsWithTimer, !spawn );
+	}
+}
+
+TEST_F( MPDataChecksum, StartingArmyAndTimedCallPoliciesAffectClassicAndCoopCompatibility )
+{
+	auto *map = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	ASSERT_NE( map, nullptr );
+	for ( const auto mode : { NDb::CLASSIC, NDb::COOP } )
+	{
+		SCOPED_TRACE( int( mode ) );
+		map->eGameType = mode;
+		map->bSpawnStartingUnits = true;
+		pConsts->RecalculateMPDataVersionChecksum();
+		const uint32_t enabled = pConsts->GetMPDataVersionChecksumWithMap( map );
+		map->bSpawnStartingUnits = false;
+		pConsts->RecalculateMPDataVersionChecksum();
+		EXPECT_NE( enabled, pConsts->GetMPDataVersionChecksumWithMap( map ) );
+		map->bSpawnStartingUnits = true;
+		pConsts->RecalculateMPDataVersionChecksum();
+		EXPECT_EQ( enabled, pConsts->GetMPDataVersionChecksumWithMap( map ) );
+		map->bAddReinfsWithTimer = false;
+		pConsts->RecalculateMPDataVersionChecksum();
+		EXPECT_NE( enabled, pConsts->GetMPDataVersionChecksumWithMap( map ) );
+		map->bAddReinfsWithTimer = true;
+		pConsts->RecalculateMPDataVersionChecksum();
+		EXPECT_EQ( enabled, pConsts->GetMPDataVersionChecksumWithMap( map ) );
+	}
 }
 
 TEST_F( MPDataChecksum, MenuReadsReuseSnapshotUntilTheNextAttempt )

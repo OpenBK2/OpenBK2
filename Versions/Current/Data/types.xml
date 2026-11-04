@@ -26722,6 +26722,76 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>d2010000</Type>
+					<Name>SpawnStartingUnits</Name>
+					<ChunkID>11</ChunkID>
+					<Description>Spawn the nation/tech-level starting army in multiplayer. Does not affect map-placed or scripted units.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>11</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>true</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>d2010000</Type>
+					<Name>AddReinfsWithTimer</Name>
+					<ChunkID>12</ChunkID>
+					<Description>Grant extra reinforcement calls over time in multiplayer. Script grants and call cooldowns remain available.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>12</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>true</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>421665920</TypeID>
 		</Item>

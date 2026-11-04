@@ -133,6 +133,8 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 	bMissionWon = false;
 	nScriptResult = 0;
 	nMultiplayerDifficulty = 0;
+	bSpawnStartingUnits = true;
+	bAddReinfsWithTimer = true;
 
 	nSecondsToReinf = 0;
 
