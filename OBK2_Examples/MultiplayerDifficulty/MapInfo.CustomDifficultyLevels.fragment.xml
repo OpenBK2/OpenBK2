@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<CustomDifficultyLevels>
+	<Item href="/OpenBK2/MultiplayerDifficulty/Levels/Easy.xdb#xpointer(/DifficultyLevel)" />
+	<Item href="/OpenBK2/MultiplayerDifficulty/Levels/Normal.xdb#xpointer(/DifficultyLevel)" />
+	<Item href="/OpenBK2/MultiplayerDifficulty/Levels/Hard.xdb#xpointer(/DifficultyLevel)" />
+</CustomDifficultyLevels>

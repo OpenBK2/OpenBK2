@@ -548,8 +548,15 @@ void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
 	}
 	for ( const auto &player : NGameX::GetCoopReplayPlayers( info ) )
 	{
-		// Bot identity and position come from the recording, independently of later map edits.
-		addMarker( player.vMPStartPos, player.wszName, 1, NGameX::COOP_BOT_COLOR, nullptr );
+		// Keep the recorded name and position, but resolve the nation icon from the
+		// authored player slot; party data is not part of the presentation snapshot.
+		const NDb::SPartyDependentInfo *pPartyInfo = nullptr;
+		if ( player.nPlayerIndex >= 0 && player.nPlayerIndex < pMap->players.size() )
+		{
+			pPartyInfo = pMap->players[player.nPlayerIndex].pPartyInfo;
+		}
+		const NDb::STexture *pIcon = pPartyInfo ? pPartyInfo->pMinimapKeyObjectIcon.GetPtr() : nullptr;
+		addMarker( player.vMPStartPos, player.wszName, 1, NGameX::COOP_BOT_COLOR, pIcon );
 	}
 }
 

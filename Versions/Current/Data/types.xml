@@ -26722,21 +26722,6 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
-				<Item>
-					<Type>c6010000</Type>
-					<Name>DifficultyLevel</Name>
-					<ChunkID>10</ChunkID>
-					<Description>Map-defined difficulty exposed to mission Lua, without automatic stat modifiers.</Description>
-					<Constraints />
-					<Attributes />
-					<DefaultValue>
-						<Type>01000000</Type>
-						<Data>0</Data>
-					</DefaultValue>
-					<ComplexDefaultValue>
-						<Type>00000000</Type>
-					</ComplexDefaultValue>
-				</Item>
 			</Fields>
 			<TypeID>421665920</TypeID>
 		</Item>

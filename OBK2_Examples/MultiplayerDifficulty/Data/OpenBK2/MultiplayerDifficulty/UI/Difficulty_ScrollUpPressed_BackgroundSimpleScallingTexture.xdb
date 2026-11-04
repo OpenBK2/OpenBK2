@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<BackgroundSimpleScallingTexture>
+	<ClassTypeID>0</ClassTypeID>
+	<Texture href="/UI/Game/Mission/Objectives/scroll_scrolluppressed_texture.xdb#xpointer(/Texture)" />
+	<Color>-1</Color>
+	<Size>
+		<x>0</x>
+		<y>0</y>
+	</Size>
+</BackgroundSimpleScallingTexture>

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<BackgroundSimpleScallingTexture>
+	<ClassTypeID>285694784</ClassTypeID>
+	<Texture href="/UI/Game/Menu/CampaignSelection2/DifficultySelection/ButtonNormal_texture.xdb#xpointer(/Texture)" />
+	<Color>-1</Color>
+	<Size>
+		<x>0</x>
+		<y>0</y>
+	</Size>
+</BackgroundSimpleScallingTexture>

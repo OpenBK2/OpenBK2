@@ -90,10 +90,12 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	CPtr<IWindow> pAdvancedPopup;
 	CPtr<IEditLine> pAdvancedPassword;
 	CPtr<IWindow> pChecksumPWL;
+	CPtr<IComboBox> pDifficulty;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
-		f.Add( 1, (CInterfaceMPScreenBase *)this );
+		// The intermediate MP base has no serializer; its inherited method selects raw-data fallback.
+		f.Add( 1, static_cast<CInterfaceScreenBase *>( this ) );
 		f.Add( 2, &pMain );
 		f.Add( 3, &maps );
 		f.Add( 4, &pSelected );
@@ -113,6 +115,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 		f.Add( 18, &pButtonFog );
 		f.Add( 19, &pAdvancedPopup );
 		f.Add( 20, &pAdvancedPassword );
+		f.Add( 21, &pDifficulty );
 		return 0;
 	}
 
@@ -123,6 +126,7 @@ private:
 	void UpdateMapName();
 	void SetControls();
 	void UpdateInterior();
+	void UpdateDifficulty();
 	void SliderPosition( const float fPosition, CWindow *pWho ) override;
 
 	//{
