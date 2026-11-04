@@ -207,8 +207,16 @@ uint64_t HashDouble2( TFunc func )
 	CSequence seq( 3 );
 	for ( int i = 0; i < DOUBLE_SAMPLES; ++i )
 	{
-		hash.Add( func( DoubleFromBits( seq.Next() ), DoubleFromBits( seq.Next() ) ) );
-		hash.Add( func( seq.Uniform( 100.0 ), seq.Uniform( 100.0 ) ) );
+		// Each draw into its own variable, first argument first. The order in which
+		// a call's arguments are evaluated is unspecified: gcc and MSVC go right to
+		// left and clang left to right, so func( seq.Next(), seq.Next() ) passed the
+		// pair swapped under clang and its hashes differed with musl agreeing.
+		const double xBits = DoubleFromBits( seq.Next() );
+		const double yBits = DoubleFromBits( seq.Next() );
+		hash.Add( func( xBits, yBits ) );
+		const double xRange = seq.Uniform( 100.0 );
+		const double yRange = seq.Uniform( 100.0 );
+		hash.Add( func( xRange, yRange ) );
 		for ( const float y : SECOND_ARGS )
 		{
 			hash.Add( func( seq.Uniform( 10.0 ), static_cast<double>( y ) ) );
@@ -240,9 +248,9 @@ TEST( MuslLibm, CosfOfTheReplayDivergence )
 }
 
 // Recorded 2026-11-04 from musl 7813e911, and identical from MSVC x64
-// RelWithDebInfo and gcc x64 -O2, and from gcc with -march=haswell, the target
-// on which compat/musl_libm_prefix.h has to undefine __FP_FAST_FMA (without it
-// log and pow change).
+// RelWithDebInfo, gcc x64 -O2 and clang 19 and 21 -O2, and from gcc with
+// -march=haswell, the target on which compat/musl_libm_prefix.h has to undefine
+// __FP_FAST_FMA (without it log and pow change).
 TEST( MuslLibm, FloatFunctions )
 {
 	ExpectHash( "sinf", HashFloat1( musl_sinf ), 0xd24919d797bcc2efull );
@@ -269,6 +277,6 @@ TEST( MuslLibm, DoubleFunctions )
 	ExpectHash( "exp", HashDouble1( musl_exp ), 0xd9149bb3c260124dull );
 	ExpectHash( "expm1", HashDouble1( musl_expm1 ), 0x5a4d23a99b205811ull );
 	ExpectHash( "log", HashDouble1( musl_log ), 0x6d69531076d339beull );
-	ExpectHash( "atan2", HashDouble2( musl_atan2 ), 0x110a79a9ba333c2cull );
-	ExpectHash( "pow", HashDouble2( musl_pow ), 0x65c18d4399c8633aull );
+	ExpectHash( "atan2", HashDouble2( musl_atan2 ), 0x1ec429fc39d324caull );
+	ExpectHash( "pow", HashDouble2( musl_pow ), 0x88511accbe8d4219ull );
 }
