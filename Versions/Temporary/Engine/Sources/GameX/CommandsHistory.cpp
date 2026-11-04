@@ -73,7 +73,8 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		replayInfo.nLastCommandSegment = 0;
 		replayInfo.nLastGameSegment = 0;
 		replayInfo.nScriptResult = 0;
-		const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+		// Use the same tracker for the replay mode and its initial campaign state.
+		IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
 		replayInfo.nMultiplayerMode = pTracker && pTracker->IsCooperative() ? 1 : 0;
 		// Resolve names once: replay presentation must survive later map/text edits.
 		replayInfo.bCoopPlayersRecorded = replayInfo.nMultiplayerMode == 1;
@@ -95,7 +96,7 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		// LoadHistory restores it at. The tracker leaves the stream empty for
 		// anything but a campaign mission.
 		trackerStartState.SetSizeDiscard( 0 );
-		if ( IScenarioTracker *pTracker = Singleton<IScenarioTracker>() )
+		if ( pTracker )
 		{
 			if ( !pTracker->SaveReplayStartState( &trackerStartState ) )
 			{

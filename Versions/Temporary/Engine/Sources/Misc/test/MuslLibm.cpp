@@ -207,8 +207,14 @@ uint64_t HashDouble2( TFunc func )
 	CSequence seq( 3 );
 	for ( int i = 0; i < DOUBLE_SAMPLES; ++i )
 	{
-		hash.Add( func( DoubleFromBits( seq.Next() ), DoubleFromBits( seq.Next() ) ) );
-		hash.Add( func( seq.Uniform( 100.0 ), seq.Uniform( 100.0 ) ) );
+		// Argument evaluation order is unspecified. Draw the second argument first
+		// to preserve the input pairs used for the recorded MSVC/GCC hashes.
+		const double yBits = DoubleFromBits( seq.Next() );
+		const double xBits = DoubleFromBits( seq.Next() );
+		hash.Add( func( xBits, yBits ) );
+		const double yUniform = seq.Uniform( 100.0 );
+		const double xUniform = seq.Uniform( 100.0 );
+		hash.Add( func( xUniform, yUniform ) );
 		for ( const float y : SECOND_ARGS )
 		{
 			hash.Add( func( seq.Uniform( 10.0 ), static_cast<double>( y ) ) );

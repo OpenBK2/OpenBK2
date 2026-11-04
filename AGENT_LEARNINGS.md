@@ -3,6 +3,12 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Deterministic test inputs need explicit sequencing too. Two `seq.Next()` or
+  `seq.Uniform()` calls in one argument list ran right-to-left on MSVC/GCC and
+  left-to-right on Clang, changing only the double atan2/pow test hashes.
+  Generate each argument in its own statement, preserving the recorded input
+  order; do not change golden hashes or the math library to hide the mismatch.
+
 - Do not validate UTF-8 by round-tripping through wchar_t. Linux iconv can
   preserve values above U+10FFFF that Windows rejects. Validate shortest UTF-8
   encodings and Unicode scalar ranges explicitly, with boundary tests for
