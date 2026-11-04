@@ -3,6 +3,13 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- A thread-local converter can be destroyed before static console-log cleanup.
+  Writing an invalid handle into its own destructor does not make later member
+  calls valid; GCC can remove that store. Keep a trivially destructible lifetime
+  flag outside the cached object, and use a scoped converter after destruction.
+  Test actual process exit in a subprocess: assertions can all pass before the
+  final log flush segfaults.
+
 - Deterministic test inputs need explicit sequencing too. Two `seq.Next()` or
   `seq.Uniform()` calls in one argument list ran right-to-left on MSVC/GCC and
   left-to-right on Clang, changing only the double atan2/pow test hashes.

@@ -6,3 +6,8 @@ set_tests_properties(MuslLibm_test PROPERTIES TIMEOUT 120)
 
 # Misc/DetMath.h, the engine's wrappers over it: std's overload rules, musl's values.
 add_unit_test(DetMath musl_libm)
+
+# Unicode conversion must also work after the main thread's cached converters
+# have been destroyed, when static destructors flush persistent console output.
+find_package(Threads REQUIRED)
+add_unit_test(Unicode Boost::predef Threads::Threads)

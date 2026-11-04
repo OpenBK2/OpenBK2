@@ -25,37 +25,32 @@ namespace NPortDetail
 
 #if !BOOST_OS_WINDOWS
 
-// One iconv descriptor. iconv_t carries conversion state, so a descriptor
-// cannot be used from two threads at once; every holder below is thread_local.
+// One iconv descriptor. Cached descriptors belong to one thread; conversions
+// during static destruction use a scoped descriptor after the cache is gone.
 class CIconv
 {
 	iconv_t cd;
+	bool *pCacheDestroyed;
 
 public:
 	CIconv( const CIconv & ) = delete;
 	void operator=( const CIconv & ) = delete;
 
-	CIconv( const char *pszTo, const char *pszFrom )
+	CIconv( const char *pszTo, const char *pszFrom, bool *_pCacheDestroyed = nullptr )
 		: cd( ::iconv_open( pszTo, pszFrom ) )
+		, pCacheDestroyed( _pCacheDestroyed )
 	{
 	}
 
-	// Marked closed as well as closed, so that a conversion asked for after this
-	// has run reports failure instead of handing libc a freed descriptor.
-	//
-	// Every holder is a thread_local static, and the main thread's are destroyed
-	// before the shared libraries' own statics are. A destructor in one of those
-	// that logs anything reaches this object after this point: libSound's
-	// CAckTuning writes acklog.bin as it goes, the file trace turns that into a
-	// log line, and the line is converted here. Without the store that was an
-	// iconv call on a closed descriptor and a segfault at every exit, after the
-	// game had already shut down cleanly.
 	~CIconv()
 	{
+		if ( pCacheDestroyed )
+		{
+			*pCacheDestroyed = true;
+		}
 		if ( IsOk() )
 		{
 			::iconv_close( cd );
-			cd = (iconv_t)-1;
 		}
 	}
 
@@ -84,6 +79,33 @@ public:
 		return nOutBytes - nOutLeft;
 	}
 };
+
+enum EIconvConversion
+{
+	ICONV_FROM_UTF16LE,
+	ICONV_TO_UTF16LE,
+	ICONV_TO_UTF8,
+	ICONV_FROM_UTF8
+};
+
+template <EIconvConversion eConversion>
+size_t
+ConvertCached( const char *pszTo, const char *pszFrom, const char *pIn, size_t nInBytes, char *pOut, size_t nOutBytes )
+{
+	// TLS destructors run before static destructors flush the console log.
+	// Keep the flag outside the cached object's lifetime: reading a member of
+	// a destroyed CIconv is undefined, and GCC can remove its destructor's stores.
+	static thread_local bool bCacheDestroyed = false;
+	if ( bCacheDestroyed )
+	{
+		CIconv conv( pszTo, pszFrom );
+		return conv.Convert( pIn, nInBytes, pOut, nOutBytes );
+	}
+	// Each conversion direction has its own cache. After destruction, return
+	// above without passing through this definition or touching the dead object.
+	static thread_local CIconv conv( pszTo, pszFrom, &bCacheDestroyed );
+	return conv.Convert( pIn, nInBytes, pOut, nOutBytes );
+}
 
 #endif
 
@@ -116,13 +138,15 @@ inline std::wstring UTF16LEToWide( const void *pData, size_t nBytes )
 	static_assert( sizeof( wchar_t ) == sizeof( uint16_t ), "Windows wchar_t is expected to be UTF-16" );
 	return std::wstring( static_cast<const wchar_t *>( pData ), nBytes / sizeof( wchar_t ) );
 #else
-	static thread_local NPortDetail::CIconv conv( "WCHAR_T", "UTF-16LE" );
 	// one UTF-16 code unit can never produce more than one wchar_t
 	std::wstring result( nBytes / sizeof( uint16_t ), L'\0' );
-	const size_t nWritten = conv.Convert( static_cast<const char *>( pData ),
-	                                      nBytes & ~size_t( 1 ),
-	                                      reinterpret_cast<char *>( &result[0] ),
-	                                      result.size() * sizeof( wchar_t ) );
+	const size_t nWritten =
+			NPortDetail::ConvertCached<NPortDetail::ICONV_FROM_UTF16LE>( "WCHAR_T",
+	                                                                 "UTF-16LE",
+	                                                                 static_cast<const char *>( pData ),
+	                                                                 nBytes & ~size_t( 1 ),
+	                                                                 reinterpret_cast<char *>( &result[0] ),
+	                                                                 result.size() * sizeof( wchar_t ) );
 	result.resize( nWritten / sizeof( wchar_t ) );
 	return result;
 #endif
@@ -142,12 +166,16 @@ inline std::string WideToUTF16LE( const std::wstring &value )
 	static_assert( sizeof( wchar_t ) == sizeof( uint16_t ), "Windows wchar_t is expected to be UTF-16" );
 	return std::string( reinterpret_cast<const char *>( value.data() ), value.size() * sizeof( wchar_t ) );
 #else
-	static thread_local NPortDetail::CIconv conv( "UTF-16LE", "WCHAR_T" );
 	// a code point outside the basic plane becomes a surrogate pair, so two
 	// UTF-16 code units is the most any single wchar_t can produce
 	std::string result( value.size() * 2 * sizeof( uint16_t ), '\0' );
-	const size_t nWritten = conv.Convert(
-			reinterpret_cast<const char *>( value.data() ), value.size() * sizeof( wchar_t ), &result[0], result.size() );
+	const size_t nWritten =
+			NPortDetail::ConvertCached<NPortDetail::ICONV_TO_UTF16LE>( "UTF-16LE",
+	                                                               "WCHAR_T",
+	                                                               reinterpret_cast<const char *>( value.data() ),
+	                                                               value.size() * sizeof( wchar_t ),
+	                                                               &result[0],
+	                                                               result.size() );
 	result.resize( nWritten );
 	return result;
 #endif
@@ -173,11 +201,15 @@ inline std::string WideToUTF8( const std::wstring &value )
 	::WideCharToMultiByte( CP_UTF8, 0, value.data(), static_cast<int>( value.size() ), &result[0], nBytes, 0, 0 );
 	return result;
 #else
-	static thread_local NPortDetail::CIconv conv( "UTF-8", "WCHAR_T" );
 	// a code point is at most 4 bytes in UTF-8, and at least one wchar_t
 	std::string result( value.size() * 4, '\0' );
-	const size_t nBytes = conv.Convert(
-			reinterpret_cast<const char *>( value.data() ), value.size() * sizeof( wchar_t ), &result[0], result.size() );
+	const size_t nBytes =
+			NPortDetail::ConvertCached<NPortDetail::ICONV_TO_UTF8>( "UTF-8",
+	                                                            "WCHAR_T",
+	                                                            reinterpret_cast<const char *>( value.data() ),
+	                                                            value.size() * sizeof( wchar_t ),
+	                                                            &result[0],
+	                                                            result.size() );
 	result.resize( nBytes );
 	return result;
 #endif
@@ -200,11 +232,15 @@ inline std::wstring UTF8ToWide( const std::string &value )
 	::MultiByteToWideChar( CP_UTF8, 0, value.data(), static_cast<int>( value.size() ), &result[0], nChars );
 	return result;
 #else
-	static thread_local NPortDetail::CIconv conv( "WCHAR_T", "UTF-8" );
 	// one byte of UTF-8 can never produce more than one code point
 	std::wstring result( value.size(), L'\0' );
-	const size_t nBytes = conv.Convert(
-			value.data(), value.size(), reinterpret_cast<char *>( &result[0] ), result.size() * sizeof( wchar_t ) );
+	const size_t nBytes =
+			NPortDetail::ConvertCached<NPortDetail::ICONV_FROM_UTF8>( "WCHAR_T",
+	                                                              "UTF-8",
+	                                                              value.data(),
+	                                                              value.size(),
+	                                                              reinterpret_cast<char *>( &result[0] ),
+	                                                              result.size() * sizeof( wchar_t ) );
 	result.resize( nBytes / sizeof( wchar_t ) );
 	return result;
 #endif
