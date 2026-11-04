@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Misc/DetMath.h"
 #include "PolyUtils.h"
 #include "Ring.h"
 
@@ -529,7 +530,7 @@ void CPolyClipper::MakeLinks( EPolygon eType, SPolygon *psPolygon )
 		}
 		const CVec2 &vB = iEdge->iBegPoint->vPoint;
 		const CVec2 &vE = iEdge->iEndPoint->vPoint;
-		float fAngle = std::atan2( vE.y - vB.y, vE.x - vB.x ) * 360 / FP_2PI;
+		float fAngle = NDetMath::ATan2( vE.y - vB.y, vE.x - vB.x ) * 360 / FP_2PI;
 		while ( fAngle < 0 )
 		{
 			fAngle += 360;

@@ -30,6 +30,7 @@
 #include "GView.h"
 #include "HeightFog.h"
 #include "LoadingCounter.h"
+#include "Misc/DetMath.h"
 #include "ObjectFader.h"
 #include "port/time.h"
 #include "RenderNode.h"
@@ -1628,9 +1629,9 @@ void CGameView::Draw( CTransformStack *pTS,
 			CVec3 vCameraDirection = matTransform.GetZAxis3();
 			Normalize( &vCameraDirection ); // It is not necessary but ...
 
-			float fYaw = std::atan2( -vCameraDirection.y, vCameraDirection.x );
+			float fYaw = NDetMath::ATan2( -vCameraDirection.y, vCameraDirection.x );
 			float fPitch =
-					-std::atan2( vCameraDirection.z, std::sqrt( sqr( vCameraDirection.x ) + sqr( vCameraDirection.y ) ) );
+					-NDetMath::ATan2( vCameraDirection.z, std::sqrt( sqr( vCameraDirection.x ) + sqr( vCameraDirection.y ) ) );
 
 			if ( fYaw < 0 )
 			{
@@ -1734,7 +1735,7 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 
 #ifdef FADE_TEST
 	{
-		float fFade = sin( GetCurrentTimeMilliseconds() / 1000.0f );
+		float fFade = NDetMath::Sin( GetCurrentTimeMilliseconds() / 1000.0f );
 		for ( int k = 0; k < fadeTestObjects.size(); ++k )
 		{
 			CObjectBase *p = fadeTestObjects[k];
@@ -1767,7 +1768,7 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 			{
 				float fPeriod = ( ( x * 134 + y * 9434 ) & 255 ) * 20 + 500;
 				float fShift = ( ( x * 34 + y * 134 + x * y * 13 ) & 1023 ) / 100.0f;
-				fog[y][x] = sin( fTime / fPeriod + fShift ) * 60 + 180;
+				fog[y][x] = NDetMath::Sin( fTime / fPeriod + fShift ) * 60 + 180;
 			}
 		}
 		SetWarFog( fog, 1 / 2.75f );
@@ -2034,10 +2035,10 @@ CObjectBase *CGameView::AddSpotLight( const CVec3 &ptColor,
 static CVec3 GetLightDir( float fPitch, float fYaw )
 {
 	CVec3 vLightDir;
-	float fHor = std::sin( ToRadian( fPitch ) );
-	vLightDir.z = -std::cos( ToRadian( fPitch ) );
-	vLightDir.x = fHor * std::cos( ToRadian( fYaw ) );
-	vLightDir.y = fHor * std::sin( ToRadian( fYaw ) );
+	float fHor = NDetMath::Sin( ToRadian( fPitch ) );
+	vLightDir.z = -NDetMath::Cos( ToRadian( fPitch ) );
+	vLightDir.x = fHor * NDetMath::Cos( ToRadian( fYaw ) );
+	vLightDir.y = fHor * NDetMath::Sin( ToRadian( fYaw ) );
 	return vLightDir;
 }
 

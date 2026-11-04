@@ -10,6 +10,7 @@
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxSvgIcons.h"
+#include "Misc/DetMath.h"
 #include "MovieDialogs.h"
 #include "MoviesEditorData.h"
 #include "MoviesEditorView.h"
@@ -1105,7 +1106,8 @@ private:
 	void OnSliderScroll( wxCommandEvent & )
 	{
 		pTimeline->SetStartTime( ( pTimeline->GetLength() * pTimeline->GetScale() ) * SliderPercent( pTimeSlider ) );
-		pTimeline->SetScale( std::pow( MOVED_DEF_SCALING, ( SliderPercent( pScaleSlider ) - 1.0f ) * MOVED_DEF_SCALING ) );
+		pTimeline->SetScale(
+				NDetMath::Pow( MOVED_DEF_SCALING, ( SliderPercent( pScaleSlider ) - 1.0f ) * MOVED_DEF_SCALING ) );
 		pTimeline->RefreshSpacing();
 		Notify( SScriptMovieEditorData::ME_CHANGE_TIME );
 	}

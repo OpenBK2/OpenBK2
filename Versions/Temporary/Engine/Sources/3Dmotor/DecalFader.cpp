@@ -3,11 +3,12 @@
 #include "DecalFader.h"
 #include "GDecal.h"
 #include "GParts.h"
+#include "Misc/DetMath.h"
 
 namespace NGScene
 {
 static const float fFadeLimit = 0.01f;
-static const float fFadeLog = std::log( fFadeLimit );
+static const float fFadeLog = NDetMath::Log( fFadeLimit );
 
 CDecalFader::CDecalFader( CObjectBase *_pDecal,
                           STime _tFadeInStart,
@@ -45,7 +46,7 @@ float CDecalFader::GetFadeValue( STime tCurrent ) const
 
 	if ( tCurrent > tFadeOutStart )
 	{
-		return std::exp( fFadeLog * ( tCurrent - tFadeOutStart ) / ( tFadeOutEnd - tFadeOutStart ) );
+		return NDetMath::Exp( fFadeLog * ( tCurrent - tFadeOutStart ) / ( tFadeOutEnd - tFadeOutStart ) );
 	}
 
 	if ( tCurrent >= tFadeInEnd )
@@ -55,7 +56,7 @@ float CDecalFader::GetFadeValue( STime tCurrent ) const
 
 	if ( tCurrent > tFadeInStart )
 	{
-		return std::exp( fFadeLog * ( tFadeInEnd - tCurrent ) / ( tFadeInEnd - tFadeInStart ) );
+		return NDetMath::Exp( fFadeLog * ( tFadeInEnd - tCurrent ) / ( tFadeInEnd - tFadeInStart ) );
 	}
 
 	return 0;
@@ -121,7 +122,7 @@ void CDecalFader::SetToFadeIn()
 	}
 
 	const float fVal = GetFadeValue( tCurrent );
-	const STime tNeed = tFadeOutStart + logf( fVal ) * ( tFadeOutEnd - tFadeOutStart ) / fFadeLog;
+	const STime tNeed = tFadeOutStart + NDetMath::Log( fVal ) * ( tFadeOutEnd - tFadeOutStart ) / fFadeLog;
 	ShiftTimes( tCurrent - tNeed );
 }
 

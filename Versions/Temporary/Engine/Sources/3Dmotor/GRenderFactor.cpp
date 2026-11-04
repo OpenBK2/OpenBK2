@@ -4,6 +4,7 @@
 #include "GfxEffects.h"
 #include "GRenderFactor.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 
 namespace NGScene
 {
@@ -98,13 +99,13 @@ static void RefreshSpecularResponse()
 			{
 				fX = std::sqrt( fX ); // fX = length(N-H)
 			}
-			fX = std::cos( 2 * std::asin( fX * 0.5f ) ); // fX = (N*H)
+			fX = NDetMath::Cos( 2 * NDetMath::ASin( fX * 0.5f ) ); // fX = (N*H)
 			float fRes;
 
 			fX = std::fabs( fX );
 			if ( fX > 0 )
 			{
-				fRes = (float)( std::pow( fX, fPower ) ) * fResMul;
+				fRes = (float)( NDetMath::Pow( fX, fPower ) ) * fResMul;
 			}
 			else
 			{
@@ -145,7 +146,7 @@ static void RefreshSpecularResponseR300()
 			fX = std::fabs( fX );
 			if ( fX > 0 )
 			{
-				fRes = (float)( std::pow( fX, fPower ) ) * fResMul;
+				fRes = (float)( NDetMath::Pow( fX, fPower ) ) * fResMul;
 			}
 			else
 			{
@@ -222,7 +223,7 @@ static void NormaliseFace( NGfx::CCubeTexture *pTex, NGfx::EFace f )
 			lock[y][x] = NGfx::SPixel8888( Float2Int( n.x + Rnd() ),
 			                               Float2Int( n.y + Rnd() ),
 			                               Float2Int( n.z + Rnd() ),
-			                               fZ > 0 ? std::pow( fZ, 8 ) * 255 : 0 );
+			                               fZ > 0 ? NDetMath::Pow( fZ, 8 ) * 255 : 0 );
 		}
 	}
 }

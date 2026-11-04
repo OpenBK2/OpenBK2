@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 // SetGetEditParameters and the two command ids the templates below pass it.
 #include "ED_B2_M1/ResourceDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
@@ -54,7 +55,7 @@ inline float ADiff( const float a, const float b )
 
 inline float AngleDiff( const CVec3 &v0, const CVec3 &v1 )
 {
-	return ADiff( std::atan2( v0.y, v0.x ), std::atan2( v1.y, v1.x ) );
+	return ADiff( NDetMath::ATan2( v0.y, v0.x ), NDetMath::ATan2( v1.y, v1.x ) );
 }
 
 inline CVec3 GetVecDir( float fDir )

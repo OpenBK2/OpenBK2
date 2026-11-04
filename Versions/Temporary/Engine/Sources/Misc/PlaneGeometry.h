@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Misc/DetMath.h"
 #include "Win32Random.h"
 
 #include "Misc_export.h"
@@ -612,12 +613,12 @@ TPolygon GetPointOnEdge( const TPolygon &rvBegin, const TPolygon &rvEnd, float f
 
 inline CVec2 CreateFromPolarCoord( float r, float a )
 {
-	return CVec2( r * std::cos( a ), r * std::sin( a ) );
+	return CVec2( r * NDetMath::Cos( a ), r * NDetMath::Sin( a ) );
 }
 
 inline CVec3 CreateFromPolarCoord( float r, float a, float fZ )
 {
-	return CVec3( r * std::cos( a ), r * std::sin( a ), fZ );
+	return CVec3( r * NDetMath::Cos( a ), r * NDetMath::Sin( a ), fZ );
 }
 
 template <class TPoint>
@@ -633,7 +634,7 @@ float GetPolarAngle( const TPoint &v )
 	}
 	else
 	{
-		float a = std::atan( v.y / v.x );
+		float a = NDetMath::ATan( v.y / v.x );
 		if ( v.x > 0.0f )
 		{
 			return ( ( v.y >= 0.0f ) ? ( a ) : ( FP_2PI + a ) );
@@ -670,8 +671,8 @@ template <class TPoint>
 inline void RotatePoint( TPoint *pPoint, float a )
 {
 	const float fX = pPoint->x;
-	const float fSinA = std::sin( a );
-	const float fCosA = std::cos( a );
+	const float fSinA = NDetMath::Sin( a );
+	const float fCosA = NDetMath::Cos( a );
 	pPoint->x = ( fX * fCosA ) - ( pPoint->y * fSinA );
 	pPoint->y = ( fX * fSinA ) + ( pPoint->y * fCosA );
 }
@@ -711,8 +712,8 @@ void MovePoints( TPolygon *pPolygon, const TPoint &rvMove )
 template <class TPolygon, class TPoint>
 void RotatePoints( TPolygon *pPolygon, float a )
 {
-	const float fSinA = std::sin( a );
-	const float fCosA = std::cos( a );
+	const float fSinA = NDetMath::Sin( a );
+	const float fCosA = NDetMath::Cos( a );
 	for ( typename TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
 	{
 		const float fX = itPoint->x;
@@ -724,8 +725,8 @@ void RotatePoints( TPolygon *pPolygon, float a )
 template <class TPolygon, class TPoint>
 void RotatePoints( TPolygon *pPolygon, float a, const TPoint &rCenterPoint )
 {
-	const float fSinA = std::sin( a );
-	const float fCosA = std::cos( a );
+	const float fSinA = NDetMath::Sin( a );
+	const float fCosA = NDetMath::Cos( a );
 	for ( typename TPolygon::iterator itPoint = pPolygon->begin(); itPoint != pPolygon->end(); ++itPoint )
 	{
 		TPoint point = ( *itPoint ) - rCenterPoint;

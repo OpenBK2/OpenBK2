@@ -2,6 +2,7 @@
 
 #include "3DLib/Transform.h"
 #include "GSceneUtils.h"
+#include "Misc/DetMath.h"
 #include "port/cdecl.h"
 
 #include "3Dmotor_export.h"
@@ -98,7 +99,7 @@ int CVec3Convert::operator&( CStructureSaver &f )
 
 void CSinus::Recalc()
 {
-	value = fpAdd + fpMn * std::sin( float( pTime->GetValue() / 1000 ) * fpFreq * FP_2PI );
+	value = fpAdd + fpMn * NDetMath::Sin( float( pTime->GetValue() / 1000 ) * fpFreq * FP_2PI );
 }
 
 int CSinus::operator&( CStructureSaver &f )

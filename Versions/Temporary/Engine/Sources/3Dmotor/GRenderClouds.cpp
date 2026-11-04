@@ -5,6 +5,7 @@
 #include "GfxShaders.h"
 #include "GRenderClouds.h"
 #include "GRenderCore.h"
+#include "Misc/DetMath.h"
 
 //#include "GRenderFactor.h"
 
@@ -107,7 +108,7 @@ void CCloudMover::Recalc()
 	Identity( &value );
 	float fTexTime = 1000 / fSpeed;
 	float fScroll = t / fTexTime;
-	float fX = std::cos( ToRadian( fAngle ) ), fY = std::sin( ToRadian( fAngle ) );
+	float fX = NDetMath::Cos( ToRadian( fAngle ) ), fY = NDetMath::Sin( ToRadian( fAngle ) );
 	float fDeltaX = std::fmod( fX * fScroll, 1 );
 	float fDeltaY = std::fmod( fY * fScroll, 1 );
 	value.SetX( CVec4( 1 / vWrapSize.x, 0, 0, fDeltaX ) );

@@ -7,6 +7,7 @@
 #include "MapEditorLib/Interface_UserData.h"
 #include "MinimapImage.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "Misc/GeomMisc.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "System/VFSOperations.h"
@@ -158,10 +159,10 @@ void RenderLight( CArray2D<uint32_t> *pImage,
 	//map size in VIS tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH, pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH );
 	//
-	const float fHor = std::sin( ToRadian( pMapInfo->pLight->fPitch ) );
-	CVec3 vLight = CVec3( fHor * std::cos( ToRadian( pMapInfo->pLight->fYaw ) ),
-	                      fHor * std::sin( ToRadian( pMapInfo->pLight->fYaw ) ),
-	                      -std::cos( ToRadian( pMapInfo->pLight->fPitch ) ) );
+	const float fHor = NDetMath::Sin( ToRadian( pMapInfo->pLight->fPitch ) );
+	CVec3 vLight = CVec3( fHor * NDetMath::Cos( ToRadian( pMapInfo->pLight->fYaw ) ),
+	                      fHor * NDetMath::Sin( ToRadian( pMapInfo->pLight->fYaw ) ),
+	                      -NDetMath::Cos( ToRadian( pMapInfo->pLight->fPitch ) ) );
 	Normalize( &vLight );
 	vLight *= ( -1.0f );
 	//

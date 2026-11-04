@@ -2,6 +2,8 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
+#include "Misc/DetMath.h"
+
 #include "Misc_export.h"
 
 // ************************************************************************************************************************ //
@@ -217,7 +219,7 @@ public:
 		const float dx = x.GetDiff1( t );
 		const float dy = y.GetDiff1( t );
 		const float denominator = std::fabs( dx * y.GetDiff2( t ) - dy * x.GetDiff2( t ) );
-		return denominator < 1e-5f ? 0 : std::pow( fabs2( dx ) + fabs2( dy ), 3.0f / 2.0f ) / denominator;
+		return denominator < 1e-5f ? 0 : NDetMath::Pow( fabs2( dx ) + fabs2( dy ), 3.0f / 2.0f ) / denominator;
 	}
 
 	// центр кривизны кривой, заданной параметрически:

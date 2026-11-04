@@ -4,6 +4,7 @@
 #include "HPObjectRPGStatsExporter.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/DetMath.h"
 #include "System/FileUtils.h"
 #include "TraceModel.h"
 
@@ -46,7 +47,7 @@ static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const std::vector
 		}
 		if ( fa > 0 )
 		{
-			fA = std::asin( fa );
+			fA = NDetMath::ASin( fa );
 		}
 		else
 		{

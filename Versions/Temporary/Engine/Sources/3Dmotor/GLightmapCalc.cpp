@@ -20,6 +20,7 @@
 #include "Image/ImagePSD.h"
 #include "Image/ImageTGA.h"
 #include "Image/Targa.h"
+#include "Misc/DetMath.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
@@ -237,7 +238,7 @@ static void AddPart( const SSphere &highResLM, std::vector<SLMGroup> *pRes, ISom
 	std::vector<SLMQuad> lmQuads;
 	MakeLMCalcGeometry( &lmData, &lmSize, data, fLMResolution, N_LM_TEXTURE_SIZE, CTPoint<int>( 0, 0 ), &lmQuads );
 
-	int nResolution = Float2Int( std::log( fLMResolution * 4 ) );
+	int nResolution = Float2Int( NDetMath::Log( fLMResolution * 4 ) );
 	// search for a suitable group
 	for ( int k = 0; k < pRes->size(); ++k )
 	{

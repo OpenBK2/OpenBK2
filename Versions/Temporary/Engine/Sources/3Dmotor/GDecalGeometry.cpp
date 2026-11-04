@@ -3,6 +3,7 @@
 #include "3DLib/Transform.h"
 #include "GCombiner.h"
 #include "GDecalGeometry.h"
+#include "Misc/DetMath.h"
 
 #include <cstdint>
 
@@ -67,7 +68,7 @@ struct SQuadProjection
 
 	void Setup( const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift )
 	{
-		float fCos = std::cos( fRotation ), fSin = std::sin( fRotation );
+		float fCos = NDetMath::Cos( fRotation ), fSin = NDetMath::Sin( fRotation );
 		CVec3 vU( vSize.x * fCos, vSize.x * fSin, 0 );
 		CVec3 vV( -vSize.y * fSin, vSize.y * fCos, 0 );
 		vVecU = CVec3( -vU.y, 0, -vU.x );
@@ -546,7 +547,7 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo,
                                                   float _fRotation )
 	: CObjectInfoProcessor( pInfo, src )
 {
-	float fSin = std::sin( _fRotation ), fCos = std::cos( _fRotation );
+	float fSin = NDetMath::Sin( _fRotation ), fCos = NDetMath::Cos( _fRotation );
 	for ( int k = 0; k < srcTris.size(); ++k )
 	{
 		const STriangle &t = srcTris[k];

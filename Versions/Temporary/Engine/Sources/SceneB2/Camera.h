@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Misc/DetMath.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/Dg.h"
 
@@ -124,9 +125,9 @@ public:
 	// from anchor to eye
 	const CVec3 GetDirection() const
 	{
-		return CVec3( std::sin( ToRadian( this->fYaw ) ) * std::cos( ToRadian( this->fPitch ) ),
-		              -std::cos( ToRadian( this->fYaw ) ) * std::cos( ToRadian( this->fPitch ) ),
-		              std::sin( ToRadian( this->fPitch ) ) );
+		return CVec3( NDetMath::Sin( ToRadian( this->fYaw ) ) * NDetMath::Cos( ToRadian( this->fPitch ) ),
+		              -NDetMath::Cos( ToRadian( this->fYaw ) ) * NDetMath::Cos( ToRadian( this->fPitch ) ),
+		              NDetMath::Sin( ToRadian( this->fPitch ) ) );
 	}
 
 	const float GetDistance() const

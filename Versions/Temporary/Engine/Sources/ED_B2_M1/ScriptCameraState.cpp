@@ -8,6 +8,7 @@
 #include "MapEditorLib/MessageBoxes.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Resources.h"
+#include "Misc/DetMath.h"
 #include "MovieDialogs.h"
 #include "SceneB2/CameraScriptMutators.h"
 #include "SceneB2/Scene.h"
@@ -1113,9 +1114,9 @@ void CScriptCameraState::Draw( IPaintContext *pPaintDC )
 		}
 		//
 		CVec3 vNewDir( VNULL3 );
-		CVec3 vDir = CVec3( std::sin( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
-		                    -std::cos( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
-		                    std::sin( ToRadian( it->fPitch ) ) );
+		CVec3 vDir = CVec3( NDetMath::Sin( ToRadian( it->fYaw ) ) * NDetMath::Cos( ToRadian( it->fPitch ) ),
+		                    -NDetMath::Cos( ToRadian( it->fYaw ) ) * NDetMath::Cos( ToRadian( it->fPitch ) ),
+		                    NDetMath::Sin( ToRadian( it->fPitch ) ) );
 
 		if ( vDir.z != 0 )
 		{
@@ -1375,16 +1376,16 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 		}
 		//
 		CVec3 vPos = it->vPosition;
-		CVec3 vDir = CVec3( std::sin( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
-		                    -std::cos( ToRadian( it->fYaw ) ) * std::cos( ToRadian( it->fPitch ) ),
-		                    std::sin( ToRadian( it->fPitch ) ) );
+		CVec3 vDir = CVec3( NDetMath::Sin( ToRadian( it->fYaw ) ) * NDetMath::Cos( ToRadian( it->fPitch ) ),
+		                    -NDetMath::Cos( ToRadian( it->fYaw ) ) * NDetMath::Cos( ToRadian( it->fPitch ) ),
+		                    NDetMath::Sin( ToRadian( it->fPitch ) ) );
 		vDir = CVec3( -vDir.y, vDir.x, 0 ); // rotate new vDir 90 degree over OZ
 		Normalize( &vDir );
 
 		CQuat qRotation = CQuat( ToRadian( it->fYaw ), V3_AXIS_Z );
 		qRotation *= CQuat( ToRadian( -90.0 - it->fPitch ), vDir );
 
-		CVec3 vScale( 0.8 * std::tan( ToRadian( it->fFOV / 2 ) ), 0.8 * std::tan( ToRadian( it->fFOV / 2 ) ), 1 );
+		CVec3 vScale( 0.8 * NDetMath::Tan( ToRadian( it->fFOV / 2 ) ), 0.8 * NDetMath::Tan( ToRadian( it->fFOV / 2 ) ), 1 );
 		vScale *= 2;
 
 		int nObjectSceneID =

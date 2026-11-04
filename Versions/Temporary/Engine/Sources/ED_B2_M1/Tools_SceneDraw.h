@@ -3,6 +3,7 @@
 #include "EditorScene.h"
 #include "Image/ImageColor.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "SceneB2/Terrain.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/Vis2AI.h"
@@ -317,8 +318,8 @@ public:
 		for ( int nIndex = 0; nIndex <= nParts; ++nIndex )
 		{
 			float alpha = FP_2PI * nIndex / nParts;
-			const CVec3 vPoint =
-					CVec3( fRadius * std::cos( alpha ) + vCenter.x, fRadius * std::sin( alpha ) + vCenter.y, vCenter.z );
+			const CVec3 vPoint = CVec3(
+					fRadius * NDetMath::Cos( alpha ) + vCenter.x, fRadius * NDetMath::Sin( alpha ) + vCenter.y, vCenter.z );
 			posNewPolyline->points.push_back( vPoint );
 		}
 		GetVec3FromARGBColor( &( posNewPolyline->vColor ), dwColor );
@@ -338,8 +339,8 @@ public:
 		for ( int nIndex = 0; nIndex <= nParts; ++nIndex )
 		{
 			float alpha = FP_2PI * nIndex / nParts;
-			CVec3 vPoint =
-					CVec3( fRadius * std::cos( alpha ) + vCenter.x, fRadius * std::sin( alpha ) + vCenter.y, vCenter.z );
+			CVec3 vPoint = CVec3(
+					fRadius * NDetMath::Cos( alpha ) + vCenter.x, fRadius * NDetMath::Sin( alpha ) + vCenter.y, vCenter.z );
 			vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 			posNewPolyline->points.push_back( vPoint );
 		}

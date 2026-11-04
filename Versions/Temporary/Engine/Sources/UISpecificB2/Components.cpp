@@ -2,6 +2,7 @@
 
 #include "3Dmotor/DBScene.h"
 #include "Components.h"
+#include "Misc/DetMath.h"
 #include "System/Dg.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
@@ -108,10 +109,10 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 		//		if ( fStartAngle <= fFinishAngle ? fMinAngle2 < fMaxAngle2 : fMinAngle2 > fMaxAngle2 )
 		if ( bResult )
 		{
-			float fMinCos = cosf( fMinAngle2 );
-			float fMinSin = sinf( fMinAngle2 );
-			float fMaxCos = cosf( fMaxAngle2 );
-			float fMaxSin = sinf( fMaxAngle2 );
+			float fMinCos = NDetMath::Cos( fMinAngle2 );
+			float fMinSin = NDetMath::Sin( fMinAngle2 );
+			float fMaxCos = NDetMath::Cos( fMaxAngle2 );
+			float fMaxSin = NDetMath::Sin( fMaxAngle2 );
 
 			CVec2 vScr2;
 			CVec2 vScr3;

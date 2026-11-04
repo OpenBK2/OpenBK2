@@ -10,6 +10,7 @@
 #include "GlobalWarFog.h"
 #include "Guns.h"
 #include "HitsStore.h"
+#include "Misc/DetMath.h"
 #include "NewUpdater.h"
 #include "Randomize.h"
 #include "Shell.h"
@@ -1404,7 +1405,7 @@ const CVec3 CBombBallisticTraj::GetCoordinates() const
 
 float CBombBallisticTraj::GetCoeff( const float &timeDiff )
 {
-	return ( 1 - std::exp( -1.0f * SConsts::TRAJ_BOMB_ALPHA * timeDiff ) ) / SConsts::TRAJ_BOMB_ALPHA;
+	return ( 1 - NDetMath::Exp( -1.0f * SConsts::TRAJ_BOMB_ALPHA * timeDiff ) ) / SConsts::TRAJ_BOMB_ALPHA;
 }
 
 float CBombBallisticTraj::GetTimeOfFly( const float fZ, const float fZSpeed )
@@ -1511,8 +1512,8 @@ CBallisticTraj::CBallisticTraj( const CVec3 &_vStart,
 	{
 		// Rotate the launch direction, then solve speed for the original target distance.
 		// Keep gravity fixed so the offset changes the arc without shifting the impact.
-		const float fCos = std::cos( fVerticalOffsetAngleRad );
-		const float fSin = std::sin( fVerticalOffsetAngleRad );
+		const float fCos = NDetMath::Cos( fVerticalOffsetAngleRad );
+		const float fSin = NDetMath::Sin( fVerticalOffsetAngleRad );
 		const float fRotatedVx = fVx * fCos - fVy * fSin;
 		const float fRotatedVy = fVx * fSin + fVy * fCos;
 		// These trajectories are relative to interpolated terrain height. Only a
@@ -2014,7 +2015,7 @@ void CATGMTraj::Segment()
 			                              vCurrentDirection.z * vDesiredDirection.z,
 			                          -1.0f,
 			                          1.0f );
-			const float fAngle = std::acos( fDot );
+			const float fAngle = NDetMath::ACos( fDot );
 			if ( fAngle > ToRadian( 89.0f ) )
 			{
 				// A target behind the missile cannot be reacquired without orbiting around it.
@@ -2025,11 +2026,11 @@ void CATGMTraj::Segment()
 				const float fMaxTurn = (std::max)( fTurnRateRad, 0.0f ) * fTimeDiff / 1000.0f;
 				if ( fAngle > fMaxTurn && fAngle > 1e-6f )
 				{
-					const float fSinAngle = std::sin( fAngle );
+					const float fSinAngle = NDetMath::Sin( fAngle );
 					if ( std::fabs( fSinAngle ) > 1e-6f )
 					{
-						vDesiredDirection = vCurrentDirection * ( std::sin( fAngle - fMaxTurn ) / fSinAngle ) +
-						                    vDesiredDirection * ( std::sin( fMaxTurn ) / fSinAngle );
+						vDesiredDirection = vCurrentDirection * ( NDetMath::Sin( fAngle - fMaxTurn ) / fSinAngle ) +
+						                    vDesiredDirection * ( NDetMath::Sin( fMaxTurn ) / fSinAngle );
 					}
 					else
 					{

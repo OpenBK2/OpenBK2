@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Misc/DetMath.h"
 #include "Misc/Win32Random.h"
 #include "Scene.h"
 #include "SurfController.h"
@@ -224,7 +225,7 @@ void CSurfController::Init( const float fAngle,
 
 	CVec2 vBBMin, vBBMax;
 
-	const CVec2 vWind( std::cos( fAngle + FP_PI / 2 ), std::sin( fAngle + FP_PI / 2 ) );
+	const CVec2 vWind( NDetMath::Cos( fAngle + FP_PI / 2 ), NDetMath::Sin( fAngle + FP_PI / 2 ) );
 
 	surfPatches.resize( 0 );
 	surfPatchesBounds.resize( 0 );

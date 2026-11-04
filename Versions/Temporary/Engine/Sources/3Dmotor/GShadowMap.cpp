@@ -3,6 +3,7 @@
 #include "3DLib/Transform.h"
 #include "4dCalcs.h"
 #include "GShadowMap.h"
+#include "Misc/DetMath.h"
 
 #include <algorithm>
 
@@ -445,7 +446,7 @@ static float SetBits( float f, int nBits, int nBitVal )
 static float CalcNLP( float f )
 {
 	float fR = 7 + f * f;
-	return f * std::log( fR ) / std::log( 2.0f ) / std::sqrt( fR );
+	return f * NDetMath::Log( fR ) / NDetMath::Log( 2.0f ) / std::sqrt( fR );
 }
 
 static void SolveNLP( float fMin, float fMax, float *pfA, float *pfB )
@@ -496,7 +497,7 @@ struct SAreaCalcInfo
 
 static float CalcArea( float fRot, const SAreaCalcInfo &info, CVec4 *pX, CVec4 *pY )
 {
-	float fSin = std::sin( ToRadian( fRot ) ), fCos = std::cos( ToRadian( fRot ) );
+	float fSin = NDetMath::Sin( ToRadian( fRot ) ), fCos = NDetMath::Cos( ToRadian( fRot ) );
 
 	CVec3 vX, vY;
 	vX = fCos * info.vXBase + fSin * info.vYBase;

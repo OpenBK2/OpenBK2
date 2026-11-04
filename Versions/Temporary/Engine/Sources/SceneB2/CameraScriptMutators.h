@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Main/GameTimer.h"
+#include "Misc/DetMath.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/Dg.h"
 
@@ -91,17 +92,17 @@ public:
 
 		const float fStartYaw = ToRadian( placementStart.fYaw );
 		const float fStartPitch = ToRadian( placementStart.fPitch );
-		const CVec3 vStartDir( std::sin( -fStartYaw ) * std::cos( -fStartPitch ),
-		                       std::cos( -fStartYaw ) * std::cos( -fStartPitch ),
-		                       std::sin( -fStartPitch ) );
+		const CVec3 vStartDir( NDetMath::Sin( -fStartYaw ) * NDetMath::Cos( -fStartPitch ),
+		                       NDetMath::Cos( -fStartYaw ) * NDetMath::Cos( -fStartPitch ),
+		                       NDetMath::Sin( -fStartPitch ) );
 		fLengStart = std::fabs( placementStart.vPosition.z / vStartDir.z );
 		vAnchorStart = placementStart.vPosition + vStartDir * fLengStart;
 		//
 		const float fFinishYaw = ToRadian( placementFinish.fYaw );
 		const float fFinishPitch = ToRadian( placementFinish.fPitch );
-		const CVec3 vFinishDir( std::sin( -fFinishYaw ) * std::cos( -fFinishPitch ),
-		                        std::cos( -fFinishYaw ) * std::cos( -fFinishPitch ),
-		                        std::sin( -fFinishPitch ) );
+		const CVec3 vFinishDir( NDetMath::Sin( -fFinishYaw ) * NDetMath::Cos( -fFinishPitch ),
+		                        NDetMath::Cos( -fFinishYaw ) * NDetMath::Cos( -fFinishPitch ),
+		                        NDetMath::Sin( -fFinishPitch ) );
 		fLengFinish = std::fabs( placementFinish.vPosition.z / vFinishDir.z );
 		const CVec3 vFinishAnchor = placementFinish.vPosition + vFinishDir * fLengFinish;
 		vAnchorDir = vFinishAnchor - vAnchorStart;
@@ -242,18 +243,18 @@ public:
 
 		const float fStartYaw = ToRadian( placementStart.fYaw );
 		const float fStartPitch = ToRadian( placementStart.fPitch );
-		vStartDir = CVec3( std::sin( -fStartYaw ) * std::cos( -fStartPitch ),
-		                   std::cos( -fStartYaw ) * std::cos( -fStartPitch ),
-		                   std::sin( -fStartPitch ) );
+		vStartDir = CVec3( NDetMath::Sin( -fStartYaw ) * NDetMath::Cos( -fStartPitch ),
+		                   NDetMath::Cos( -fStartYaw ) * NDetMath::Cos( -fStartPitch ),
+		                   NDetMath::Sin( -fStartPitch ) );
 		fLengStart = std::fabs( placementStart.vPosition.z / vStartDir.z );
 		vStartDir *= fLengStart * fSpline1;
 		vAnchorStart = placementStart.vPosition + vStartDir;
 		//
 		const float fFinishYaw = ToRadian( placementFinish.fYaw );
 		const float fFinishPitch = ToRadian( placementFinish.fPitch );
-		vFinishDir = CVec3( std::sin( -fFinishYaw ) * std::cos( -fFinishPitch ),
-		                    std::cos( -fFinishYaw ) * std::cos( -fFinishPitch ),
-		                    std::sin( -fFinishPitch ) );
+		vFinishDir = CVec3( NDetMath::Sin( -fFinishYaw ) * NDetMath::Cos( -fFinishPitch ),
+		                    NDetMath::Cos( -fFinishYaw ) * NDetMath::Cos( -fFinishPitch ),
+		                    NDetMath::Sin( -fFinishPitch ) );
 		fLengFinish = std::fabs( placementFinish.vPosition.z / vFinishDir.z );
 		vFinishDir *= fLengFinish * fSpline2;
 		vAnchorFinish = placementFinish.vPosition + vFinishDir;

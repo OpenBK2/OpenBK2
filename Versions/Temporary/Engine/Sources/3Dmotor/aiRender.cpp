@@ -2,6 +2,7 @@
 
 #include "aiObject.h"
 #include "aiRender.h"
+#include "Misc/DetMath.h"
 
 namespace NAI
 {
@@ -165,7 +166,7 @@ void CFastRenderer::InitParallel( const CVec2 &_ptOrigin, float fAngle, float fS
 	ts.MakeParallel( region.Width() + 0.01f, region.Height() + 0.01f );
 	SHMatrix cam;
 	CVec2 ptCenter( _ptOrigin.x, _ptOrigin.y );
-	CVec2 ptXDir( std::cos( fAngle ) * fStep, std::sin( fAngle ) * fStep );
+	CVec2 ptXDir( NDetMath::Cos( fAngle ) * fStep, NDetMath::Sin( fAngle ) * fStep );
 	ptCenter += ptXDir * ( ( region.x1 + region.x2 ) * 0.5f );
 	ptCenter += CVec2( -ptXDir.y, ptXDir.x ) * ( ( region.y1 + region.y2 ) * 0.5f );
 	MakeMatrix( &cam, FP_PI2, fAngle, 0, CVec3( ptCenter.x, ptCenter.y, 0 ) );
@@ -215,7 +216,7 @@ void CFastRenderer::InitProjective(
 	//grid.SetSizes( region.Width(), region.Height() );
 	//origin = CTPoint<int>( -nHalfSize, -nHalfSize );
 
-	fPerPixelShiftX = std::tan( ToRadian( fAngle ) * 0.5f ) / nHalfSize;
+	fPerPixelShiftX = NDetMath::Tan( ToRadian( fAngle ) * 0.5f ) / nHalfSize;
 	fPerPixelShiftY = fPerPixelShiftX * fAspect;
 	bPerspective = true;
 	CalcDistMul();
@@ -228,7 +229,7 @@ void CFastRenderer::InitProjective( const CVec3 &src, const CVec3 &dst, float fH
 	CVec3 ptDir = dst - src;
 	MakeMatrix( &m, src, dst - src );
 	float fDistance = fabs( ptDir ) + 0.1f;
-	float fAngle = 2 * ToDegree( std::atan2( fHalfSquare, fDistance ) );
+	float fAngle = 2 * ToDegree( NDetMath::ATan2( fHalfSquare, fDistance ) );
 	InitProjective( m, fDistance, fAngle, nHalfSize );
 }
 
@@ -238,7 +239,7 @@ void CFastRenderer::InitProjective( const CVec3 &src, const CVec3 &dst, const CV
 	CVec3 ptDir = dst - src;
 	MakeMatrix( &m, src, dst - src );
 	float fDistance = fabs( ptDir ) + 0.1f;
-	float fAngle = 2 * ToDegree( std::atan2( halfSquare.x, fDistance ) );
+	float fAngle = 2 * ToDegree( NDetMath::ATan2( halfSquare.x, fDistance ) );
 	InitProjective( m, fDistance, fAngle, nHalfSize, halfSquare.y / halfSquare.x );
 }
 

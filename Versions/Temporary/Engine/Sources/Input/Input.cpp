@@ -16,6 +16,7 @@
 #include "Misc/Win32Helper.h"
 #else
 #include "HostedInput.h"
+#include "Misc/DetMath.h"
 #include "port/window.h"
 #include "System/SdlVideo.h"
 
@@ -788,8 +789,8 @@ void PumpMessages( bool bFocus )
 				SMessage sMessageX( sKeyX.nAction, sKeyX.ePOVAxis, sKeyX.eType, 0, true, iTempEvent->sMessage.tTime );
 				if ( iTempEvent->sMessage.nParam != -1 )
 				{
-					sMessageX.nParam =
-							std::cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+					sMessageX.nParam = NDetMath::Cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) *
+					                   POV_RANGE_VALUE;
 				}
 
 				messages.push_back( sMessageX );
@@ -800,8 +801,8 @@ void PumpMessages( bool bFocus )
 				SMessage sMessageY( sKeyY.nAction, sKeyY.ePOVAxis, sKeyY.eType, 0, true, iTempEvent->sMessage.tTime );
 				if ( iTempEvent->sMessage.nParam != -1 )
 				{
-					sMessageY.nParam =
-							std::sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+					sMessageY.nParam = NDetMath::Sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) *
+					                   POV_RANGE_VALUE;
 				}
 				messages.push_back( sMessageY );
 			}

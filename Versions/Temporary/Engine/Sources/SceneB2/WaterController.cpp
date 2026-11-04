@@ -6,6 +6,7 @@
 #include "B2_M1_Terrain/DBPreLight.h"
 #include "GenTerrain.h"
 #include "Image/Targa.h"
+#include "Misc/DetMath.h"
 #include "Misc/Win32Random.h"
 #include "Scene.h"
 #include "System/FastMath.h"
@@ -203,10 +204,10 @@ CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
 {
 	if ( _pLight )
 	{
-		const float fHor = std::sin( ToRadian( _pLight->fPitch ) );
-		vSunDir.z = -std::cos( ToRadian( _pLight->fPitch ) );
-		vSunDir.x = fHor * std::cos( ToRadian( _pLight->fYaw ) );
-		vSunDir.y = fHor * std::sin( ToRadian( _pLight->fYaw ) );
+		const float fHor = NDetMath::Sin( ToRadian( _pLight->fPitch ) );
+		vSunDir.z = -NDetMath::Cos( ToRadian( _pLight->fPitch ) );
+		vSunDir.x = fHor * NDetMath::Cos( ToRadian( _pLight->fYaw ) );
+		vSunDir.y = fHor * NDetMath::Sin( ToRadian( _pLight->fYaw ) );
 		vSunDir = -vSunDir;
 	}
 	else
@@ -245,7 +246,7 @@ inline int FindRealIndex( const CVec2i &val, const std::vector<CVec2i> &arr )
 
 inline float GetTanHyperbolic( const float z )
 {
-	return ( std::exp( z ) - std::exp( -z ) ) / ( std::exp( z ) + std::exp( -z ) );
+	return ( NDetMath::Exp( z ) - NDetMath::Exp( -z ) ) / ( NDetMath::Exp( z ) + NDetMath::Exp( -z ) );
 }
 
 inline float GetPhase( const int x, const int y, const float fDeepWaveNumber )
@@ -307,7 +308,7 @@ void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode>> *pWa
 			for ( int p = 0; p < nStages; ++p )
 			{
 				const float fCoeff = (float)p / ( nStages - 1 );
-				fDefPhase += std::sin( (float)i * ( 0.3f + 0.9f * fCoeff ) ) * ( 0.01f + 0.04f * fCoeff );
+				fDefPhase += NDetMath::Sin( (float)i * ( 0.3f + 0.9f * fCoeff ) ) * ( 0.01f + 0.04f * fCoeff );
 			}
 
 			float fPhase = fDefPhase * DEF_WAVES_SCALE_FACTOR;
@@ -747,7 +748,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 							const CVec3 &vSunDirAmbient = curParams.pLight->vAmbientColor;
 							const CVec3 &vSunDirDiffuse = curParams.pLight->vLightColor;
 
-							const float fCos = -std::cos( ToRadian( curParams.pLight->fPitch ) );
+							const float fCos = -NDetMath::Cos( ToRadian( curParams.pLight->fPitch ) );
 							vCol.Lerp( fCos, vSunDirAmbient, vSunDirDiffuse );
 							vCol *= 255;
 						}
@@ -1491,7 +1492,7 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 		for ( int i = 0; i < waterNodes.GetSizeX(); ++i )
 		{
 			const CVec2 vPos( vOrg.x + (float)i * DEF_TILE_SIZE, vOrg.y + (float)g * DEF_TILE_SIZE );
-			RotateVector( &vRotPos, vPos, vCenter, std::cos( fWinterDirection ), std::sin( fWinterDirection ) );
+			RotateVector( &vRotPos, vPos, vCenter, NDetMath::Cos( fWinterDirection ), NDetMath::Sin( fWinterDirection ) );
 			const int nIndX = vRotPos.x * DEF_INV_TILE_SIZE;
 			const int nIndY = vRotPos.y * DEF_INV_TILE_SIZE;
 			if ( ( nIndX >= 0 ) && ( nIndX < seaMap.GetSizeX() ) && ( nIndY >= 0 ) && ( nIndY < seaMap.GetSizeY() ) &&

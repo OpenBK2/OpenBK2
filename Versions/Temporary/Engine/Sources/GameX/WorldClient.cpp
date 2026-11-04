@@ -13,6 +13,7 @@
 #include "GameXClassIDs.h"
 #include "GetConsts.h"
 #include "InterfaceState.h"
+#include "Misc/DetMath.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
 #include "port/wordpack.h"
@@ -358,11 +359,11 @@ void CWorldClient::SUISelection::CalcTargetState( const CVec2 &vMovePos,
                                                   const CVec2 &vStartRotatePos,
                                                   const CVec2 &vFinishRotatePos )
 {
-	float fStartAngle = atan2f( vStartRotatePos.y - vMovePos.y, vStartRotatePos.x - vMovePos.x );
-	float fFinishAngle = atan2f( vFinishRotatePos.y - vMovePos.y, vFinishRotatePos.x - vMovePos.x );
+	float fStartAngle = NDetMath::ATan2( vStartRotatePos.y - vMovePos.y, vStartRotatePos.x - vMovePos.x );
+	float fFinishAngle = NDetMath::ATan2( vFinishRotatePos.y - vMovePos.y, vFinishRotatePos.x - vMovePos.x );
 	float fDeltaAngle = fFinishAngle - fStartAngle;
-	float fSin = sinf( fDeltaAngle );
-	float fCos = cosf( fDeltaAngle );
+	float fSin = NDetMath::Sin( fDeltaAngle );
+	float fCos = NDetMath::Cos( fDeltaAngle );
 
 	for ( int i = 0; i < objects.size(); ++i )
 	{
@@ -3055,7 +3056,7 @@ void CWorldClient::SMapCommandAck::Place( const CVec3 &_vPos, const CVec3 &vStar
 	Place( _vPos );
 	if ( bPlaced )
 	{
-		float fAngle = atan2f( vPos.y - vStartPos.y, vPos.x - vStartPos.x );
+		float fAngle = NDetMath::ATan2( vPos.y - vStartPos.y, vPos.x - vStartPos.x );
 		CQuat q;
 		q.FromAngleAxis( fAngle, CVec3( 0.0f, 0.0f, 1.0f ) );
 		Scene()->MoveObject( nUniqueID, vPos, q );

@@ -3,6 +3,7 @@
 #include "B2_M1_Terrain/DBPreLight.h"
 #include "B2_M1_Terrain/DBWater.h"
 #include "Image/Targa.h"
+#include "Misc/DetMath.h"
 #include "Misc/Win32Random.h"
 #include "Scene.h"
 #include "System/FastMath.h"
@@ -594,10 +595,10 @@ int CWaterPatch::Process( const long nTime )
 			vNorm *= invCoeffs[nNormsCount];
 
 			CVec3 vSunDir;
-			const float fHor = std::sin( ToRadian( pDesc->pLight->fPitch ) );
-			vSunDir.z = -std::cos( ToRadian( pDesc->pLight->fPitch ) );
-			vSunDir.x = fHor * std::cos( ToRadian( pDesc->pLight->fYaw ) );
-			vSunDir.y = fHor * std::sin( ToRadian( pDesc->pLight->fYaw ) );
+			const float fHor = NDetMath::Sin( ToRadian( pDesc->pLight->fPitch ) );
+			vSunDir.z = -NDetMath::Cos( ToRadian( pDesc->pLight->fPitch ) );
+			vSunDir.x = fHor * NDetMath::Cos( ToRadian( pDesc->pLight->fYaw ) );
+			vSunDir.y = fHor * NDetMath::Sin( ToRadian( pDesc->pLight->fYaw ) );
 			vSunDir = -vSunDir;
 
 			const CVec3 &vSunDirAmbient = pDesc->pLight->vAmbientColor;
@@ -720,8 +721,8 @@ int CWaterPatch::Process( const long nTime )
 				fRad = 2.0f * ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) - fRad;
 			}
 			fRad += DEF_WATER_HOR_DEFORM_MIN_RAD;
-			waterHorDeform[g][i].fOffsX = std::cos( fAng ) * fRad;
-			waterHorDeform[g][i].fOffsY = std::sin( fAng ) * fRad;
+			waterHorDeform[g][i].fOffsX = NDetMath::Cos( fAng ) * fRad;
+			waterHorDeform[g][i].fOffsY = NDetMath::Sin( fAng ) * fRad;
 		}
 	}
 
@@ -735,7 +736,7 @@ inline float CWaterPatch::GetPhase( const int x, const int y, const int curw )
 
 inline float CWaterPatch::GetTanHyperbolic( const float z )
 {
-	return ( std::exp( z ) - std::exp( -z ) ) / ( std::exp( z ) + std::exp( -z ) );
+	return ( NDetMath::Exp( z ) - NDetMath::Exp( -z ) ) / ( NDetMath::Exp( z ) + NDetMath::Exp( -z ) );
 }
 
 inline float CWaterPatch::GetFracPart( const float z )
@@ -786,8 +787,8 @@ int CWaterPatch::Init(
 
 	// init vertexes
 	grid.resize( nSX * nSY );
-	fWaterRotationSin = std::sin( _fRotAngle );
-	fWaterRotationCos = std::cos( _fRotAngle );
+	fWaterRotationSin = NDetMath::Sin( _fRotAngle );
+	fWaterRotationCos = NDetMath::Cos( _fRotAngle );
 	vWaterOffset = org;
 	for ( int g = 0; g < nSY; ++g )
 	{
@@ -921,8 +922,8 @@ int CWaterPatch::Init(
 			}
 			fRad += DEF_WATER_HOR_DEFORM_MIN_RAD;
 
-			waterHorDeform[g][i].fOffsX = std::cos( fAng ) * fRad;
-			waterHorDeform[g][i].fOffsY = std::sin( fAng ) * fRad;
+			waterHorDeform[g][i].fOffsX = NDetMath::Cos( fAng ) * fRad;
+			waterHorDeform[g][i].fOffsY = NDetMath::Sin( fAng ) * fRad;
 		}
 	}
 
@@ -1104,7 +1105,7 @@ void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 		for ( int p = 0; p < nStages; ++p )
 		{
 			const float fCoeff = (float)p / ( nStages - 1 );
-			fDefPhase += std::sin( (float)i * ( 0.3f + 0.9f * fCoeff ) ) * ( 0.01f + 0.04f * fCoeff );
+			fDefPhase += NDetMath::Sin( (float)i * ( 0.3f + 0.9f * fCoeff ) ) * ( 0.01f + 0.04f * fCoeff );
 		}
 
 		float fPhase = fDefPhase * DEF_WAVES_SCALE_FACTOR;
@@ -1164,8 +1165,8 @@ void CWater::Create( NGScene::IGameView *pGView, const int nPatchesX, const int 
 		nWaterWidth = 2 * DEF_PATCH_SIZE - 6;
 	}
 
-	const float fAngleCos = std::cos( fAngle );
-	const float fAngleSin = std::sin( fAngle );
+	const float fAngleCos = NDetMath::Cos( fAngle );
+	const float fAngleSin = NDetMath::Sin( fAngle );
 
 	patches.reserve( nPatchesX );
 	patches.resize( 0 );

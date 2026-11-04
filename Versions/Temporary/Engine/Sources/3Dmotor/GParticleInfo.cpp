@@ -4,6 +4,7 @@
 #include "GParticleFilter.h"
 #include "GParticleFormat.h"
 #include "GParticleInfo.h"
+#include "Misc/DetMath.h"
 
 #include <cstdint>
 
@@ -105,7 +106,7 @@ struct SSinCosTableInit
 	{
 		for ( int k = 0; k < N_SIN_TABLE_PERIOD * 2 - 1; ++k )
 		{
-			fSinTable[k] = std::sin( k * FP_2PI / N_SIN_TABLE_PERIOD );
+			fSinTable[k] = NDetMath::Sin( k * FP_2PI / N_SIN_TABLE_PERIOD );
 		}
 	}
 } sinCosTable;

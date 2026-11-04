@@ -2,6 +2,7 @@
 
 #include "3Dmotor/Interpolate.h"
 #include "CameraScriptMutators.h"
+#include "Misc/DetMath.h"
 #include "SceneB2/Scene.h"
 
 #include <fmt/format.h>
@@ -79,9 +80,9 @@ void CSCamDMoveFlightMutator::Recalc()
 		TLinearInterpolate interp;
 		//
 		const float fLeng = interp( fLengStart, fLengFinish, fCoeff );
-		const CVec3 vDir( std::sin( ToRadian( -this->fYaw ) ) * std::cos( ToRadian( -this->fPitch ) ),
-		                  std::cos( ToRadian( -this->fYaw ) ) * std::cos( ToRadian( -this->fPitch ) ),
-		                  std::sin( ToRadian( -this->fPitch ) ) );
+		const CVec3 vDir( NDetMath::Sin( ToRadian( -this->fYaw ) ) * NDetMath::Cos( ToRadian( -this->fPitch ) ),
+		                  NDetMath::Cos( ToRadian( -this->fYaw ) ) * NDetMath::Cos( ToRadian( -this->fPitch ) ),
+		                  NDetMath::Sin( ToRadian( -this->fPitch ) ) );
 		this->vPosition = vAnchor - vDir * fLeng;
 		this->fFOV = interp( placementStart.fFOV, placementFinish.fFOV, fCoeff );
 	}
@@ -127,8 +128,8 @@ void CSCamDFollowFlightMutator::Recalc()
 		CVec3 vDir = vAnchor - this->vPosition;
 		Normalize( &vDir );
 		//
-		this->fPitch = ToDegree( -asinf( vDir.z ) );
-		this->fYaw = ToDegree( std::atan2( vDir.y, vDir.x ) - FP_PI2 );
+		this->fPitch = ToDegree( -NDetMath::ASin( vDir.z ) );
+		this->fYaw = ToDegree( NDetMath::ATan2( vDir.y, vDir.x ) - FP_PI2 );
 	}
 	else
 	{
@@ -185,8 +186,9 @@ void CSCamDRotateFlightMutator::Recalc()
 	const float fPitch = ToRadian( this->fPitch );
 	const float fYaw = ToRadian( this->fYaw );
 
-	CVec3 vOldDir =
-			CVec3( std::sin( -fYaw ) * std::cos( -fPitch ), std::cos( -fYaw ) * std::cos( -fPitch ), std::sin( -fPitch ) );
+	CVec3 vOldDir = CVec3( NDetMath::Sin( -fYaw ) * NDetMath::Cos( -fPitch ),
+	                       NDetMath::Cos( -fYaw ) * NDetMath::Cos( -fPitch ),
+	                       NDetMath::Sin( -fPitch ) );
 
 	if ( vOldDir.z != 0 ) //	We cannot rotate horizontal camera
 	{
@@ -196,8 +198,9 @@ void CSCamDRotateFlightMutator::Recalc()
 	const float fCoeff = float( currTime - timeStart ) / float( timeFinish - timeStart );
 	const float fNewYaw = fStartYaw + fAngle * fCoeff;
 	this->fYaw = ToDegree( fNewYaw );
-	CVec3 vNewDir = CVec3(
-			std::sin( -fNewYaw ) * std::cos( -fPitch ), std::cos( -fNewYaw ) * std::cos( -fPitch ), std::sin( -fPitch ) );
+	CVec3 vNewDir = CVec3( NDetMath::Sin( -fNewYaw ) * NDetMath::Cos( -fPitch ),
+	                       NDetMath::Cos( -fNewYaw ) * NDetMath::Cos( -fPitch ),
+	                       NDetMath::Sin( -fPitch ) );
 	vNewDir *= fabs( vOldDir );
 
 	this->vPosition = ( CVec3( Vis2AI( basePlacement.vPosition.x ),
@@ -314,9 +317,10 @@ CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies
 		cameraQuats.push_back( quat );
 
 		// calculate Anchor
-		const CVec3 vDir( std::sin( ToRadian( -camPlacement.fYaw ) ) * std::cos( ToRadian( -camPlacement.fPitch ) ),
-		                  std::cos( ToRadian( -camPlacement.fYaw ) ) * std::cos( ToRadian( -camPlacement.fPitch ) ),
-		                  std::sin( ToRadian( -camPlacement.fPitch ) ) );
+		const CVec3 vDir(
+				NDetMath::Sin( ToRadian( -camPlacement.fYaw ) ) * NDetMath::Cos( ToRadian( -camPlacement.fPitch ) ),
+				NDetMath::Cos( ToRadian( -camPlacement.fYaw ) ) * NDetMath::Cos( ToRadian( -camPlacement.fPitch ) ),
+				NDetMath::Sin( ToRadian( -camPlacement.fPitch ) ) );
 		const float fDist = std::fabs( camPlacement.vPosition.z / vDir.z );
 		const CVec3 vAnchor = camPlacement.vPosition + vDir * fDist;
 		cameraAnchors.push_back( vAnchor );
@@ -402,9 +406,10 @@ void CScriptMoviesMutatorHolder::Recalc()
 				{
 					const CVec3 vAnchor = cameraAnchors[i] + ( cameraAnchors[i + 1] - cameraAnchors[i] ) * fCoeff;
 					const float fDist = interp( cameraDists[i], cameraDists[i + 1], fCoeff );
-					const CVec3 vDir( std::sin( -( placement.fYaw ) ) * std::cos( -( FP_PI2 * 3.0f - placement.fPitch ) ),
-					                  std::cos( -( placement.fYaw ) ) * std::cos( -( FP_PI2 * 3.0f - placement.fPitch ) ),
-					                  std::sin( -( FP_PI2 * 3.0f - placement.fPitch ) ) );
+					const CVec3 vDir(
+							NDetMath::Sin( -( placement.fYaw ) ) * NDetMath::Cos( -( FP_PI2 * 3.0f - placement.fPitch ) ),
+							NDetMath::Cos( -( placement.fYaw ) ) * NDetMath::Cos( -( FP_PI2 * 3.0f - placement.fPitch ) ),
+							NDetMath::Sin( -( FP_PI2 * 3.0f - placement.fPitch ) ) );
 					placement.vPosition = vAnchor - vDir * fDist;
 				}
 				AI2Vis( &placement.vPosition );

@@ -20,6 +20,7 @@
 #include "FullScreenFader.h"
 #include "Image/Targa.h"
 #include "Main/GameTimer.h"
+#include "Misc/DetMath.h"
 #include "Misc/StrProc.h"
 #include "port/time.h"
 #include "SceneHoldQueue.h"
@@ -500,7 +501,7 @@ static void CalcGammaRamp2Bounded( NGfx::SPixel8888 *pRamp, float fBrightness, f
 	for ( int i = 0; i < 256; ++i )
 	{
 		float fVal = float( i ) / 255.0f;
-		float fGammaValue = std::pow( fVal, fPower );
+		float fGammaValue = NDetMath::Pow( fVal, fPower );
 		float fContrastValue = Clamp( fA * fGammaValue + fB, 0.0f, 1.0f );
 		float fResult = Clamp( fContrastValue + fBrightness, 0.0f, 1.0f );
 		pRamp[i].r = fResult * 255.0f;
@@ -939,8 +940,8 @@ void CScene::OnSerialize( IBinSaver &saver )
 static void CalcBigRect( CTRect<float> *pRect, float fCameraYaw, float fMapSizeX, float fMapSizeY )
 {
 	const float fAngle = -ToRadian( fCameraYaw );
-	const float fSin = std::sin( fAngle );
-	const float fCos = std::cos( fAngle );
+	const float fSin = NDetMath::Sin( fAngle );
+	const float fCos = NDetMath::Cos( fAngle );
 	//
 	CVec2 v1( 0, fMapSizeY );
 	CVec2 v2( fMapSizeX, 0 );
@@ -973,8 +974,8 @@ static void CalcIterationParams( CVec3 *pvStart,
                                  const CTRect<float> &rcRect )
 {
 	const float fAngle = -ToRadian( fCameraYaw );
-	const float fSin = std::sin( fAngle );
-	const float fCos = std::cos( fAngle );
+	const float fSin = NDetMath::Sin( fAngle );
+	const float fCos = NDetMath::Cos( fAngle );
 	const CVec3 vAxisX( fCos, fSin, 0 );
 	const CVec3 vAxisY( -fSin, fCos, 0 );
 	pvStart->Set( rcRect.minx * vAxisX.x + rcRect.maxy * vAxisX.y, rcRect.minx * vAxisY.x + rcRect.maxy * vAxisY.y, 0 );
@@ -1373,7 +1374,7 @@ static void CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<s
 	}
 	//
 	const float fYaw = paramsSet.empty() ? 0 : NStr::ToFloat( NStr::ToMBCS( paramsSet[0] ) );
-	const float fPitch = ToDegree( std::asin( 3.0f / 4.0f ) );
+	const float fPitch = ToDegree( NDetMath::ASin( 3.0f / 4.0f ) );
 	float fOldDist, fOldPitch, fOldYaw;
 	Camera()->GetPlacement( &fOldDist, &fOldPitch, &fOldYaw );
 	Camera()->SetPlacement( fOldDist, fPitch, fYaw );

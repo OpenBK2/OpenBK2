@@ -20,6 +20,7 @@
 #include "GSceneUtils.h"
 #include "GShadowVolume.h"
 #include "LoadingCounter.h"
+#include "Misc/DetMath.h"
 #include "Misc/HPTimer.h"
 #include "SuperCollider.h" // for TraceStatic(...)
 #include "WaitingList.h"   // CompactWaitingList, which WalkNotLoadedObjects is
@@ -1369,8 +1370,8 @@ static void AddPCElement( CSceneFragments *pRes, CCombinedPart *p )
 		const CCombinedPart::SPartInfo &r = partsInfo[i];
 		const CCombinedPart::SMaterialInfo &m = p->GetMaterial( r.nMaterial );
 		SPerPartVariables vars = m.vars;
-		float f =
-				( std::log( pPart->fAverageTriArea ) - std::log( fPCLow ) ) / ( std::log( fPCHigh ) - std::log( fPCLow ) );
+		float f = ( NDetMath::Log( pPart->fAverageTriArea ) - NDetMath::Log( fPCLow ) ) /
+		          ( NDetMath::Log( fPCHigh ) - NDetMath::Log( fPCLow ) );
 		vars.fFade = Clamp( f, 0.0f, 1.0f );
 
 		CPartFlags pf;

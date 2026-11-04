@@ -5,6 +5,7 @@
 #include "GfxBuffers.h"
 #include "GfxInternal.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "Misc/HPTimer.h"
 #include "port/debugging.h"
 #include "port/window.h"
@@ -1307,7 +1308,7 @@ void SetGamma( bool bGamma )
 			float f = k / 256.0f;
 			//if ( f < 0.0031308f ) f = f * 12.92f; else 	f = 1.055f * exp( log( f ) / 2.4f ) - 0.055f;
 			//if ( f < 0.026175f ) f = f * 4; else 	f = 1.1466f * exp( log( f ) / 2.4f ) - 0.1466f;
-			f = std::exp( std::log( f ) / fGamma );
+			f = NDetMath::Exp( NDetMath::Log( f ) / fGamma );
 			uint16_t wRes = Float2Int( f * 65535 );
 			if ( !gammaRamp.empty() )
 			{

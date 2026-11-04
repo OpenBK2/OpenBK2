@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Misc/DetMath.h"
 #include "Tools.h"
 
 #include "Misc_export.h"
@@ -2951,11 +2952,11 @@ inline void CQuat::FromAngleAxis( float fAngle, const CVec3 &vAxis, const bool b
 	NI_ASSERT( bNormalizeAxis || fabs( fabs( vAxis ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
 
 	fAngle *= 0.5f;
-	const float fSinAlpha = bNormalizeAxis ? std::sin( fAngle ) / fabs( vAxis ) : std::sin( fAngle );
+	const float fSinAlpha = bNormalizeAxis ? NDetMath::Sin( fAngle ) / fabs( vAxis ) : NDetMath::Sin( fAngle );
 	vec4.x = vAxis.x * fSinAlpha;
 	vec4.y = vAxis.y * fSinAlpha;
 	vec4.z = vAxis.z * fSinAlpha;
-	vec4.w = std::cos( fAngle );
+	vec4.w = NDetMath::Cos( fAngle );
 }
 
 inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis )
@@ -2963,11 +2964,12 @@ inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, floa
 	NI_ASSERT( bNormalizeAxis || fabs( fabs( fAxisX, fAxisY, fAxisZ ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
 
 	fAngle *= 0.5f;
-	const float fSinAlpha = bNormalizeAxis ? std::sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : std::sin( fAngle );
+	const float fSinAlpha =
+			bNormalizeAxis ? NDetMath::Sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : NDetMath::Sin( fAngle );
 	vec4.x = fAxisX * fSinAlpha;
 	vec4.y = fAxisY * fSinAlpha;
 	vec4.z = fAxisZ * fSinAlpha;
-	vec4.w = std::cos( fAngle );
+	vec4.w = NDetMath::Cos( fAngle );
 }
 
 // create quaternion from Euler matrix
@@ -3031,12 +3033,12 @@ inline void CQuat::FromEulerAngles( float yaw, float pitch, float roll )
 	const float fHalfPitch = pitch * 0.5f;
 	const float fHalfRoll = roll * 0.5f;
 
-	const float fCosYaw = std::cos( fHalfYaw );
-	const float fSinYaw = std::sin( fHalfYaw );
-	const float fCosPitch = std::cos( fHalfPitch );
-	const float fSinPitch = std::sin( fHalfPitch );
-	const float fCosRoll = std::cos( fHalfRoll );
-	const float fSinRoll = std::sin( fHalfRoll );
+	const float fCosYaw = NDetMath::Cos( fHalfYaw );
+	const float fSinYaw = NDetMath::Sin( fHalfYaw );
+	const float fCosPitch = NDetMath::Cos( fHalfPitch );
+	const float fSinPitch = NDetMath::Sin( fHalfPitch );
+	const float fCosRoll = NDetMath::Cos( fHalfRoll );
+	const float fSinRoll = NDetMath::Sin( fHalfRoll );
 
 	vec4.x = fSinRoll * fCosPitch * fCosYaw - fCosRoll * fSinPitch * fSinYaw;
 	vec4.y = fCosRoll * fSinPitch * fCosYaw + fSinRoll * fCosPitch * fSinYaw;
@@ -3313,10 +3315,10 @@ inline const CQuat CQuat::Exp() const
 	// exp(q) = cos(A)+sin(A)*(x*i+y*j+z*k).  If sin(A) is near zero,
 	// use exp(q) = cos(A)+A*(x*i+y*j+z*k) since A/sin(A) has limit 1.
 	const double angle = fabs( vec4.x, vec4.y, vec4.z );
-	const double sn = std::sin( angle );
+	const double sn = NDetMath::Sin( angle );
 	CQuat result;
 
-	result.vec4.w = float( std::cos( angle ) );
+	result.vec4.w = float( NDetMath::Cos( angle ) );
 
 	if ( std::fabs( sn ) >= FP_QUAT_EPSILON )
 	{
@@ -3343,8 +3345,8 @@ inline const CQuat CQuat::Log() const
 	// sin(A)*(x*i + y*j + z*k) since sin(A)/A has limit 1.
 	if ( std::fabs( vec4.w ) < 1.0f )
 	{
-		const double angle = std::acos( vec4.w );
-		const double sn = std::sin( angle );
+		const double angle = NDetMath::ACos( vec4.w );
+		const double sn = NDetMath::Sin( angle );
 		if ( std::fabs( sn ) >= FP_QUAT_EPSILON )
 		{
 			const float coeff = float( angle / sn );
@@ -3371,10 +3373,10 @@ inline void CQuat::Slerp( const float factor, const CQuat &p, const CQuat &q )
 	// calculate coefficients
 	if ( ( 1.0 - cosom ) > FP_QUAT_EPSILON ) // standard case (slerp)
 	{
-		const float omega = std::acos( cosom );
-		const float sinom = static_cast<float>( 1.0 / std::sin( omega ) );
-		scale0 = float( std::sin( ( 1.0 - factor ) * omega ) * sinom );
-		scale1 = float( std::sin( factor * omega ) * sinom );
+		const float omega = NDetMath::ACos( cosom );
+		const float sinom = static_cast<float>( 1.0 / NDetMath::Sin( omega ) );
+		scale0 = float( NDetMath::Sin( ( 1.0 - factor ) * omega ) * sinom );
+		scale1 = float( NDetMath::Sin( factor * omega ) * sinom );
 	}
 	else // "p" and "q" quaternions are very close. so we can do a linear interpolation
 	{

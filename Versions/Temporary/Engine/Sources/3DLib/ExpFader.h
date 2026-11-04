@@ -1,4 +1,5 @@
 #pragma once
+#include "Misc/DetMath.h"
 #include "System/time.hpp"
 
 namespace NGScene
@@ -45,7 +46,7 @@ public:
 	void Update( STime tCur, float fTargetSize )
 	{
 		float fDeltaT = (std::max)( 0.0f, ( (float)tCur - tPrev ) / 1024.0f );
-		fSize = fTargetSize - ( fTargetSize - fSize ) * std::exp( -fDeltaT / fOnTime );
+		fSize = fTargetSize - ( fTargetSize - fSize ) * NDetMath::Exp( -fDeltaT / fOnTime );
 		tPrev = tCur;
 	}
 
@@ -62,7 +63,7 @@ public:
 
 inline float GefFadeLatency( float fLatency )
 {
-	return -fLatency / std::log( 0.01f );
+	return -fLatency / NDetMath::Log( 0.01f );
 }
 
 } // namespace NGScene

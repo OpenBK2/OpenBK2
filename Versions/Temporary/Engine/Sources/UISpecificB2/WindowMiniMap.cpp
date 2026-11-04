@@ -3,6 +3,7 @@
 #include "3Dmotor/RectLayout.h"
 #include "Main/GameTimer.h"
 #include "Misc/Bresenham.h"
+#include "Misc/DetMath.h"
 #include "Misc/GeomMisc.h"
 #include "Misc/PlaneGeometry.h"
 #include "System/Commands.h"
@@ -28,8 +29,8 @@ struct SMatrix2
 
 	SMatrix2( float fAngle )
 	{
-		float fSin = std::sin( fAngle );
-		float fCos = std::cos( fAngle );
+		float fSin = NDetMath::Sin( fAngle );
+		float fCos = NDetMath::Cos( fAngle );
 
 		m[0][0] = fCos;
 		m[0][1] = -fSin;
@@ -775,7 +776,7 @@ void CWindowMiniMap::MakeTransformParams( const CVec2 &vPoint00,
 void CWindowMiniMap::MakeRotableTransformParams( const CVec2 &vDirView )
 {
 	bNeedScreenToMapRefresh = true;
-	float fAngleView = std::atan2( vDirView.y, vDirView.x ) - FP_PI2;
+	float fAngleView = NDetMath::ATan2( vDirView.y, vDirView.x ) - FP_PI2;
 	float fDeltaAngle = fabsf( fAngleView - fPrevRotableAngle );
 	if ( fDeltaAngle < F_ANGLE_DELTA )
 	{

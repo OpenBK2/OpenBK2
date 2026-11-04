@@ -8,6 +8,7 @@
 #include "Guns.h"
 #include "Helicopter.h"
 #include "HelicopterStates.h"
+#include "Misc/DetMath.h"
 #include "NewUpdater.h"
 #include "System/FastMath.h"
 #include "UnitsIterators2.h"
@@ -399,9 +400,10 @@ void CHelicopter::SecondSegment( const NTimer::STime timeDiff )
 		{
 			const float fHorizontalDist =
 					(std::max)( fabs( CVec2( vVisualAimPoint.x, vVisualAimPoint.y ) - GetCenterPlain() ), 1.0f );
-			fTargetAttackAngle = Clamp( atan2f( (std::max)( 0.0f, GetCenter().z - vVisualAimPoint.z ), fHorizontalDist ),
-			                            0.0f,
-			                            pHeliStats->fMaxAttackAngleDownRadians );
+			fTargetAttackAngle =
+					Clamp( NDetMath::ATan2( (std::max)( 0.0f, GetCenter().z - vVisualAimPoint.z ), fHorizontalDist ),
+			           0.0f,
+			           pHeliStats->fMaxAttackAngleDownRadians );
 		}
 		// Attack orientation uses only yaw and forward pitch; do not add a banking axis.
 		if ( !bAttackTilt && !bTranslating && ( bMoveTargetSet || bVisualAimPointSet || IsTurning() ) )
@@ -523,14 +525,14 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	}
 	else if ( pHeliStats && std::fabs( fVisualMovementAngle ) > 0.001f )
 	{
-		vVisualSpeed.z = -fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) * tanf( fVisualMovementAngle );
+		vVisualSpeed.z = -fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) * NDetMath::Tan( fVisualMovementAngle );
 	}
 
 	CVec3 vVisualNormal( fabs( vInterpolatedNormal ) > 0.001f ? vInterpolatedNormal : V3_AXIS_Z );
 	if ( pHeliStats && !bDeadSpiralStarted && !bAttackTilt && std::fabs( fVisualSideAngle ) > 0.001f )
 	{
 		const CVec2 vSide( vVisualFrontDirection.y, -vVisualFrontDirection.x );
-		vVisualNormal += CVec3( vSide * tanf( fVisualSideAngle ), 0.0f );
+		vVisualNormal += CVec3( vSide * NDetMath::Tan( fVisualSideAngle ), 0.0f );
 	}
 
 	Normalize( &vVisualNormal );

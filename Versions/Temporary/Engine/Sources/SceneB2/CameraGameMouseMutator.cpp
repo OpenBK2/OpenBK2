@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CameraGameMouseMutator.h"
+#include "Misc/DetMath.h"
 #include "port/time.h"
 #include "Scene.h"
 #include "System/Commands.h"
@@ -121,7 +122,7 @@ float CCameraGameMouseMutator::GetZoomDistance( float fTimeDiff, float fRealSens
 		// speed and frame rate. At speed 1, about 95% of the step takes 250 ms.
 		const float fSmoothSpeed =
 				std::isfinite( s_fSmoothZoomSpeed ) && s_fSmoothZoomSpeed > 0 ? s_fSmoothZoomSpeed : 1.0f;
-		const float fBlend = -std::expm1( -0.012f * fSmoothSpeed * fTimeDiff );
+		const float fBlend = -NDetMath::ExpM1( -0.012f * fSmoothSpeed * fTimeDiff );
 		fDistance += ( fZoomTargetDistance - fDistance ) * fBlend;
 		if ( std::fabs( fZoomTargetDistance - fDistance ) < 0.001f )
 		{

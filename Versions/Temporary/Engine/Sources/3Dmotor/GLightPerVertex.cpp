@@ -3,6 +3,7 @@
 #include "3DLib/GGeometry.h"
 #include "GfxBuffers.h"
 #include "GLightPerVertex.h"
+#include "Misc/DetMath.h"
 //#include "..\Misc\HPTimer.h"
 #include "3DLib/Bound.h"
 #include "GLightPerVertexFused.h"
@@ -88,7 +89,7 @@ static float Lin( float f )
 
 static float Outp( float f )
 {
-	return std::exp( std::log( f ) / 3 );
+	return NDetMath::Exp( NDetMath::Log( f ) / 3 );
 }
 
 static CVec3 GetLinearColor( const CVec3 &a )

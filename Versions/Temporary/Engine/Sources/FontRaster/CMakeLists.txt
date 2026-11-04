@@ -25,6 +25,9 @@ bk2_add_library(FontRaster STATIC
 target_include_directories(FontRaster PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # PRIVATE: no FreeType type appears in FontRaster.h
 target_link_libraries(FontRaster PRIVATE freetype)
+# The gamma table uses NDetMath::Pow (Misc/DetMath.h); FontRaster links nothing
+# else of Misc, so it takes the library the header calls directly.
+target_link_libraries(FontRaster PRIVATE musl_libm)
 set_target_properties(FontRaster PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # unit tests, built on request: GposKerning_test

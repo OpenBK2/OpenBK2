@@ -2,6 +2,7 @@
 
 #include "3Dmotor/DBScene.h"
 #include "GenTerrain.h"
+#include "Misc/DetMath.h"
 
 #include <algorithm>
 
@@ -562,8 +563,8 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 				const float fNextSecTexY = (float)( k + 1 ) * DEF_PENDENT_SECTEX_COEFF;
 
 				const float fAngle = DEF_PENDENT_PART1_ANGLE_COEFF * k;
-				const float fCosAng = std::cos( fAngle );
-				const float fSinAng = std::sin( fAngle );
+				const float fCosAng = NDetMath::Cos( fAngle );
+				const float fSinAng = NDetMath::Sin( fAngle );
 
 				if ( k < DEF_PENDENT_PART1_NUM )
 				{

@@ -7,6 +7,8 @@
 #include FT_TRUETYPE_TABLES_H
 #include FT_TRUETYPE_TAGS_H
 
+#include "Misc/DetMath.h"
+
 #include <algorithm>
 #include <cmath>
 
@@ -282,7 +284,7 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 	for ( int i = 0; i < 256; ++i )
 	{
 		const double fGamma = options.fGamma > 0 ? options.fGamma : 1.0;
-		impl.gammaTable[i] = static_cast<uint8_t>( std::lround( 255.0 * std::pow( i / 255.0, 1.0 / fGamma ) ) );
+		impl.gammaTable[i] = static_cast<uint8_t>( std::lround( 255.0 * NDetMath::Pow( i / 255.0, 1.0 / fGamma ) ) );
 	}
 	SDesignMetrics design;
 	if ( !ReadDesignMetrics( impl.pFace, &design, pszError ) )

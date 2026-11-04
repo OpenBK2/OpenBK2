@@ -12,6 +12,7 @@
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "Misc/StrProc.h"
 #include "SceneB2/TerraGen.h"
 #include "SceneB2/VisObjDesc.h"
@@ -888,7 +889,7 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 	SHMatrix mtx = pLocInfo->mtx;
 	CVec3 vec;
 	mtx.RotateVector( &vec, V3_AXIS_Z );
-	float fAngle = std::atan2( vec.y, vec.x ); // -pi...+pi
+	float fAngle = NDetMath::ATan2( vec.y, vec.x ); // -pi...+pi
 
 	// угол возвращается в AI системе отчсчета (отсчитывается против часовой стрелки от (0,1,0))
 	if ( fAngle < 0 ) // 0..2pi

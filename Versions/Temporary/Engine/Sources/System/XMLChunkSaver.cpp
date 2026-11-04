@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "FilePath.h"
+#include "Misc/DetMath.h"
 #include "Misc/StrProc.h"
 #include "port/unicode.h"
 #include "XMLChunkSaver.h"
@@ -403,7 +404,7 @@ static const float ReadFloat( const char *p, const int nSize )
 			}
 			nPower *= nESign;
 
-			f *= std::pow( 10.0f, nPower );
+			f *= NDetMath::Pow( 10.0f, nPower );
 		}
 	}
 

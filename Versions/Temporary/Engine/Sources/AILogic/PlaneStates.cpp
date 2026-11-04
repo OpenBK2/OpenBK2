@@ -9,6 +9,7 @@
 #include "GroupLogic.h"
 #include "Guns.h"
 #include "ManuverInternal.h"
+#include "Misc/DetMath.h"
 #include "NewUpdater.h"
 #include "PlanePath.h"
 #include "PlanesFormation.h"
@@ -1833,10 +1834,11 @@ CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState(
 	if ( pStats->wDivingAngle != 0 )
 	{
 		const float fBetta = ( PI - fDiveAngle ) / 2.0f;
-		fStartAttackDist = ( fVertTurnRadius / std::tan( fBetta ) ) + ( pPlane->GetCenter().z / std::tan( fDiveAngle ) ) +
+		fStartAttackDist = ( fVertTurnRadius / NDetMath::Tan( fBetta ) ) +
+		                   ( pPlane->GetCenter().z / NDetMath::Tan( fDiveAngle ) ) +
 		                   pStats->fSpeed * 3 * SConsts::AI_SEGMENT_DURATION;
 
-		fFinishAttckDist = SPlanesConsts::GetMinHeight() / std::tan( fDiveAngle );
+		fFinishAttckDist = SPlanesConsts::GetMinHeight() / NDetMath::Tan( fDiveAngle );
 		//TODO{ check for gun ammo and bombs and send ack if no ammo
 		if ( !bAmmoRemains )
 		{

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Misc/DetMath.h"
+
 #include <string>
 #include <vector>
 
@@ -277,9 +279,9 @@ inline float CalcTimeSliderSpacing( float fLength, float fScale, int nWidth )
 	{
 		return 1.0f;
 	}
-	const float fSpacing =
-			std::pow( TSL_DEF_SPACING_SCALE_COEFF,
-	              (int)( std::log( fSpan * TSL_DEF_SPACING / nWidth ) / std::log( TSL_DEF_SPACING_SCALE_COEFF ) - 1 ) );
+	const float fSpacing = NDetMath::Pow(
+			TSL_DEF_SPACING_SCALE_COEFF,
+			(int)( NDetMath::Log( fSpan * TSL_DEF_SPACING / nWidth ) / NDetMath::Log( TSL_DEF_SPACING_SCALE_COEFF ) - 1 ) );
 	// a span small enough to underflow the power would do the same as above
 	return ( fSpacing > 0.0f ) ? fSpacing : 1.0f;
 }

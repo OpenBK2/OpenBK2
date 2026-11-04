@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CameraMapIterator.h"
+#include "Misc/DetMath.h"
 
 CCameraMapIterator::CCameraMapIterator(
 		float fFOV, float fYaw, float fPitch, float fDistance, const CVec2 &vScreenSize, float fMapSizeX, float fMapSizeY )
@@ -9,12 +10,12 @@ CCameraMapIterator::CCameraMapIterator(
 	, nCurrX( 0 )
 	, nCurrY( 0 )
 {
-	const float fStepX = 2.0f * fDistance * std::tan( fFOV * 0.5f );
-	const float fStepY = vScreenSize.y * fStepX / ( vScreenSize.x * std::sin( fPitch ) );
+	const float fStepX = 2.0f * fDistance * NDetMath::Tan( fFOV * 0.5f );
+	const float fStepY = vScreenSize.y * fStepX / ( vScreenSize.x * NDetMath::Sin( fPitch ) );
 	//
 	const float fAngle = -fYaw;
-	const float fSin = std::sin( fAngle );
-	const float fCos = std::cos( fAngle );
+	const float fSin = NDetMath::Sin( fAngle );
+	const float fCos = NDetMath::Cos( fAngle );
 	//
 	CVec2 v1( 0, fMapSizeY );
 	CVec2 v2( fMapSizeX, 0 );

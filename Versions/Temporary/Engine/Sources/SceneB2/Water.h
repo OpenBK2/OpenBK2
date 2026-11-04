@@ -2,6 +2,7 @@
 
 #include "B2_M1_Terrain/PatchHolder.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "System/Time.h"
 
 #include <cstdint>
@@ -20,8 +21,8 @@ class CCSBound;
 
 inline float GetTanHyperbolic( float z )
 {
-	const float fExpZ = std::exp( z );
-	const float fExpMinusZ = std::exp( -z );
+	const float fExpZ = NDetMath::Exp( z );
+	const float fExpMinusZ = NDetMath::Exp( -z );
 	return ( fExpZ - fExpMinusZ ) / ( fExpZ + fExpMinusZ );
 }
 

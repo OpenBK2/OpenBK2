@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "MissionWarFog.h"
 #include "Stats_B2_M1/IconsSet.h"
 //#include "..\SceneB2\PerlinNoise.h"
@@ -37,7 +38,7 @@ SInterfaceMissionWarFogInfo::SInterfaceMissionWarFogInfo()
 		int c = i - nDensity;
 		if ( c < 0 )
 			c = 0;
-		cloudDensities[i] = 1.0f - pow( fSharpness, c );
+		cloudDensities[i] = 1.0f - NDetMath::Pow( fSharpness, c );
 	}
 }
 

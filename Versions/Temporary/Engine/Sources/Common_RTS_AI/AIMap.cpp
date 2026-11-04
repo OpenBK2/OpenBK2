@@ -2,6 +2,7 @@
 
 #include "AIMap.h"
 #include "Misc/Bresenham.h"
+#include "Misc/DetMath.h"
 #include "StaticMapHeights.h"
 #include "Terrain.h"
 
@@ -187,7 +188,7 @@ void CAIMap::RecreateCircles()
 		tiles.clear();
 		mask.FillZero();
 
-		const float fDelta = atan2f( 1, 4 * nMaxRadius ) * 65536.0f / FP_2PI;
+		const float fDelta = NDetMath::ATan2( 1.0f, static_cast<float>( 4 * nMaxRadius ) ) * 65536.0f / FP_2PI;
 		const uint16_t wDelta = fDelta;
 		uint16_t wAngle = 0;
 		SVector vOffset = GetOffset( wAngle, i );

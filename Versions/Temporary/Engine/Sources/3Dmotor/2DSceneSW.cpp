@@ -4,6 +4,7 @@
 #include "DBScene.h"
 #include "GfxBuffers.h"
 #include "GTexture.h"
+#include "Misc/DetMath.h"
 #include "RectLayout.h"
 #include "Render.h"
 #include "SWTexture.h"
@@ -361,7 +362,7 @@ class CSWSpot : public ISWRects
 		pTextureData = pTexture->GetValue();
 
 		CVec3 vGeom[4];
-		float fCos = std::cos( fAngle ), fSin = std::sin( fAngle );
+		float fCos = NDetMath::Cos( fAngle ), fSin = NDetMath::Sin( fAngle );
 		CVec3 ptRight( ptSize.x * fCos, ptSize.x * fSin, 0 );
 		CVec3 ptUp( -ptSize.y * fSin, ptSize.y * fCos, 0 );
 		CVec3 ptCenter( ptPos, 0 );

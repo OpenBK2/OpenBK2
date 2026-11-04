@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CameraBasicMouseMutator.h"
+#include "Misc/DetMath.h"
 
 #include <fmt/format.h>
 
@@ -208,8 +209,8 @@ void CCameraBasicMouseMutator::SwitchManualScrolling( const std::string &szLocke
 
 const CVec3 CCameraBasicMouseMutator::GetListener() const
 {
-	const float fScreenWidth = fDistance * std::tan( ToRadian( fFOV / 2.0f ) );
-	const float fHeight = fDistance * std::atan( ToRadian( fFOV / 2.0f ) );
+	const float fScreenWidth = fDistance * NDetMath::Tan( ToRadian( fFOV / 2.0f ) );
+	const float fHeight = fDistance * NDetMath::ATan( ToRadian( fFOV / 2.0f ) );
 
 	CVec3 vDir( vAnchor - vPosition );
 	vDir.z = 0;

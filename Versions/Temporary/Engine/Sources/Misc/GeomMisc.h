@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Misc/DetMath.h"
 #include "port/wordpack.h"
 
 #include <cstdint>
@@ -366,8 +367,8 @@ inline void CreateDirectTransformMatrix( SHMatrix *pRes, const float fWidth, con
 // perspective projection matrix
 inline void CreatePerspectiveProjectionMatrixLH( SHMatrix *pRes, float fov, float fAspect, float fNear, float fFar )
 {
-	const float c = static_cast<float>( std::cos( fov * 0.5 ) );
-	const float s = static_cast<float>( std::sin( fov * 0.5 ) );
+	const float c = static_cast<float>( NDetMath::Cos( fov * 0.5 ) );
+	const float s = static_cast<float>( NDetMath::Sin( fov * 0.5 ) );
 	const float Q = s * fFar / ( fFar - fNear );
 	//
 	Zero( *pRes );
@@ -381,8 +382,8 @@ inline void CreatePerspectiveProjectionMatrixLH( SHMatrix *pRes, float fov, floa
 
 inline void CreatePerspectiveProjectionMatrixRH( SHMatrix *pRes, float fov, float fAspect, float fNear, float fFar )
 {
-	const float c = static_cast<float>( std::cos( fov * 0.5 ) );
-	const float s = static_cast<float>( std::sin( fov * 0.5 ) );
+	const float c = static_cast<float>( NDetMath::Cos( fov * 0.5 ) );
+	const float s = static_cast<float>( NDetMath::Sin( fov * 0.5 ) );
 	const float Q = s * fFar / ( fFar - fNear );
 	//
 	Zero( *pRes );

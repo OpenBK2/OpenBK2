@@ -4,6 +4,7 @@
 #include "3Dmotor/DBScene.h"
 #include "AIDebugInfo.h"
 #include "B2_M1_World/CommonB2M1AI.h"
+#include "Misc/DetMath.h"
 
 const int MAX_TILES_IN_MARKER = 1024;
 
@@ -163,8 +164,8 @@ void CDebugSegment::SetPosition( const CSegment &aiSegment )
 // ************************************************************************************************************************ //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const int CDebugCircle::N_SPLICE = 32;
-const float CDebugCircle::F_AI_TURN_X = std::cos( 2 * PI / N_SPLICE );
-const float CDebugCircle::F_AI_TURN_Y = std::sin( 2 * PI / N_SPLICE );
+const float CDebugCircle::F_AI_TURN_X = NDetMath::Cos( 2 * PI / N_SPLICE );
+const float CDebugCircle::F_AI_TURN_Y = NDetMath::Sin( 2 * PI / N_SPLICE );
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugCircle::Init( const CCircle &aiCircle )

@@ -9,6 +9,7 @@
 #include "GRenderExecute.h"
 #include "GRenderFactor.h"
 #include "GRenderModes.h"
+#include "Misc/DetMath.h"
 #include "port/time.h"
 #include "System/Commands.h"
 
@@ -279,8 +280,8 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 	float fMul = 1.0f / NGfx::N_VEC_FULL_TEX_SIZE;
 	float Time = GetCurrentTimeMilliseconds() * 0.001f * fAngVel;
 
-	float si = std::sin( Time );
-	float co = std::cos( Time );
+	float si = NDetMath::Sin( Time );
+	float co = NDetMath::Cos( Time );
 
 	pRC->SetVSConst( 38, CVec4( fMul * co, fMul * si, -fMul * si, fMul * co ) );
 	pRC->SetVSConst( 39, CVec4( ( -co + si ) * 0.5f + 0.5f, ( -co - si ) * 0.5f + 0.5f, 0.0f, 0.0f ) );
@@ -340,8 +341,8 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					float WindTime = 0.0f;
 					WindTime = GetCurrentTimeMilliseconds() * 0.003f;
 
-					float _co = 2.0f * std::cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
-					float _si = 2.0f * std::sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+					float _co = 2.0f * NDetMath::Cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+					float _si = 2.0f * NDetMath::Sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 
 					pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );
 				}
@@ -376,8 +377,8 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 				float WindTime = 0.0f;
 				WindTime = GetCurrentTimeMilliseconds() * 0.003f;
 
-				float _co = 2.0f * std::cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
-				float _si = 2.0f * std::sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+				float _co = 2.0f * NDetMath::Cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
+				float _si = 2.0f * NDetMath::Sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 
 				pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );
 			}
