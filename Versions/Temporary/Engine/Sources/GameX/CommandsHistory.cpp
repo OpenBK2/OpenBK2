@@ -404,7 +404,8 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	pScenarioTracker->SetMultiplayerDifficulty( replayInfo.nDifficulty );
 
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
-	scenarioInfo.wszGameType = replayInfo.nMultiplayerMode == 1 ? L"COOP" : L"CLASSIC";
+	scenarioInfo.wszGameType =
+			replayInfo.nMultiplayerMode == 1 ? L"<val MP_GAME_TYPE_COOP>" : L"<val MP_GAME_TYPE_CLASSIC>";
 	for ( int i = 0; i < replayInfo.slots.size(); ++i )
 	{
 		const SMPSlot &slot = replayInfo.slots[i];

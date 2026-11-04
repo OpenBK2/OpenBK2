@@ -12,6 +12,7 @@ namespace
 {
 bool RejectRules( std::string *pError, const char *pszReason )
 {
+	// Pass stable markup to the local UI; validation must not depend on translations.
 	if ( pError )
 	{
 		*pError = pszReason;
@@ -117,18 +118,18 @@ bool ResolveMultiplayerMapRules( SB2GameSpecificData *pGame,
 	}
 	if ( !pGame || !pGame->pMPMap || !pGame->pMPMap->pMap || !pConsts )
 	{
-		return RejectRules( pError, "The multiplayer map or multiplayer constants are missing." );
+		return RejectRules( pError, "<val MP_RULE_MISSING_DATA>" );
 	}
 	const auto &map = *pGame->pMPMap;
 	if ( map.eGameType != NDb::CLASSIC && map.eGameType != NDb::COOP )
 	{
-		return RejectRules( pError, "The map has an unsupported game type." );
+		return RejectRules( pError, "<val MP_RULE_UNSUPPORTED_GAME_TYPE>" );
 	}
 	pGame->eType = map.eGameType == NDb::COOP ? SB2GameSpecificData::EGT_COOP : SB2GameSpecificData::EGT_FLAG_CONTROL_2;
 	pGame->nDifficultyLevel = map.nDifficultyLevel;
 	if ( map.nForcedTechLevel < -1 || map.nForcedTechLevel >= int( pConsts->techLevels.size() ) )
 	{
-		return RejectRules( pError, "The map's forced tech level is outside MultiplayerConsts.TechLevels." );
+		return RejectRules( pError, "<val MP_RULE_INVALID_FORCED_TECH_LEVEL>" );
 	}
 	if ( map.nForcedTechLevel >= 0 )
 	{
@@ -136,23 +137,22 @@ bool ResolveMultiplayerMapRules( SB2GameSpecificData *pGame,
 	}
 	if ( pGame->nTechLevel < 0 || pGame->nTechLevel >= pConsts->techLevels.size() )
 	{
-		return RejectRules( pError, "Select a valid multiplayer tech level." );
+		return RejectRules( pError, "<val MP_RULE_INVALID_TECH_LEVEL>" );
 	}
 	for ( int nNation : map.allowedNations )
 	{
 		if ( nNation < 0 || nNation >= pConsts->sides.size() )
 		{
-			return RejectRules( pError, "The map's allowed nations contain an invalid MultiplayerConsts side index." );
+			return RejectRules( pError, "<val MP_RULE_INVALID_ALLOWED_NATION>" );
 		}
 	}
 	if ( GetAllowedMultiplayerNations( *pGame, pConsts ).empty() )
 	{
-		return RejectRules( pError, "No allowed nation is available at this tech level." );
+		return RejectRules( pError, "<val MP_RULE_NO_AVAILABLE_NATION>" );
 	}
 	if ( pGame->nPlayers < 2 || pGame->nPlayers > map.nPlayers )
 	{
-		return RejectRules( pError,
-		                    "The lobby requires at least two human slots and cannot exceed the map's player limit." );
+		return RejectRules( pError, "<val MP_RULE_INVALID_LOBBY_CAPACITY>" );
 	}
 	if ( IsCoopGame( *pGame ) )
 	{
@@ -160,7 +160,7 @@ bool ResolveMultiplayerMapRules( SB2GameSpecificData *pGame,
 		// Connectivity and lockstep membership use 16-bit player-ID masks.
 		if ( players.size() < 3 || players.size() > 16 || players.back().nDiplomacySide != 2 )
 		{
-			return RejectRules( pError, "COOP maps require at most 16 map players, with the neutral player last." );
+			return RejectRules( pError, "<val MP_RULE_COOP_INVALID_PLAYER_LAYOUT>" );
 		}
 		int nHumans = 0;
 		for ( int i = 0; i + 1 < players.size(); ++i )
@@ -172,13 +172,12 @@ bool ResolveMultiplayerMapRules( SB2GameSpecificData *pGame,
 			}
 			else if ( player.ePlayerType != NDb::AI_BOT || player.nDiplomacySide != 1 )
 			{
-				return RejectRules( pError,
-				                    "COOP players must be HUMAN on side 0 or AI_BOT on side 1, followed by one neutral." );
+				return RejectRules( pError, "<val MP_RULE_COOP_INVALID_PLAYER_ROLES>" );
 			}
 		}
 		if ( nHumans < map.nPlayers )
 		{
-			return RejectRules( pError, "The COOP map declares more human slots than its HUMAN players provide." );
+			return RejectRules( pError, "<val MP_RULE_COOP_INSUFFICIENT_HUMAN_SLOTS>" );
 		}
 		pGame->bRandomPlacement = false;
 		pGame->nTimeLimit = 0; // COOP ends only when the map script decides its result.
@@ -208,7 +207,7 @@ bool ValidateMultiplayerLobby( const SB2GameSpecificData &game,
 	     game.nDifficultyLevel != resolved.nDifficultyLevel || slots.size() != GetMultiplayerSlotCount( game ) ||
 	     ( IsCoopGame( game ) && ( game.bRandomPlacement || game.nTimeLimit != 0 ) ) )
 	{
-		return RejectRules( pError, "The lobby settings do not match the map's rules." );
+		return RejectRules( pError, "<val MP_RULE_LOBBY_SETTINGS_MISMATCH>" );
 	}
 	const auto nations = GetAllowedMultiplayerNations( game, pConsts );
 	int nHumans = 0;
@@ -224,15 +223,15 @@ bool ValidateMultiplayerLobby( const SB2GameSpecificData &game,
 		     ( IsCoopGame( game ) && slot.nTeam != 0 ) ||
 		     std::find( nations.begin(), nations.end(), slot.nCountry ) == nations.end() )
 		{
-			return RejectRules( pError, "A player occupies an unavailable slot, team or nation." );
+			return RejectRules( pError, "<val MP_RULE_INVALID_PLAYER_ASSIGNMENT>" );
 		}
 		if ( !slot.bAccept )
 		{
-			return RejectRules( pError, "Every player must be ready before starting." );
+			return RejectRules( pError, "<val MP_RULE_PLAYERS_NOT_READY>" );
 		}
 		if ( slot.nColour < 0 || slot.nColour >= pConsts->playerColorInfos.size() )
 		{
-			return RejectRules( pError, "A player has selected an unavailable colour." );
+			return RejectRules( pError, "<val MP_RULE_INVALID_PLAYER_COLOUR>" );
 		}
 		++nHumans;
 		++nTeams[slot.nTeam];
@@ -240,15 +239,13 @@ bool ValidateMultiplayerLobby( const SB2GameSpecificData &game,
 		{
 			if ( slots[j].bPresent && slots[j].nColour == slot.nColour )
 			{
-				return RejectRules( pError, "Players must choose different colours." );
+				return RejectRules( pError, "<val MP_RULE_DUPLICATE_PLAYER_COLOURS>" );
 			}
 		}
 	}
 	if ( nHumans < 2 || ( !IsCoopGame( game ) && ( nTeams[0] == 0 || nTeams[1] == 0 ) ) )
 	{
-		return RejectRules( pError,
-		                    IsCoopGame( game ) ? "At least two human players are required. The game will not start."
-		                                       : "All players have the same team. The game will not start." );
+		return RejectRules( pError, IsCoopGame( game ) ? "<val CANT_START_COOP_PLAYERS>" : "<val CANT_START_SAME_TEAM>" );
 	}
 	return true;
 }

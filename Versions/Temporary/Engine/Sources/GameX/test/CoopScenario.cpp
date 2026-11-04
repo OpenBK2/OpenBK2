@@ -305,8 +305,8 @@ TEST_F( CoopScenario, UnnamedBotsHaveDistinctFallbacksAndClassicUsesOnlyNetworkR
 	tracker->MissionWin();
 	const auto teams = NGameX::BuildMultiplayerStatistics( tracker, multiplayerConsts );
 	ASSERT_EQ( teams.lostTeam.size(), 2 );
-	EXPECT_NE( FindStatisticsPlayer( teams.lostTeam, L"AI 2" ), nullptr );
-	EXPECT_NE( FindStatisticsPlayer( teams.lostTeam, L"AI 4" ), nullptr );
+	EXPECT_NE( FindStatisticsPlayer( teams.lostTeam, L"<val AI_PLAYER_NAME_PREFIX>2" ), nullptr );
+	EXPECT_NE( FindStatisticsPlayer( teams.lostTeam, L"<val AI_PLAYER_NAME_PREFIX>4" ), nullptr );
 	tracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	const auto classic = NGameX::BuildMultiplayerStatistics( tracker, multiplayerConsts );
 	EXPECT_EQ( classic.wonTeam.size(), 2 );
@@ -329,7 +329,7 @@ TEST_F( CoopScenario, BotPresentationKeepsSparseMapIdsNamesAndPositions )
 	EXPECT_EQ( players[0].wszName, L"General \u017dukov \u6771" );
 	EXPECT_EQ( players[0].vMPStartPos, CVec2( 12.5f, 34.25f ) );
 	EXPECT_EQ( players[1].nPlayerIndex, 3 );
-	EXPECT_EQ( players[1].wszName, L"AI 4" );
+	EXPECT_EQ( players[1].wszName, L"<val AI_PLAYER_NAME_PREFIX>4" );
 	EXPECT_EQ( players[1].vMPStartPos, CVec2( 78.75f, 90.5f ) );
 	EXPECT_TRUE( NGameX::CollectCoopMapPlayers( nullptr ).empty() );
 }
@@ -451,7 +451,7 @@ TEST_F( CoopScenario, ReplayRosterSelectsEverySparseHumanAndBotWithItsResult )
 	EXPECT_EQ( players[0].wszName, L"Human 0" );
 	EXPECT_EQ( players[1].wszName, L"General \u017dukov \u6771" );
 	EXPECT_EQ( players[2].wszName, L"Human 2" );
-	EXPECT_EQ( players[3].wszName, L"AI 4" );
+	EXPECT_EQ( players[3].wszName, L"<val AI_PLAYER_NAME_PREFIX>4" );
 	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, -1 ) );
 	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 4 ) );
 	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 99 ) );
@@ -587,11 +587,11 @@ TEST_F( CoopScenario, SinglePlayerReplayRosterKeepsOriginalPlayerAndLocalizedNam
 	EXPECT_TRUE( NGameX::CanWatchReplayPlayer( info, 0 ) );
 	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 1 ) );
 	SetBotName( 0, u"" );
-	EXPECT_EQ( NGameX::GetReplayPlayers( info )[0].wszName, L"Player 1" );
+	EXPECT_EQ( NGameX::GetReplayPlayers( info )[0].wszName, L"<val PLAYER_NAME_PREFIX>1" );
 	info.pMap = nullptr;
 	const auto missingMap = NGameX::GetReplayPlayers( info );
 	ASSERT_EQ( missingMap.size(), 1 );
-	EXPECT_EQ( missingMap[0].wszName, L"Player 1" );
+	EXPECT_EQ( missingMap[0].wszName, L"<val PLAYER_NAME_PREFIX>1" );
 	EXPECT_FALSE( missingMap[0].bSelectable );
 }
 

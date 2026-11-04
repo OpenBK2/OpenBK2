@@ -7,6 +7,7 @@
 #include "InterfaceMisc.h"
 #include "InterfaceMPGameRoom.h"
 #include "InterfaceState.h"
+#include "MessageParts.h"
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
@@ -472,8 +473,9 @@ void CInterfaceMPGameRoom::SetTimeLimit( int nTimeLimit )
 		return;
 	}
 	// COOP has no clock limit; keep the same DB styling as the CLASSIC value.
-	const std::wstring wszText =
-			NGameX::IsCoopGame( gameDesc ) ? L"--:--" : NStr::ToUnicode( fmt::format( "{} min", nTimeLimit ) );
+	const std::wstring wszText = NGameX::IsCoopGame( gameDesc )
+	                                 ? L"<val MP_TIME_LIMIT_NONE>"
+	                                 : std::to_wstring( nTimeLimit ) + L"<val TIME_MINUTES_SUFFIX>";
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + wszText );
 }
 
@@ -874,8 +876,16 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 				const bool bMissingPlayers = nPresentPlayers < 2 || ( !bCoop && nTeamMask != 3 );
 				if ( bMissingPlayers && !bCoop )
 				{
-					// CLASSIC keeps its original localized same-team warning.
-					pCantStartSide->SetText( pCantStartSide->GetDBText() );
+					// Keep the original screen translation as a backup for older data.
+					const std::wstring &wszLegacy = pCantStartSide->GetDBText();
+					if ( !NGameX::FindMessagePart( NGameX::GetUIConsts(), L"CANT_START_SAME_TEAM" ).empty() || wszLegacy.empty() )
+					{
+						pCantStartSide->SetText( GetLobbyMessageFormat( pCantStartSide ) + L"<val CANT_START_SAME_TEAM>" );
+					}
+					else
+					{
+						pCantStartSide->SetText( wszLegacy );
+					}
 				}
 				else
 				{
@@ -883,9 +893,10 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 					if ( bMissingPlayers )
 					{
 						wszMessage = GetScreen()->GetTextEntry( "CANT_START_COOP_PLAYERS" );
-						if ( wszMessage.empty() )
+						if ( wszMessage.empty() ||
+						     !NGameX::FindMessagePart( NGameX::GetUIConsts(), L"CANT_START_COOP_PLAYERS" ).empty() )
 						{
-							wszMessage = L"At least two human players are required.<br>The game will not start.";
+							wszMessage = L"<val CANT_START_COOP_PLAYERS>";
 						}
 					}
 					pCantStartSide->SetText( GetLobbyMessageFormat( pCantStartSide ) + wszMessage );
