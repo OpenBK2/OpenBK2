@@ -82,6 +82,7 @@ jobs:
             Versions/Current/Data/UI/Game/Mission/Panels/RightPanel
             OBK2_Examples/GLB_format_usage
             OBK2_Examples/UnitTransferImpl
+            OBK2_Examples/MessageParts
 
       - name: Setup build environment
         uses: ./.github/actions/setup-linux-build
@@ -192,6 +193,7 @@ jobs:
             Versions/Current/Data/UI/Game/Mission/Panels/RightPanel
             OBK2_Examples/GLB_format_usage
             OBK2_Examples/UnitTransferImpl
+            OBK2_Examples/MessageParts
 
       # Its own ccache, since a job saves only what it used and these two share
       # no objects at all.

@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Multiplayer and COOP messages now use localized `<val>` message parts, including mode names, chat team marking, lobby errors, replay results and disabled reinforcement timers. `UIConstsB2.MessageParts` links a catalogue of text files; general values and existing screen translations remain available before English backups. The English example archive and integration instructions are in `OBK2_Examples/MessageParts`.
+
 - COOP victory/defeat camera sequences now pause world sounds and particle effects like single-player missions, while the outcome music, camera orbit and fade continue.
 
 - Replay previews now select individual players, including COOP AI bots. Rows show the player name, Winner/Loser/Unfinished status and existing team flag. Selection follows the exact recorded player ID across replay-list rebuilds, and replay names containing spaces keep the selected viewpoint. The existing GUI layout is reused.

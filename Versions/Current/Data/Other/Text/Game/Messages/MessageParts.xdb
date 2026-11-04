@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='utf-8'?>
+<MessageParts>
+	<Parts>
+		<Item>
+			<ValName>MP_CHAT_TEAM_SUFFIX</ValName>
+			<ValueTextFileRef href="MP_CHAT_TEAM_SUFFIX.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_GAME_TYPE_CLASSIC</ValName>
+			<ValueTextFileRef href="MP_GAME_TYPE_CLASSIC.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_GAME_TYPE_COOP</ValName>
+			<ValueTextFileRef href="MP_GAME_TYPE_COOP.txt" />
+		</Item>
+		<Item>
+			<ValName>REINFORCEMENT_TIMER_NEVER</ValName>
+			<ValueTextFileRef href="REINFORCEMENT_TIMER_NEVER.txt" />
+		</Item>
+		<Item>
+			<ValName>AI_PLAYER_NAME_PREFIX</ValName>
+			<ValueTextFileRef href="AI_PLAYER_NAME_PREFIX.txt" />
+		</Item>
+		<Item>
+			<ValName>PLAYER_NAME_PREFIX</ValName>
+			<ValueTextFileRef href="PLAYER_NAME_PREFIX.txt" />
+		</Item>
+		<Item>
+			<ValName>REPLAY_PLAYER_WINNER</ValName>
+			<ValueTextFileRef href="REPLAY_PLAYER_WINNER.txt" />
+		</Item>
+		<Item>
+			<ValName>REPLAY_PLAYER_LOSER</ValName>
+			<ValueTextFileRef href="REPLAY_PLAYER_LOSER.txt" />
+		</Item>
+		<Item>
+			<ValName>REPLAY_PLAYER_UNFINISHED</ValName>
+			<ValueTextFileRef href="REPLAY_PLAYER_UNFINISHED.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_MISSING_DATA</ValName>
+			<ValueTextFileRef href="MP_RULE_MISSING_DATA.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_UNSUPPORTED_GAME_TYPE</ValName>
+			<ValueTextFileRef href="MP_RULE_UNSUPPORTED_GAME_TYPE.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_INVALID_FORCED_TECH_LEVEL</ValName>
+			<ValueTextFileRef href="MP_RULE_INVALID_FORCED_TECH_LEVEL.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_INVALID_TECH_LEVEL</ValName>
+			<ValueTextFileRef href="MP_RULE_INVALID_TECH_LEVEL.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_INVALID_ALLOWED_NATION</ValName>
+			<ValueTextFileRef href="MP_RULE_INVALID_ALLOWED_NATION.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_NO_AVAILABLE_NATION</ValName>
+			<ValueTextFileRef href="MP_RULE_NO_AVAILABLE_NATION.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_INVALID_LOBBY_CAPACITY</ValName>
+			<ValueTextFileRef href="MP_RULE_INVALID_LOBBY_CAPACITY.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_COOP_INVALID_PLAYER_LAYOUT</ValName>
+			<ValueTextFileRef href="MP_RULE_COOP_INVALID_PLAYER_LAYOUT.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_COOP_INVALID_PLAYER_ROLES</ValName>
+			<ValueTextFileRef href="MP_RULE_COOP_INVALID_PLAYER_ROLES.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_COOP_INSUFFICIENT_HUMAN_SLOTS</ValName>
+			<ValueTextFileRef href="MP_RULE_COOP_INSUFFICIENT_HUMAN_SLOTS.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_LOBBY_SETTINGS_MISMATCH</ValName>
+			<ValueTextFileRef href="MP_RULE_LOBBY_SETTINGS_MISMATCH.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_INVALID_PLAYER_ASSIGNMENT</ValName>
+			<ValueTextFileRef href="MP_RULE_INVALID_PLAYER_ASSIGNMENT.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_PLAYERS_NOT_READY</ValName>
+			<ValueTextFileRef href="MP_RULE_PLAYERS_NOT_READY.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_INVALID_PLAYER_COLOUR</ValName>
+			<ValueTextFileRef href="MP_RULE_INVALID_PLAYER_COLOUR.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_RULE_DUPLICATE_PLAYER_COLOURS</ValName>
+			<ValueTextFileRef href="MP_RULE_DUPLICATE_PLAYER_COLOURS.txt" />
+		</Item>
+		<Item>
+			<ValName>CANT_START_COOP_PLAYERS</ValName>
+			<ValueTextFileRef href="CANT_START_COOP_PLAYERS.txt" />
+		</Item>
+		<Item>
+			<ValName>CANT_START_SAME_TEAM</ValName>
+			<ValueTextFileRef href="CANT_START_SAME_TEAM.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_JOIN_INVALID_HUMAN_SLOT</ValName>
+			<ValueTextFileRef href="MP_JOIN_INVALID_HUMAN_SLOT.txt" />
+		</Item>
+		<Item>
+			<ValName>TIME_MINUTES_SUFFIX</ValName>
+			<ValueTextFileRef href="TIME_MINUTES_SUFFIX.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_TIME_LIMIT_NONE</ValName>
+			<ValueTextFileRef href="MP_TIME_LIMIT_NONE.txt" />
+		</Item>
+	</Parts>
+</MessageParts>

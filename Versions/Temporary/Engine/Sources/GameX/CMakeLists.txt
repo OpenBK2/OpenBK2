@@ -27,6 +27,7 @@ set(SOURCES
     DBWrapReinf.cpp
     DummyInterface.cpp
     GameRoomData.cpp
+    MessageParts.cpp
     Initialization.cpp
     InterfaceArmyBranchDlg.cpp
     InterfaceArmyScreen.cpp

@@ -767,8 +767,9 @@ void CMissionReinf::UpdateEnable()
 	{
 		const int nSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
 		// Refresh disabled and zero timers too, rather than leaving the previous countdown visible.
-		const std::wstring wszTime =
-				nSeconds < 0 ? L"never" : NStr::ToUnicode( fmt::format( "{}:{:02d}", nSeconds / 60, nSeconds % 60 ) );
+		const std::wstring wszTime = nSeconds < 0
+		                                 ? L"<val REINFORCEMENT_TIMER_NEVER>"
+		                                 : NStr::ToUnicode( fmt::format( "{}:{:02d}", nSeconds / 60, nSeconds % 60 ) );
 		const std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + wszTime;
 		pRoller1->SetTooltip( wszTooltip );
 		pRoller2->SetTooltip( wszTooltip );

@@ -1,6 +1,11 @@
 
 # AGENT LEARNINGS
 
+- Game localization text files are UTF-16LE with a BOM: `NText::LoadUnicodeText`
+  rejects UTF-8, including the UTF-8 text in older authoring examples. Validate
+  new text archives through the game's VFS/database and NText reader. Preserve
+  prefix/suffix spaces and omit resource-text final newlines, which are displayed.
+
 This file is meant for AI agents only, both for read and write purposes.
 
 - A thread-local converter can be destroyed before static console-log cleanup.

@@ -655,6 +655,72 @@ uint32_t SMPLocalizedGameType::CalcCheckSum() const
 
 
 
+void SMessagePart::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+	NMetaInfo::ReportMetaInfo( szAddName + "ValName", (uint8_t*)&szValName - pThis, sizeof(szValName), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "ValueTextFileRef", (uint8_t*)&szValueTextFileRef - pThis, sizeof(szValueTextFileRef), NTypeDef::TYPE_TYPE_STRING );
+}
+
+int SMessagePart::operator&( IXmlSaver &saver )
+{
+	saver.Add( "ValName", &szValName );
+	saver.Add( "ValueTextFileRef", &szValueTextFileRef );
+
+	return 0;
+}
+
+int SMessagePart::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &szValName );
+	saver.Add( 3, &szValueTextFileRef );
+
+	return 0;
+}
+
+uint32_t SMessagePart::CalcCheckSum() const
+{
+	CCheckSumScope scope( __dwCheckSum );
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << szValName;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
+void SMessageParts::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "MessageParts", typeID, sizeof(*this) );
+
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportStructArrayMetaInfo( "Parts", &parts, pThis );
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SMessageParts::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+	saver.Add( "Parts", &parts );
+
+	return 0;
+}
+
+int SMessageParts::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &parts );
+
+	return 0;
+}
+
+
+
 void SUIConstsB2::SSeasonName::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (uint8_t*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
@@ -712,6 +778,7 @@ void SUIConstsB2::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "MPLocalizedGameTypes", &mPLocalizedGameTypes, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ChapterMapArrows", &chapterMapArrows, pThis );
 	NMetaInfo::ReportMetaInfo( "ForbiddenWordsFileRef", (uint8_t*)&szForbiddenWordsFileRef - pThis, sizeof(szForbiddenWordsFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "MessageParts", (uint8_t*)&pMessageParts - pThis, sizeof(pMessageParts), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -730,6 +797,7 @@ int SUIConstsB2::operator&( IXmlSaver &saver )
 	saver.Add( "MPLocalizedGameTypes", &mPLocalizedGameTypes );
 	saver.Add( "ChapterMapArrows", &chapterMapArrows );
 	saver.Add( "ForbiddenWordsFileRef", &szForbiddenWordsFileRef );
+	saver.Add( "MessageParts", &pMessageParts );
 
 	return 0;
 }
@@ -748,6 +816,7 @@ int SUIConstsB2::operator&( IBinSaver &saver )
 	saver.Add( 10, &mPLocalizedGameTypes );
 	saver.Add( 11, &chapterMapArrows );
 	saver.Add( 12, &szForbiddenWordsFileRef );
+	saver.Add( 13, &pMessageParts );
 
 	return 0;
 }
@@ -1357,6 +1426,7 @@ using namespace NDb;
 REGISTER_DATABASE_CLASS( UISPECIFICB2, 0x1508D300, SARSetSpecialAbility )
 REGISTER_DATABASE_CLASS( UISPECIFICB2, 0x1508A340, SARSetForcedAction )
 REGISTER_DATABASE_CLASS( UISPECIFICB2, 0x1717BAC0, SActionButtonInfo )
+REGISTER_DATABASE_CLASS( UISPECIFICB2, 0x1109C341, SMessageParts )
 REGISTER_DATABASE_CLASS( UISPECIFICB2, 0x1109C340, SUIConstsB2 )
 REGISTER_DATABASE_CLASS( UISPECIFICB2, 0x1508E480, SWindowMiniMapShared )
 REGISTER_DATABASE_CLASS( UISPECIFICB2, 0x1508E481, SWindowMiniMap )

@@ -388,9 +388,9 @@ TEST_F( ReplayPlayerSelection, SecondAndThirdClassicRowsKeepSparsePlayerIDsAfter
 	{
 		SelectReplay( replay );
 		const std::wstring name = replay == 0 ? L"First match" : L"Second match";
-		ExpectRow( 0, L"Human 1", L"Loser" );
-		ExpectRow( 1, L"Human 3", L"Winner" );
-		ExpectRow( 2, L"Human 5", L"Winner" );
+		ExpectRow( 0, L"Human 1", L"<val REPLAY_PLAYER_LOSER>" );
+		ExpectRow( 1, L"Human 3", L"<val REPLAY_PLAYER_WINNER>" );
+		ExpectRow( 2, L"Human 5", L"<val REPLAY_PLAYER_WINNER>" );
 		ClickPlayer( 1 );
 		ExpectLoad( name, 3 );
 		ClickPlayer( 2 );
@@ -413,9 +413,9 @@ TEST_F( ReplayPlayerSelection, HumansAndBotsAreIndividualSelectableViewpointsAft
 		SelectReplay( replay );
 		const std::wstring name = replay == 0 ? L"Cooperative defeat" : L"Cooperative defeat copy";
 		ExpectLoad( name, 1 ); // The first human remains the default, even with bot slot zero.
-		ExpectRow( 0, L"General 0", L"Winner" );
-		ExpectRow( 1, L"Human 1", L"Loser" );
-		ExpectRow( 2, L"General 2", L"Winner" );
+		ExpectRow( 0, L"General 0", L"<val REPLAY_PLAYER_WINNER>" );
+		ExpectRow( 1, L"Human 1", L"<val REPLAY_PLAYER_LOSER>" );
+		ExpectRow( 2, L"General 2", L"<val REPLAY_PLAYER_WINNER>" );
 		ClickPlayer( 1 );
 		ExpectLoad( name, 1 );
 		ClickPlayer( 2 );
@@ -432,9 +432,9 @@ TEST_F( ReplayPlayerSelection, UnfinishedCooperativeRowsReplaceBothLocalizedTeam
 	AddReplay( "Unfinished mission", info );
 	HydrateInterface();
 	SelectReplay( 0 );
-	ExpectRow( 0, L"General 0", L"Unfinished" );
-	ExpectRow( 1, L"Human 1", L"Unfinished" );
-	ExpectRow( 2, L"General 2", L"Unfinished" );
+	ExpectRow( 0, L"General 0", L"<val REPLAY_PLAYER_UNFINISHED>" );
+	ExpectRow( 1, L"Human 1", L"<val REPLAY_PLAYER_UNFINISHED>" );
+	ExpectRow( 2, L"General 2", L"<val REPLAY_PLAYER_UNFINISHED>" );
 }
 
 TEST_F( ReplayPlayerSelection, InvalidBotRowsAndUnmappedSelectionsCannotStartPlayback )

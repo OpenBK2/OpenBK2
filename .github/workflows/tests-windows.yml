@@ -55,6 +55,7 @@ jobs:
             Versions/Current/Data/UI/Game/Mission/Panels/RightPanel
             OBK2_Examples/GLB_format_usage
             OBK2_Examples/UnitTransferImpl
+            OBK2_Examples/MessageParts
 
       # MSVC, Ninja, the DirectX SDK and ccache. 3Dmotor links dxsdk::d3d9, and the
       # tests link 3Dmotor, so they need the SDK exactly as the game build does.

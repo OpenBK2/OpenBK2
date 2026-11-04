@@ -2635,7 +2635,7 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 		const int totalSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
 		// A negative recycle time means no future reinforcement credit, not a countdown.
 		const std::wstring wszTime =
-				totalSeconds < 0 ? L"never"
+				totalSeconds < 0 ? L"<val REINFORCEMENT_TIMER_NEVER>"
 												 : NStr::ToUnicode( fmt::format( "{}:{:02}", totalSeconds / 60, totalSeconds % 60 ) );
 		timeForNextReinf->SetText( L"<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" +
 		                           wszTime );

@@ -126,16 +126,19 @@ old unspecified table order, and older scripted recordings may verify differentl
 
 The implementation reuses existing multiplayer controls and displays CLASSIC or
 COOP in map/game lists, so no additional required button or window records are
-needed. `UIConsts.fragment.xml` provides optional localized game-type entries
-for UI data that uses `MPLocalizedGameTypes`. Merge them into the mod's existing
-list rather than replacing unrelated UI constants. The accompanying text files
-are UTF-8 examples; use your mod's normal localization workflow.
+needed. [MessageParts](../MessageParts/README.md) supplies the current localized
+mode names, lobby errors, player-name prefixes and timer labels through
+`UIConstsB2.MessageParts`. Its English `.pak` contains game-ready UTF-16LE text.
+`UIConsts.fragment.xml` illustrates the older `MPLocalizedGameTypes` field;
+the current mode labels use `<val MP_GAME_TYPE_CLASSIC>` and `<val MP_GAME_TYPE_COOP>`.
 
 COOP's lobby time limit displays `--:--`. Its minimum-player warning uses the
-normal game text style; CLASSIC keeps its original warning. To translate the
-COOP warning, merge `MPGameRoom.relatedTexts.fragment.xml` into the existing
+normal game text style. The message catalogue takes priority; existing screen
+translations remain backups. For older data, merge `MPGameRoom.relatedTexts.fragment.xml` into the existing
 `MPGameRoom_WindowScreen.xdb` `RelatedTexts` list and resolve its `TextFileRef`
-relative to that screen. An English fallback works without this optional entry.
+relative to that screen. The text files beside this older fragment are UTF-8
+examples and need conversion to UTF-16LE with a BOM for the game. An English
+fallback works without this optional entry.
 A disabled reinforcement-credit timer displays `never` instead of a countdown.
 
 ## Suggested mission check

@@ -49,7 +49,8 @@ void CMPManagerMode::StartGame()
 
 	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
-	scenarioInfo.wszGameType = NGameX::IsCoopGame( gameDesc ) ? L"COOP" : L"CLASSIC";
+	scenarioInfo.wszGameType =
+			NGameX::IsCoopGame( gameDesc ) ? L"<val MP_GAME_TYPE_COOP>" : L"<val MP_GAME_TYPE_CLASSIC>";
 	pScenarioTracker->SetGameType( NGameX::IsCoopGame( gameDesc ) ? IAIScenarioTracker::EGT_MULTI_COOP
 	                                                              : IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	pScenarioTracker->MissionStart( gameDesc.pMPMap->pMap, gameDesc.nTechLevel );

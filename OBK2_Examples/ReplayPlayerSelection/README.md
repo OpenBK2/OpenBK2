@@ -22,9 +22,11 @@ the human network roster.
 COOP recordings without a scripted result show `Unfinished`. CLASSIC recordings
 with no recorded winning side also show `Unfinished`.
 
-For localization, a mod can supply these optional `RelatedTexts` entries on the
-ReplaySaveLoad screen. Existing data works without them, using the English text
-shown below. The row's font and alignment still come from its existing GUI data.
+For localization, use these names in [MessageParts](../MessageParts/README.md).
+The existing optional `RelatedTexts` entries on the ReplaySaveLoad screen remain
+backups when neither MessageParts nor general `<val>` values supplies a
+translation. Existing data works without them, using the English text shown
+below. The row's font and alignment still come from its existing GUI data.
 
 | Entry | Default text |
 | --- | --- |

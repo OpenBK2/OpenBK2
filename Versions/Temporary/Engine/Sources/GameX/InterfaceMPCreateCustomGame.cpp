@@ -82,7 +82,7 @@ void CInterfaceMPCreateCustomGame::FillMapData()
 		}
 
 		tmpInfo.wszMapName = GET_TEXT_PRE( pMPMap->, MapName );
-		tmpInfo.wszGameType = pMPMap->eGameType == NDb::COOP ? L"COOP" : L"CLASSIC";
+		tmpInfo.wszGameType = pMPMap->eGameType == NDb::COOP ? L"<val MP_GAME_TYPE_COOP>" : L"<val MP_GAME_TYPE_CLASSIC>";
 		tmpInfo.pMPMap = pMPMap;
 
 		tmpInfo.nPlayersMax = pMPMap->nPlayers;

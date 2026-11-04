@@ -3,6 +3,10 @@ add_unit_test(MPPacketTraceLog SOURCES ../MPPacketTraceLog.cpp)
 # Exercise the real game-constants snapshot with generated database records.
 add_unit_test(MPDataChecksum GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 add_unit_test(MPCoopRules GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+add_unit_test(MessageParts GameX UISpecificB2 UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+target_compile_definitions(MessageParts_test PRIVATE
+    MESSAGE_PARTS_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml"
+    MESSAGE_PARTS_PAK="${CMAKE_SOURCE_DIR}/OBK2_Examples/MessageParts/messages.pak")
 target_compile_definitions(MPCoopRules_test PRIVATE
     MP_COOP_RULES_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 add_unit_test(CoopScenario GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
@@ -24,6 +28,8 @@ target_compile_definitions(UnitTransferUI_test PRIVATE
 target_compile_definitions(MPDataChecksum_test PRIVATE
     MP_CHECKSUM_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 if(WIN32)
+    set_tests_properties(MessageParts_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
     # GameX loads UI's FFmpeg codecs, including DLLs outside CMake's link graph.
     set_tests_properties(MPDataChecksum_test MPCoopRules_test CoopScenario_test UnitTransferCommand_test ReplayPlayerDrop_test ReplayCommandTiming_test ReplayPlayerSelection_test UnitTransferUI_test MPSideFlags_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")

@@ -2,6 +2,8 @@
 
 // automatically generated file, don't change manually!
 
+#include "UISpecificB2_export.h"
+
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/M1Actions.h"
 #include "Stats_B2_M1/RPGStats.h"
@@ -371,6 +373,43 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
+	struct SMessagePart
+	{
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+		std::string szValName;
+		NFile::CFilePath szValueTextFileRef;
+
+		SMessagePart() :
+			__dwCheckSum( 0 )
+		{ }
+		//
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
+
+	struct UISPECIFICB2_EXPORT SMessageParts : public CResource
+	{
+		OBJECT_BASIC_METHODS( SMessageParts )
+	public:
+		enum { typeID = 0x1109C341 };
+		std::vector< SMessagePart > parts;
+
+		SMessageParts() { }
+		//
+		int GetTypeID() const override { return typeID; }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
+	};
+
 	struct SUIConstsB2 : public SUIGameConsts
 	{
 		OBJECT_BASIC_METHODS( SUIConstsB2 )
@@ -407,6 +446,7 @@ namespace NDb
 		std::vector< SMPLocalizedGameType > mPLocalizedGameTypes;
 		std::vector< CDBPtr< STexture > > chapterMapArrows;
 		NFile::CFilePath szForbiddenWordsFileRef;
+		CDBPtr< SMessageParts > pMessageParts;
 
 		#include "include_UIConstsB2.h"
 

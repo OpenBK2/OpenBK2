@@ -7,6 +7,7 @@
 #include "GetConsts.h"
 #include "InterfaceMisc.h"
 #include "InterfaceReplaySaveLoad.h"
+#include "MessageParts.h"
 #include "Misc/StrProc.h"
 #include "MPInterfaceData.h"
 #include "ReplayPlayerInfo.h"
@@ -372,21 +373,22 @@ void CInterfaceReplaySaveLoad::AddPlayer( IWindow *pWnd, const NGameX::SReplayPl
 	}
 
 	const char *pszResultKey = "REPLAY_PLAYER_UNFINISHED";
-	const wchar_t *pszResultFallback = L"Unfinished";
+	const wchar_t *pszResultTag = L"<val REPLAY_PLAYER_UNFINISHED>";
 	if ( player.eResult == NGameX::RPR_WINNER )
 	{
 		pszResultKey = "REPLAY_PLAYER_WINNER";
-		pszResultFallback = L"Winner";
+		pszResultTag = L"<val REPLAY_PLAYER_WINNER>";
 	}
 	else if ( player.eResult == NGameX::RPR_LOSER )
 	{
 		pszResultKey = "REPLAY_PLAYER_LOSER";
-		pszResultFallback = L"Loser";
+		pszResultTag = L"<val REPLAY_PLAYER_LOSER>";
 	}
 	std::wstring wszResult = GetScreen() ? GetScreen()->GetTextEntry( pszResultKey ) : std::wstring();
-	if ( wszResult.empty() )
+	// New message values take priority, retaining screen translations for old data.
+	if ( wszResult.empty() || !NGameX::FindMessagePart( NGameX::GetUIConsts(), NStr::ToUnicode( pszResultKey ) ).empty() )
 	{
-		wszResult = pszResultFallback;
+		wszResult = pszResultTag;
 	}
 	ITextView *pPlayers = GetChildChecked<ITextView>( pWnd, "ItemPlayers", true );
 	if ( pPlayers )

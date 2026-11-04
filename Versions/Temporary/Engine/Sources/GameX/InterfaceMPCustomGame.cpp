@@ -83,8 +83,8 @@ void CInterfaceMPCustomGame::SetFiltersData()
 	{
 		pData = new CTextData( wszAnyText );
 		pGameTypeBox->AddItem( pData );
-		pGameTypeBox->AddItem( new CTextData( L"CLASSIC" ) );
-		pGameTypeBox->AddItem( new CTextData( L"COOP" ) );
+		pGameTypeBox->AddItem( new CTextData( L"<val MP_GAME_TYPE_CLASSIC>" ) );
+		pGameTypeBox->AddItem( new CTextData( L"<val MP_GAME_TYPE_COOP>" ) );
 		pGameTypeBox->Select( 0 );
 	}
 	if ( pTechLevel )
@@ -184,8 +184,10 @@ void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBas
 	}
 	NMPSetData::SetChildText( pItem, "ItemTechLevel", wszTechText );
 
-	NMPSetData::SetChildText(
-			pItem, "ItemGameType", info.nGameType == SB2GameSpecificData::EGT_COOP ? L"COOP" : L"CLASSIC" );
+	NMPSetData::SetChildText( pItem,
+	                          "ItemGameType",
+	                          info.nGameType == SB2GameSpecificData::EGT_COOP ? L"<val MP_GAME_TYPE_COOP>"
+	                                                                          : L"<val MP_GAME_TYPE_CLASSIC>" );
 
 	NMPSetData::SetChildText(
 			pItem, "ItemMapSize", NStr::ToUnicode( fmt::format( "{} x {}", info.nSizeX, info.nSizeY ) ) );

@@ -414,7 +414,7 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	std::wstring teamOnly = L"";
 	if ( pMsg->bTeamOnly )
 	{
-		teamOnly = L" (Team)";
+		teamOnly = L"<val MP_CHAT_TEAM_SUFFIX>";
 	}
 
 	std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr +

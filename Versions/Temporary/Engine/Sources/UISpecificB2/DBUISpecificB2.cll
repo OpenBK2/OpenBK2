@@ -180,6 +180,19 @@ struct SMPLocalizedGameType
 	#include "include_MPLocalizedGameType.h"
 };
 
+struct SMessagePart
+{
+	string _ValName;
+	TextFileRef _ValueTextFileRef;
+};
+
+/* Presentation-only values for <val ValName>; never part of simulation checksums. */
+[typeID = 0x1109C341; no_checksum; export]
+class SMessageParts
+{
+	SMessagePart _Parts[];
+};
+
 [typeID = 0x1109C340; no_checksum]
 class SUIConstsB2 : public SUIGameConsts
 {
@@ -202,6 +215,8 @@ class SUIConstsB2 : public SUIGameConsts
 	STexture *_ChapterMapArrows[];
 	// forbidden words (for chat)
 	TextFileRef _ForbiddenWordsFileRef;
+	// Localized message values, with general Tags and English backups when absent.
+	SMessageParts *_MessageParts;
 	
 
 	#include "include_UIConstsB2.h"
