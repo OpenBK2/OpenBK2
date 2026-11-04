@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- COOP hosts now choose difficulty from the selected map's `CustomDifficultyLevels` in game settings. The controls are hidden for CLASSIC maps and maps without difficulty choices. The selected index is synchronized, returned by Lua and saved in replays; `MultiplayerMap.DifficultyLevel` was removed. Replay AI markers now load their nation icons from the map player's `PartyInfo`. The difficulty GUI package and authoring examples are in `OBK2_Examples/MultiplayerDifficulty`.
+
 - Multiplayer and COOP messages now use localized `<val>` message parts, including mode names, chat team marking, lobby errors, replay results and disabled reinforcement timers. `UIConstsB2.MessageParts` links a catalogue of text files; general values and existing screen translations remain available before English backups. The English example archive and integration instructions are in `OBK2_Examples/MessageParts`.
 
 - COOP victory/defeat camera sequences now pause world sounds and particle effects like single-player missions, while the outcome music, camera orbit and fade continue.

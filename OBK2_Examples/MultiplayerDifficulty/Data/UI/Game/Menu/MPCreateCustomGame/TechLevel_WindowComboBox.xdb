@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowComboBox>
+	<ClassTypeID>387064640</ClassTypeID>
+	<Shared href="/UI/Game/Menu/MPCommon/CommonText_WindowComboBoxShared.xdb#xpointer(/WindowComboBoxShared)" />
+	<Name>TechLevel</Name>
+	<Tooltip href="" />
+	<TooltipFileRef href="/UI/Game/Menu/MPCreateCustomGame/controls/techlevel.txt" />
+	<Visible>true</Visible>
+	<Priority>100</Priority>
+	<GameMessageReactions />
+	<Placement>
+		<Position>
+			<First>
+				<x>180</x>
+				<y>66</y>
+			</First>
+			<Second>true</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_LOW_END</First>
+			<Second>true</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_LOW_END</First>
+			<Second>true</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>150</x>
+				<y>32</y>
+			</First>
+			<Second>true</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</UpperMargin>
+	</Placement>
+	<Enabled>true</Enabled>
+	<TextString href="" />
+	<ListPriority>900</ListPriority>
+	<MaxVisibleRows>12</MaxVisibleRows>
+	<OnSelection>
+		<Commands />
+		<Reversable>false</Reversable>
+	</OnSelection>
+</WindowComboBox>

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowMSButton>
+	<ClassTypeID>285694855</ClassTypeID>
+	<Shared href="/OpenBK2/MultiplayerDifficulty/UI/DifficultyClosed_WindowMSButtonShared.xdb#xpointer(/WindowMSButtonShared)" />
+	<Name />
+	<Tooltip href="" />
+	<TooltipFileRef href="" />
+	<Visible>true</Visible>
+	<Priority>10</Priority>
+	<GameMessageReactions />
+	<Placement>
+		<Position>
+			<First>
+				<x>-1</x>
+				<y>0</y>
+			</First>
+			<Second>true</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_HIGH_END</First>
+			<Second>true</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_LOW_END</First>
+			<Second>true</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>131</x>
+				<y>28</y>
+			</First>
+			<Second>true</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>true</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>true</Second>
+		</UpperMargin>
+	</Placement>
+	<Enabled>true</Enabled>
+	<TextString href="" />
+	<ButtonStates>
+		<Item>
+			<MessageOnEnterState />
+			<CommandsOnEnterState>
+				<Commands />
+				<Reversable>false</Reversable>
+			</CommandsOnEnterState>
+			<CommandsOnRightClick>
+				<Commands />
+				<Reversable>false</Reversable>
+			</CommandsOnRightClick>
+			<commandsOnLDblKlick>
+				<Commands />
+				<Reversable>false</Reversable>
+			</commandsOnLDblKlick>
+			<WaitVisual>false</WaitVisual>
+			<ReverseCommands>false</ReverseCommands>
+			<Name />
+		</Item>
+	</ButtonStates>
+	<ButtonGroupID>0</ButtonGroupID>
+	<AutoChangeState>false</AutoChangeState>
+	<PushEffect>
+		<Commands />
+		<Reversable>false</Reversable>
+	</PushEffect>
+	<State>0</State>
+	<Text href="" />
+	<TextFileRef href="" />
+	<TextFormat href="" />
+</WindowMSButton>

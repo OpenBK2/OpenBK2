@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowTextView>
+	<ClassTypeID>285694860</ClassTypeID>
+	<Shared href="/UI/Game/Menu/MPCommon/Item_WindowTextViewShared.xdb#xpointer(/WindowTextViewShared)" />
+	<Name>CaptureTimeData</Name>
+	<Tooltip href="" />
+	<TooltipFileRef href="" />
+	<Visible>true</Visible>
+	<Priority>0</Priority>
+	<GameMessageReactions />
+	<Placement>
+		<Position>
+			<First>
+				<x>133</x>
+				<y>130</y>
+			</First>
+			<Second>true</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_LOW_END</First>
+			<Second>false</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_LOW_END</First>
+			<Second>false</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>50</x>
+				<y>20</y>
+			</First>
+			<Second>true</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</UpperMargin>
+	</Placement>
+	<Enabled>true</Enabled>
+	<TextString href="" />
+	<Text href="" />
+	<TextFileRef href="/UI/Game/Menu/MPGameRoom/Controls/timesuffixmin.txt" />
+	<ResizeOnTextSet>false</ResizeOnTextSet>
+	<TextFormat href="/UI/Game/Common/Header2_TextFormat.xdb#xpointer(/TextFormat)" />
+</WindowTextView>

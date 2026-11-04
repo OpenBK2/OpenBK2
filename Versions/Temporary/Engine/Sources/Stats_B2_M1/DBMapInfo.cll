@@ -444,8 +444,7 @@ class SMultiplayerMap
 	[preserveDefault] int _ForcedTechLevel = -1;
 	// Allowed MPConsts side indexes for humans. Empty allows every available nation.
 	int _AllowedNations[];
-	// Map-defined difficulty exposed to mission Lua, without automatic stat modifiers.
-	int _DifficultyLevel = 0;
+	/* Binary chunk 10 was DifficultyLevel. It is now a lobby setting; do not reuse that chunk. */
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

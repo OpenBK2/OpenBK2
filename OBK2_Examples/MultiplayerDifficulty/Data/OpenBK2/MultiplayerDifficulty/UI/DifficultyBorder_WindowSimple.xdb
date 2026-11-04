@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowSimple>
+	<ClassTypeID>285700801</ClassTypeID>
+	<Shared href="/UI/Game/Menu/CampaignSelection/parts/DifficultyBorder_WindowSimpleShared.xdb#xpointer(/WindowSimpleShared)" />
+	<Name />
+	<Tooltip href="" />
+	<TooltipFileRef href="/OpenBK2/MultiplayerDifficulty/Text/DifficultyTooltip.txt" />
+	<Visible>true</Visible>
+	<Priority>0</Priority>
+	<GameMessageReactions />
+	<Placement>
+		<Position>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>true</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_MARGIN</First>
+			<Second>true</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_MARGIN</First>
+			<Second>true</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>113</x>
+				<y>21</y>
+			</First>
+			<Second>true</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>14</x>
+				<y>22</y>
+			</First>
+			<Second>true</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>34</x>
+				<y>22</y>
+			</First>
+			<Second>true</Second>
+		</UpperMargin>
+	</Placement>
+	<Enabled>true</Enabled>
+	<TextString href="" />
+</WindowSimple>

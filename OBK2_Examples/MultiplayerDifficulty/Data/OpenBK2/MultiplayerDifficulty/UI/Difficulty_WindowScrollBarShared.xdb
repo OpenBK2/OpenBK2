@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowScrollBarShared>
+	<Crap>false</Crap>
+	<Children />
+	<Background href="" />
+	<Foreground href="" />
+	<Flags>
+		<Transparent>false</Transparent>
+	</Flags>
+	<Placement>
+		<Position>
+			<First>
+				<x>-12</x>
+				<y>0</y>
+			</First>
+			<Second>true</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_MARGIN</First>
+			<Second>true</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_HIGH_END</First>
+			<Second>true</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>16</x>
+				<y>0</y>
+			</First>
+			<Second>true</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>0</x>
+				<y>26</y>
+			</First>
+			<Second>true</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>0</x>
+				<y>26</y>
+			</First>
+			<Second>true</Second>
+		</UpperMargin>
+	</Placement>
+	<ActiveArea />
+	<IgnoreDblClick>false</IgnoreDblClick>
+	<Speed>200</Speed>
+	<ButtonLower href="/OpenBK2/MultiplayerDifficulty/UI/Difficulty_ScrollUp_WindowMSButton.xdb#xpointer(/WindowMSButton)" />
+	<ButtonGreater href="/OpenBK2/MultiplayerDifficulty/UI/Difficulty_ScrollDown_WindowMSButton.xdb#xpointer(/WindowMSButton)" />
+	<Slider href="/OpenBK2/MultiplayerDifficulty/UI/Difficulty_ScrollSlider_WindowSlider.xdb#xpointer(/WindowSlider)" />
+</WindowScrollBarShared>

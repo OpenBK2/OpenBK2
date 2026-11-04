@@ -3,6 +3,7 @@
 #include "GameX/DBMPConsts.h"
 #include "GameX/MPCoopRules.h"
 #include "GameX/MPInterfaceData.h"
+#include "GameX/MultiplayerNetPackets.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
@@ -119,11 +120,98 @@ TEST_F( MPCoopRules, ResolvesForcedSettingsWithoutTurningUnrestrictedTechIntoMin
 	EXPECT_FALSE( game.bRandomPlacement );
 	EXPECT_EQ( game.nTimeLimit, 0 );
 	map->nForcedTechLevel = 1;
-	map->nDifficultyLevel = 7;
+	mission->customDifficultyLevels.resize( 3, CreateRecord<NDb::SDifficultyLevel>( "DifficultyLevel" ) );
+	game.nDifficultyLevel = 2;
 	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
 	EXPECT_EQ( game.nTechLevel, 1 );
-	EXPECT_EQ( game.nDifficultyLevel, 7 );
+	EXPECT_EQ( game.nDifficultyLevel, 2 );
 	EXPECT_EQ( NGameX::GetAllowedMultiplayerNations( game, constants ), ( std::vector<int>{ 1, 2 } ) );
+}
+
+TEST_F( MPCoopRules, HostDifficultySurvivesNetworkPayloadAndClientRuleResolution )
+{
+	ASSERT_TRUE( NDb::AddNewObject( "coop.xdb", CDBID( "coop.xdb" ), records.front() ) );
+	mission->customDifficultyLevels.resize( 3, CreateRecord<NDb::SDifficultyLevel>( "DifficultyLevel" ) );
+	game.nDifficultyLevel = 2;
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	CObj<CB2GameSpecificInfoPacket> outgoing =
+			dynamic_cast<CB2GameSpecificInfoPacket *>( NObjectFactory::MakeObject( 102 ) );
+	CObj<CB2GameSpecificInfoPacket> incoming =
+			dynamic_cast<CB2GameSpecificInfoPacket *>( NObjectFactory::MakeObject( 102 ) );
+	ASSERT_NE( outgoing, nullptr );
+	ASSERT_NE( incoming, nullptr );
+	outgoing->info = game;
+	CMemoryStream stream;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->AddPolymorphicBase( 1, outgoing.GetPtr() );
+	}
+	stream.Seek( 0 );
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		saver->AddPolymorphicBase( 1, incoming.GetPtr() );
+	}
+	SB2GameSpecificData peer;
+	peer = incoming->info;
+	EXPECT_EQ( peer.pMPMap, map );
+	EXPECT_EQ( peer.nDifficultyLevel, 2 );
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &peer, &error, constants ) ) << error;
+	EXPECT_EQ( peer.nDifficultyLevel, 2 );
+	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( peer, ReadySlots(), &error, constants ) ) << error;
+}
+
+TEST_F( MPCoopRules, DifficultyValidationRejectsInvalidAndMissingAuthoredEntries )
+{
+	// Existing maps without an authored list retain the zero-index script value.
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	for ( const int nInvalid : { -1, 1 } )
+	{
+		game.nDifficultyLevel = nInvalid;
+		EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+		EXPECT_EQ( error, "<val MP_RULE_INVALID_DIFFICULTY_LEVEL>" );
+		EXPECT_FALSE( NGameX::ValidateMultiplayerLobby( game, ReadySlots(), &error, constants ) );
+	}
+	auto *difficulty = CreateRecord<NDb::SDifficultyLevel>( "DifficultyLevel" );
+	ASSERT_NE( difficulty, nullptr );
+	mission->customDifficultyLevels = { difficulty, nullptr, difficulty };
+	for ( const int nInvalid : { -1, 1, 3 } )
+	{
+		game.nDifficultyLevel = nInvalid;
+		EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+		EXPECT_EQ( error, "<val MP_RULE_INVALID_DIFFICULTY_LEVEL>" );
+	}
+	// Do not compress sparse entries: authored index two still reaches the script as two.
+	game.nDifficultyLevel = 2;
+	EXPECT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	EXPECT_EQ( game.nDifficultyLevel, 2 );
+	map->eGameType = NDb::CLASSIC;
+	EXPECT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	EXPECT_EQ( game.nDifficultyLevel, 2 );
+	// A new map with fewer choices needs an explicit UI selection, never peer-side clamping.
+	mission->customDifficultyLevels.resize( 1 );
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	EXPECT_EQ( game.nDifficultyLevel, 2 );
+	game.nDifficultyLevel = 0;
+	EXPECT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+}
+
+TEST( MultiplayerDifficulty, OlderSettingsResetMissingDifficultyToZero )
+{
+	CMemoryStream stream;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		int nPlayers = 2;
+		saver->Add( 3, &nPlayers );
+	}
+	SB2GameSpecificData restored;
+	restored.nDifficultyLevel = 2;
+	stream.Seek( 0 );
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		restored.operator&( *saver );
+	}
+	EXPECT_EQ( restored.nPlayers, 2 );
+	EXPECT_EQ( restored.nDifficultyLevel, 0 );
 }
 
 TEST_F( MPCoopRules, PreservesSparseMapIDsAndExcludesBotsNeutralAndExcessHumanSlots )

@@ -319,3 +319,31 @@ context. Read `git diff` of every touched file before building.
   COM macro and `CDBPtr::GetPtr` returns const data. Use a descriptive variable such
   as `replayInterface`, and finish mutable fixture descriptors before assigning them
   to database pointers. Include `port/time.h` when using `SSystemTime` directly.
+
+## Multiplayer difficulty selection
+
+- Keep map difficulty indices in authored order. The campaign selector's special
+  four-item reordering is campaign-specific and must not alter map Lua indices.
+  Validate the host's shared selection without overwriting it during peer-side
+  map-rule resolution; replay startup restores the recorded index independently.
+- `CTextDataViewer` expects a combo item child named `ItemComboText`. Reusing a
+  campaign combo skin with its original `Text` child silently loses the labels.
+- The VFS chooses the newest archive entry when paths collide. A reproducible ZIP
+  timestamp of 2000 works for new resources but makes UI overrides lose to stock
+  archives. Use the patch's date and document conflicts with newer mod overrides.
+- `MakeObject<T>` uses a static checked cast and cannot construct interfaces such
+  as `IWindow` that virtually inherit `CObjectBase`. A host UI fixture failed to
+  compile with that helper; use `MakeObjectVirtual<T>` or dynamically cast the
+  factory result for those interfaces.
+- BinSaver's overload probe can miss an inherited serializer. For the MP screen
+  base it selected the one-byte fallback and read raw bytes over the vtable.
+  Serialize the explicit `CInterfaceScreenBase` subobject, which declares the
+  serializer, rather than the intermediate class that only inherits it.
+- The MP settings frame is part of its parent's background artwork. Increasing
+  the transparent Controls window from 220 to 244 units did not enlarge that
+  frame and made the last row overflow. Check the actual artwork bounds, then
+  compact the rows. Resize fixed child button skins and selected-text offsets
+  too; shrinking a combo's outer rectangle alone leaves its contents unchanged.
+- `BackgroundSimpleTexture` does not implement `EPA_MARGIN` texture alignment.
+  Use `BackgroundSimpleScallingTexture` for resized skins; the similarly named
+  alignment setting leaves texture coordinates unset rather than scaling them.

@@ -19,6 +19,10 @@ add_unit_test(ReplayCommandTiming GameX libdb System Misc Main AILogic Stats_B2_
 add_unit_test(ReplayPlayerSelection GameX UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 target_compile_definitions(ReplayPlayerSelection_test PRIVATE
     REPLAY_SELECTION_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+# Exercise the real host difficulty dropdown and submitted create-game message.
+add_unit_test(MPDifficultySelection GameX UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+target_compile_definitions(MPDifficultySelection_test PRIVATE
+    MP_DIFFICULTY_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 add_unit_test(UnitTransferUI UI 3Dmotor libdb System Misc gr2)
 # Resolve the flags of an installed game's sides, when one is named (see the source).
 add_unit_test(MPSideFlags GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
@@ -31,10 +35,12 @@ if(WIN32)
     set_tests_properties(MessageParts_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
     # GameX loads UI's FFmpeg codecs, including DLLs outside CMake's link graph.
-    set_tests_properties(MPDataChecksum_test MPCoopRules_test CoopScenario_test UnitTransferCommand_test ReplayPlayerDrop_test ReplayCommandTiming_test ReplayPlayerSelection_test UnitTransferUI_test MPSideFlags_test PROPERTIES
+    set_tests_properties(MPDataChecksum_test MPCoopRules_test CoopScenario_test UnitTransferCommand_test ReplayPlayerDrop_test ReplayCommandTiming_test ReplayPlayerSelection_test MPDifficultySelection_test UnitTransferUI_test MPSideFlags_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
     set_property(TARGET MPDataChecksum_test APPEND PROPERTY
         LINK_DEPENDS $<TARGET_FILE:GameX>)
     set_property(TARGET ReplayPlayerSelection_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:GameX> $<TARGET_FILE:UI>)
+    set_property(TARGET MPDifficultySelection_test APPEND PROPERTY
         LINK_DEPENDS $<TARGET_FILE:GameX> $<TARGET_FILE:UI>)
 endif()

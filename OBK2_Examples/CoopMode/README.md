@@ -12,15 +12,14 @@ the regenerated `types.xml` from this source revision.
 
 ## Map descriptor
 
-`MultiplayerMap.xdb` shows the four new properties. Adjust its map/name references
-and dimensions to your mission:
+`MultiplayerMap.xdb` shows the three COOP-related properties. Adjust its map/name
+references and dimensions to your mission:
 
 | Field | Default | Meaning |
 | --- | --- | --- |
 | `GameType` | `CLASSIC` | Set to `COOP` for cooperative rules. |
 | `ForcedTechLevel` | `-1` | A zero-based MultiplayerConsts tech index; -1 permits the host's selection. |
 | `AllowedNations` | Empty | Zero-based MultiplayerConsts side indexes for human players. Empty permits every side available at the selected tech. |
-| `DifficultyLevel` | `0` | Integer returned by Lua `GetDifficultyLevel()`. It does not apply automatic stat modifiers. |
 
 `Players` remains the maximum number of **humans**, not the total number of map
 players. At least two humans must be connected and ready to start. If the host
@@ -32,6 +31,17 @@ restrict the choice, including Random. An invalid index or a list with no nation
 available at the chosen tech is a data error and prevents starting. Forced tech
 is displayed but cannot be changed. COOP hides team selection and disables
 random-placement and match time-limit controls; all humans join side 0.
+
+Difficulty is selected by the host in the multiplayer game settings. Populate
+`MapInfo.CustomDifficultyLevels` with `DifficultyLevel` records in the desired
+dropdown order; their `LocalizedNameFileRef` supplies each label. Lua
+`GetDifficultyLevel()` returns the selected zero-based index, which is synchronized
+to every client and saved in replays. The selector is hidden for CLASSIC maps or an
+empty list, using index `0`. These records
+do not apply automatic unit-stat or reinforcement modifiers in MP; scripts decide
+what each difficulty does. The old `MultiplayerMap.DifficultyLevel` property was
+removed. See the [difficulty guide](../MultiplayerDifficulty/README.md) for the GUI
+package and examples.
 
 ## Map players and armies
 
@@ -69,6 +79,8 @@ The replay preview lists individual players. Both humans and AI bots can be
 selected as viewpoints, with the first human selected initially. Bot entries stay
 outside the human network roster, and the replay list's player count still counts
 humans. A bot viewpoint retains its map-configured AI role.
+Replay bot nation icons use that player's current map `PartyInfo`, while names
+and marker positions continue to come from the replay snapshot.
 
 ## Mission script
 
@@ -85,7 +97,7 @@ Before using it, create the script groups and areas named in its comments.
   human peers do not automatically decide COOP results.
 - A map without a script, or whose script never calls a result function, keeps
   running until players leave. Disconnect/network cancellation remains possible.
-- `GetDifficultyLevel()` returns the descriptor value. `GetMultiplayerMatchTechLevel()`
+- `GetDifficultyLevel()` returns the host-selected index. `GetMultiplayerMatchTechLevel()`
   and `GetPlayerMultiplayerNation(player)` expose the human MP configuration.
 - `IsPlayerPresent(player)` lets scripts handle unoccupied or departed humans.
   On disconnect, the existing rule stops and transfers that player's units to a

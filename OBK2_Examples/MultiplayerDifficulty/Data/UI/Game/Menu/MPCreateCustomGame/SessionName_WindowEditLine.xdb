@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowEditLine>
+	<ClassTypeID>285694851</ClassTypeID>
+	<Shared href="/UI/Game/Menu/Common/Common_WindowEditLineShared.xdb#xpointer(/WindowEditLineShared)" />
+	<Name>SessionName</Name>
+	<Tooltip href="" />
+	<TooltipFileRef href="/UI/Game/Menu/MPCreateCustomGame/controls/ttsessionname.txt" />
+	<Visible>true</Visible>
+	<Priority>0</Priority>
+	<GameMessageReactions />
+	<Placement>
+		<Position>
+			<First>
+				<x>-10</x>
+				<y>6</y>
+			</First>
+			<Second>true</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_LOW_END</First>
+			<Second>true</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_HIGH_END</First>
+			<Second>true</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>200</x>
+				<y>36</y>
+			</First>
+			<Second>true</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</UpperMargin>
+	</Placement>
+	<Enabled>true</Enabled>
+	<TextString href="" />
+	<OnReturn />
+	<SequienceOnReturn>
+		<Commands>
+			<Item href="/UI/Game/Menu/MPCreateCustomGame/SessionEnter_UISRunReaction.xdb#xpointer(/UISRunReaction)" />
+		</Commands>
+		<Reversable>false</Reversable>
+	</SequienceOnReturn>
+	<OnEscape />
+	<SequienceOnEscape>
+		<Commands />
+		<Reversable>false</Reversable>
+	</SequienceOnEscape>
+	<MaxLength>20</MaxLength>
+	<TextScroll>false</TextScroll>
+	<TextEntryType>ETET_ALL</TextEntryType>
+	<Password>false</Password>
+	<SequienceOnTextChanged>
+		<Commands>
+			<Item href="/UI/Game/Menu/MPCreateCustomGame/SessionNameTextChange_UISRunReaction.xdb#xpointer(/UISRunReaction)" />
+		</Commands>
+		<Reversable>false</Reversable>
+	</SequienceOnTextChanged>
+	<OnTextChanged />
+</WindowEditLine>

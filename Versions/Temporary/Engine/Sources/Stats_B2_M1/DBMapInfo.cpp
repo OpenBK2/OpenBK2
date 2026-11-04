@@ -1581,7 +1581,6 @@ void SMultiplayerMap::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "GameType", (uint8_t*)&eGameType - pThis, sizeof(eGameType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "ForcedTechLevel", (uint8_t*)&nForcedTechLevel - pThis, sizeof(nForcedTechLevel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "AllowedNations", &allowedNations, pThis );
-	NMetaInfo::ReportMetaInfo( "DifficultyLevel", (uint8_t*)&nDifficultyLevel - pThis, sizeof(nDifficultyLevel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1596,7 +1595,6 @@ int SMultiplayerMap::operator&( IXmlSaver &saver )
 	saver.Add( "GameType", &eGameType );
 	saver.Add( "ForcedTechLevel", &nForcedTechLevel );
 	saver.Add( "AllowedNations", &allowedNations );
-	saver.Add( "DifficultyLevel", &nDifficultyLevel );
 
 	return 0;
 }
@@ -1614,7 +1612,6 @@ int SMultiplayerMap::operator&( IBinSaver &saver )
 		saver.Add( 8, &nForcedTechLevel );
 	}
 	saver.Add( 9, &allowedNations );
-	saver.Add( 10, &nDifficultyLevel );
 
 	return 0;
 }
@@ -1627,7 +1624,7 @@ uint32_t SMultiplayerMap::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations << nDifficultyLevel;
+	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

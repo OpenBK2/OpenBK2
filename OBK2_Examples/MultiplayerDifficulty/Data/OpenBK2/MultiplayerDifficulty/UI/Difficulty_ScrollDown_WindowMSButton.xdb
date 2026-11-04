@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowMSButton>
+	<ClassTypeID>285694855</ClassTypeID>
+	<Shared href="/OpenBK2/MultiplayerDifficulty/UI/Difficulty_ScrollDown_WindowMSButtonShared.xdb#xpointer(/WindowMSButtonShared)" />
+	<Name>ScrollDown</Name>
+	<Tooltip href="" />
+	<TooltipFileRef href="" />
+	<Visible>true</Visible>
+	<Priority>0</Priority>
+	<GameMessageReactions />
+	<Placement>
+		<Position>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_LOW_END</First>
+			<Second>false</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_LOW_END</First>
+			<Second>false</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>16</x>
+				<y>16</y>
+			</First>
+			<Second>true</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</UpperMargin>
+	</Placement>
+	<Enabled>true</Enabled>
+	<TextString href="" />
+	<ButtonStates>
+		<Item>
+			<MessageOnEnterState />
+			<CommandsOnEnterState>
+				<Commands />
+				<Reversable>false</Reversable>
+			</CommandsOnEnterState>
+			<CommandsOnRightClick>
+				<Commands />
+				<Reversable>false</Reversable>
+			</CommandsOnRightClick>
+			<commandsOnLDblKlick>
+				<Commands />
+				<Reversable>false</Reversable>
+			</commandsOnLDblKlick>
+			<WaitVisual>false</WaitVisual>
+			<ReverseCommands>false</ReverseCommands>
+			<Name />
+		</Item>
+	</ButtonStates>
+	<ButtonGroupID>0</ButtonGroupID>
+	<AutoChangeState>false</AutoChangeState>
+	<PushEffect>
+		<Commands />
+		<Reversable>false</Reversable>
+	</PushEffect>
+	<State>0</State>
+	<Text href="" />
+	<TextFileRef href="" />
+	<TextFormat href="" />
+</WindowMSButton>

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WindowSlider>
+	<ClassTypeID>285694858</ClassTypeID>
+	<Shared href="/OpenBK2/MultiplayerDifficulty/UI/Difficulty_ScrollSlider_WindowSliderShared.xdb#xpointer(/WindowSliderShared)" />
+	<Name />
+	<Tooltip href="" />
+	<TooltipFileRef href="" />
+	<Visible>true</Visible>
+	<Priority>0</Priority>
+	<GameMessageReactions />
+	<Placement>
+		<Position>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</Position>
+		<VerAllign>
+			<First>EPA_MARGIN</First>
+			<Second>true</Second>
+		</VerAllign>
+		<HorAllign>
+			<First>EPA_LOW_END</First>
+			<Second>false</Second>
+		</HorAllign>
+		<Size>
+			<First>
+				<x>0</x>
+				<y>0</y>
+			</First>
+			<Second>false</Second>
+		</Size>
+		<LowerMargin>
+			<First>
+				<x>0</x>
+				<y>16</y>
+			</First>
+			<Second>true</Second>
+		</LowerMargin>
+		<UpperMargin>
+			<First>
+				<x>0</x>
+				<y>16</y>
+			</First>
+			<Second>true</Second>
+		</UpperMargin>
+	</Placement>
+	<Enabled>true</Enabled>
+	<TextString href="" />
+	<SpecialPositions>0</SpecialPositions>
+</WindowSlider>
