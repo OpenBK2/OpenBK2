@@ -10,6 +10,7 @@
 #include "MapInfoEditor.h"
 #include "MapObjectMultiState.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "port/vkcodes.h"
 #include "ResourceDefines.h"
 #include "SceneB2/Scene.h"
@@ -545,18 +546,18 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 	}
 	Normalize( &dir );
 	vDirMarker = dir;
-	DebugTrace( "Angle: %g", atan2( dir.y, dir.x ) * 180 / FP_PI );
+	DebugTrace( "Angle: %g", NDetMath::ATan2( dir.y, dir.x ) * 180 / FP_PI );
 
 	if ( nLock == 0 ) // первый линейный сегмент вращается вокруг первого терминатора
 	{
-		fStartDir = atan2( dir.y, dir.x );
+		fStartDir = NDetMath::ATan2( dir.y, dir.x );
 		vLockDir = dir;
 		segments.push_back( ST_LINE );
 	}
 
 	float fDA = AngleDiff( dir, vLockDir );
 
-	int n = fabs( fDA ) / ( 2.0f * fArcDeltaAngle ); // сколько arc-ов нужно добавить, чтобы (приблизительно)
+	int n = std::fabs( fDA ) / ( 2.0f * fArcDeltaAngle ); // сколько arc-ов нужно добавить, чтобы (приблизительно)
 	// выйти на текущее направление мыши
 	float fSign = fDA < 0 ? -1.0f : 1.0f;
 	for ( int i = 0; i < n; ++i )
@@ -572,7 +573,7 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 	float fShLen = fabs( shift );
 	Normalize( &shift );
 	float fShDA = AngleDiff( shift, cd );
-	fShLen *= cos( fShDA );
+	fShLen *= NDetMath::Cos( fShDA );
 	float fSegLen = GetSegAABBSize( ST_LINE ).x;
 	int m = fShLen / fSegLen;
 	//

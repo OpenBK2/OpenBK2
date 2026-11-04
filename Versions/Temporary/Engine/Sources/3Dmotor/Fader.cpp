@@ -2,6 +2,7 @@
 
 #include "3DLib/ExpFader.h"
 #include "Fader.h"
+#include "Misc/DetMath.h"
 
 namespace NGScene
 {
@@ -85,13 +86,13 @@ protected:
 
 					if ( eFadeType == E_FADE_TO_BLACK )
 					{
-						if ( fabs( value ) < FADE_EPS )
+						if ( std::fabs( value ) < FADE_EPS )
 						{
 							bNeedUpdate = false;
 							value = 0.0f;
 						}
 					}
-					else if ( fabs( value ) > ( 1.0f - FADE_EPS ) )
+					else if ( std::fabs( value ) > ( 1.0f - FADE_EPS ) )
 					{
 						bNeedUpdate = false;
 						value = 1.0f;
@@ -229,7 +230,7 @@ IFader *CreateSimpleFader( const SFaderInfo &faderInfo )
 {
 	if ( faderInfo.bStartFade )
 	{
-		const float fOnTime = -faderInfo.fLatency / log( 0.01f );
+		const float fOnTime = -faderInfo.fLatency / NDetMath::Log( 0.01f );
 		//return new CSimpleFader( faderInfo.bFadeToBlack ? E_FADE_TO_BLACK : E_FADE_TO_WHITE, faderInfo.nStartTime, faderInfo.fLatency/*fOnTime*/ );
 		return new CSimpleFader(
 				faderInfo.bFadeToBlack ? E_FADE_TO_BLACK : E_FADE_TO_WHITE, faderInfo.nStartTime, fOnTime, faderInfo.pOwner );

@@ -351,7 +351,7 @@ void CMechUnitEntrenchSelfState::Segment()
 			{
 				float fNewValue = float( curTime - timeStartBuild ) / ( timeEndBuild - timeStartBuild );
 
-				if ( fabs( fOldProgress - fNewValue ) > 0.1f )
+				if ( std::fabs( fOldProgress - fNewValue ) > 0.1f )
 				{
 					CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 					pUpdate->info.nAbilityType = NDb::ABILITY_ENTRENCH_SELF;

@@ -109,7 +109,7 @@ namespace NReference
 	                    CVec2 *pBary )
 	{
 		float d = ( p1x - p0x ) * ( p2y - p0y ) - ( p1y - p0y ) * ( p2x - p0x );
-		if ( fabs( d ) > DEF_EPS )
+		if ( std::fabs( d ) > DEF_EPS )
 		{
 			Count( d < 0.0f ? PATH_TRIANGLE_CLOCKWISE : PATH_TRIANGLE_COUNTERCLOCKWISE );
 			d = 1.0 / d;

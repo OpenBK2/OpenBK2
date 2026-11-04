@@ -2,6 +2,7 @@
 
 #include "3Dmotor/GfxBuffers.h"
 #include "Misc/BitData.h"
+#include "Misc/DetMath.h"
 #include "System/Dg.h"
 #include "UI/Window.h"
 #include "UISpecificB2.h"
@@ -119,8 +120,8 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 			vSize = _vSize;
 			vCenter = _vCenter;
 
-			fSin = sin( fAngle );
-			fCos = cos( fAngle );
+			fSin = NDetMath::Sin( fAngle );
+			fCos = NDetMath::Cos( fAngle );
 		}
 
 		CVec2 Transform( const CVec2 &_vPos ) const

@@ -10,6 +10,7 @@
 #include "GlobalWarFog.h"
 #include "Guns.h"
 #include "HitsStore.h"
+#include "Misc/DetMath.h"
 #include "NewUpdater.h"
 #include "Randomize.h"
 #include "Shell.h"
@@ -1404,12 +1405,12 @@ const CVec3 CBombBallisticTraj::GetCoordinates() const
 
 float CBombBallisticTraj::GetCoeff( const float &timeDiff )
 {
-	return ( 1 - exp( -1.0f * SConsts::TRAJ_BOMB_ALPHA * timeDiff ) ) / SConsts::TRAJ_BOMB_ALPHA;
+	return ( 1 - NDetMath::Exp( -1.0f * SConsts::TRAJ_BOMB_ALPHA * timeDiff ) ) / SConsts::TRAJ_BOMB_ALPHA;
 }
 
 float CBombBallisticTraj::GetTimeOfFly( const float fZ, const float fZSpeed )
 {
-	return ( sqrt( sqr( fZSpeed ) + 2 * SConsts::TRAJECTORY_BOMB_G * fZ ) + fZSpeed ) / SConsts::TRAJECTORY_BOMB_G;
+	return ( std::sqrt( sqr( fZSpeed ) + 2 * SConsts::TRAJECTORY_BOMB_G * fZ ) + fZSpeed ) / SConsts::TRAJECTORY_BOMB_G;
 }
 
 //*******************************************************************
@@ -1488,8 +1489,8 @@ CBallisticTraj::CBallisticTraj( const CVec3 &_vStart,
 			fV = fCoeff + 0.001f;
 		}
 
-		const float fSqrt1 = sqrt( fV + fCoeff );
-		const float fSqrt2 = sqrt( fV - fCoeff );
+		const float fSqrt1 = std::sqrt( fV + fCoeff );
+		const float fSqrt2 = std::sqrt( fV - fCoeff );
 
 		// крутая траектория
 		/*if ( eType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
@@ -1511,8 +1512,8 @@ CBallisticTraj::CBallisticTraj( const CVec3 &_vStart,
 	{
 		// Rotate the launch direction, then solve speed for the original target distance.
 		// Keep gravity fixed so the offset changes the arc without shifting the impact.
-		const float fCos = cos( fVerticalOffsetAngleRad );
-		const float fSin = sin( fVerticalOffsetAngleRad );
+		const float fCos = NDetMath::Cos( fVerticalOffsetAngleRad );
+		const float fSin = NDetMath::Sin( fVerticalOffsetAngleRad );
 		const float fRotatedVx = fVx * fCos - fVy * fSin;
 		const float fRotatedVy = fVx * fSin + fVy * fCos;
 		// These trajectories are relative to interpolated terrain height. Only a
@@ -1520,7 +1521,7 @@ CBallisticTraj::CBallisticTraj( const CVec3 &_vStart,
 		// An impossible offset retains the original solution rather than firing off-map.
 		if ( x0 > 0.0f && fG > 0.0f && fRotatedVx > 0.0f && fRotatedVy > 0.0f )
 		{
-			const float fSpeedScale = sqrt( fG * x0 / ( 2.0f * fRotatedVx * fRotatedVy ) );
+			const float fSpeedScale = std::sqrt( fG * x0 / ( 2.0f * fRotatedVx * fRotatedVy ) );
 			if ( std::isfinite( fSpeedScale ) && fSpeedScale > 0.0f )
 			{
 				fVx = fRotatedVx * fSpeedScale;
@@ -1588,7 +1589,7 @@ namespace
 {
 bool ClipATGMSegmentAxis( float fStart, float fDelta, float fMin, float fMax, float *pEnter, float *pExit )
 {
-	if ( fabs( fDelta ) < 1e-6f )
+	if ( std::fabs( fDelta ) < 1e-6f )
 	{
 		return fStart >= fMin && fStart <= fMax;
 	}
@@ -1610,7 +1611,7 @@ float GetATGMSegmentRectRatio( const CVec3 &vFrom, const CVec3 &vTo, const SRect
 	const CVec2 vDelta( vTo.x - vFrom.x, vTo.y - vFrom.y );
 	const float fStartX = vStart.x * rect.dir.x + vStart.y * rect.dir.y;
 	const float fStartY = vStart.x * rect.dirPerp.x + vStart.y * rect.dirPerp.y;
-	const bool bInside = fStartX >= -rect.lengthBack && fStartX <= rect.lengthAhead && fabs( fStartY ) <= rect.width;
+	const bool bInside = fStartX >= -rect.lengthBack && fStartX <= rect.lengthAhead && std::fabs( fStartY ) <= rect.width;
 	if ( bInside )
 	{
 		// Starting on or inside collision geometry is an immediate hit, not a missed sweep.
@@ -1720,9 +1721,9 @@ CVec3 CATGMTraj::GetGuidancePoint() const
 		const float fB = 2.0f * ( vRelative.x * vTargetVelocity.x + vRelative.y * vTargetVelocity.y );
 		const float fC = vRelative.x * vRelative.x + vRelative.y * vRelative.y + vRelative.z * vRelative.z;
 		float fLeadTime = 0.0f;
-		if ( fabs( fA ) < 1e-6f )
+		if ( std::fabs( fA ) < 1e-6f )
 		{
-			if ( fabs( fB ) > 1e-6f )
+			if ( std::fabs( fB ) > 1e-6f )
 			{
 				fLeadTime = -fC / fB;
 			}
@@ -1732,7 +1733,7 @@ CVec3 CATGMTraj::GetGuidancePoint() const
 			const float fDiscriminant = fB * fB - 4.0f * fA * fC;
 			if ( fDiscriminant >= 0.0f )
 			{
-				const float fRoot = sqrt( fDiscriminant );
+				const float fRoot = std::sqrt( fDiscriminant );
 				const float fT1 = ( -fB - fRoot ) / ( 2.0f * fA );
 				const float fT2 = ( -fB + fRoot ) / ( 2.0f * fA );
 				if ( fT1 > 0.0f && fT2 > 0.0f )
@@ -1783,7 +1784,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom,
 			if ( fRatio <= 1.0f )
 			{
 				const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
-				if ( fabs( fZ - GetTargetAimZ( pTarget ) ) <= AI_TILE_SIZE * 2.0f )
+				if ( std::fabs( fZ - GetTargetAimZ( pTarget ) ) <= AI_TILE_SIZE * 2.0f )
 				{
 					*ppHitTarget = pTarget;
 					return fRatio;
@@ -1828,7 +1829,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom,
 			const float fZ = vFrom.z + ( vTo.z - vFrom.z ) * fRatio;
 			const float fTargetZ =
 					!bStrayMode && pUnit == pTarget && IsAimingForTargetTop() ? GetTargetAimZ( pUnit ) : pUnit->GetVisZ();
-			if ( fabs( fZ - fTargetZ ) <= AI_TILE_SIZE * 2.0f )
+			if ( std::fabs( fZ - fTargetZ ) <= AI_TILE_SIZE * 2.0f )
 			{
 				fBestRatio = fRatio;
 				*ppHitTarget = pUnit;
@@ -1908,7 +1909,7 @@ float CATGMTraj::FindImpactRatio( const CVec3 &vFrom,
 
 	// Sampling at half-tile intervals catches cliffs and terrain that actually rises into the flight path.
 	const float fHorizontalLength = fabs( CVec2( vTo.x - vFrom.x, vTo.y - vFrom.y ) );
-	const int nSamples = (std::max)( 1, (int)ceil( fHorizontalLength / ( AI_TILE_SIZE * 0.5f ) ) );
+	const int nSamples = (std::max)( 1, (int)std::ceil( fHorizontalLength / ( AI_TILE_SIZE * 0.5f ) ) );
 	for ( int i = 1; i <= nSamples; ++i )
 	{
 		const float fRatio = (float)i / nSamples;
@@ -2014,7 +2015,7 @@ void CATGMTraj::Segment()
 			                              vCurrentDirection.z * vDesiredDirection.z,
 			                          -1.0f,
 			                          1.0f );
-			const float fAngle = acos( fDot );
+			const float fAngle = NDetMath::ACos( fDot );
 			if ( fAngle > ToRadian( 89.0f ) )
 			{
 				// A target behind the missile cannot be reacquired without orbiting around it.
@@ -2025,11 +2026,11 @@ void CATGMTraj::Segment()
 				const float fMaxTurn = (std::max)( fTurnRateRad, 0.0f ) * fTimeDiff / 1000.0f;
 				if ( fAngle > fMaxTurn && fAngle > 1e-6f )
 				{
-					const float fSinAngle = sin( fAngle );
-					if ( fabs( fSinAngle ) > 1e-6f )
+					const float fSinAngle = NDetMath::Sin( fAngle );
+					if ( std::fabs( fSinAngle ) > 1e-6f )
 					{
-						vDesiredDirection = vCurrentDirection * ( sin( fAngle - fMaxTurn ) / fSinAngle ) +
-						                    vDesiredDirection * ( sin( fMaxTurn ) / fSinAngle );
+						vDesiredDirection = vCurrentDirection * ( NDetMath::Sin( fAngle - fMaxTurn ) / fSinAngle ) +
+						                    vDesiredDirection * ( NDetMath::Sin( fMaxTurn ) / fSinAngle );
 					}
 					else
 					{

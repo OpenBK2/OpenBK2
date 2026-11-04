@@ -65,11 +65,19 @@ uint32_t SGameConsts::RecalculateMPDataVersionChecksum() const
 	auto mod_folder_name = relPath.string();
 	if ( !mod_folder_name.empty() )
 	{
-		int gummy = 0x123456AF;
+		// Computed in uint32_t: the original int arithmetic overflowed, which is
+		// undefined behaviour. Unsigned arithmetic wraps by definition and gives the
+		// bits MSVC and gcc produced in practice, so the checksum is unchanged. The
+		// character is read as signed char, as it was on x86, so a non-ASCII byte
+		// in the path hashes the same on a platform where plain char is unsigned.
+		uint32_t gummy = 0x123456AF;
 		for ( size_t i = 0; i < mod_folder_name.size(); i++ )
 		{
-			gummy += mod_folder_name[i] * gummy + i * gummy + 0xFED321;
+			const auto ch = static_cast<uint32_t>( static_cast<signed char>( mod_folder_name[i] ) );
+			gummy += ch * gummy + static_cast<uint32_t>( i ) * gummy + 0xFED321u;
 		}
+		// Same 4 bytes as the int it replaces, so the adler32 input is unchanged.
+		static_assert( sizeof( gummy ) == sizeof( int ) );
 		ret = CalculateChecksum( ret, gummy );
 	}
 

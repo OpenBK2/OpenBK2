@@ -181,7 +181,7 @@ void CTerraGen::CragsPushExactPoint( std::vector<STerrainInfo::SVSOPoint> *pArra
 	const float fMaxHeight = GetMaxCragHeight( CVec2( vPos.x, vPos.y ), nExcludeID );
 #endif
 
-	if ( ( ( t2 - t1 ) < DEF_EXACT_EPS ) || ( fabs( vPos.z - fMaxHeight ) < DEF_EXACT_EPS ) )
+	if ( ( ( t2 - t1 ) < DEF_EXACT_EPS ) || ( std::fabs( vPos.z - fMaxHeight ) < DEF_EXACT_EPS ) )
 	{
 		NDb::SVSOPoint p;
 		p.vPos = vPos;
@@ -491,7 +491,7 @@ void CTerraGen::PutAllCragsOnTerrain()
 
 static bool IsGridPoint( const CVec3fEx &vPoint )
 {
-	return ( fabs( sqr( fmodf( vPoint.x, DEF_TILE_SIZE ) ) + sqr( fmodf( vPoint.y, DEF_TILE_SIZE ) ) ) < DEF_EPS2 );
+	return ( std::fabs( sqr( fmodf( vPoint.x, DEF_TILE_SIZE ) ) + sqr( fmodf( vPoint.y, DEF_TILE_SIZE ) ) ) < DEF_EPS2 );
 }
 
 static CVec2i GetGridPoint( const CVec3fEx &vPoint )

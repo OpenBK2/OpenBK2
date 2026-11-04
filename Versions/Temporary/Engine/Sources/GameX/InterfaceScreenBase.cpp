@@ -5,6 +5,7 @@
 #include "GetConsts.h"
 #include "InterfaceScreenBase.h"
 #include "InterfaceState.h"
+#include "Misc/DetMath.h"
 #include "Misc/StrProc.h"
 #include "MultiplayerCommandManager.h"
 #include "ScenarioTracker.h"
@@ -257,7 +258,7 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 		pCamera->GetPlacement( &fDist, &fPitch, &fYaw );
 		float fNear, fFar, fFOV;
 		pCamera->GetCameraParams( &fNear, &fFar, &fFOV );
-		const float fScreenWidth = fDist * tan( ToRadian( fFOV / 2.0f ) );
+		const float fScreenWidth = fDist * NDetMath::Tan( ToRadian( fFOV / 2.0f ) );
 
 		CVec3 vAnchor = pCamera->GetAnchor();
 		CVec3 vPosition = pCamera->GetPos();

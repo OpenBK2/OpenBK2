@@ -58,9 +58,9 @@ int FindStateByValue( const std::string &szValue, const NDb::SOptionSystem::SOpt
 			return -1;
 		}
 
-		if ( fabs( fOptionValue - fValue ) < fMinDifference )
+		if ( std::fabs( fOptionValue - fValue ) < fMinDifference )
 		{
-			fMinDifference = fabs( fOptionValue - fValue );
+			fMinDifference = std::fabs( fOptionValue - fValue );
 			nNearest = i;
 		}
 	}

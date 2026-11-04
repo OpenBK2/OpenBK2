@@ -9,6 +9,7 @@
 #include "GroupLogic.h"
 #include "Guns.h"
 #include "ManuverInternal.h"
+#include "Misc/DetMath.h"
 #include "NewUpdater.h"
 #include "PlanePath.h"
 #include "PlanesFormation.h"
@@ -834,10 +835,11 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 		const CVec2 vPoint1( vPos + vSpeed * fTriangleLength );
 		const int nRot = NRandom::Random( 0, 1 ) == 0 ? 1 : -1;
 		RecordRandomCall();
-		const CVec2 vPoint2( vPos + fTriangleLength *
-		                                ( ( sqrt( 3.0f ) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
-		const CVec2 vPoint3(
-				vPos + fTriangleLength * ( -( sqrt( 3.0f ) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
+		const CVec2 vPoint2( vPos + fTriangleLength * ( ( std::sqrt( 3.0f ) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) -
+		                                                0.5f * vSpeed ) );
+		const CVec2 vPoint3( vPos +
+		                     fTriangleLength *
+		                         ( -( std::sqrt( 3.0f ) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
 
 		AddPoint( vPoint2 );
 		AddPoint( vPoint3 );
@@ -1322,7 +1324,7 @@ CPlaneLeaveState::CPlaneLeaveState( CAviation *_pPlane )
 	                                                            : vMapSize.x + LEAVE_DISSAPEAR_DISTANCE,
 	                         vCenter.y );
 	const CVec2 vAwayPoint =
-			fabs( vAwayPoint1.y - vCenter.y ) < fabs( vAwayPoint2.x - vCenter.x ) ? vAwayPoint1 : vAwayPoint2;
+			std::fabs( vAwayPoint1.y - vCenter.y ) < std::fabs( vAwayPoint2.x - vCenter.x ) ? vAwayPoint1 : vAwayPoint2;
 
 	InitPathToPoint( CVec3( vAwayPoint, pPlane->GetCenter().z ), true, true );
 }
@@ -1832,10 +1834,11 @@ CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState(
 	if ( pStats->wDivingAngle != 0 )
 	{
 		const float fBetta = ( PI - fDiveAngle ) / 2.0f;
-		fStartAttackDist = ( fVertTurnRadius / tan( fBetta ) ) + ( pPlane->GetCenter().z / tan( fDiveAngle ) ) +
+		fStartAttackDist = ( fVertTurnRadius / NDetMath::Tan( fBetta ) ) +
+		                   ( pPlane->GetCenter().z / NDetMath::Tan( fDiveAngle ) ) +
 		                   pStats->fSpeed * 3 * SConsts::AI_SEGMENT_DURATION;
 
-		fFinishAttckDist = SPlanesConsts::GetMinHeight() / tan( fDiveAngle );
+		fFinishAttckDist = SPlanesConsts::GetMinHeight() / NDetMath::Tan( fDiveAngle );
 		//TODO{ check for gun ammo and bombs and send ack if no ammo
 		if ( !bAmmoRemains )
 		{
@@ -2035,7 +2038,7 @@ void CPlaneShturmovikPatrolState::Segment()
 					bDiveInProgress = true;
 				}
 				TryBurstAllGuns();
-				if ( fabs( pPlane->GetPlanesFormation()->GetManuver()->GetEndPoint().z - enemie.GetZ() ) >
+				if ( std::fabs( pPlane->GetPlanesFormation()->GetManuver()->GetEndPoint().z - enemie.GetZ() ) >
 				     SPlanesConsts::GetMinHeight() )
 				{
 					// too low height, maneuver was canceled by itself
@@ -2177,7 +2180,7 @@ bool CPlaneShturmovikPatrolState::IsTargetBehind( const CVec2 &vTarget ) const
 void CPlaneShturmovikPatrolState::TryBurstAllGunsToPoints()
 {
 	const CVec3 vSpeed( pPlane->GetSpeedB2() );
-	if ( fabs( vSpeed.z ) < fabs( vSpeed.x, vSpeed.y ) * 0.01f && vSpeed.z < -FP_EPSILON )
+	if ( std::fabs( vSpeed.z ) < fabs( vSpeed.x, vSpeed.y ) * 0.01f && vSpeed.z < -FP_EPSILON )
 	{
 		return;
 	}
@@ -2448,11 +2451,11 @@ void CPlaneFlyDeadState::CDeadZone::Init()
 
 void CPlaneFlyDeadState::CDeadZone::AdjustEscapePoint( CVec2 *pPoint )
 {
-	const float fXMaxDiff = fabs( pPoint->x - fMaxX );
-	const float fXMinDiff = fabs( pPoint->x - fMinX );
+	const float fXMaxDiff = std::fabs( pPoint->x - fMaxX );
+	const float fXMinDiff = std::fabs( pPoint->x - fMinX );
 
-	const float fYMaxDiff = fabs( pPoint->y - fMaxY );
-	const float fYMinDiff = fabs( pPoint->y - fMinY );
+	const float fYMaxDiff = std::fabs( pPoint->y - fMaxY );
+	const float fYMinDiff = std::fabs( pPoint->y - fMinY );
 
 	const float fXDiff = (std::min)( fXMaxDiff, fXMinDiff );
 	const float fYDiff = (std::min)( fYMaxDiff, fYMinDiff );

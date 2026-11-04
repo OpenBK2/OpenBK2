@@ -1607,8 +1607,8 @@ bool InitZBuffer( D3DFORMAT format )
 			nXSize = Float2Int( nXRSize * sqrt( fRegisterResolution ) );
 			nYSize = Float2Int( nYRSize * sqrt( fRegisterResolution ) );
 #else
-			nXSize = Float2Int( nXRSize * sqrt( fRegisterResolution ) );
-			nYSize = Float2Int( nYRSize * ( 564.0f / 768.0f ) * sqrt( fRegisterResolution ) );
+			nXSize = Float2Int( nXRSize * std::sqrt( fRegisterResolution ) );
+			nYSize = Float2Int( nYRSize * ( 564.0f / 768.0f ) * std::sqrt( fRegisterResolution ) );
 #endif
 		}
 		nXSize = (std::min)( nXSize, (int)devCaps.MaxTextureWidth );

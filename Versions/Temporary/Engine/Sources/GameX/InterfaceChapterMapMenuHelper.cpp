@@ -2,6 +2,7 @@
 
 #include "DBScenario.h"
 #include "InterfaceChapterMapMenuHelper.h"
+#include "Misc/DetMath.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "UI/UI.h"
 
@@ -73,7 +74,7 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 					if ( nMission == 0 )
 					{
 						float fAngle = ToRadian( pChapter->fMainStrikeAngle );
-						CVec2 vDir( cosf( fAngle ), sinf( fAngle ) );
+						CVec2 vDir( NDetMath::Cos( fAngle ), NDetMath::Sin( fAngle ) );
 						vMainStrike = vDir * pChapter->fMainStrikePower;
 					}
 					break;
@@ -209,7 +210,7 @@ void SChapterMapMenuHelper::ReReadPotentials()
 			if ( pDetailsMap->objects[i].nPlayer == nMission )
 			{
 				float fAngle = ToRadian( pChapter->fMainStrikeAngle );
-				CVec2 vDir( cosf( fAngle ), sinf( fAngle ) );
+				CVec2 vDir( NDetMath::Cos( fAngle ), NDetMath::Sin( fAngle ) );
 				vMainStrike = vDir * pChapter->fMainStrikePower;
 				break;
 			}

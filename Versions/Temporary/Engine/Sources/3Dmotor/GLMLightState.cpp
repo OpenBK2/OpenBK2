@@ -3,6 +3,7 @@
 #include "GLightPerVertex.h"
 #include "GLMLightState.h"
 #include "GScene.h"
+#include "Misc/DetMath.h"
 #include "RandomGen.h"
 
 // radius / F_POINT_LIGHT_FALLOFF - nominal brightness distance
@@ -36,7 +37,7 @@ static void GenerateRandomSphereVector( CVec3 *pRes )
 		{
 			continue;
 		}
-		*pRes = v / sqrt( f );
+		*pRes = v / std::sqrt( f );
 		return;
 	}
 }
@@ -180,9 +181,11 @@ CVec3 CLightState::GenerateSkyDir( SLightStateCalcSeed *pSeed, int nSkyDirs )
 	{
 		CVec3 vAmbDir;
 		float fTeta = 1 - Halton( 2, nSeed ) * 0.7f; // never less then 0.3f;//
-		fTeta = acos( fTeta );
+		fTeta = NDetMath::ACos( fTeta );
 		float fOmega = Halton( nDirBeta, nSeed ) * FP_2PI;
-		vSky = CVec3( cos( fOmega ) * sin( fTeta ), sin( fOmega ) * sin( fTeta ), -cos( fTeta ) );
+		vSky = CVec3( NDetMath::Cos( fOmega ) * NDetMath::Sin( fTeta ),
+		              NDetMath::Sin( fOmega ) * NDetMath::Sin( fTeta ),
+		              -NDetMath::Cos( fTeta ) );
 		++nSeed;
 		if ( nSeed == 100000 ) //12 )//
 		{
@@ -199,7 +202,7 @@ CVec3 CLightState::GenerateSkyDir( SLightStateCalcSeed *pSeed, int nSkyDirs )
 
 inline float GetLinear( float f )
 {
-	return pow( f, 2.4f );
+	return NDetMath::Pow( f, 2.4f );
 }
 
 inline CVec3 GetLinearColor( const CVec3 &_vColor )

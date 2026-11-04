@@ -60,8 +60,8 @@ bool CSortedGridUnits::SUnitsCompare::operator()( const int a, const int b ) con
 	{
 		const CVec2 vACenter( pSortedUnits->rotatedUnitsCoord[a] );
 		const CVec2 vBCenter( pSortedUnits->rotatedUnitsCoord[b] );
-		const int nARow = fmod( vACenter.y, STANDART_HEIGHT );
-		const int nBRow = fmod( vBCenter.y, STANDART_HEIGHT );
+		const int nARow = std::fmod( vACenter.y, STANDART_HEIGHT );
+		const int nBRow = std::fmod( vBCenter.y, STANDART_HEIGHT );
 
 		if ( nARow != nBRow )
 		{
@@ -205,7 +205,7 @@ void CGrid::CreateGrid()
 	{
 		fUnitsSquare += GetColumnWidth() * GetRowHeight( sortedUnits.GetAABB( i ).y );
 	}
-	const int nColumns = ceil( sqrt( fUnitsSquare ) / GetColumnWidth() );
+	const int nColumns = std::ceil( std::sqrt( fUnitsSquare ) / GetColumnWidth() );
 
 	//
 	newCenters.resize( sortedUnits.GetSize() );
@@ -233,7 +233,8 @@ void CGrid::CreateGrid()
 		sortedColumns.push_back( nColumn );
 		std::sort( sortedColumns.begin(), sortedColumns.end(), compare );
 
-		fHeight = (std::max)( fHeight, static_cast<float>( fabs( newCenters[sortedUnits.GetUnitByOrderNumber( i )].y ) ) );
+		fHeight =
+				(std::max)( fHeight, static_cast<float>( std::fabs( newCenters[sortedUnits.GetUnitByOrderNumber( i )].y ) ) );
 		fWidth = (std::max)( fWidth, newCenters[sortedUnits.GetUnitByOrderNumber( i )].x + vAABBHalfSize.x );
 	}
 

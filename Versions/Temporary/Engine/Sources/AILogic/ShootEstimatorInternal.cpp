@@ -394,7 +394,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 						// очередей
 
 						const int nAmmoPerBurst = pGun->GetWeapon()->nAmmoPerBurst;
-						const int nBursts = ceil( fProbShotsToKill / nAmmoPerBurst );
+						const int nBursts = std::ceil( fProbShotsToKill / nAmmoPerBurst );
 
 						fTime += pGun->GetAimTime( false ) + ( nBursts - 1 ) * pGun->GetRelaxTime( false ) +
 						         nBursts * ( ( nAmmoPerBurst - 1 ) * pGun->GetFireRate() );
@@ -713,7 +713,7 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 
 					// очередей
 					const int nAmmoPerBurst = pGun->GetWeapon()->nAmmoPerBurst;
-					const int nBursts = ceil( fProbShotsToKill / nAmmoPerBurst );
+					const int nBursts = std::ceil( fProbShotsToKill / nAmmoPerBurst );
 
 					fTime += pGun->GetAimTime( false ) + ( nBursts - 1 ) * pGun->GetRelaxTime( false ) +
 					         nBursts * ( ( nAmmoPerBurst - 1 ) * pGun->GetFireRate() );

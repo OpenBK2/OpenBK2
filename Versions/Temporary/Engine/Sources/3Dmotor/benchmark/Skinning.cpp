@@ -30,6 +30,7 @@
 #include "3Dmotor/stdafx.h"
 
 #include "3Dmotor/GLightPerVertexKernels.h"
+#include "Misc/DetMath.h"
 // IsAVX2Present() lives beside the lighting kernels, which need the initialised
 // nCubicRoot table; the 3Dmotor DLL does not export it on Windows.
 #include "3Dmotor/GSSEtransform.cpp"
@@ -161,7 +162,7 @@ void RandomMatrix( std::mt19937 &rng, float *m )
 	std::uniform_real_distribution<float> scale( 0.8f, 1.2f );
 	std::uniform_real_distribution<float> trans( -1000.0f, 1000.0f );
 	const float a = angle( rng ), b = angle( rng ), s = scale( rng );
-	const float ca = std::cos( a ), sa = std::sin( a ), cb = std::cos( b ), sb = std::sin( b );
+	const float ca = NDetMath::Cos( a ), sa = NDetMath::Sin( a ), cb = NDetMath::Cos( b ), sb = NDetMath::Sin( b );
 	const float r[3][3] = {
 		{ ca * s, -sa * cb * s, sa * sb * s }, { sa * s, ca * cb * s, -ca * sb * s }, { 0, sb * s, cb * s } };
 	for ( int row = 0; row < 3; ++row )

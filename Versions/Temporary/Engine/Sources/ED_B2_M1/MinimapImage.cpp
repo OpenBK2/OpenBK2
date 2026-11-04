@@ -7,6 +7,7 @@
 #include "MapEditorLib/Interface_UserData.h"
 #include "MinimapImage.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "Misc/GeomMisc.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "System/VFSOperations.h"
@@ -150,7 +151,7 @@ void RenderLight( CArray2D<uint32_t> *pImage,
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pTerrainInfo == 0" );
 	NI_ASSERT( pTerrainInfo != 0, "Wrong parameter: pTerrainInfo == 0" );
 	NI_ASSERT( pMapInfo->pLight != 0, "Wrong parameter: pMapInfo->pLight == 0" );
-	if ( fabs( fRatio ) <= FP_EPSILON )
+	if ( std::fabs( fRatio ) <= FP_EPSILON )
 	{
 		pImage->FillEvery( NImage::GRAY_LIGHTER_COLOR );
 		return;
@@ -158,10 +159,10 @@ void RenderLight( CArray2D<uint32_t> *pImage,
 	//map size in VIS tiles
 	const CTPoint<int> size( pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH, pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH );
 	//
-	const float fHor = sin( ToRadian( pMapInfo->pLight->fPitch ) );
-	CVec3 vLight = CVec3( fHor * cos( ToRadian( pMapInfo->pLight->fYaw ) ),
-	                      fHor * sin( ToRadian( pMapInfo->pLight->fYaw ) ),
-	                      -cos( ToRadian( pMapInfo->pLight->fPitch ) ) );
+	const float fHor = NDetMath::Sin( ToRadian( pMapInfo->pLight->fPitch ) );
+	CVec3 vLight = CVec3( fHor * NDetMath::Cos( ToRadian( pMapInfo->pLight->fYaw ) ),
+	                      fHor * NDetMath::Sin( ToRadian( pMapInfo->pLight->fYaw ) ),
+	                      -NDetMath::Cos( ToRadian( pMapInfo->pLight->fPitch ) ) );
 	Normalize( &vLight );
 	vLight *= ( -1.0f );
 	//
@@ -703,7 +704,7 @@ void RenderOcean( CArray2D<uint32_t> *pImage,
 					if ( ( GetAlphaFromARGBColor<uint32_t>( dwBorderColor ) > 0 ) &&
 					     ( pCoastDescriptor->nMiniMapGradientWidth > 0 ) )
 					{
-						float fDistance = fabs( PolygonDistance( coastPointList, vTileCenter, false ) );
+						float fDistance = std::fabs( PolygonDistance( coastPointList, vTileCenter, false ) );
 						for ( CLakeList::const_iterator itIsland = rIslandList.begin(); itIsland != rIslandList.end(); ++itIsland )
 						{
 							float fIslandDistance = PolygonDistance( itIsland->pointList, vTileCenter, true );
@@ -783,7 +784,7 @@ void RenderLake( CArray2D<uint32_t> *pImage,
 							     ( itLake->pDescriptor->nMiniMapGradientWidth > 0 ) )
 							{
 								const float fGradientWidth = itLake->pDescriptor->nMiniMapGradientWidth * AI_TILE_SIZE * 1.0f;
-								float fDistance = fabs( PolygonDistance( itLake->pointList, vTileCenter, true ) );
+								float fDistance = std::fabs( PolygonDistance( itLake->pointList, vTileCenter, true ) );
 								for ( CLakePointListPtrList::const_iterator itIslandPointListPtr =
 								          itLake->islandPointListPtrList.begin();
 								      itIslandPointListPtr != itLake->islandPointListPtrList.end();

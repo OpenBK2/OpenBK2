@@ -6,6 +6,7 @@
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 #include "MapEditorLib/WxWidget.h"
+#include "Misc/DetMath.h"
 #include "port/vkcodes.h"
 #include "TextEditorView.h"
 
@@ -60,7 +61,7 @@ double Luminance( const wxColour &colour )
 	auto linear = []( unsigned char channel )
 	{
 		const double value = channel / 255.0;
-		return value <= 0.04045 ? value / 12.92 : std::pow( ( value + 0.055 ) / 1.055, 2.4 );
+		return value <= 0.04045 ? value / 12.92 : NDetMath::Pow( ( value + 0.055 ) / 1.055, 2.4 );
 	};
 	return 0.2126 * linear( colour.Red() ) + 0.7152 * linear( colour.Green() ) + 0.0722 * linear( colour.Blue() );
 }

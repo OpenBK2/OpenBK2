@@ -657,7 +657,7 @@ void CConvexHull::EstimateBound( SBound *pRes )
 	CVec3 ptCenter;
 	pGeometry.Refresh();
 	const CGeometryInfo &g = *pGeometry->GetValue();
-	float fRadius = sqrt( CalcRadius2( g.bound, pos ) );
+	float fRadius = std::sqrt( CalcRadius2( g.bound, pos ) );
 	pos.RotateHVector( &ptCenter, g.bound.s.ptCenter );
 	pRes->SphereInit( ptCenter, fRadius );
 }
@@ -813,9 +813,9 @@ void CVolumeNode::AddInform( const SBound &b, int nMask, bool bTraverseUp )
 		if ( ( nMask & nInformMask ) == nMask )
 		{
 			CVec3 vDif = bInform.s.ptCenter - b.s.ptCenter;
-			if ( fabs( vDif.x ) <= bInform.ptHalfBox.x - b.ptHalfBox.x &&
-			     fabs( vDif.y ) <= bInform.ptHalfBox.y - b.ptHalfBox.y &&
-			     fabs( vDif.z ) <= bInform.ptHalfBox.z - b.ptHalfBox.z )
+			if ( std::fabs( vDif.x ) <= bInform.ptHalfBox.x - b.ptHalfBox.x &&
+			     std::fabs( vDif.y ) <= bInform.ptHalfBox.y - b.ptHalfBox.y &&
+			     std::fabs( vDif.z ) <= bInform.ptHalfBox.z - b.ptHalfBox.z )
 			{
 				return;
 			}

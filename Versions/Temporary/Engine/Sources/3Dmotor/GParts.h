@@ -777,7 +777,7 @@ public:
 		const SFBTransform &pos = pTransform->GetValue();
 		CVec3 ptCenter;
 		pos.forward.RotateHVector( &ptCenter, bound.s.ptCenter );
-		float fR = sqrt( CalcRadius2( bound, pos.forward ) );
+		float fR = std::sqrt( CalcRadius2( bound, pos.forward ) );
 		return GetNode( ptCenter, fR );
 	}
 

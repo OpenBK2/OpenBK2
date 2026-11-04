@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CameraGameMouseMutator.h"
+#include "Misc/DetMath.h"
 #include "port/time.h"
 #include "Scene.h"
 #include "System/Commands.h"
@@ -121,9 +122,9 @@ float CCameraGameMouseMutator::GetZoomDistance( float fTimeDiff, float fRealSens
 		// speed and frame rate. At speed 1, about 95% of the step takes 250 ms.
 		const float fSmoothSpeed =
 				std::isfinite( s_fSmoothZoomSpeed ) && s_fSmoothZoomSpeed > 0 ? s_fSmoothZoomSpeed : 1.0f;
-		const float fBlend = -std::expm1( -0.012f * fSmoothSpeed * fTimeDiff );
+		const float fBlend = -NDetMath::ExpM1( -0.012f * fSmoothSpeed * fTimeDiff );
 		fDistance += ( fZoomTargetDistance - fDistance ) * fBlend;
-		if ( fabs( fZoomTargetDistance - fDistance ) < 0.001f )
+		if ( std::fabs( fZoomTargetDistance - fDistance ) < 0.001f )
 		{
 			fDistance = fZoomTargetDistance;
 			bSmoothZoomActive = false;
@@ -154,7 +155,7 @@ void CCameraGameMouseMutator::Recalc()
 		// select yaw or pitch
 		if ( s_bGameCameraSelectYawPitch )
 		{
-			if ( fabs( fPitchDelta ) > fabs( fYawDelta ) )
+			if ( std::fabs( fPitchDelta ) > std::fabs( fYawDelta ) )
 			{
 				fYawDelta = 0;
 			}
@@ -174,10 +175,10 @@ void CCameraGameMouseMutator::Recalc()
 				IncrementValue(
 						fPitch - fAddPitch, fPitchDelta, GetPitchLimit(), fTimeDiff, HasAutopositioning(), s_bGameFreeCamera ) +
 				fAddPitch;
-		fPitch = fmod( fPitch, FP_2PI );
+		fPitch = std::fmod( fPitch, FP_2PI );
 		// increment yaw
 		fYaw = IncrementValue( fYaw, fYawDelta, GetYawLimit(), fTimeDiff, HasAutopositioning(), s_bGameFreeCamera );
-		fYaw = fmod( fYaw, FP_2PI );
+		fYaw = std::fmod( fYaw, FP_2PI );
 		// DebugTrace( "fPitch = %2.3f, fYaw = %2.3f", fPitch, fYaw );
 		// calculate camera's rotation
 		const CQuat quat = CQuat( fYaw, V3_AXIS_Z ) * CQuat( fPitch, V3_AXIS_X );
@@ -237,7 +238,7 @@ void CCameraGameMouseMutator::Recalc()
 		float fYawDelta = GetYawSpeed() * fTimeDiff * 0.0001f;
 		//			fYaw = IncrementValue( fYaw, fYawDelta, GetYawLimit(), fTimeDiff, HasAutopositioning(), s_bGameFreeCamera );
 		fYaw += fYawDelta;
-		fYaw = fmod( fYaw, FP_2PI );
+		fYaw = std::fmod( fYaw, FP_2PI );
 
 		const CQuat quat = CQuat( fYaw, V3_AXIS_Z ) * CQuat( fPitch, V3_AXIS_X );
 		quat.GetZAxis( &vDir );
@@ -250,7 +251,7 @@ void CCameraGameMouseMutator::Recalc()
 		ClearSliders();
 	}
 
-	SetWasUpdated( ( fabs( fYawOld - fYaw ) > EPS_VALUE ) || ( fabs( fPitchOld - fPitch ) > EPS_VALUE ) ||
+	SetWasUpdated( ( std::fabs( fYawOld - fYaw ) > EPS_VALUE ) || ( std::fabs( fPitchOld - fPitch ) > EPS_VALUE ) ||
 	               ( fabs2( vPositionOld - vPosition ) > EPS_VALUE ) );
 }
 

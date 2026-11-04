@@ -62,8 +62,8 @@ float CTreeFallingMutator::GetCoeffForTime( int nTime )
 		bFinished = true;
 		fCoeff = 0.0f;
 	}
-	fCoeff *= abs( fCoeff );
-	float fResult = abs( NMath::Cos( nTime * fTimeCoeff ) );
+	fCoeff *= std::abs( fCoeff );
+	float fResult = std::abs( NMath::Cos( nTime * fTimeCoeff ) );
 	return 1.0 - fResult * fCoeff;
 }
 

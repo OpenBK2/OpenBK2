@@ -161,7 +161,7 @@ void CManuver::AdjustNormale( const NTimer::STime timeDiff,
 	const float fDiff( DirsDifference( wDesiredDir, wCur ) );
 	const int nDiffSign( DifferenceSign( wDesiredDir, wCur ) );
 
-	if ( fDiff < fabs( timeDiff * fCurTiltSpeed ) )
+	if ( fDiff < std::fabs( timeDiff * fCurTiltSpeed ) )
 	{
 		// tilt direction match needed direction and it is near to finish
 		*vNormal = vDesiredNormale;
@@ -381,7 +381,7 @@ void CManuverToHorisontal::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 	const float fR( pref.GetR( fabs( pPos->GetSpeedB2() ) ) );
 	SPrevPathParams param( pPos );
 
-	if ( vCurrentSpeed.z < 0.00001f && fabs( vPos.z - vCurrentPos.z ) < 0.00001f )
+	if ( vCurrentSpeed.z < 0.00001f && std::fabs( vPos.z - vCurrentPos.z ) < 0.00001f )
 	{
 		// already at desired height
 		CPtr<CPahtFractionArcLineArc> pNewPath = new CPahtFractionArcLineArc;

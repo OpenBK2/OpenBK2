@@ -21,7 +21,7 @@ void RenderPolycount( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *
 
 		float fFade = f.vars.fFade;
 		CVec4 &vColor = colors[k];
-		fFade = sqrt( fFade );
+		fFade = std::sqrt( fFade );
 		vColor = CVec4( 1, 0, 0, 1 ) * ( 1 - fFade ) + CVec4( 0, 0, 1, 1 ) * fFade;
 
 		COpGenContext fi( &lightOps.ops, &f );

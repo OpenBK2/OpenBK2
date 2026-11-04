@@ -449,7 +449,7 @@ void SObjectInfo::RotateTo90Degree( bool bUpdateSceneElements )
 			// поворот без учета добавочных поворотов
 			float fNewDirection = fDirection + itMapInfoElement->second.fDirection;
 			fNewDirection = ToDegree( fNewDirection ) / 90.0f;
-			fNewDirection = floor( fNewDirection );
+			fNewDirection = std::floor( fNewDirection );
 			fNewDirection = ToRadian( fNewDirection * 90.0f );
 			itMapInfoElement->second.fAdditionalDirection =
 					fNewDirection - ( fDirection + itMapInfoElement->second.fDirection );

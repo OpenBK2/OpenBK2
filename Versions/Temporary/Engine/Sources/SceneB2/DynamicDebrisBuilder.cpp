@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "GenTerrain.h"
+#include "Misc/DetMath.h"
 
 #define DEF_VERTICES_NUM_ALLOC 256
 #define DEF_TRIANGLES_NUM_ALLOC 256
@@ -51,8 +52,8 @@ void CTerraGen::AddDynamicDebris(
 	const CVec2 _v3( vPos.x + vSize.x * fExtCoeff, vPos.y + vSize.y * fExtCoeff );
 	const CVec2 _v4( vPos.x + vSize.x * fExtCoeff, vPos.y - vSize.y * fExtCoeff );
 
-	const float fCos = cos( fAngle );
-	const float fSin = sin( fAngle );
+	const float fCos = NDetMath::Cos( fAngle );
+	const float fSin = NDetMath::Sin( fAngle );
 
 	CVec3 v1( (float)( _v1.x - vPos.x ) * fCos - (float)( _v1.y - vPos.y ) * fSin + vPos.x,
 	          (float)( _v1.x - vPos.x ) * fSin + (float)( _v1.y - vPos.y ) * fCos + vPos.y,

@@ -2,6 +2,7 @@
 
 #include "3Dmotor/DBScene.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "MOObject.h"
 #include "SceneB2/AnimMutators.h"
 #include "SceneB2/WindController.h"
@@ -179,7 +180,7 @@ void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 		CVec3 vPos, vScale;
 		CQuat qRot;
 		GetPlacement( &vPos, &qRot, &vScale );
-		float fAngle = PI / 2.0f - atan( pUpdate->fTg );
+		float fAngle = PI / 2.0f - NDetMath::ATan( pUpdate->fTg );
 		if ( const NDb::SObjectRPGStats *pStats = dynamic_cast<const NDb::SObjectRPGStats *>( GetStats() ) )
 		{
 			CPtr<ITreeFallingMutator> pMutator = MakeObject<ITreeFallingMutator>( ITreeFallingMutator::typeID );

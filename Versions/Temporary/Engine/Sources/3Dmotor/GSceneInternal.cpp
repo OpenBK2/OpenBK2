@@ -20,6 +20,7 @@
 #include "GSceneUtils.h"
 #include "GShadowVolume.h"
 #include "LoadingCounter.h"
+#include "Misc/DetMath.h"
 #include "Misc/HPTimer.h"
 #include "SuperCollider.h" // for TraceStatic(...)
 #include "WaitingList.h"   // CompactWaitingList, which WalkNotLoadedObjects is
@@ -350,7 +351,7 @@ static bool DoesIntersect( const SSphere &s, const SRayInfo &r )
 	{
 		return false;
 	}
-	float fSide = sqrt( sqr( s.fRadius ) - fRo );
+	float fSide = std::sqrt( sqr( s.fRadius ) - fRo );
 	if ( fDist - fSide > r.fLength )
 	{
 		return false;
@@ -522,7 +523,7 @@ void CGScene::WalkNotLoadedObjects()
 													{
 														const SFBTransform &trans = pPart->GetSimplePos();
 														trans.forward.RotateHVector( &vCenter, bv.s.ptCenter );
-														fR = sqrt( CalcRadius2( bv, trans.forward ) );
+														fR = std::sqrt( CalcRadius2( bv, trans.forward ) );
 													}
 													break;
 													case TT_NONE:
@@ -999,7 +1000,7 @@ void CGScene::SSceneFragmentGroupInfo::FilterParts(
 
 	const SHMatrix &matTransform = pTS->Get().backward;
 	CVec3 vCameraPosition( matTransform._14, matTransform._24, matTransform._34 );
-	if ( fabs( matTransform._44 ) > FP_EPSILON )
+	if ( std::fabs( matTransform._44 ) > FP_EPSILON )
 	{
 		vCameraPosition /= matTransform._44;
 	}
@@ -1369,7 +1370,8 @@ static void AddPCElement( CSceneFragments *pRes, CCombinedPart *p )
 		const CCombinedPart::SPartInfo &r = partsInfo[i];
 		const CCombinedPart::SMaterialInfo &m = p->GetMaterial( r.nMaterial );
 		SPerPartVariables vars = m.vars;
-		float f = ( log( pPart->fAverageTriArea ) - log( fPCLow ) ) / ( log( fPCHigh ) - log( fPCLow ) );
+		float f = ( NDetMath::Log( pPart->fAverageTriArea ) - NDetMath::Log( fPCLow ) ) /
+		          ( NDetMath::Log( fPCHigh ) - NDetMath::Log( fPCLow ) );
 		vars.fFade = Clamp( f, 0.0f, 1.0f );
 
 		CPartFlags pf;
@@ -1610,7 +1612,7 @@ void CGScene::DrawSunFlares( CTransformStack *pTS, NGfx::CRenderContext *pRC )
 	pTS->Get().forward.RotateHVector( &sSunProj, sSun );
 	sSunProj.x = sSunProj.x / sSunProj.w;
 	sSunProj.y = sSunProj.y / sSunProj.w;
-	if ( ( fabs( sSunProj.x ) > 1 ) || ( fabs( sSunProj.y ) > 1 ) || ( sSunProj.w <= 0 ) )
+	if ( ( std::fabs( sSunProj.x ) > 1 ) || ( std::fabs( sSunProj.y ) > 1 ) || ( sSunProj.w <= 0 ) )
 	{
 		fSunFlareCoeff = 0;
 		return;

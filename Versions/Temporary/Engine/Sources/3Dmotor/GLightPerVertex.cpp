@@ -3,6 +3,7 @@
 #include "3DLib/GGeometry.h"
 #include "GfxBuffers.h"
 #include "GLightPerVertex.h"
+#include "Misc/DetMath.h"
 //#include "..\Misc\HPTimer.h"
 #include "3DLib/Bound.h"
 #include "GLightPerVertexFused.h"
@@ -88,7 +89,7 @@ static float Lin( float f )
 
 static float Outp( float f )
 {
-	return exp( log( f ) / 3 );
+	return NDetMath::Exp( NDetMath::Log( f ) / 3 );
 }
 
 static CVec3 GetLinearColor( const CVec3 &a )
@@ -430,7 +431,7 @@ static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
 		// take into account size of object
 		float fCorrected = f + sqr( bv.s.fRadius ) * 0.25f;
 		float fCut = (std::max)( 0.0f, sqr( p.fRadius ) - fCorrected ) * ( 1 / sqr( p.fRadius ) );
-		float fAttenuation = fCut / ( fCorrected * fScale + F_PL_MIN_DISTANCE_NORMALIZED ) / sqrt( f );
+		float fAttenuation = fCut / ( fCorrected * fScale + F_PL_MIN_DISTANCE_NORMALIZED ) / std::sqrt( f );
 		att.nX = Float2Int( v.x * fAttenuation * N_PL_ATTENUATION_SCALE );
 		att.nY = Float2Int( v.y * fAttenuation * N_PL_ATTENUATION_SCALE );
 		att.nZ = Float2Int( v.z * fAttenuation * N_PL_ATTENUATION_SCALE );

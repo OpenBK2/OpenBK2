@@ -509,7 +509,7 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 	for ( int k = 0; k < pData->verts.size(); ++k )
 	{
 		CVec2 &tex = f.GetTex( pData, k );
-		if ( fabs( tex.x ) > N_MAX_TEX_WRAP || fabs( tex.y ) > N_MAX_TEX_WRAP )
+		if ( std::fabs( tex.x ) > N_MAX_TEX_WRAP || std::fabs( tex.y ) > N_MAX_TEX_WRAP )
 		{
 			bHasLargeUV = true;
 			break;
@@ -531,8 +531,8 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 		fXMax = (std::max)( fXMax, fX );
 		fYMax = (std::max)( fYMax, fY );
 	}
-	fXMin = floor( fXMin );
-	fYMin = floor( fYMin );
+	fXMin = std::floor( fXMin );
+	fYMin = std::floor( fYMin );
 	bool bNeedSplit = ( ( fXMax - fXMin ) > N_MAX_TEX_WRAP * 2 ) | ( ( fYMax - fYMin ) > N_MAX_TEX_WRAP );
 	if ( !bNeedSplit )
 	{

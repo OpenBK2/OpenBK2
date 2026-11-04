@@ -126,6 +126,6 @@ inline void UpdateBounds( CVec3 &vMin, CVec3 &vMax, const CVec3 &v )
 inline bool DoesIntersect( const SSphere &s, const SBound &bv )
 {
 	CVec3 v( bv.s.ptCenter - s.ptCenter );
-	return fabs( v.x ) - s.fRadius < bv.ptHalfBox.x && fabs( v.y ) - s.fRadius < bv.ptHalfBox.y &&
-	       fabs( v.z ) - s.fRadius < bv.ptHalfBox.z;
+	return std::fabs( v.x ) - s.fRadius < bv.ptHalfBox.x && std::fabs( v.y ) - s.fRadius < bv.ptHalfBox.y &&
+	       std::fabs( v.z ) - s.fRadius < bv.ptHalfBox.z;
 }

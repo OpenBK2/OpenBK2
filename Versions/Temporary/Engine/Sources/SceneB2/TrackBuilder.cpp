@@ -10,7 +10,7 @@
 inline float GetIntersectX( const float x, const CVec2 &p1, const CVec2 &p2, CVec2 *pRes )
 {
 	pRes->x = x;
-	if ( fabs( p2.x - p1.x ) < DEF_EPS )
+	if ( std::fabs( p2.x - p1.x ) < DEF_EPS )
 	{
 		pRes->y = ( p1.y + p2.y ) * 0.5f;
 		return 0.5f;
@@ -23,7 +23,7 @@ inline float GetIntersectX( const float x, const CVec2 &p1, const CVec2 &p2, CVe
 inline float GetIntersectY( const float y, const CVec2 &p1, const CVec2 &p2, CVec2 *pRes )
 {
 	pRes->y = y;
-	if ( fabs( p2.y - p1.y ) < DEF_EPS )
+	if ( std::fabs( p2.y - p1.y ) < DEF_EPS )
 	{
 		pRes->x = ( p1.x + p2.x ) * 0.5f;
 		return 0.5f;

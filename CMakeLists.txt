@@ -275,6 +275,7 @@ include(cmake/spdlog.cmake)
 # symbols.cmake first: granny.cmake and bk2_targets.cmake install PDBs with it.
 include(cmake/symbols.cmake)
 include(cmake/granny.cmake)
+include(cmake/musl-libm.cmake)
 include(cmake/ffmpeg.cmake)
 include(cmake/crashpad.cmake)
 include(cmake/versioninfo.cmake)

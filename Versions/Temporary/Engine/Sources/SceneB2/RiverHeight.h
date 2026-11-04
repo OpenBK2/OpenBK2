@@ -103,7 +103,7 @@ inline void MakeRidgeQuadBoxes( const std::vector<CVec3fEx> &ridge, std::vector<
 			fMaxX = (std::max)( fMaxX, double( v.x ) );
 			fMinY = (std::min)( fMinY, double( v.y ) );
 			fMaxY = (std::max)( fMaxY, double( v.y ) );
-			fLargestCoord = (std::max)( fLargestCoord, (std::max)( fabs( double( v.x ) ), fabs( double( v.y ) ) ) );
+			fLargestCoord = (std::max)( fLargestCoord, (std::max)( std::fabs( double( v.x ) ), std::fabs( double( v.y ) ) ) );
 			for ( int j = i + 1; j < 4; ++j )
 			{
 				const double dx = double( corners[j]->x ) - v.x;
@@ -111,14 +111,14 @@ inline void MakeRidgeQuadBoxes( const std::vector<CVec3fEx> &ridge, std::vector<
 				fSpan2 = (std::max)( fSpan2, dx * dx + dy * dy );
 			}
 		}
-		const double fArea1 = fabs( GetDoubleArea( *corners[1], *corners[2], *corners[0] ) );
-		const double fArea2 = fabs( GetDoubleArea( *corners[3], *corners[0], *corners[2] ) );
+		const double fArea1 = std::fabs( GetDoubleArea( *corners[1], *corners[2], *corners[0] ) );
+		const double fArea2 = std::fabs( GetDoubleArea( *corners[3], *corners[0], *corners[2] ) );
 		if ( !( fSpan2 > 0.0 ) || fArea1 < fThin * fSpan2 || fArea2 < fThin * fSpan2 )
 		{
 			pBoxes->push_back( everything );
 			continue;
 		}
-		const double fPad = fPadOfSpan * sqrt( fSpan2 ) + fPadOfCoord * fLargestCoord;
+		const double fPad = fPadOfSpan * std::sqrt( fSpan2 ) + fPadOfCoord * fLargestCoord;
 		const SRidgeQuadBox box = {
 			float( fMinX - fPad ), float( fMinY - fPad ), float( fMaxX + fPad ), float( fMaxY + fPad ) };
 		pBoxes->push_back( box );

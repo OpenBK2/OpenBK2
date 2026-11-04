@@ -3,6 +3,7 @@
 #include "EditorScene.h"
 #include "MarkerSet.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/Vis2AI.h"
 
@@ -129,7 +130,7 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 		{
 			fR += FP_PI2;
 		}
-		CVec3 dv( cos( fR ), sin( fR ), 0.01f );
+		CVec3 dv( NDetMath::Cos( fR ), NDetMath::Sin( fR ), 0.01f );
 		polyline[k + 1] = v + dv * F_ARROW_SIZE;
 		k += 2;
 	}

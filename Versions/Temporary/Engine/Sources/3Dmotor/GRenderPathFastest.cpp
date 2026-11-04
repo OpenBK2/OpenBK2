@@ -595,7 +595,7 @@ void UpdateWaterReflection( CTransformStack *pTS,
 	matTransposeInverse.RotateHVector( &vProjectWaterPlane, CVec4( 0, 0, 1.0f, -fWaterHeight + 0.2f ) );
 
 	SHMatrix projClipMatrix;
-	if ( fabs( vProjectWaterPlane.z ) < FP_EPSILON )
+	if ( std::fabs( vProjectWaterPlane.z ) < FP_EPSILON )
 	{
 		// plane is perpendicular to the near plane
 		projClipMatrix = pTS->GetProjection().forward;
@@ -610,8 +610,8 @@ void UpdateWaterReflection( CTransformStack *pTS,
 
 		// "Normalize" plane ( if (-1<x<1 && -1<y<1 && 0<z<1 && w<farPlane) => Dot( xyzw, plane ) < 1 )
 		const float fFarPlane = 10000.0f;
-		float fMaxDot = fabs( vProjectWaterPlane.x ) + fabs( vProjectWaterPlane.y ) + fabs( vProjectWaterPlane.z ) +
-		                fabs( vProjectWaterPlane.w ) * fFarPlane;
+		float fMaxDot = std::fabs( vProjectWaterPlane.x ) + std::fabs( vProjectWaterPlane.y ) +
+		                std::fabs( vProjectWaterPlane.z ) + std::fabs( vProjectWaterPlane.w ) * fFarPlane;
 
 		vProjectWaterPlane /= fFarPlane;
 

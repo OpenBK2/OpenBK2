@@ -173,7 +173,7 @@ CFontInfo *CTextLocaleInfo::SearchFont( const SFont &sFont )
 
 		if ( IsValid( pResFontInfo ) )
 		{
-			if ( abs( sDBFont.nSize - sFont.nSize ) < abs( nSize - sFont.nSize ) )
+			if ( std::abs( sDBFont.nSize - sFont.nSize ) < std::abs( nSize - sFont.nSize ) )
 			{
 				nSize = sDBFont.nSize;
 				pResFontInfo = ( *iTemp );

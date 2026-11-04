@@ -38,6 +38,7 @@
 #include "VersionInfo.h"
 #include "WinFrame2Input.h"
 
+#include <cmath> // _set_FMA3_enable
 #include <exception>
 #include <iterator>
 #include <typeinfo>
@@ -300,6 +301,16 @@ int main( int argc, char *argv[] )
 
 static int RunGame( const std::vector<std::string> &arguments )
 {
+	// The x64 CRT carries FMA3 variants of sin, cos, exp, log, pow and others
+	// and picks them at runtime when the CPU has FMA, so the same build gave
+	// different simulation results on two Windows machines, which in lockstep
+	// multiplayer is an ASYNC. Turned off before anything computes, so every
+	// CPU takes the same code path. The CRT is the shared DLL, so this covers
+	// every module in the process. The x86 CRT has no such variants.
+#if BOOST_OS_WINDOWS && BOOST_ARCH_X86_64
+	(void)_set_FMA3_enable( 0 );
+#endif
+
 #if USE_MIMALLOC
 	// Retain the non-Windows allocator dependency even with link-time pruning.
 	(void)mi_version();

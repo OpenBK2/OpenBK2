@@ -470,7 +470,7 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 					{
 						--itFrwd;
 						const float fFrwdUnitShift = GetUnitPosition( itFrwd->pUnit, vGroupCenter, vPerpPathDirection );
-						if ( fabs( fFrwdUnitShift - fThisUnitShift ) < MAX_DIFF_BETWEEN_SHIFTS &&
+						if ( std::fabs( fFrwdUnitShift - fThisUnitShift ) < MAX_DIFF_BETWEEN_SHIFTS &&
 						     fabs2( it->pUnit->GetCenter() - itFrwd->pUnit->GetCenter() ) < MAX_DIFF_BETWEEN_UNITS )
 						{
 							bLockFound = true;
@@ -512,8 +512,8 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 					{
 						const int nPriority2 = it2->pUnit->GetUnitPriority();
 						const float fShift2 = GetUnitPosition( it2->pUnit, vGroupCenter, vPerpPathDirection );
-						if ( nPriority2 > nPriority && ( fabs( fShift - fShift2 ) < 3 * MAX_DIFF_BETWEEN_SHIFTS ||
-						                                 abs( it->nCell % COLUMN_SIZE - it2->nCell % COLUMN_SIZE ) < 2 ) )
+						if ( nPriority2 > nPriority && ( std::fabs( fShift - fShift2 ) < 3 * MAX_DIFF_BETWEEN_SHIFTS ||
+						                                 std::abs( it->nCell % COLUMN_SIZE - it2->nCell % COLUMN_SIZE ) < 2 ) )
 						{
 							bCanGo = false;
 						}

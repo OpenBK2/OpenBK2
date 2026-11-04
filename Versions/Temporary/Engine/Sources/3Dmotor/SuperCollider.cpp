@@ -233,7 +233,7 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere,
 	{
 		return F_NO_COLLISION; // no intersection
 	}
-	float fDistToSphere = v - sqrt( d );
+	float fDistToSphere = v - std::sqrt( d );
 	if ( fDistToSphere > velocity.fVel )
 	{
 		return F_NO_COLLISION; // too far

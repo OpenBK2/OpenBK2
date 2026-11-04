@@ -97,7 +97,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 		boundCircle.bIsRound = true;
 		boundCircle.fRadius = fabs( vAABBHalfSize );
 	}
-	nBoundTileRadius = IsInfantry() ? 0 : int( ceil( ( 2 * vAABBHalfSize.x ) / float( 32.0f ) ) ) / 2;
+	nBoundTileRadius = IsInfantry() ? 0 : int( std::ceil( ( 2 * vAABBHalfSize.x ) / float( 32.0f ) ) ) / 2;
 	// transfer animation information to animdescs
 	if ( bInEditor == false )
 	{

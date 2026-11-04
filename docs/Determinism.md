@@ -302,20 +302,227 @@ part of simulation state.
   already safe, but it is unverified and `arch.cmake` passes nothing by default.
   Moot if x86 and x64 clients never need to play each other.
 
+### Unqualified math calls on a float compute in double on Linux
+
+The first divergence found by playing a Windows replay on Linux. Not a
+difference of libm: of which function the call reaches.
+
+`<cmath>` has to declare `float sqrt(float)`, `double sqrt(double)` and
+`long double sqrt(long double)` in `std`. Whether it also puts them in the
+global namespace is unspecified ([headers]). MSVC's UCRT does, so an
+unqualified `sqrt( f )` on a float is the float overload there. libstdc++ sits
+on glibc's C header, whose global namespace has only `double sqrt(double)`, so
+the same call promotes to double and everything after it in the expression is
+double, rounded to float once at the end. Both are conforming. Overload
+resolution itself is fully specified and agrees; the candidate sets differ.
+
+In a template it is also a matter of include order. A call whose argument is
+dependent but a fundamental type gets nothing from argument-dependent lookup,
+so only what was visible where the template was defined counts, and libstdc++'s
+own `<math.h>` wrapper does bring the `std` overloads into the global
+namespace. Which function a call reaches can therefore depend on what some
+earlier header included, and reading one file does not settle it.
+
+**`Misc/Tools.h`, the three `Normalize` overloads (fixed).** `1 / sqrt( u )`
+was float on Windows and double on Linux, and the results differ by an ulp for
+12992 of the 65536 directions `GetVectorByDirection` takes, about a fifth.
+Replay `xplat1`, recorded on Windows, diverged on Linux at the second sample
+with the random draw count still agreeing; the differing fields were
+`CEntrenchmentPart::boundRect`, `CAIUnit` unit rects, aviation speeds and
+directions and the start and finish quaternions derived from them, all
+downstream of `GetVectorByDirection`. One `boundRect` entry was reproduced
+byte for byte by emulating both paths. `std::sqrt` is the float overload on
+both, which is what Windows always computed, so a Windows replay verifies
+exactly as it did before the change.
+
+**The rest of the tree (fixed).** Before the sweep a Linux release build had
+103 `sqrtsd`, 276 `divsd` and 105 calls to `sqrt@plt` in `libAILogic.so`, and 7
+to 12 `sqrtsd` in each of `Common_RTS_AI`, `B2_M1_World`, `3DLib` and `Misc`;
+the Windows DLLs had none. Every math call that resolved to a function from the
+system headers now names `std::`: 876 calls in 185 files, everywhere rather
+than only in the simulation modules, so no module has to be judged in or out.
+`std::` was chosen over `sinf` and the like because it keeps code generic over
+the type, which `Normalize<TYPE>` needs and the fixed-point replacement will
+want, and it reaches the same function `sinf` would.
+
+How the sites were found, since a grep cannot do it: `clang-query-21` over the
+Linux build's `compile_commands.json`, matching a `DeclRefExpr` to a function
+of these names declared under `/usr/`, excluding references from `/usr/`,
+`_deps`, `third_party` and the build tree. The project's own `fabs` overloads,
+for `CVec2`, `CVec3`, `CVec4`, `CTPoint` and for two to four floats, are
+declared in the tree and so are not matched. Do not exclude by
+`isExpansionInSystemHeader()`: project headers count as system headers in this
+build, presumably through an `-isystem` that covers them, and that excludes
+most of the tree silently.
+
+Templates need care. A call whose argument depends on the template parameter is
+an `UnresolvedLookupExpr`, and the libm function is merely one of its
+candidates. Where the argument is a point or vector, qualifying it removes the
+project overload and breaks the instantiation, which is how these were found:
+`PlaneGeometry.h` and `Geom.h` stay unqualified, and `IsEqual` in
+`ED_B2_M1/PassabilityProfile.cpp`, instantiated with both floats and vectors,
+uses `using std::fabs;` and an unqualified call, so argument-dependent lookup
+still finds the vector overload while a float gets the float one. Re-running
+the matcher afterwards finds only those nine sites.
+
+`abs` was checked separately for the worse case, an unqualified `abs( f )`
+reaching `int abs(int)` and truncating: none of the qualified `abs` calls had
+a floating-point argument converted to an integer.
+
+The result: a Windows replay plays out with exactly the same samples and draw
+counts as before, since MSVC already picked the float overloads, and on Linux
+the fields differing from Windows at the first diverging sample of `xplat1`
+went from 102 to 12 after `Normalize` and to 1 after the sweep. The one left is
+a `cosf` result, below.
+
+Still to do, to keep it fixed: clang-tidy's
+`performance-type-promotion-in-math-fn` in CI as the first entry of the
+`.clang-tidy` that does not exist yet (clang-tidy is not installed in the WSL
+environment; `clang-query-21` is), `-Wdouble-promotion` on gcc and clang for the
+simulation modules (noisy at first through printf-style varargs, hence those
+modules only), or the `clang-query` matcher above as a CI step. Both work on the
+semantic tree, so unlike a grep they see the overload actually chosen.
+
+**The libm residue, measured.** In replay `xplat1` the one field still
+differing after the sweep is an infantry unit's `qFinish`, built by
+`CQuat::FromAngleAxis` at direction 44044: `cosf` of the half angle is
+`0xbf03bc92` from glibc and `0xbf03bc93` from the MSVC CRT. The exact value,
+-0.5145961354311596669, rounds to `0xbf03bc93`, so here the CRT is correctly
+rounded and glibc is one ulp away; the value lies close to halfway between the
+two floats. A campaign replay `xplat2`, 445 samples, verifies on Windows and on
+Linux diverges at the second sample with the random draw count agreeing at
+every one of the 445 samples, which is this pattern. A correctly rounded libm
+would agree with the CRT here by construction.
+
+None of this touches the libm half. Qualified, `sqrt` is settled for good,
+because IEEE-754 requires it correctly rounded; the transcendental functions
+still differ between the MSVC CRT and glibc at equal precision.
+
+### Related hazards found alongside, and what to do about them
+
+**libm dispatches on the CPU, on both platforms.** The MSVC x64 CRT has FMA3
+variants of `sin`, `cos`, `exp`, `log`, `pow`, `atan` and others and picks them
+at runtime when the CPU has FMA. Nothing documents that the two agree, so one
+`Game.exe` could give different results on two Windows machines.
+`_set_FMA3_enable( 0 )` at startup turns that off, and `Game` now does so.
+Measured on an i7-12700H, where the CRT does default to the FMA3 path:
+`sinf`, `cosf`, `sin`, `cos`, `exp` and `atan2` gave bit-identical results
+with it on and off over 12 million inputs, and replay `xplat2` verified the
+same either way. So no divergence was observed from it; the call removes the
+dependence rather than fixing a seen difference.
+glibc does the same through its multiarch ifuncs (`__sin_fma`, `__exp_fma` and
+so on), and nothing promises those agree with the generic variants to the last
+bit; only `GLIBC_TUNABLES` can mask it, which is an environment, not something
+the code can enforce. This one breaks agreement within a platform, and a
+Windows against WSL comparison on one machine can never show it, because both
+run on the same CPU. Vendoring libm compiled without FMA removes it on both
+sides together with the cross-platform difference.
+
+**Compile-time folding of math calls.** gcc folds a call to a math builtin
+whose arguments are constants using MPFR, which is correctly rounded, while the
+same call at runtime is glibc's result, and MSVC folds less of it. Identical
+source can therefore produce a correctly rounded value on one platform and the
+CRT's on the other. The vendored libm has to be reached under names the
+compiler does not treat as builtins, or with the relevant `-fno-builtin-*`.
+
+**Constants are safe, their types may not be.** The simulation uses `FP_PI`
+and `FP_2PI` from `Misc/Tools.h`, float literals, and every compiler here
+converts a decimal literal to the nearest representable value, so they are
+bit-identical. `M_PI` is not used; it is a `double`, so `f * M_PI` is computed
+in double, the same class of problem as above. A table filled at startup by
+calling `sinf` inherits the libm difference; a table of literals does not.
+
+**What the compiler may rewrite.** Under the IEEE semantics this build uses,
+only rewrites that are bit-identical for every input: `pow( x, 2.0 )` to
+`x * x`, `x / 2.0f` to `x * 0.5f`. Never `1 / sqrt( x )` to `rsqrtss`, whose
+low bits differ between Intel and AMD, and never `pow( x, 0.5 )` to `sqrt( x )`,
+which differ at `-0` and `-inf`. Those take `-ffast-math`, `-Ofast`,
+`-freciprocal-math`, `-mrecip` or `/fp:fast`, none of which any CMake file
+or preset sets today. What the language permits even without them is FMA
+contraction: gcc defaults to `-ffp-contract=fast`, harmless only while the
+x86-64 baseline has no FMA instructions, and `cmake/arch.cmake` can apply
+`/arch:AVX2` or `/arch:AVX512` globally on MSVC, where only `/fp:strict`
+(AILogic) or a recent compiler's `/fp:precise` default keeps it from fusing.
+
+**The floating-point environment.** The rounding mode is handled:
+`CRoundingControl` sets it and `GroupLogic.cpp` asserts round to nearest. The
+flush-to-zero and denormals-are-zero bits of MXCSR are not, and any library
+running on the main thread could set them, which changes results for tiny
+values without any error.
+
+To do, after the qualification sweep:
+
+1. **Done:** `_set_FMA3_enable( 0 )` at the start of `Game` on Windows x64.
+2. **Done:** `-ffp-contract=off` for the whole tree on gcc and clang, in
+   `cmake/arch.cmake`. MSVC needs no flag: it fuses only under `/fp:contract`
+   or `/fp:fast`, and nothing sets either.
+3. Check MXCSR, and the rounding mode with it, at the start of each simulation
+   segment, and report a divergence rather than compute through a changed one.
+4. Extend the CI grep over the simulation directories with `_mm_rcp`,
+   `_mm_rsqrt`, `-ffast-math`, `-Ofast`, `-mrecip`, `/fp:fast` and
+   `/fp:contract`. None is in use; the point is that none arrives.
+
 ### libm
 
 `sqrt` and `fmod` are exactly specified by IEEE-754 and are already
-bit-identical. They need no replacement. The rest are not identical between the
+bit-identical, provided both platforms call them at the same precision (see
+the section above). They need no replacement. The rest are not identical between the
 MSVC CRT and glibc:
 
 - `AILogic`: `exp` 9 sites, `tan` 6, `sin` 3, `log`, `acos`, `atan2f`.
 - `B2_M1_World` and `Common_RTS_AI`: `atan2f` 4, `exp` 1.
 
-Two strategies. Vendor one portable implementation and compile it identically on
-both platforms, openlibm or musl's libm, which requires holding `-ffp-contract=off`
-on those translation units. Or take a correctly-rounded implementation,
-CORE-MATH, where the result is uniquely defined by the standard and therefore
-identical by construction rather than by compilation discipline.
+Those counts predate the qualification sweep and are low: it found far more
+`sin`, `cos`, `atan2`, `acos` and `exp` calls, many of them in `Misc` and
+`3DLib` headers the simulation includes, such as `CQuat::FromAngleAxis` and
+`GetAngles`. The clang-query setup above can list exactly which functions the
+simulation modules call and at which precision, which is the first step of
+either option below.
+
+#### The two ways forward
+
+Everything else in the float arithmetic is already pinned: `+ - * /`, `sqrt`
+and `fma` are correctly rounded by IEEE-754 and identical everywhere, the
+calls are qualified, contraction is off and the rounding mode is controlled.
+What is left is about ten transcendental functions, in float and double:
+`sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `exp`, `log`, `pow`.
+
+**1. Vendor the math functions, keep floats.** Not a replacement C runtime:
+only those functions, reached under our own names (`NMath::Sin` or a header
+the simulation includes) so the compiler cannot substitute its builtins or
+fold them with MPFR.
+
+- CORE-MATH is correctly rounded, so its result is fixed by the definition and
+  not by how it was compiled: the same on any compiler, CPU and architecture,
+  with or without FMA. Its binary32 set is complete and fast, and glibc 2.41
+  took several of its functions. Its binary64 set is less complete.
+- musl's libm or openlibm are small and portable but not correctly rounded,
+  so they agree across platforms only when compiled identically, contraction
+  off and no builtins: a discipline rather than a guarantee.
+- streflop is what Spring RTS uses for this exact lockstep problem. Proven, but
+  old, and partly shaped by x87 concerns this build no longer has.
+
+Cost: days. It also changes Windows results, since the MSVC CRT is not
+correctly rounded everywhere either, so every recorded replay is re-recorded
+once. Acceptance test: `xplat2` verifying on Linux.
+
+**2. Fixed point.** What `AGENTS.md` names as the long-term direction. It buys
+complete independence from floating-point hardware, compiler flags and libm,
+on any architecture. It costs a rewrite of the simulation's arithmetic, module
+by module (`AILogic` alone has about 2666 uses of `float`); a conversion of the
+database's float stats at load, with some balance values moving; a format chosen
+per quantity with overflow checks, since map coordinates, small angles and
+accumulated speeds want different range and precision; and its own `sin`,
+`cos`, `atan2` and `sqrt` as tables, CORDIC or polynomials, which is option 1's
+work again in integers. Every result changes. It leaves undefined behaviour,
+evaluation order, sort ties, iteration order and uninitialised reads exactly
+where they are.
+
+**Recommendation: option 1 now, with CORE-MATH for the binary32 functions.**
+It closes the last measured Windows against Linux difference in days, with no
+data or balance change, and the replay harness verifies it at once. Fixed point
+stays the long-term option, by when what it adds over option 1 is mainly
+independence from architectures nobody ships on yet.
 
 ### Unstable sorting
 

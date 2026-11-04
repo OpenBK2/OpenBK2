@@ -5,6 +5,7 @@
 #include "IdleMechProcess.h"
 #include "Input/Bind.h"
 #include "Main/GameTimer.h"
+#include "Misc/DetMath.h"
 #include "Misc/Win32Random.h"
 #include "MOProjectile.h"
 #include "MOUnitMechanical.h"
@@ -886,7 +887,7 @@ float DragCurve( float x, float d, float k )
 {
 	k = std::clamp( k, -12.0f, 12.0f );
 
-	return x / ( x + ( 1.0f - x ) * std::exp( k * ( x - d ) ) );
+	return x / ( x + ( 1.0f - x ) * NDetMath::Exp( k * ( x - d ) ) );
 }
 
 void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &placement,
@@ -962,7 +963,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		}
 		bool bPlaceSegment = false;
 		bool bNewDir = bForwardMoving;
-		uint16_t wDirRange = abs( wLastTrackDir - placement.dir );
+		uint16_t wDirRange = std::abs( wLastTrackDir - placement.dir );
 		if ( nLastTrackTime < 0 || ( Singleton<IGameTimer>()->GetGameTime() - nLastTrackTime > pStats->nTrackLifetime ) ||
 		     ( wDirRange > 32768 ? wDirRange < ( 65536 - 8192 ) : wDirRange > 8192 ) )
 		{

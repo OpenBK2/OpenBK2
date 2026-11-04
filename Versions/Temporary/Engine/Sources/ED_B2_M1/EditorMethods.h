@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 // SetGetEditParameters and the two command ids the templates below pass it.
 #include "ED_B2_M1/ResourceDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
@@ -45,7 +46,7 @@ void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInf
 inline float ADiff( const float a, const float b )
 {
 	float r = a - b;
-	if ( fabs( r ) > FP_PI )
+	if ( std::fabs( r ) > FP_PI )
 	{
 		r += ( FP_2PI * ( r < 0.f ? 1.f : -1.f ) );
 	}
@@ -54,7 +55,7 @@ inline float ADiff( const float a, const float b )
 
 inline float AngleDiff( const CVec3 &v0, const CVec3 &v1 )
 {
-	return ADiff( atan2( v0.y, v0.x ), atan2( v1.y, v1.x ) );
+	return ADiff( NDetMath::ATan2( v0.y, v0.x ), NDetMath::ATan2( v1.y, v1.x ) );
 }
 
 inline CVec3 GetVecDir( float fDir )

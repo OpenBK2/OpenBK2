@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Misc/DetMath.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/Dg.h"
 
@@ -124,16 +125,16 @@ public:
 	// from anchor to eye
 	const CVec3 GetDirection() const
 	{
-		return CVec3( sin( ToRadian( this->fYaw ) ) * cos( ToRadian( this->fPitch ) ),
-		              -cos( ToRadian( this->fYaw ) ) * cos( ToRadian( this->fPitch ) ),
-		              sin( ToRadian( this->fPitch ) ) );
+		return CVec3( NDetMath::Sin( ToRadian( this->fYaw ) ) * NDetMath::Cos( ToRadian( this->fPitch ) ),
+		              -NDetMath::Cos( ToRadian( this->fYaw ) ) * NDetMath::Cos( ToRadian( this->fPitch ) ),
+		              NDetMath::Sin( ToRadian( this->fPitch ) ) );
 	}
 
 	const float GetDistance() const
 	{
 		const CVec3 vDir = GetDirection();
-		NI_VERIFY( fabs( vDir.z ) > FP_EPSILON, "Unable to calculate camera distance", return 0.0f );
-		return fabs( vPosition.z / vDir.z );
+		NI_VERIFY( std::fabs( vDir.z ) > FP_EPSILON, "Unable to calculate camera distance", return 0.0f );
+		return std::fabs( vPosition.z / vDir.z );
 	}
 
 	const CVec3 GetAnchor() const

@@ -20,7 +20,7 @@ void CLaserMarkTrace::Recalc()
 	const float fTimeDiff = ( pTimer->GetValue() - timeStart ) / 1000.0f;
 	const float fLaserSize =
 			LASER_MARK_HALF_THIKNESS *
-			( 1.0f - fabs( 2.0f * fmod( fTimeDiff, LASER_MARK_PULSAR_TIME ) / LASER_MARK_PULSAR_TIME - 1.0f ) );
+			( 1.0f - std::fabs( 2.0f * std::fmod( fTimeDiff, LASER_MARK_PULSAR_TIME ) / LASER_MARK_PULSAR_TIME - 1.0f ) );
 
 	data.verts[0].pos = vStart - vNorm * fLaserSize;
 	data.verts[1].pos = vEnd - vNorm * fLaserSize;

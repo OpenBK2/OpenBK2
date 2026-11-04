@@ -3,6 +3,7 @@
 // Defensive member defaults; explicit constructor values still take precedence.
 
 #include "Common_RTS_AI/AIMap.h"
+#include "Misc/DetMath.h"
 #include "System/FastMath.h"
 
 #include <cstdint>
@@ -129,8 +130,9 @@ public:
 
 		const CVec2 vEndDX =
 				GetVectorByDirection( ( bClockWise ) ? ( _wStartDir - _wDirDiff ) : ( _wStartDir + _wDirDiff ) );
-		const float fEndDir = ( vEndDX.x == 0 ) ? ( ( vEndDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : atan2f( vEndDX.y, vEndDX.x );
-		fStartDir = ( vDX.x == 0 ) ? ( ( vDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : atan2f( vDX.y, vDX.x );
+		const float fEndDir =
+				( vEndDX.x == 0 ) ? ( ( vEndDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : NDetMath::ATan2( vEndDX.y, vEndDX.x );
+		fStartDir = ( vDX.x == 0 ) ? ( ( vDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : NDetMath::ATan2( vDX.y, vDX.x );
 		fDirDiff = ( bClockWise ) ? ( fStartDir - fEndDir ) : ( fEndDir - fStartDir );
 		while ( fDirDiff < 0 )
 		{
@@ -196,7 +198,7 @@ uint16_t CheckArcTiles( TYPE &func,
 	const uint16_t wPerpAngle = ( bClockWise == bForward ) ? ( wStartAngle - 16384 ) : ( wStartAngle + 16384 );
 	const CVec2 vCenter = vUnit + fRadius * GetVectorByDirection( wPerpAngle );
 	SVector tile = SVector( -666, -666 );
-	const float fDelta = atan2f( 1, fRadius ) * 65536.0f / FP_2PI;
+	const float fDelta = NDetMath::ATan2( 1.0f, fRadius ) * 65536.0f / FP_2PI;
 	const uint16_t wDelta = fDelta;
 	for ( uint16_t angle = 0; angle < wDiffAngle; angle += wDelta )
 	{

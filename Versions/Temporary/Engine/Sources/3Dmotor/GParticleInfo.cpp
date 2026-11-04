@@ -4,6 +4,7 @@
 #include "GParticleFilter.h"
 #include "GParticleFormat.h"
 #include "GParticleInfo.h"
+#include "Misc/DetMath.h"
 
 #include <cstdint>
 
@@ -105,7 +106,7 @@ struct SSinCosTableInit
 	{
 		for ( int k = 0; k < N_SIN_TABLE_PERIOD * 2 - 1; ++k )
 		{
-			fSinTable[k] = sin( k * FP_2PI / N_SIN_TABLE_PERIOD );
+			fSinTable[k] = NDetMath::Sin( k * FP_2PI / N_SIN_TABLE_PERIOD );
 		}
 	}
 } sinCosTable;
@@ -356,7 +357,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			//v[1].x = fPivotX + fScaleX;  v[1].y = fPivotY - fScaleY;
 			//v[2].x = fPivotX + fScaleX;  v[2].y = fPivotY + fScaleY;
 			//v[3].x = fPivotX - fScaleX;  v[3].y = fPivotY + fScaleY;
-			float fZShiftScale = fHalfScale * ( fabs( scale.x ) + fabs( scale.y ) );
+			float fZShiftScale = fHalfScale * ( std::fabs( scale.x ) + std::fabs( scale.y ) );
 			int nRnd = ( n * n + nFrame ) & 7, nRndStep = n | 1;
 
 			CVec3 pos = positions[nDst - 1];

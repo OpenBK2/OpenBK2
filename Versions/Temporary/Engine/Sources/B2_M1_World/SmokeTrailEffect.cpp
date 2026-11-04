@@ -47,7 +47,7 @@ void CSmokeTrailEffect::UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, N
 	Normalize( &vDir );
 	vDir *= fInterval;
 
-	float fDist = sqrt( fDist2 );
+	float fDist = std::sqrt( fDist2 );
 	//
 	float fTimeInterval = 0;
 	CVec3 vDirInterval = VNULL3;

@@ -71,7 +71,7 @@ const float CBSpline::GetReverseR() const
 	const CVec2 second = 6 * a * t + 2 * b;
 	const float tanLen = fabs( first );
 
-	return fabs( first.x * second.y - first.y * second.x ) / ( sqr( tanLen ) * tanLen );
+	return std::fabs( first.x * second.y - first.y * second.x ) / ( sqr( tanLen ) * tanLen );
 }
 
 const void CBSpline::StartForwardIterating( SForwardIter *pIter )

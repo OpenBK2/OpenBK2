@@ -43,8 +43,8 @@ float CalcScaleFactor( const CVec2 &vElementSize, const CVec3 &vCenter, const CV
 	vMin.Minimize( vRes );
 	vMax.Maximize( vRes );
 	//
-	const float fMaxX = (std::max)( fabs( vMin.x ), fabs( vMax.x ) ) * 2.0f;
-	const float fMaxY = (std::max)( fabs( vMin.y ), fabs( vMax.y ) ) * 2.0f;
+	const float fMaxX = (std::max)( std::fabs( vMin.x ), std::fabs( vMax.x ) ) * 2.0f;
+	const float fMaxY = (std::max)( std::fabs( vMin.y ), std::fabs( vMax.y ) ) * 2.0f;
 	return (std::min)( vElementSize.x / fMaxX, vElementSize.y / fMaxY );
 }
 

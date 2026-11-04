@@ -11,6 +11,7 @@
 #include "MapInfoEditor.h"
 #include "MapObjectMultiState.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "port/vkcodes.h"
 #include "ResourceDefines.h"
 #include "SceneB2/Scene.h"
@@ -522,7 +523,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 	if ( bFitToAIGrid )
 	{
 		Normalize( &dir );
-		float fExactDir = atan2( dir.y, dir.x );
+		float fExactDir = NDetMath::ATan2( dir.y, dir.x );
 		int nA = fExactDir / FP_PI4;
 		switch ( nA )
 		{
@@ -546,7 +547,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 		}
 		float fADiff = ADiff( fExactDir, fRayDir );
 		fRayDir = fExactDir;
-		nNumSections = ( fabs( fLen * cos( fADiff ) ) ) / fSectionLen;
+		nNumSections = ( std::fabs( fLen * NDetMath::Cos( fADiff ) ) ) / fSectionLen;
 		if ( nNumSections == 0 )
 		{
 			nNumSections = 1;
@@ -555,7 +556,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 	else
 	{
 		Normalize( &dir );
-		fRayDir = atan2( dir.y, dir.x );
+		fRayDir = NDetMath::ATan2( dir.y, dir.x );
 		nNumSections = fLen / fSectionLen;
 		if ( nNumSections == 0 )
 		{

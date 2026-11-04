@@ -304,6 +304,8 @@ public:
 	int GetMissionRecommendedReinfCalls() const override;
 	bool IsOnlyRecommendedReinfCalls() const override;
 	void ClearMissionScriptVars() override;
+	bool SaveReplayStartState( CMemoryStream *pStream ) override;
+	bool LoadReplayStartState( CMemoryStream *pStream ) override;
 	// mission statistics
 	int GetNPlayers() const override;
 	int GetPlayerSide( int nPlayer ) const override;

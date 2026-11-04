@@ -56,8 +56,8 @@ void CWindowRoundProgressBar::SetAngles( float _fStartAngle, float _fFinishAngle
 	// CRAP - should fix CTextureRoundSegmentVisitor
 
 	float fTotalDiff = 0.0f; // Total change in values; if too small - ignore
-	fTotalDiff += fabs( fStartAngle - _fStartAngle );
-	fTotalDiff += fabs( fFinishAngle - _fFinishAngle );
+	fTotalDiff += std::fabs( fStartAngle - _fStartAngle );
+	fTotalDiff += std::fabs( fFinishAngle - _fFinishAngle );
 
 	if ( fTotalDiff < MIN_DIFFERENCE )
 	{

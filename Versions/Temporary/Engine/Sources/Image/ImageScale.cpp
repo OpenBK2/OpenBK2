@@ -328,8 +328,8 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 				contrib[i].p = new CONTRIB[int( width * 2 + 1 )];
 				double center = ( double( i ) + 0.5 ) / xscale -
 				                0.5; // shift center to (1/2 axis - 0.5 = 0.5/scale - 0.5) to reach an actual pixel center
-				double left = ceil( center - width );
-				double right = floor( center + width );
+				double left = std::ceil( center - width );
+				double right = std::floor( center + width );
 				for ( int j = left; j <= right; ++j )
 				{
 					double weight = center - double( j );
@@ -357,8 +357,8 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 				contrib[i].p = new CONTRIB[int( filterwidth * 2 + 1 )];
 				double center = ( double( i ) + 0.5 ) / xscale -
 				                0.5; // shift center to (1/2 axis - 0.5 = 0.5/scale - 0.5) to reach an actual pixel center
-				double left = ceil( center - filterwidth );
-				double right = floor( center + filterwidth );
+				double left = std::ceil( center - filterwidth );
+				double right = std::floor( center + filterwidth );
 				for ( int j = left; j <= right; ++j )
 				{
 					double weight = center - double( j );
@@ -428,8 +428,8 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 				contrib[i].p = new CONTRIB[int( width * 2 + 1 )];
 				double center = ( double( i ) + 0.5 ) / yscale -
 				                0.5; // shift center to (1/2 axis - 0.5 = 0.5/scale - 0.5) to reach an actual pixel center
-				double left = ceil( center - width );
-				double right = floor( center + width );
+				double left = std::ceil( center - width );
+				double right = std::floor( center + width );
 				for ( int j = left; j <= right; ++j )
 				{
 					double weight = center - double( j );
@@ -457,8 +457,8 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 				contrib[i].p = new CONTRIB[int( filterwidth * 2 + 1 )];
 				double center = ( double( i ) + 0.5 ) / yscale -
 				                0.5; // shift center to (1/2 axis - 0.5 = 0.5/scale - 0.5) to reach an actual pixel center
-				double left = ceil( center - filterwidth );
-				double right = floor( center + filterwidth );
+				double left = std::ceil( center - filterwidth );
+				double right = std::floor( center + filterwidth );
 				for ( int j = left; j <= right; ++j )
 				{
 					double weight = center - double( j );

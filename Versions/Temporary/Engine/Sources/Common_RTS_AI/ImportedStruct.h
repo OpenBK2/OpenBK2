@@ -50,7 +50,7 @@ public:
 
 	bool IsBeamIntersectLine( const SVector &ptStart, const SVector &ptSecond ) const
 	{
-		return ( fabs( GetDistFromLine( ptStart ) ) > fabs( GetDistFromLine( ptSecond ) ) ) ||
+		return ( std::fabs( GetDistFromLine( ptStart ) ) > std::fabs( GetDistFromLine( ptSecond ) ) ) ||
 		       IsSegmIntersectLine( ptStart, ptSecond );
 	}
 

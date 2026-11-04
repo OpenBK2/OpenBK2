@@ -215,13 +215,14 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 		const bool bConfiguredOverheadImpact =
 				shell.etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK && shell.pMissleParams &&
 				shell.pMissleParams->bAimsForTop &&
-				fabs( GetVisZ() + AI_TILE_SIZE + shell.pMissleParams->fTopTargetingHeight - vExplCoord3D.z ) <=
+				std::fabs( GetVisZ() + AI_TILE_SIZE + shell.pMissleParams->fTopTargetingHeight - vExplCoord3D.z ) <=
 						AI_TILE_SIZE * 2.0f;
 
 		// попали визуально
 		// DebugTrace( "Player %d: %2.3f, %s", player, fabs( GetCenterPlain() - vExplCoord ), unitRect.IsPointInside( vExplCoord ) ? "true" : "false" );
 		// An overhead fuse is an exact hit at its configured visual height, even beyond legacy unit-height tolerance.
-		if ( ( bConfiguredOverheadImpact || fabs( GetVisZ() - vExplCoord3D.z ) <= AI_TILES_IN_VIS_TILE * AI_TILE_SIZE ) &&
+		if ( ( bConfiguredOverheadImpact ||
+		       std::fabs( GetVisZ() - vExplCoord3D.z ) <= AI_TILES_IN_VIS_TILE * AI_TILE_SIZE ) &&
 		     unitRect.IsPointInside( vExplCoord ) )
 		{
 			const int nRandArmor = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect );
@@ -284,7 +285,7 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl,
 	const CVec2 vExplCoord2D( vExplCoord3D.x, vExplCoord3D.y );
 	const CVec2 vUnitCenter( GetCenterPlain() );
 	const float fDist2 = fabs2( vUnitCenter - vExplCoord2D );
-	const float fZDiff = fabs( GetVisZ() - vExplCoord3D.z );
+	const float fZDiff = std::fabs( GetVisZ() - vExplCoord3D.z );
 	const uint64_t nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
 
 	bool bPreconditionsPassed = false;

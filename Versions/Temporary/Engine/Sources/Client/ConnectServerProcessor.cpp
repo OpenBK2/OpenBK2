@@ -78,7 +78,8 @@ bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckCo
 		CPtr<CPrimeNumbers> pPrime = new CPrimeNumbers();
 
 		int nCnt = 0;
-		while ( nCnt < pPrime->GetNNumbers() && pPrime->GetPrime( nCnt ) <= sqrt( double( pCheckConnectPacket->nNumber ) ) )
+		while ( nCnt < pPrime->GetNNumbers() &&
+		        pPrime->GetPrime( nCnt ) <= std::sqrt( double( pCheckConnectPacket->nNumber ) ) )
 		{
 			const int64_t nPrime1 = pPrime->GetPrime( nCnt );
 			const int64_t nModule = pCheckConnectPacket->nNumber % nPrime1;

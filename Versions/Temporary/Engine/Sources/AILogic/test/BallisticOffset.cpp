@@ -42,7 +42,7 @@ TEST_P( BallisticOffset, SignedOffsetAdjustsSpeedAndKeepsTargetAtEveryRange )
 		const CVec3 start( 100, 200, 0 ), target( start.x + distance, start.y, 0 );
 		CObj<CBallisticTraj> legacy = new CBallisticTraj( start, target, speed, GetParam(), elevationLimit, range );
 		const CVec3 oldVelocity = legacy->GetInitialVelocity();
-		const float oldAngle = atan2( oldVelocity.z, oldVelocity.x );
+		const float oldAngle = std::atan2( oldVelocity.z, oldVelocity.x );
 		const unsigned sampleTime = 100;
 		const float oldGravity =
 				2.0f * ( oldVelocity.z * sampleTime - legacy->GetCoordinatesAtTime( legacy->GetStartTime() + sampleTime ).z ) /
@@ -53,15 +53,15 @@ TEST_P( BallisticOffset, SignedOffsetAdjustsSpeedAndKeepsTargetAtEveryRange )
 			CObj<CBallisticTraj> changed =
 					new CBallisticTraj( start, target, speed, GetParam(), elevationLimit, range, offset );
 			const CVec3 velocity = changed->GetInitialVelocity();
-			EXPECT_GT( fabs( fabs( velocity ) - fabs( oldVelocity ) ), 0.001f );
-			EXPECT_NEAR( atan2( velocity.z, velocity.x ) - oldAngle, offset, 0.00001f );
+			EXPECT_GT( std::fabs( fabs( velocity ) - fabs( oldVelocity ) ), 0.001f );
+			EXPECT_NEAR( std::atan2( velocity.z, velocity.x ) - oldAngle, offset, 0.00001f );
 			const CVec3 position = changed->GetCoordinatesAtTime( changed->GetStartTime() + sampleTime );
 			const float gravity = 2.0f * ( velocity.z * sampleTime - position.z ) / ( sampleTime * sampleTime );
 			EXPECT_NEAR( gravity, oldGravity, 0.000001f );
 			const CVec3 impact = changed->GetCoordinatesAtTime( changed->GetExplTime() );
 			// Millisecond quantization permits at most one millisecond of travel error.
-			EXPECT_NEAR( impact.x, target.x, fabs( velocity.x ) + 0.01f );
-			EXPECT_NEAR( impact.z, 0.0f, fabs( velocity.z ) + 0.01f );
+			EXPECT_NEAR( impact.x, target.x, std::fabs( velocity.x ) + 0.01f );
+			EXPECT_NEAR( impact.z, 0.0f, std::fabs( velocity.z ) + 0.01f );
 			EXPECT_EQ( impact.y, start.y );
 			for ( int part = 0; part <= 10; ++part )
 			{

@@ -25,7 +25,7 @@ public:
 
 	float GetRTTDisp() const
 	{
-		return sqrt( fabs( sqr( fAvrgRTT ) - fAvrgRTT2 ) );
+		return std::sqrt( std::fabs( sqr( fAvrgRTT ) - fAvrgRTT2 ) );
 	}
 
 	float GetTimeSinceLastRecv() const

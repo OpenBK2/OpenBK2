@@ -11,6 +11,7 @@
 #include "GeneralIntendant.h"
 #include "GeneralInternal.h"
 #include "GeneralTasks.h"
+#include "Misc/DetMath.h"
 #include "Technics.h"
 #include "TimeCounter.h"
 #include "UnitCreation.h"
@@ -426,15 +427,15 @@ const float Func( const float fX, const float fBound )
 	float func;
 	if ( fX <= f )
 	{
-		func = exp( k * ( fX - f ) );
+		func = NDetMath::Exp( k * ( fX - f ) );
 	}
 	else
 	{
-		func = 2 - exp( -k * ( fX - f ) );
+		func = 2 - NDetMath::Exp( -k * ( fX - f ) );
 	}
 
 	// сдвиг функции в ноль в нуле и в fBound в бесконечности
-	func = ( func - exp( -k * f ) ) / ( 2 - exp( -k * f ) ) * fBound;
+	func = ( func - NDetMath::Exp( -k * f ) ) / ( 2 - NDetMath::Exp( -k * f ) ) * fBound;
 
 	return func;
 }
@@ -610,10 +611,11 @@ void CGeneral::BombardmentSegment()
 				const float fProbability = Func( fRatio, 1 - SGeneralConsts::PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE ) +
 				                           SGeneralConsts::PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE;
 				// делится на 1000, т.к. проверка раз в секунду
-				const float fProbNow = fProbability >= 1.0f
-				                           ? 1.0f
-				                           : 1 - exp( 1.0f / ( (float)SGeneralConsts::TIME_TO_ARTILLERY_FIRE / 1000.0f ) *
-				                                      log( 1.0f - fProbability ) );
+				const float fProbNow =
+						fProbability >= 1.0f
+								? 1.0f
+								: 1 - NDetMath::Exp( 1.0f / ( (float)SGeneralConsts::TIME_TO_ARTILLERY_FIRE / 1000.0f ) *
+				                             NDetMath::Log( 1.0f - fProbability ) );
 
 				// нужно стрелять
 				const float fRand = NRandom::Random( 0.0f, 1.0f );

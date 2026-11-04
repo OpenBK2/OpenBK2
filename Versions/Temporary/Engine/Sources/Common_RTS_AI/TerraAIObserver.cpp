@@ -149,7 +149,7 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
 	const float fDist12 = fabs( v[2] - v[1] );
 	if ( fDist12 < 2.5 * fTileSize )
 	{
-		if ( fabs( fDist12 ) < FP_EPSILON )
+		if ( std::fabs( fDist12 ) < FP_EPSILON )
 		{
 			v[2] = v[1];
 		}
@@ -161,7 +161,7 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
 	const float fDist03 = fabs( v[3] - v[0] );
 	if ( fDist03 < 2.5 * fTileSize )
 	{
-		if ( fabs( fDist03 ) < FP_EPSILON )
+		if ( std::fabs( fDist03 ) < FP_EPSILON )
 		{
 			v[3] = v[0];
 		}
@@ -294,10 +294,10 @@ void CTerraAIObserver::LockSteepTiles()
 				}
 
 				const float fMiddle = GetTileHeight( nX, nY );
-				const float fUp = fabs( fMiddle - GetTileHeight( nX, nY - 1 ) );
-				const float fDown = fabs( fMiddle - GetTileHeight( nX, nY + 1 ) );
-				const float fLeft = fabs( fMiddle - GetTileHeight( nX - 1, nY ) );
-				const float fRight = fabs( fMiddle - GetTileHeight( nX + 1, nY ) );
+				const float fUp = std::fabs( fMiddle - GetTileHeight( nX, nY - 1 ) );
+				const float fDown = std::fabs( fMiddle - GetTileHeight( nX, nY + 1 ) );
+				const float fLeft = std::fabs( fMiddle - GetTileHeight( nX - 1, nY ) );
+				const float fRight = std::fabs( fMiddle - GetTileHeight( nX + 1, nY ) );
 
 				if ( fUp > s_fHeightsDiffToLock || fDown > s_fHeightsDiffToLock || fLeft > s_fHeightsDiffToLock ||
 				     fRight > s_fHeightsDiffToLock )

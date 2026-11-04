@@ -231,7 +231,7 @@ inline float ToDegree( const float angle )
 
 inline float NormalizeAngleInDegree( const float angle )
 {
-	float fResult = fmod( double( angle ), 360.0 );
+	float fResult = std::fmod( double( angle ), 360.0 );
 	if ( fResult < 0 )
 	{
 		fResult += 360.f;
@@ -247,17 +247,17 @@ inline int NormalizeAngleInDegree( const int angle )
 
 inline float SignumNormalizeAngleInDegree( const float angle )
 {
-	return float( fmod( angle + 180 * boost::math::sign( angle ), 360 ) - 180 * boost::math::sign( angle ) );
+	return float( std::fmod( angle + 180 * boost::math::sign( angle ), 360 ) - 180 * boost::math::sign( angle ) );
 }
 
 inline float NormalizeAngleInRadian( const float angle )
 {
-	return float( fmod( double( angle ), 2.0 * PI ) + ( double( angle ) < 0 ? 2.0 * PI : 0 ) );
+	return float( std::fmod( double( angle ), 2.0 * PI ) + ( double( angle ) < 0 ? 2.0 * PI : 0 ) );
 }
 
 inline float SignumNormalizeAngleInRadian( const float angle )
 {
-	return float( fmod( double( angle ) + PI, 2.0 * PI ) + ( double( angle ) < -PI ? PI : -PI ) );
+	return float( std::fmod( double( angle ) + PI, 2.0 * PI ) + ( double( angle ) < -PI ? PI : -PI ) );
 }
 
 // ************************************************************************************************************************ //
@@ -313,7 +313,7 @@ inline float fabs2( const float x, const float y, const float z, const float w )
 
 inline float fabs( const float x, const float y, const float z, const float w )
 {
-	return static_cast<float>( sqrt( fabs2( x, y, z, w ) ) );
+	return static_cast<float>( std::sqrt( fabs2( x, y, z, w ) ) );
 }
 
 inline float fabs2( const float x, const float y, const float z )
@@ -323,7 +323,7 @@ inline float fabs2( const float x, const float y, const float z )
 
 inline float fabs( const float x, const float y, const float z )
 {
-	return static_cast<float>( sqrt( fabs2( x, y, z ) ) );
+	return static_cast<float>( std::sqrt( fabs2( x, y, z ) ) );
 }
 
 inline float fabs2( const float x, const float y )
@@ -333,7 +333,7 @@ inline float fabs2( const float x, const float y )
 
 inline float fabs( const float x, const float y )
 {
-	return static_cast<float>( sqrt( fabs2( x, y ) ) );
+	return static_cast<float>( std::sqrt( fabs2( x, y ) ) );
 }
 
 inline float fabs2( const float x )
@@ -358,11 +358,17 @@ inline TYPE square( const TYPE x )
 	return x * x;
 }
 
+// std::sqrt, not sqrt, in all three. MSVC declares a global float sqrt(float)
+// and libstdc++ does not, so unqualified sqrt on a float computed 1/sqrt in
+// float on Windows and in double on Linux, rounding once at the end, and the
+// two disagreed by an ulp for about a fifth of all directions. That is a
+// lockstep divergence between the two. std::sqrt picks the float overload on
+// both, which is what Windows always computed.
 template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y )
 {
 	TYPE u = fabs2( x, y );
-	if ( fabs( u - TYPE( 1 ) ) < FP_EPSILON )
+	if ( std::fabs( u - TYPE( 1 ) ) < FP_EPSILON )
 	{
 		return true; // already normalized
 	}
@@ -370,7 +376,7 @@ inline bool Normalize( TYPE &x, TYPE &y )
 	{
 		return false; // can't normalize
 	}
-	u = static_cast<TYPE>( TYPE( 1 ) / sqrt( u ) );
+	u = static_cast<TYPE>( TYPE( 1 ) / std::sqrt( u ) );
 	x *= u;
 	y *= u;
 	return true;
@@ -380,7 +386,7 @@ template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y, TYPE &z )
 {
 	TYPE u = fabs2( x, y, z );
-	if ( fabs( u - TYPE( 1 ) ) < FP_EPSILON )
+	if ( std::fabs( u - TYPE( 1 ) ) < FP_EPSILON )
 	{
 		return true; // already normalized
 	}
@@ -388,7 +394,7 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z )
 	{
 		return false; // can't normalize
 	}
-	u = static_cast<TYPE>( TYPE( 1 ) / sqrt( u ) );
+	u = static_cast<TYPE>( TYPE( 1 ) / std::sqrt( u ) );
 	x *= u;
 	y *= u;
 	z *= u;
@@ -399,7 +405,7 @@ template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
 {
 	TYPE u = fabs2( x, y, z, w );
-	if ( fabs( u - TYPE( 1 ) ) < FP_EPSILON )
+	if ( std::fabs( u - TYPE( 1 ) ) < FP_EPSILON )
 	{
 		return true; // already normalized
 	}
@@ -407,7 +413,7 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
 	{
 		return false; // can't normalize
 	}
-	u = static_cast<TYPE>( TYPE( 1 ) / sqrt( u ) );
+	u = static_cast<TYPE>( TYPE( 1 ) / std::sqrt( u ) );
 	x *= u;
 	y *= u;
 	z *= u;

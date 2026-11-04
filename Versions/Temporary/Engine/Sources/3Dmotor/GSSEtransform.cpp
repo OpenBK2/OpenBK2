@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "GPixelFormat.h"
+#include "Misc/DetMath.h"
 #include "port/cpuid.h"
 
 namespace
@@ -32,7 +33,7 @@ static struct SNormalizeInit
 		nNormalizeTable[0] = 0x7fff;
 		for ( int k = 1; k < std::size( nNormalizeTable ); ++k )
 		{
-			nNormalizeTable[k] = (std::min)( 0x7fff, Float2Int( ( 64 * ( 127 * 16 ) ) / sqrt( k + 0.99f ) ) );
+			nNormalizeTable[k] = (std::min)( 0x7fff, Float2Int( ( 64 * ( 127 * 16 ) ) / std::sqrt( k + 0.99f ) ) );
 		}
 		for ( int k = 0; k < std::size( mmxWeights ); ++k )
 		{
@@ -42,9 +43,9 @@ static struct SNormalizeInit
 		for ( int k = 0; k < 16384; ++k )
 		{
 			float f = k * 1.0f / 16384;
-			nCubicRoot[k] = Float2Int( exp( log( f ) / 3 ) * 255 );
+			nCubicRoot[k] = Float2Int( NDetMath::Exp( NDetMath::Log( f ) / 3 ) * 255 );
 			f = f / 16384;
-			nCubicRoot[k + 16384] = Float2Int( exp( log( f ) / 3 ) * 255 );
+			nCubicRoot[k + 16384] = Float2Int( NDetMath::Exp( NDetMath::Log( f ) / 3 ) * 255 );
 		}
 	}
 } normalizeInit;

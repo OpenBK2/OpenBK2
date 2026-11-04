@@ -11,9 +11,9 @@ void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 	const float z2 = vec4.z * vec4.z;
 	const float w2 = vec4.w * vec4.w;
 
-	*pfYaw = atan2( 2 * ( vec4.w * vec4.z + vec4.x * vec4.y ), w2 - z2 + x2 - y2 );
-	*pfPitch = -asin( 2 * ( vec4.z * vec4.x - vec4.w * vec4.y ) );
-	*pfRoll = atan2( 2 * ( vec4.z * vec4.y + vec4.w * vec4.x ), w2 + z2 - x2 - y2 );
+	*pfYaw = std::atan2( 2 * ( vec4.w * vec4.z + vec4.x * vec4.y ), w2 - z2 + x2 - y2 );
+	*pfPitch = -std::asin( 2 * ( vec4.z * vec4.x - vec4.w * vec4.y ) );
+	*pfRoll = std::atan2( 2 * ( vec4.z * vec4.y + vec4.w * vec4.x ), w2 + z2 - x2 - y2 );
 }
 
 const uint16_t GetDirectionByVector( float x, float y )
@@ -428,7 +428,7 @@ const float fabs( const SRect rect1, const SRect rect2 )
 	// не пересекаются
 	if ( segm1Max < segm2Min || segm2Max < segm1Min )
 	{
-		return (std::min)( fabs( segm1Max - segm2Min ), fabs( segm2Max - segm1Min ) );
+		return (std::min)( std::fabs( segm1Max - segm2Min ), std::fabs( segm2Max - segm1Min ) );
 	}
 	else
 	{

@@ -3,6 +3,7 @@
 #include "Image.h"
 #include "ImageEffect.h"
 #include "Misc/Bresenham.h"
+#include "Misc/DetMath.h"
 #include "Misc/Geom.h"
 
 #include <cstdint>
@@ -150,7 +151,7 @@ void Invert( CArray2D<uint32_t> *pImage )
 inline uint32_t GetGammaCorrection( uint32_t dwVal, float fBrightness, float fPower, float fA, float fB )
 {
 	const float fVal = float( dwVal ) / 255.0f;
-	const float fGammaValue = pow( fVal, fPower );
+	const float fGammaValue = NDetMath::Pow( fVal, fPower );
 	const float fContrastValue = Clamp( fA * fGammaValue + fB, 0.0f, 1.0f );
 	const float fResult = Clamp( fContrastValue + fBrightness, 0.0f, 1.0f );
 	return Clamp<uint32_t>( fResult * 255.0f + 0.5f, 0, 0xFF );
@@ -174,7 +175,7 @@ void GammaCorrection( CArray2D<uint32_t> *pImage, float fBrightness, float fCont
 	// calculate equation params for Y = A*X + B
 	// contrast: a*x + b
 	// если contrast < 0, то a = 1/a (наклон <45 градусов)
-	float fA = 1.0f + 4.0f * fabs( fContrast );
+	float fA = 1.0f + 4.0f * std::fabs( fContrast );
 	if ( fContrast < 0 )
 	{
 		fA = 1.0f / fA;

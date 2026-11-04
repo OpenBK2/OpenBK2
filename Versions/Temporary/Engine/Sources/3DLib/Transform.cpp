@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Misc/DetMath.h"
 #include "Transform.h"
 
 #include <cstring>
@@ -78,8 +79,8 @@ void MakeMatrix( SFBTransform *pRes, float fpTangazh, float fpRiskanie, float fK
 
 void MakeMatrix( SHMatrix *pRes, const CVec3 &ptPos, const CVec3 &ptDir )
 {
-	float fpTang = atan2( ptDir.z, sqrt( sqr( ptDir.x ) + sqr( ptDir.y ) ) );
-	float fpRisk = atan2( ptDir.y, ptDir.x ) - FP_PI2;
+	float fpTang = NDetMath::ATan2( ptDir.z, std::sqrt( sqr( ptDir.x ) + sqr( ptDir.y ) ) );
+	float fpRisk = NDetMath::ATan2( ptDir.y, ptDir.x ) - FP_PI2;
 	MakeMatrix( pRes, fpTang, fpRisk, 0, ptPos );
 }
 
@@ -167,7 +168,7 @@ void TransformYupToZup( SHMatrix *pMatrix )
 void MakeProjectiveRay(
 		CVec3 *pRes, CVec3 *pOrig, const SHMatrix &camera, const CVec2 &screenRect, const CVec2 &cursorPos, float fFovX )
 {
-	float fDepth = screenRect.x * 0.5f / tan( ToRadian( fFovX ) * 0.5f );
+	float fDepth = screenRect.x * 0.5f / NDetMath::Tan( ToRadian( fFovX ) * 0.5f );
 	CVec3 direction( cursorPos.x - screenRect.x / 2, fDepth, -cursorPos.y + screenRect.y / 2 );
 	if ( fabs2( direction ) < 1e-8f )
 	{
@@ -206,7 +207,7 @@ bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 
 	}
 	vRes.x /= vRes.y;
 	vRes.z /= vRes.y;
-	float fDepth = screenRect.x * 0.5f / tan( ToRadian( fFovX ) * 0.5f );
+	float fDepth = screenRect.x * 0.5f / NDetMath::Tan( ToRadian( fFovX ) * 0.5f );
 
 	if ( pRes != 0 )
 	{
@@ -214,11 +215,11 @@ bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 
 		pRes->y = -vRes.z * fDepth + screenRect.y / 2;
 	}
 
-	if ( fabs( vRes.x * fDepth ) > screenRect.x / 2 )
+	if ( std::fabs( vRes.x * fDepth ) > screenRect.x / 2 )
 	{
 		return false;
 	}
-	if ( fabs( vRes.z * fDepth ) > screenRect.y / 2 )
+	if ( std::fabs( vRes.z * fDepth ) > screenRect.y / 2 )
 	{
 		return false;
 	}
@@ -235,11 +236,11 @@ bool TestRayInFrustrum( const CVec3 &ptPos,
 {
 	CVec4 vRes;
 	ts.Get().forward.RotateHVector( &vRes, ptPos );
-	vRes.x /= fabs( vRes.w );
-	vRes.y /= fabs( vRes.w );
+	vRes.x /= std::fabs( vRes.w );
+	vRes.y /= std::fabs( vRes.w );
 	if ( pZ != 0 )
 	{
-		vRes.z /= fabs( vRes.w );
+		vRes.z /= std::fabs( vRes.w );
 		*pZ = vRes.z;
 	}
 	if ( pRes != 0 )
@@ -248,11 +249,11 @@ bool TestRayInFrustrum( const CVec3 &ptPos,
 		pRes->y = -vRes.y * screenRect.y / 2 + screenRect.y / 2;
 	}
 
-	if ( fabs( vRes.x ) > 1 )
+	if ( std::fabs( vRes.x ) > 1 )
 	{
 		return false;
 	}
-	if ( fabs( vRes.y ) > 1 )
+	if ( std::fabs( vRes.y ) > 1 )
 	{
 		return false;
 	}
@@ -288,7 +289,7 @@ void TransformBound( SBound *pRes, const SBound &src, const SHMatrix &fwd )
 {
 	CVec3 ptCenter;
 	fwd.RotateHVector( &ptCenter, src.s.ptCenter );
-	float fR = sqrt( CalcRadius2( src, fwd ) );
+	float fR = std::sqrt( CalcRadius2( src, fwd ) );
 	pRes->SphereInit( ptCenter, fR );
 }
 
@@ -344,9 +345,9 @@ void CTransformStack::MakeProjective( float fAspect, float fFovX, float fZMin, f
 	float near_plane = fZMin;
 	float fFovY;
 	fFovX = ToRadian( fFovX );
-	fFovY = 2 * atan( tan( fFovX * 0.5f ) * fAspect );
-	w = (float)1 / tan( fFovX * 0.5 ); // 1/tan(x) == cot(x)
-	h = (float)1 / tan( fFovY * 0.5 ); // 1/tan(x) == cot(x)
+	fFovY = 2 * NDetMath::ATan( NDetMath::Tan( fFovX * 0.5f ) * fAspect );
+	w = (float)1 / NDetMath::Tan( fFovX * 0.5 ); // 1/tan(x) == cot(x)
+	h = (float)1 / NDetMath::Tan( fFovY * 0.5 ); // 1/tan(x) == cot(x)
 	Q = far_plane / ( far_plane - near_plane );
 
 	SHMatrix ret;
@@ -455,7 +456,7 @@ static void CalcLeftRight( float *pf1, float *pf2, float a, float b )
 
 static float CalcScale( const CVec4 &vTrans )
 {
-	return sqrt( sqr( vTrans.x ) + sqr( vTrans.y ) + sqr( vTrans.z ) );
+	return std::sqrt( sqr( vTrans.x ) + sqr( vTrans.y ) + sqr( vTrans.z ) );
 }
 
 bool CTransformStack::GetCoverRect( CTRect<float> *pRes, const CVec3 &_ptCenter, float fRadius )

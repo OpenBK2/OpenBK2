@@ -84,7 +84,7 @@ void CScene::MakeSelection( SVisObjSelection &selection,
 	{
 		//const float fMaxSize = max( pVOD->pModel->pGeometry->vSize.x, pVOD->pModel->pGeometry->vSize.y ) * fSelScale * 0.5f;
 		const float fMaxSize =
-				sqrt( fabs2( pVOD->pModel->pGeometry->vSize.x ) + fabs2( pVOD->pModel->pGeometry->vSize.y ) ) * fSelScale *
+				std::sqrt( fabs2( pVOD->pModel->pGeometry->vSize.x ) + fabs2( pVOD->pModel->pGeometry->vSize.y ) ) * fSelScale *
 				0.5f;
 		selection.fSelSize = fMaxSize;
 

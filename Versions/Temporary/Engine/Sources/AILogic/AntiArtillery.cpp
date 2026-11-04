@@ -108,7 +108,7 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 	}
 	theAAManager.AddAA( this );
 
-	float fGunRadius = abs( _fGunRadius );
+	float fGunRadius = std::abs( _fGunRadius );
 	bIsAA = ( _fGunRadius < 0.0f );
 	if ( bIsAA )
 	{

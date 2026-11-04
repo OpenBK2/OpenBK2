@@ -696,7 +696,7 @@ bool CLadderLobby::MatchMakingStep()
 					const float nTeam1Level = NLadder::TeamLevel( ladderClients, gameInfo.team1Players );
 					const float nTeam2Level = NLadder::TeamLevel( ladderClients, gameInfo.team2Players );
 
-					if ( fabs( nTeam2Level - nTeam1Level ) <= pConsts->nLevelDelta )
+					if ( std::fabs( nTeam2Level - nTeam1Level ) <= pConsts->nLevelDelta )
 					{
 						// Команды подобраны. Начинаем игру.
 						CreateLadderGame( gameInfo );

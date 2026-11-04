@@ -60,7 +60,7 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 
 			const float fNextFootTexX =
 					fFootTexX +
-					sqrt( fabs2( point1.vPos.x - point2.vPos.x ) + fabs2( point1.vPos.y - point2.vPos.y ) ) * fTexScaleX;
+					std::sqrt( fabs2( point1.vPos.x - point2.vPos.x ) + fabs2( point1.vPos.y - point2.vPos.y ) ) * fTexScaleX;
 
 			const float fTexY1 = point1.vPos.z * fTexScaleY;
 			const float fTexY2 = point2.vPos.z * fTexScaleY;

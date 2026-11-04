@@ -4,6 +4,7 @@
 #include "DBAIConsts.h"
 #include "ManuverBuilder.h"
 #include "ManuverInternal.h"
+#include "Misc/DetMath.h"
 #include "PlanesFormation.h"
 
 CManuverBuilder theManuverBuilder;
@@ -25,7 +26,7 @@ CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPlanesFormation *pPo
 	if ( fDiveAngle != 0.0f )
 	{
 		const float fBetta = ( PI - fDiveAngle ) / 2.0f;
-		fStartAttackDist += ( vPos.z / tan( fDiveAngle ) );
+		fStartAttackDist += ( vPos.z / NDetMath::Tan( fDiveAngle ) );
 	}
 	CVec3 vAttackPos( CVec2( vEnemy.x, vEnemy.y ) + fStartAttackDist * vDir, pref.GetPatrolHeight() );
 

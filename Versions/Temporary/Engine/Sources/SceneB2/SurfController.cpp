@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Misc/DetMath.h"
 #include "Misc/Win32Random.h"
 #include "Scene.h"
 #include "SurfController.h"
@@ -224,7 +225,7 @@ void CSurfController::Init( const float fAngle,
 
 	CVec2 vBBMin, vBBMax;
 
-	const CVec2 vWind( cos( fAngle + FP_PI / 2 ), sin( fAngle + FP_PI / 2 ) );
+	const CVec2 vWind( NDetMath::Cos( fAngle + FP_PI / 2 ), NDetMath::Sin( fAngle + FP_PI / 2 ) );
 
 	surfPatches.resize( 0 );
 	surfPatchesBounds.resize( 0 );
@@ -269,8 +270,8 @@ void CSurfController::Init( const float fAngle,
 
 		AddPoints( vWind, points, pCurPatch );
 
-		const bool bNeedCycle = ( fabs( points[0].vPos.x - points[points.size() - 1].vPos.x ) < DEF_EPS ) &&
-		                        ( fabs( points[0].vPos.y - points[points.size() - 1].vPos.y ) < DEF_EPS );
+		const bool bNeedCycle = ( std::fabs( points[0].vPos.x - points[points.size() - 1].vPos.x ) < DEF_EPS ) &&
+		                        ( std::fabs( points[0].vPos.y - points[points.size() - 1].vPos.y ) < DEF_EPS );
 
 		for ( int i = 0; i < points.size(); ++i )
 		{

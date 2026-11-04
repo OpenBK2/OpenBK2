@@ -7,6 +7,7 @@
 #include "CameraScriptMutators.h"
 #include "Cursor.h"
 #include "Main/GameTimer.h"
+#include "Misc/DetMath.h"
 #include "Misc/StrProc.h"
 #include "Scene.h"
 #include "System/Commands.h"
@@ -315,7 +316,8 @@ void CCamera::Update()
 		for ( std::list<NCamera::SEarthQuake>::iterator it = earthquakes.begin(); it != earthquakes.end(); )
 		{
 			const float fTime = it->fTime / 1000.0f;
-			fVal += exp( -fTime * it->fAttenuation ) * cos( s_fQuakePeriod * FP_2PI * fTime ) * it->fAmplitude;
+			fVal += NDetMath::Exp( -fTime * it->fAttenuation ) * NDetMath::Cos( s_fQuakePeriod * FP_2PI * fTime ) *
+			        it->fAmplitude;
 			it->fTime += fTimeDiff;
 			if ( it->fTime >= it->fDuration )
 			{
@@ -334,11 +336,11 @@ void CCamera::Update()
 	quat.GetZAxis( &vDir );
 
 	// build view matrix
-	const int nPitch = Float2Int( floor( fPitch / FP_PI ) );
+	const int nPitch = Float2Int( std::floor( fPitch / FP_PI ) );
 	if ( nPitch % 2 == 0 )
 	{
-		float fpTang = atan2( vDir.z, sqrt( sqr( vDir.x ) + sqr( vDir.y ) ) );
-		float fpRisk = atan2( vDir.y, vDir.x ) - FP_PI2;
+		float fpTang = NDetMath::ATan2( vDir.z, std::sqrt( sqr( vDir.x ) + sqr( vDir.y ) ) );
+		float fpRisk = NDetMath::ATan2( vDir.y, vDir.x ) - FP_PI2;
 		MakeMatrix( &matView, fpTang, fpRisk, fRoll, vPosition );
 	}
 	else
@@ -594,10 +596,11 @@ void CCamera::ConformMouseMutator2ScriptMutator()
 	pMouseMutator->SetFOV( placement.fFOV );
 
 	const float fFakePitch = ToRadian( 270.0f ) - placement.fPitch;
-	const CVec3 vDir(
-			sin( placement.fYaw ) * cos( fFakePitch ), -cos( placement.fYaw ) * cos( fFakePitch ), sin( fFakePitch ) );
+	const CVec3 vDir( NDetMath::Sin( placement.fYaw ) * NDetMath::Cos( fFakePitch ),
+	                  -NDetMath::Cos( placement.fYaw ) * NDetMath::Cos( fFakePitch ),
+	                  NDetMath::Sin( fFakePitch ) );
 
-	const float fDistance = fabs( placement.vPosition.z / vDir.z );
+	const float fDistance = std::fabs( placement.vPosition.z / vDir.z );
 	pMouseMutator->SetDistance( fDistance );
 	CVec3 vAnchor = placement.vPosition - vDir * fDistance;
 	//AI2Vis( &vAnchor );
@@ -631,10 +634,10 @@ bool CCamera::ValidateScriptPlacement( NCamera::CCameraPlacement *pPlacement ) c
 	validPlacement.vPosition = vValidPosition;
 
 	// rPlacement is already valid
-	if ( fabs( fRealYaw - fValidYaw ) < s_fValidateDifference &&
-	     fabs( fRealPitch - fValidPitch ) < s_fValidateDifference &&
-	     fabs( fRealFOV - fValidFOV ) < s_fValidateDifference &&
-	     fabs( fRealDistance - fValidDistance ) < s_fValidateDifference )
+	if ( std::fabs( fRealYaw - fValidYaw ) < s_fValidateDifference &&
+	     std::fabs( fRealPitch - fValidPitch ) < s_fValidateDifference &&
+	     std::fabs( fRealFOV - fValidFOV ) < s_fValidateDifference &&
+	     std::fabs( fRealDistance - fValidDistance ) < s_fValidateDifference )
 	{
 		return false;
 	}

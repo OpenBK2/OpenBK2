@@ -466,23 +466,45 @@ public:
 	}
 };
 
+// wx is started once for the whole suite, not once per test. wx does not survive
+// being cleaned up and started again in one process: on GTK the native renderer
+// is a function-local static that keeps a reference to the generic renderer,
+// and wxEntryCleanup() deletes the generic one, so the second test's first
+// wxPropertyGrid called through a dangling pointer and crashed.
 class EditorViews : public VisObjBuilder
 {
-protected:
 	// Cover initialization and cleanup too: the default assertion dialog blocks CI.
-	CTestWxAssertHandler assertHandler;
-	bool wxStarted = false;
-	std::unique_ptr<wxFrame> frame;
+	static inline std::unique_ptr<CTestWxAssertHandler> assertHandler;
+	static inline bool wxStarted = false;
 	// wx keeps the narrow argv pointers until wxEntryCleanup().
-	int argc = 1;
-	char name[sizeof( "EditorViews_test" )] = "EditorViews_test";
-	char *argv[2] = { name, nullptr };
+	static inline int argc = 1;
+	static inline char name[sizeof( "EditorViews_test" )] = "EditorViews_test";
+	static inline char *argv[2] = { name, nullptr };
+
+protected:
+	std::unique_ptr<wxFrame> frame;
+
+	static void SetUpTestSuite()
+	{
+		assertHandler = std::make_unique<CTestWxAssertHandler>();
+		wxApp::SetInstance( new wxApp );
+		wxStarted = wxEntryStart( argc, argv );
+	}
+
+	static void TearDownTestSuite()
+	{
+		if ( wxStarted )
+		{
+			wxTheApp->ProcessPendingEvents();
+			wxEntryCleanup();
+			wxStarted = false;
+		}
+		assertHandler.reset();
+	}
 
 	void SetUp() override
 	{
 		VisObjBuilder::SetUp();
-		wxApp::SetInstance( new wxApp );
-		wxStarted = wxEntryStart( argc, argv );
 		if ( !wxStarted )
 		{
 			GTEST_SKIP() << "A display is required for wx editor tests (use xvfb-run on Linux).";
@@ -495,8 +517,8 @@ protected:
 		frame.reset();
 		if ( wxStarted )
 		{
+			// What the frame and the test queued still runs before the next test.
 			wxTheApp->ProcessPendingEvents();
-			wxEntryCleanup();
 		}
 		VisObjBuilder::TearDown();
 	}

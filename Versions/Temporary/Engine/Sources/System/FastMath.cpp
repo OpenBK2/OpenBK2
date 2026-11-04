@@ -242,7 +242,7 @@ static struct SFastMathInit
 			//  and an exponent of 0, stored as 127
 
 			s.i = ( i << 8 ) | ( 0x7F << 23 );
-			s.f = (float)sqrt( s.f );
+			s.f = (float)std::sqrt( s.f );
 
 			// Take the square root then strip the first 7 bits of
 			//  the mantissa into the table
@@ -253,7 +253,7 @@ static struct SFastMathInit
 			//  stored as 128
 
 			s.i = ( i << 8 ) | ( 0x80 << 23 );
-			s.f = (float)sqrt( s.f );
+			s.f = (float)std::sqrt( s.f );
 
 			gs_FastSqrtTable[i] = ( s.i & 0x7FFFFF );
 		}

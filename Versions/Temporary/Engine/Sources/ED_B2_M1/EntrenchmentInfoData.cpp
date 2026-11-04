@@ -5,6 +5,7 @@
 #include "Main/GameTimer.h"
 #include "MapEditorLib/BusyCursor.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 #include "SceneB2/Scene.h"
 #include "Stats_B2_M1/IconsSet.h"
 
@@ -124,7 +125,7 @@ bool SEntrenchmentInfo::GetEntrenchmentSegmentPositionOnTerrain( CVec3 *pPos,
 	*pScale = CVec3( fKScale, 1.0f, 1.0f );
 	//
 	Normalize( &vTerraDir );
-	float fVertAngle = atan2( vTerraDir.z, sqrt( sqr( vTerraDir.x ) + sqr( vTerraDir.y ) ) );
+	float fVertAngle = NDetMath::ATan2( vTerraDir.z, std::sqrt( sqr( vTerraDir.x ) + sqr( vTerraDir.y ) ) );
 	//
 	CVec3 vrAxis = VNULL3;
 	qXYRot.Rotate( &vrAxis, -V3_AXIS_Y );

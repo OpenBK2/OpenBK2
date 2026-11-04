@@ -1441,8 +1441,9 @@ void CScripts::DelInvalidUnits( const int scriptId )
 
 int CScripts::GetCheckObjectsInScriptArea( const SScriptArea &area, const struct ICheckObjects &check )
 {
-	float fR =
-			area.eType == EAT_CIRCLE ? area.fR : (std::max)( fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
+	float fR = area.eType == EAT_CIRCLE
+	               ? area.fR
+	               : (std::max)( std::fabs( area.vAABBHalfSize.x ), std::fabs( area.vAABBHalfSize.y ) );
 	int nResult = 0;
 	for ( CStObjCircleIter<false> iter( area.vCenter, fR ); !iter.IsFinished(); iter.Iterate() )
 	{
@@ -2365,7 +2366,8 @@ void CScripts::EnumUnitsInScriptArea( IScriptAreaEnumerator *pEnumerator, const 
 	else
 	{
 		SRect areaRect;
-		areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
+		areaRect.InitRect(
+				area.vCenter, CVec2( 1, 0 ), std::fabs( area.vAABBHalfSize.x ), std::fabs( area.vAABBHalfSize.y ) );
 		EnumUnitsInRect( pEnumerator, nPlayer, bCountPlanes, areaRect );
 	}
 }
@@ -2537,7 +2539,8 @@ int CScripts::GetNScriptUnitsInArea( struct lua_State *state )
 		{
 			const NDb::SScriptArea &area = pScripts->areas[szName];
 			SRect areaRect;
-			areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
+			areaRect.InitRect(
+					area.vCenter, CVec2( 1, 0 ), std::fabs( area.vAABBHalfSize.x ), std::fabs( area.vAABBHalfSize.y ) );
 			// CRAP{ ??? static objects ??? dynamic_cast
 			for ( std::list<CPtr<CUpdatableObj>>::iterator iter = pScripts->groups[nScriptGroup].begin();
 			      iter != pScripts->groups[nScriptGroup].end();
@@ -3742,8 +3745,8 @@ int CScripts::GetScriptAreaParams( struct lua_State *pState )
 	}
 	else
 	{
-		script.PushNumber( fabs( area.vAABBHalfSize.x ) );
-		script.PushNumber( fabs( area.vAABBHalfSize.y ) );
+		script.PushNumber( std::fabs( area.vAABBHalfSize.x ) );
+		script.PushNumber( std::fabs( area.vAABBHalfSize.y ) );
 	}
 
 	return 4;
@@ -4251,7 +4254,8 @@ int CScripts::IsUnitInArea( struct lua_State *state )
 			             script );
 			const NDb::SScriptArea &area = pScripts->areas[szName];
 			SRect areaRect;
-			areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
+			areaRect.InitRect(
+					area.vCenter, CVec2( 1, 0 ), std::fabs( area.vAABBHalfSize.x ), std::fabs( area.vAABBHalfSize.y ) );
 			for ( int i = 0; i < pFormation->Size(); ++i )
 			{
 				if ( IsUnitInRectArea( ( *pFormation )[i], areaRect, nPlayer ) )
@@ -4284,7 +4288,8 @@ int CScripts::IsUnitInArea( struct lua_State *state )
 			             script );
 			const NDb::SScriptArea &area = pScripts->areas[szName];
 			SRect areaRect;
-			areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
+			areaRect.InitRect(
+					area.vCenter, CVec2( 1, 0 ), std::fabs( area.vAABBHalfSize.x ), std::fabs( area.vAABBHalfSize.y ) );
 			script.PushBool( IsUnitInRectArea( pUnit, areaRect, nPlayer ) );
 		}
 		return 1;
@@ -4916,7 +4921,8 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 		bRectangle = area.eType == EAT_RECTANGLE;
 		if ( bRectangle )
 		{
-			areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
+			areaRect.InitRect(
+					area.vCenter, CVec2( 1, 0 ), std::fabs( area.vAABBHalfSize.x ), std::fabs( area.vAABBHalfSize.y ) );
 		}
 		else
 		{

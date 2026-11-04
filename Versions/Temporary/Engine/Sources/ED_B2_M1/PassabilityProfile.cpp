@@ -231,12 +231,15 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 template <class T>
 static bool IsEqual( const T &fVar, const T &fValue )
 {
+	// T is a float or a vector. std::fabs covers the float, and the vector's
+	// fabs is found by argument-dependent lookup.
+	using std::fabs;
 	return fabs( fVar - fValue ) < fEps;
 }
 
 static const float Sign( const float x )
 {
-	if ( fabs( x ) < fEps )
+	if ( std::fabs( x ) < fEps )
 	{
 		return 0;
 	}
@@ -470,7 +473,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 				}
 				else
 				{
-					bOnOneLine = fabs( line.DistToPoint( connNum2Point[j] ) ) < fEps;
+					bOnOneLine = std::fabs( line.DistToPoint( connNum2Point[j] ) ) < fEps;
 				}
 			}
 
@@ -777,7 +780,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 					//mask.DrawPoint( vNextPoint, NImage::SColor( 255, 0, 0, 0 ) );
 					//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 
-					if ( fabs( line.DistToPoint( vNextPoint ) ) < fTolerance )
+					if ( std::fabs( line.DistToPoint( vNextPoint ) ) < fTolerance )
 					{
 						toDelete[i - 1] = 1;
 						bChanged = true;

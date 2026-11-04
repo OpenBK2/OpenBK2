@@ -245,7 +245,7 @@ void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 
 		const EMovementPlane newPlane =
 				( pAIMap->GetTerrain()->GetTerrainType( vNewTile ) == ETT_WATER_TERRAIN ) ? PLANE_WATER : PLANE_TERRAIN;
-		if ( abs( vTile.x - vNewTile.x ) < 2 && abs( vTile.y - vNewTile.y ) < 2 )
+		if ( std::abs( vTile.x - vNewTile.x ) < 2 && std::abs( vTile.y - vNewTile.y ) < 2 )
 		{
 			if ( newPlane != eMovementPlane )
 			{
@@ -806,7 +806,7 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 			stayTime += timeDiff;
 		}
 
-		if ( GetCenterTile() != vOldTile && fabs( vCenter.z - pAIMap->GetHeights()->GetZ( GetCenter() ) ) < 0.001f &&
+		if ( GetCenterTile() != vOldTile && std::fabs( vCenter.z - pAIMap->GetHeights()->GetZ( GetCenter() ) ) < 0.001f &&
 		     !IsInfantry() )
 		{
 			CheckForDestroyedObjects( GetCenterPlain() );

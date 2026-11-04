@@ -252,7 +252,7 @@ CBasicGun *CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 				// выстрелов, чтобы убить
 				const float fShotsToKill = pObj->GetHitPoints() / pGun->GetDamage();
 				// очередей
-				const int nBursts = ceil( fShotsToKill / pWStats->nAmmoPerBurst );
+				const int nBursts = std::ceil( fShotsToKill / pWStats->nAmmoPerBurst );
 
 				// кол-во очередей * ( время прицеливания + ( кол-во выстрелов - 1 ) * время между выстрелами )
 				time += nBursts * ( pWStats->nAimingTime + ( pWStats->nAmmoPerBurst - 1 ) * pGun->GetFireRate() );

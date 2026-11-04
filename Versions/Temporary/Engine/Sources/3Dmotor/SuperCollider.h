@@ -112,7 +112,7 @@ public:
 	{
 		CVec3 ptCollision;
 		SBound b;
-		CVec3 ptHalfBox( fabs( vel.x ) * 0.5f, fabs( vel.y ) * 0.5f, fabs( vel.z ) * 0.5f );
+		CVec3 ptHalfBox( std::fabs( vel.x ) * 0.5f, std::fabs( vel.y ) * 0.5f, std::fabs( vel.z ) * 0.5f );
 		b.BoxExInit( sphere.ptCenter + vel * 0.5f, ptHalfBox );
 		b.Extend( sphere.fRadius );
 		volume.Fetch( b );

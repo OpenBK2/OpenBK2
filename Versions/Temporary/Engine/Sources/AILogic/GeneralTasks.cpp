@@ -221,7 +221,7 @@ void CGeneralTaskToDefendPatch::CalcSeverity( const bool bEnemyUpdated, const bo
 		fFriendlyMobileForce = pr2.fCount;
 	}
 	// Add importance
-	fSeverity = fFriendlyForce + fFriendlyMobileForce - fabs( patchInfo.fImportance ) -
+	fSeverity = fFriendlyForce + fFriendlyMobileForce - std::fabs( patchInfo.fImportance ) -
 	            SGeneralConsts::PLAYER_FORCE_COEFFICIENT * fEnemyForce;
 }
 

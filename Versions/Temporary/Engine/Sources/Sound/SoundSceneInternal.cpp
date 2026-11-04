@@ -623,7 +623,8 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 				{
 					NI_ASSERT( IsValid( it->second ),
 					           fmt::format( "Invalid cell at ( enum all sounds ){{{} : {}}}", it->first.x, it->first.y ) );
-					const int nRadius = abs( vListenerCell.x - ( *it ).first.x ) + abs( vListenerCell.y - ( *it ).first.y );
+					const int nRadius =
+							std::abs( vListenerCell.x - ( *it ).first.x ) + std::abs( vListenerCell.y - ( *it ).first.y );
 					( *it ).second->EnumAllSounds( collector, nRadius );
 				}
 				vFormerCameraCell = vListenerCell;

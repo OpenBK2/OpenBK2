@@ -4,6 +4,7 @@
 #include "GfxEffects.h"
 #include "GRenderFactor.h"
 #include "Misc/2Darray.h"
+#include "Misc/DetMath.h"
 
 namespace NGScene
 {
@@ -78,9 +79,9 @@ static void RefreshSpecularResponse()
 	for ( int y = 0; y < N_SIZE; ++y )
 	{
 		float fRo = ( y + 0.5f ) / N_SIZE;
-		float fPower = triple( fabs( fRo ) ) * 256;
+		float fPower = triple( std::fabs( fRo ) ) * 256;
 		float fResMul;
-		fResMul = sqrt( sqrt( (std::max)( fPower, 1.0f ) ) );
+		fResMul = std::sqrt( std::sqrt( (std::max)( fPower, 1.0f ) ) );
 		if ( fRo == 0 )
 		{
 			fResMul = 1;
@@ -91,20 +92,20 @@ static void RefreshSpecularResponse()
 			if ( fX > 0.5f )
 			{
 				fX = ( fX - 0.5f ) * 2;
-				fX = sqrt( fX * 4 ); // fX = length(N-H)
-				fX = (std::max)( fX, (float)sqrt( 0.5f ) );
+				fX = std::sqrt( fX * 4 ); // fX = length(N-H)
+				fX = (std::max)( fX, (float)std::sqrt( 0.5f ) );
 			}
 			else
 			{
-				fX = sqrt( fX ); // fX = length(N-H)
+				fX = std::sqrt( fX ); // fX = length(N-H)
 			}
-			fX = cos( 2 * asin( fX * 0.5f ) ); // fX = (N*H)
+			fX = NDetMath::Cos( 2 * NDetMath::ASin( fX * 0.5f ) ); // fX = (N*H)
 			float fRes;
 
-			fX = fabs( fX );
+			fX = std::fabs( fX );
 			if ( fX > 0 )
 			{
-				fRes = (float)( pow( fX, fPower ) ) * fResMul;
+				fRes = (float)( NDetMath::Pow( fX, fPower ) ) * fResMul;
 			}
 			else
 			{
@@ -130,9 +131,9 @@ static void RefreshSpecularResponseR300()
 	for ( int y = 0; y < N_SIZE; ++y )
 	{
 		float fRo = ( y + 0.5f ) / N_SIZE;
-		float fPower = triple( fabs( fRo ) ) * 256;
+		float fPower = triple( std::fabs( fRo ) ) * 256;
 		float fResMul;
-		fResMul = sqrt( sqrt( (std::max)( fPower, 1.0f ) ) );
+		fResMul = std::sqrt( std::sqrt( (std::max)( fPower, 1.0f ) ) );
 		if ( fRo == 0 )
 		{
 			fResMul = 1;
@@ -142,10 +143,10 @@ static void RefreshSpecularResponseR300()
 			float fX = ( x + 0.5f ) / ( N_SIZE ); // fX = (N*H)
 			float fRes;
 
-			fX = fabs( fX );
+			fX = std::fabs( fX );
 			if ( fX > 0 )
 			{
-				fRes = (float)( pow( fX, fPower ) ) * fResMul;
+				fRes = (float)( NDetMath::Pow( fX, fPower ) ) * fResMul;
 			}
 			else
 			{
@@ -222,7 +223,7 @@ static void NormaliseFace( NGfx::CCubeTexture *pTex, NGfx::EFace f )
 			lock[y][x] = NGfx::SPixel8888( Float2Int( n.x + Rnd() ),
 			                               Float2Int( n.y + Rnd() ),
 			                               Float2Int( n.z + Rnd() ),
-			                               fZ > 0 ? pow( fZ, 8 ) * 255 : 0 );
+			                               fZ > 0 ? NDetMath::Pow( fZ, 8 ) * 255 : 0 );
 		}
 	}
 }
@@ -285,7 +286,7 @@ NGfx::CTexture *GetLightFallLookup()
 			//float fQ1 = fQ2;//sqrt( fQ2 );
 			float fQ1 = 1;
 			float fDistance = Clamp( fDot / fQ1, 0.0f, 1.0f );
-			float fFall = 1 / ( 1 + sqr( fDistance * NGfx::F_POINT_FALLOFF ) ) * sqrt( sqrt( 1 - fDistance ) );
+			float fFall = 1 / ( 1 + sqr( fDistance * NGfx::F_POINT_FALLOFF ) ) * std::sqrt( std::sqrt( 1 - fDistance ) );
 			char cRes = Float2Int( fFall * 255 );
 			lock[y][x] = NGfx::SPixel8888( cRes, cRes, cRes, cRes );
 		}

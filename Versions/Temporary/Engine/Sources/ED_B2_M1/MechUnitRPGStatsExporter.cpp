@@ -1383,7 +1383,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 					Normalize( &vec );
 					float fDir = NMath::ACos( vec.y );
 					const float F_EPS_ANGLE = 0.01f;
-					if ( fabs( fDir ) < F_EPS_ANGLE )
+					if ( std::fabs( fDir ) < F_EPS_ANGLE )
 					{
 						pG->nDirection = 0xFFFF;
 					}

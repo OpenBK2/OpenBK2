@@ -160,8 +160,8 @@ static bool RasterizeObjectMask( const std::vector<CVec3> &verts,
 			const int nAISizeX = fAISizeX;
 			const float fAISizeY = Vis2AI( vMax.y - vMin.y ) / AI_TILE_SIZE;
 			const int nAISizeY = fAISizeY;
-			pMask->SetSizes( (std::max)( 1, fabs( fAISizeX - nAISizeX ) < DEF_EPS ? nAISizeX : nAISizeX + 1 ),
-			                 (std::max)( 1, fabs( fAISizeY - nAISizeY ) < DEF_EPS ? nAISizeY : nAISizeY + 1 ) );
+			pMask->SetSizes( (std::max)( 1, std::fabs( fAISizeX - nAISizeX ) < DEF_EPS ? nAISizeX : nAISizeX + 1 ),
+			                 (std::max)( 1, std::fabs( fAISizeY - nAISizeY ) < DEF_EPS ? nAISizeY : nAISizeY + 1 ) );
 			//pOrigin->Set( vMin.x, vMax.y );
 			pOrigin->Set( -Vis2AI( vMin.x ), -Vis2AI( vMin.y ) );
 			pOrigin->x *= fAISizeX / (float)pMask->GetSizeX();
@@ -185,15 +185,15 @@ static bool RasterizeObjectMask( const std::vector<CVec3> &verts,
 		const int y2 = Clamp( int( ( verts[it->i2].y - vMin.y ) * fScaleCoeffY ) + nTexOffs, 0, pMask->GetSizeY() - 1 );
 		const int x3 = Clamp( int( ( verts[it->i3].x - vMin.x ) * fScaleCoeffX ) + nTexOffs, 0, pMask->GetSizeX() - 1 );
 		const int y3 = Clamp( int( ( verts[it->i3].y - vMin.y ) * fScaleCoeffY ) + nTexOffs, 0, pMask->GetSizeY() - 1 );
-		if ( ( fabs( verts[it->i1].z - vMin.z ) <= fDist ) && ( fabs( verts[it->i2].z - vMin.z ) <= fDist ) )
+		if ( ( std::fabs( verts[it->i1].z - vMin.z ) <= fDist ) && ( std::fabs( verts[it->i2].z - vMin.z ) <= fDist ) )
 		{
 			DrawLine( pMask, x1, y1, x2, y2, 1 );
 		}
-		if ( ( fabs( verts[it->i2].z - vMin.z ) <= fDist ) && ( fabs( verts[it->i3].z - vMin.z ) <= fDist ) )
+		if ( ( std::fabs( verts[it->i2].z - vMin.z ) <= fDist ) && ( std::fabs( verts[it->i3].z - vMin.z ) <= fDist ) )
 		{
 			DrawLine( pMask, x2, y2, x3, y3, 1 );
 		}
-		if ( ( fabs( verts[it->i3].z - vMin.z ) <= fDist ) && ( fabs( verts[it->i1].z - vMin.z ) <= fDist ) )
+		if ( ( std::fabs( verts[it->i3].z - vMin.z ) <= fDist ) && ( std::fabs( verts[it->i1].z - vMin.z ) <= fDist ) )
 		{
 			DrawLine( pMask, x3, y3, x1, y1, 1 );
 		}

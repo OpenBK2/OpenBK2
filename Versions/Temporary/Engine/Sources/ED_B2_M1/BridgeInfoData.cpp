@@ -291,8 +291,8 @@ int SBridgeInfo::CreateCenterPoints( CBridgeCenterPointList *pResultList,
 		}
 		case DIRECTION_UNKNOWN:
 		{
-			const float fSizeX = abs( rvEnd.x - rvStart.x );
-			const float fSizeY = abs( rvEnd.y - rvStart.y );
+			const float fSizeX = std::abs( rvEnd.x - rvStart.x );
+			const float fSizeY = std::abs( rvEnd.y - rvStart.y );
 			if ( fSizeY > fSizeX )
 			{
 				const float fX = float( rvStart.x + rvEnd.x ) / 2.0f;

@@ -233,7 +233,7 @@ static const float fEps = 0.00001f;
 
 static const float SignEps( const float x )
 {
-	if ( fabs( x ) < fEps )
+	if ( std::fabs( x ) < fEps )
 	{
 		return 0;
 	}
@@ -250,7 +250,8 @@ static const float SignEps( const float x )
 static bool IsPointInsideSegment( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 {
 	CLine2 line( v1, v2 );
-	return fabs( line.DistToPoint( vPoint ) ) < fEps && SignEps( vPoint.x - v1.x ) * SignEps( v2.x - vPoint.x ) >= 0 &&
+	return std::fabs( line.DistToPoint( vPoint ) ) < fEps &&
+	       SignEps( vPoint.x - v1.x ) * SignEps( v2.x - vPoint.x ) >= 0 &&
 	       SignEps( vPoint.y - v1.y ) * SignEps( v2.y - vPoint.y ) >= 0;
 }
 

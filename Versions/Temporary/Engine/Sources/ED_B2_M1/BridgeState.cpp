@@ -456,7 +456,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 				}
 				else
 				{
-					for ( int nTerminatorIndex = 0; nTerminatorIndex < abs( nAdditionalSpanCount ); ++nTerminatorIndex )
+					for ( int nTerminatorIndex = 0; nTerminatorIndex < std::abs( nAdditionalSpanCount ); ++nTerminatorIndex )
 					{
 						const unsigned nSceneID = sceneIDlist.back();
 						if ( CPtr<SAIDissapearObjUpdate> pUpdate = new SAIDissapearObjUpdate() )
