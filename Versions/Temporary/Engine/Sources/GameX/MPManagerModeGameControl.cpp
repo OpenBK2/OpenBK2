@@ -57,6 +57,8 @@ void CMPManagerMode::StartGame()
 	pScenarioTracker->SetMultiplayerDifficulty( gameDesc.nDifficultyLevel );
 	pScenarioTracker->SetSpawnStartingUnits( gameDesc.pMPMap->bSpawnStartingUnits );
 	pScenarioTracker->SetAddReinfsWithTimer( gameDesc.pMPMap->bAddReinfsWithTimer );
+	pScenarioTracker->SetOnBaseCaptureReinfPointsGain( gameDesc.pMPMap->nOnBaseCaptureReinfPointsGain );
+	pScenarioTracker->SetOnBaseLostReinfPointsLoss( gameDesc.pMPMap->nOnBaseLostReinfPointsLoss );
 
 	dwLaggers = 0;
 	dwLaggersOld = 0;

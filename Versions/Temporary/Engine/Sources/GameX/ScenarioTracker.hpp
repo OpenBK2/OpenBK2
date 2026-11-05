@@ -550,6 +550,8 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	int nMultiplayerDifficulty = 0;
 	bool bSpawnStartingUnits = true;
 	bool bAddReinfsWithTimer = true;
+	int nOnBaseCaptureReinfPointsGain = 1;
+	int nOnBaseLostReinfPointsLoss = -1;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -592,6 +594,23 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		else
 		{
 			f.Add( 26, &bAddReinfsWithTimer );
+		}
+		// Missing chunks restore the classic bonuses, including when reusing a tracker.
+		if ( f.IsReading() && !f.HasChunk( 27 ) )
+		{
+			nOnBaseCaptureReinfPointsGain = 1;
+		}
+		else
+		{
+			f.Add( 27, &nOnBaseCaptureReinfPointsGain );
+		}
+		if ( f.IsReading() && !f.HasChunk( 28 ) )
+		{
+			nOnBaseLostReinfPointsLoss = -1;
+		}
+		else
+		{
+			f.Add( 28, &nOnBaseLostReinfPointsLoss );
 		}
 		return 0;
 	}
@@ -666,6 +685,26 @@ public:
 	bool GetAddReinfsWithTimer() const override
 	{
 		return bAddReinfsWithTimer;
+	}
+
+	void SetOnBaseCaptureReinfPointsGain( int nPoints ) override
+	{
+		nOnBaseCaptureReinfPointsGain = nPoints;
+	}
+
+	int GetOnBaseCaptureReinfPointsGain() const override
+	{
+		return nOnBaseCaptureReinfPointsGain;
+	}
+
+	void SetOnBaseLostReinfPointsLoss( int nPoints ) override
+	{
+		nOnBaseLostReinfPointsLoss = nPoints;
+	}
+
+	int GetOnBaseLostReinfPointsLoss() const override
+	{
+		return nOnBaseLostReinfPointsLoss;
 	}
 
 	int GetDifficultyLevel() const override

@@ -1583,6 +1583,8 @@ void SMultiplayerMap::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "AllowedNations", &allowedNations, pThis );
 	NMetaInfo::ReportMetaInfo( "SpawnStartingUnits", (uint8_t*)&bSpawnStartingUnits - pThis, sizeof(bSpawnStartingUnits), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "AddReinfsWithTimer", (uint8_t*)&bAddReinfsWithTimer - pThis, sizeof(bAddReinfsWithTimer), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "OnBaseCaptureReinfPointsGain", (uint8_t*)&nOnBaseCaptureReinfPointsGain - pThis, sizeof(nOnBaseCaptureReinfPointsGain), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "OnBaseLostReinfPointsLoss", (uint8_t*)&nOnBaseLostReinfPointsLoss - pThis, sizeof(nOnBaseLostReinfPointsLoss), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1599,6 +1601,8 @@ int SMultiplayerMap::operator&( IXmlSaver &saver )
 	saver.Add( "AllowedNations", &allowedNations );
 	saver.Add( "SpawnStartingUnits", &bSpawnStartingUnits );
 	saver.Add( "AddReinfsWithTimer", &bAddReinfsWithTimer );
+	saver.Add( "OnBaseCaptureReinfPointsGain", &nOnBaseCaptureReinfPointsGain );
+	saver.Add( "OnBaseLostReinfPointsLoss", &nOnBaseLostReinfPointsLoss );
 
 	return 0;
 }
@@ -1624,6 +1628,14 @@ int SMultiplayerMap::operator&( IBinSaver &saver )
 	{
 		saver.Add( 12, &bAddReinfsWithTimer );
 	}
+	if ( !saver.IsReading() || saver.HasChunk( 13 ) )
+	{
+		saver.Add( 13, &nOnBaseCaptureReinfPointsGain );
+	}
+	if ( !saver.IsReading() || saver.HasChunk( 14 ) )
+	{
+		saver.Add( 14, &nOnBaseLostReinfPointsLoss );
+	}
 
 	return 0;
 }
@@ -1636,7 +1648,7 @@ uint32_t SMultiplayerMap::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations << bSpawnStartingUnits << bAddReinfsWithTimer;
+	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations << bSpawnStartingUnits << bAddReinfsWithTimer << nOnBaseCaptureReinfPointsGain << nOnBaseLostReinfPointsLoss;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

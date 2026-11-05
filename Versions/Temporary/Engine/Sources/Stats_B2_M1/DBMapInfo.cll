@@ -449,6 +449,10 @@ class SMultiplayerMap
 	[chunkID = 11; preserveDefault] bool _SpawnStartingUnits = true;
 	// Grant extra reinforcement calls over time in multiplayer. Script grants and call cooldowns remain available.
 	[chunkID = 12; preserveDefault] bool _AddReinfsWithTimer = true;
+	// Reinforcement point change for each eligible teammate when capturing a base. Zero disables the grant.
+	[chunkID = 13; preserveDefault] int _OnBaseCaptureReinfPointsGain = 1;
+	// Signed reinforcement point change when losing a base. Negative removes points; zero disables the loss.
+	[chunkID = 14; preserveDefault] int _OnBaseLostReinfPointsLoss = -1;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

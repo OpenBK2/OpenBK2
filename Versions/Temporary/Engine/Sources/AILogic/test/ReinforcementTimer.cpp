@@ -4,6 +4,7 @@
 #include "../CommonUnit.h"
 #include "../DBAIConsts.h"
 #include "../Diplomacy.h"
+#include "../KeyBuildingBonusSystem.h"
 #include "../PlayerReinforcement.h"
 #include "../Units.h"
 #include "Common_RTS_AI/AIMap.h"
@@ -17,9 +18,12 @@
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
+#include <limits>
 #include <tuple>
+#include <utility>
 
 #include <gtest/gtest.h>
 
@@ -138,6 +142,7 @@ protected:
 
 	void TearDown() override
 	{
+		theReinfArray.clear();
 		NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
 		logic = nullptr;
 		SetAIMap( nullptr );
@@ -192,6 +197,77 @@ TEST_P( ReinforcementTimer, InitializationAndExplicitGrantsRespectTimerPolicy )
 	controller.Segment();
 	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 6 );
 	EXPECT_FLOAT_EQ( Countdown(), TimerEnabled() ? 4.0f : 19.0f );
+}
+
+TEST_P( ReinforcementTimer, BaseOwnershipUsesSignedMapBonusesForEveryTeammate )
+{
+	// Two teammates on each side and a neutral slot exercise the real ownership handler.
+	map->players.resize( 5 );
+	for ( int i = 0; i < 5; ++i )
+	{
+		map->players[i].nReinforcementCalls = 10;
+		map->players[i].nDiplomacySide = i / 2;
+	}
+	logic->SetNPlayers( 4 );
+	for ( int i = 0; i < 5; ++i )
+	{
+		theDipl.SetParty( i, i / 2 );
+	}
+	CKeyBuildingBonusSystem bonuses;
+	bonuses.InitBonusSystem( map );
+	for ( const auto values : { std::pair<int, int>( 1, -1 ), { 3, -2 }, { 0, 0 }, { -2, 4 }, { 3, -50 } } )
+	{
+		SCOPED_TRACE( testing::Message() << values.first << ", " << values.second );
+		tracker->MissionStart( map, 0 );
+		EXPECT_EQ( tracker->GetOnBaseCaptureReinfPointsGain(), 1 );
+		EXPECT_EQ( tracker->GetOnBaseLostReinfPointsLoss(), -1 );
+		tracker->SetAddReinfsWithTimer( TimerEnabled() );
+		tracker->SetOnBaseCaptureReinfPointsGain( values.first );
+		tracker->SetOnBaseLostReinfPointsLoss( values.second );
+		for ( int i = 0; i < 4; ++i )
+		{
+			tracker->AddPlayer( i );
+			tracker->SetPlayerSide( i, i / 2 );
+		}
+		theReinfArray.InitPlayerReinforcementArray( map, aiConsts );
+		bonuses.ChangeOwnership( 4, 0, 7, true );
+		// Initial placement, same-side transfers and non-base buildings grant nothing.
+		bonuses.ChangeOwnership( 0, 1, 7, false );
+		bonuses.ChangeOwnership( 0, 2, 999, false );
+		for ( int i = 0; i < 5; ++i )
+		{
+			EXPECT_EQ( tracker->GetReinforcementCallsLeft( i ), 10 );
+		}
+		bonuses.ChangeOwnership( 0, 2, 7, false );
+		for ( int i = 0; i < 4; ++i )
+		{
+			EXPECT_EQ( tracker->GetReinforcementCallsLeft( i ),
+			           (std::max)( 0, 10 + ( i < 2 ? values.second : values.first ) ) );
+			EXPECT_EQ( tracker->GetStatistics( i, IScenarioTracker::ESK_REINFORCEMENTS_CALLED ), 0 );
+		}
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 4 ), 10 );
+		// Capturing from neutral applies only the gain, without charging the neutral player.
+		bonuses.ChangeOwnership( 2, 4, 7, true );
+		const int before = tracker->GetReinforcementCallsLeft( 0 );
+		bonuses.ChangeOwnership( 4, 0, 7, false );
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), (std::max)( 0, before + values.first ) );
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 4 ), 10 );
+	}
+}
+
+TEST_P( ReinforcementTimer, AuthoredBonusesSaturateAtIntegerLimits )
+{
+	CPlayerReinforcement controller;
+	controller.InitPlayerReinforcement( 0, map, aiConsts );
+	controller.GiveReinforcementCalls( ( std::numeric_limits<int>::max )(), false );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), ( std::numeric_limits<int>::max )() );
+	controller.GiveReinforcementCalls( 1, false );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), ( std::numeric_limits<int>::max )() );
+	SetSimulationTime( 2001 );
+	controller.Segment();
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), ( std::numeric_limits<int>::max )() );
+	controller.GiveReinforcementCalls( ( std::numeric_limits<int>::min )(), false );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 0 );
 }
 
 TEST_P( ReinforcementTimer, ElapsedTimerAndSaveLoadGrantOnlyWhenEnabled )

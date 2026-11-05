@@ -157,6 +157,8 @@ struct SMultiplayerReplayInfo
 	// Snapshot of the multiplayer map rules used when the recorded mission started.
 	bool bSpawnStartingUnits = true;
 	bool bAddReinfsWithTimer = true;
+	int nOnBaseCaptureReinfPointsGain = 1;
+	int nOnBaseLostReinfPointsLoss = -1;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -205,6 +207,23 @@ struct SMultiplayerReplayInfo
 		{
 			f.Add( 24, &bAddReinfsWithTimer );
 		}
+		// Older recordings used the fixed +1/-1 base ownership bonuses.
+		if ( f.IsReading() && !f.HasChunk( 25 ) )
+		{
+			nOnBaseCaptureReinfPointsGain = 1;
+		}
+		else
+		{
+			f.Add( 25, &nOnBaseCaptureReinfPointsGain );
+		}
+		if ( f.IsReading() && !f.HasChunk( 26 ) )
+		{
+			nOnBaseLostReinfPointsLoss = -1;
+		}
+		else
+		{
+			f.Add( 26, &nOnBaseLostReinfPointsLoss );
+		}
 		return 0;
 	}
 
@@ -248,6 +267,8 @@ struct SMultiplayerReplayInfo
 		bCoopPlayersRecorded = src.bCoopPlayersRecorded;
 		bSpawnStartingUnits = src.bSpawnStartingUnits;
 		bAddReinfsWithTimer = src.bAddReinfsWithTimer;
+		nOnBaseCaptureReinfPointsGain = src.nOnBaseCaptureReinfPointsGain;
+		nOnBaseLostReinfPointsLoss = src.nOnBaseLostReinfPointsLoss;
 		return *this;
 	}
 };

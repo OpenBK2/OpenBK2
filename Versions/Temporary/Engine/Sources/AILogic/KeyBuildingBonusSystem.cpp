@@ -98,7 +98,8 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 			{
 				if ( !bDuringMapLoad )
 				{
-					theReinfArray.GiveReinforcementCalls( i, -1, false );
+					// The loss is already a signed delta in the multiplayer map rules.
+					theReinfArray.GiveReinforcementCalls( i, GetScenarioTracker()->GetOnBaseLostReinfPointsLoss(), false );
 				}
 
 				if ( pos->second.playerBonuses.size() > i )
@@ -122,7 +123,7 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 			{
 				if ( !bDuringMapLoad )
 				{
-					theReinfArray.GiveReinforcementCalls( i, 1, true );
+					theReinfArray.GiveReinforcementCalls( i, GetScenarioTracker()->GetOnBaseCaptureReinfPointsGain(), true );
 				}
 
 				if ( pos->second.playerBonuses.size() > i )

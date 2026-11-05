@@ -26792,6 +26792,76 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>c6010000</Type>
+					<Name>OnBaseCaptureReinfPointsGain</Name>
+					<ChunkID>13</ChunkID>
+					<Description>Reinforcement point change for each eligible teammate when capturing a base. Zero disables the grant.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>13</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>1</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>c6010000</Type>
+					<Name>OnBaseLostReinfPointsLoss</Name>
+					<ChunkID>14</ChunkID>
+					<Description>Signed reinforcement point change when losing a base. Negative removes points; zero disables the loss.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>14</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>-1</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>421665920</TypeID>
 		</Item>

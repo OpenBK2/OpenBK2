@@ -425,6 +425,11 @@ context. Read `git diff` of every touched file before building.
 
 ## Multiplayer reinforcement controls
 
+- Base ownership credits are applied by `CKeyBuildingBonusSystem` through the
+  reinforcement array, separately from the scenario tracker's flag bookkeeping.
+  Their loss values are signed deltas. Keep capture's timer reset when the delta
+  is zero, and preserve the neutral, AI, same-team and map-load exclusions.
+
 - Starting-army placement also activates the first reinforcement entry. Keep the
   eligible starting recipe available, then skip spawning after entry activation;
   returning no recipe would disable later calls on maps without a default entry.

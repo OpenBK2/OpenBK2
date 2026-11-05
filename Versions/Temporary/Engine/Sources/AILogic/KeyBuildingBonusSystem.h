@@ -2,6 +2,8 @@
 
 #include "Stats_B2_M1/DBMapInfo.h"
 
+#include "AILogic_export.h"
+
 namespace NDb
 {
 struct SMapInfo;
@@ -22,9 +24,9 @@ public:
 
 public:
 	// all buildings will notify about ownership change
-	void ChangeOwnership( int nOldPlayer, int nNewPlayer, int nLinkID, bool bDuringMapLoad );
+	AILOGIC_EXPORT void ChangeOwnership( int nOldPlayer, int nNewPlayer, int nLinkID, bool bDuringMapLoad );
 	bool IsStorage( int nLinkID ) const;
-	void InitBonusSystem( const NDb::SMapInfo *pMapInfo );
+	AILOGIC_EXPORT void InitBonusSystem( const NDb::SMapInfo *pMapInfo );
 	bool IsKeyBuilding( int nLinkID ) const;
 
 	void SendUpdates() const;

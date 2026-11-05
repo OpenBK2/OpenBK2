@@ -273,8 +273,12 @@ TEST_F( CoopScenario, OlderTrackerSaveRestoresArmyAndTimedCallDefaultsOnAReusedO
 	ASSERT_NE( restored, nullptr );
 	EXPECT_TRUE( restored->GetSpawnStartingUnits() );
 	EXPECT_TRUE( restored->GetAddReinfsWithTimer() );
+	EXPECT_EQ( restored->GetOnBaseCaptureReinfPointsGain(), 1 );
+	EXPECT_EQ( restored->GetOnBaseLostReinfPointsLoss(), -1 );
 	restored->SetSpawnStartingUnits( false );
 	restored->SetAddReinfsWithTimer( false );
+	restored->SetOnBaseCaptureReinfPointsGain( 0 );
+	restored->SetOnBaseLostReinfPointsLoss( -3 );
 	CMemoryStream stream;
 	{
 		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
@@ -288,6 +292,8 @@ TEST_F( CoopScenario, OlderTrackerSaveRestoresArmyAndTimedCallDefaultsOnAReusedO
 	}
 	EXPECT_TRUE( restored->GetSpawnStartingUnits() );
 	EXPECT_TRUE( restored->GetAddReinfsWithTimer() );
+	EXPECT_EQ( restored->GetOnBaseCaptureReinfPointsGain(), 1 );
+	EXPECT_EQ( restored->GetOnBaseLostReinfPointsLoss(), -1 );
 }
 
 TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
@@ -296,6 +302,8 @@ TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 	tracker->SetScriptOutcome( 1 );
 	tracker->SetSpawnStartingUnits( false );
 	tracker->SetAddReinfsWithTimer( false );
+	tracker->SetOnBaseCaptureReinfPointsGain( 0 );
+	tracker->SetOnBaseLostReinfPointsLoss( -3 );
 	CMemoryStream stream;
 	{
 		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
@@ -312,6 +320,8 @@ TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 	EXPECT_EQ( restored->GetScriptOutcome(), 1 );
 	EXPECT_FALSE( restored->GetSpawnStartingUnits() );
 	EXPECT_FALSE( restored->GetAddReinfsWithTimer() );
+	EXPECT_EQ( restored->GetOnBaseCaptureReinfPointsGain(), 0 );
+	EXPECT_EQ( restored->GetOnBaseLostReinfPointsLoss(), -3 );
 	EXPECT_TRUE( restored->IsPlayerPresent( 3 ) );
 }
 
@@ -749,6 +759,8 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	original.nScriptResult = 2;
 	original.bSpawnStartingUnits = false;
 	original.bAddReinfsWithTimer = false;
+	original.nOnBaseCaptureReinfPointsGain = 3;
+	original.nOnBaseLostReinfPointsLoss = 0;
 	original.slots.resize( 5 );
 	original.slots[0].bPresent = true;
 	original.slots[2].bPresent = true;
@@ -769,12 +781,18 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	EXPECT_EQ( restored.nScriptResult, 2 );
 	EXPECT_FALSE( restored.bSpawnStartingUnits );
 	EXPECT_FALSE( restored.bAddReinfsWithTimer );
+	EXPECT_EQ( restored.nOnBaseCaptureReinfPointsGain, 3 );
+	EXPECT_EQ( restored.nOnBaseLostReinfPointsLoss, 0 );
 	SMultiplayerReplayInfo copied;
 	EXPECT_TRUE( copied.bSpawnStartingUnits );
 	EXPECT_TRUE( copied.bAddReinfsWithTimer );
+	EXPECT_EQ( copied.nOnBaseCaptureReinfPointsGain, 1 );
+	EXPECT_EQ( copied.nOnBaseLostReinfPointsLoss, -1 );
 	copied = restored;
 	EXPECT_FALSE( copied.bSpawnStartingUnits );
 	EXPECT_FALSE( copied.bAddReinfsWithTimer );
+	EXPECT_EQ( copied.nOnBaseCaptureReinfPointsGain, 3 );
+	EXPECT_EQ( copied.nOnBaseLostReinfPointsLoss, 0 );
 	ASSERT_EQ( restored.slots.size(), 5 );
 	EXPECT_TRUE( restored.slots[2].bPresent );
 	EXPECT_FALSE( restored.slots[1].bPresent );
@@ -791,9 +809,13 @@ TEST( CoopReplay, MissingOutcomeAndArmyPolicyChunksKeepLegacyDefaults )
 	SMultiplayerReplayInfo restored;
 	EXPECT_TRUE( restored.bSpawnStartingUnits );
 	EXPECT_TRUE( restored.bAddReinfsWithTimer );
+	EXPECT_EQ( restored.nOnBaseCaptureReinfPointsGain, 1 );
+	EXPECT_EQ( restored.nOnBaseLostReinfPointsLoss, -1 );
 	restored.nScriptResult = 2;
 	restored.bSpawnStartingUnits = false;
 	restored.bAddReinfsWithTimer = false;
+	restored.nOnBaseCaptureReinfPointsGain = 3;
+	restored.nOnBaseLostReinfPointsLoss = 0;
 	stream.Seek( 0 );
 	{
 		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
@@ -803,6 +825,8 @@ TEST( CoopReplay, MissingOutcomeAndArmyPolicyChunksKeepLegacyDefaults )
 	EXPECT_EQ( restored.nScriptResult, 0 );
 	EXPECT_TRUE( restored.bSpawnStartingUnits );
 	EXPECT_TRUE( restored.bAddReinfsWithTimer );
+	EXPECT_EQ( restored.nOnBaseCaptureReinfPointsGain, 1 );
+	EXPECT_EQ( restored.nOnBaseLostReinfPointsLoss, -1 );
 }
 
 struct SReplayCompletionState
@@ -832,10 +856,14 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	NSingleton::RegisterSingleton( tracker, IScenarioTracker::tidTypeID );
 	tracker->SetSpawnStartingUnits( false );
 	tracker->SetAddReinfsWithTimer( false );
+	tracker->SetOnBaseCaptureReinfPointsGain( 3 );
+	tracker->SetOnBaseLostReinfPointsLoss( 0 );
 	history->StartNewGame( map );
 	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
 	tracker->SetSpawnStartingUnits( true );
 	tracker->SetAddReinfsWithTimer( true );
+	tracker->SetOnBaseCaptureReinfPointsGain( 1 );
+	tracker->SetOnBaseLostReinfPointsLoss( -1 );
 	SetBotName( 1, u"Renamed after start" );
 	map->players[1].vMPStartPos = CVec2( 100, 200 );
 	map->players[3].ePlayerType = NDb::HUMAN;
@@ -858,6 +886,8 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	const auto recorded = readHistoryInfo();
 	EXPECT_FALSE( recorded.bSpawnStartingUnits );
 	EXPECT_FALSE( recorded.bAddReinfsWithTimer );
+	EXPECT_EQ( recorded.nOnBaseCaptureReinfPointsGain, 3 );
+	EXPECT_EQ( recorded.nOnBaseLostReinfPointsLoss, 0 );
 	EXPECT_TRUE( recorded.bCoopPlayersRecorded );
 	const auto players = NGameX::GetCoopReplayPlayers( recorded );
 	ASSERT_EQ( players.size(), 2 );
@@ -874,6 +904,8 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	const auto classic = readHistoryInfo();
 	EXPECT_TRUE( classic.bSpawnStartingUnits );
 	EXPECT_TRUE( classic.bAddReinfsWithTimer );
+	EXPECT_EQ( classic.nOnBaseCaptureReinfPointsGain, 1 );
+	EXPECT_EQ( classic.nOnBaseLostReinfPointsLoss, -1 );
 	EXPECT_FALSE( classic.bCoopPlayersRecorded );
 	EXPECT_TRUE( classic.coopPlayers.empty() );
 }

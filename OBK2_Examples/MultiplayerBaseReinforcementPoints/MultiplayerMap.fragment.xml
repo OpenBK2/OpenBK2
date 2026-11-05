@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Merge these fields into an existing MultiplayerMap.xdb. -->
+<MultiplayerMap>
+	<OnBaseCaptureReinfPointsGain>3</OnBaseCaptureReinfPointsGain>
+	<OnBaseLostReinfPointsLoss>-2</OnBaseLostReinfPointsLoss>
+</MultiplayerMap>
