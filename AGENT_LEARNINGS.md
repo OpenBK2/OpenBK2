@@ -449,3 +449,19 @@ context. Read `git diff` of every touched file before building.
 - A GUI test failed when it passed a button label to `wxWindow::FindWindow`.
   That overload searches window names. Set an explicit name or inspect child
   buttons' `GetLabel()` values when locating controls in tests.
+
+## Persistent objective notifications
+
+- BinSaver supports `det_map`, not `std::map`; an unsupported container can select
+  its raw-byte fallback. Check the serializer overloads before adding saved state.
+  Clear new maps before reading an optional chunk so older saves cannot keep stale
+  entries when loading into an existing object.
+- `OBJECT_BASIC_METHODS` switches access to private even in a struct. A new feedback
+  payload initially failed to compile because its text member followed that macro;
+  put `public:` before fields used by the producer and consumer.
+- Persistent notifications must bypass timeout, capacity eviction, click dismissal
+  and generic feedback cleanup. Change the existing text control for timer ticks
+  rather than recreating the event view, which also plays the event sound.
+- Constructing a bare AI does not initialize the updater's client transformers.
+  A queue test first returned generic action updates; restoring the real updater
+  through BinSaver initializes the registry and tests pending payload persistence.

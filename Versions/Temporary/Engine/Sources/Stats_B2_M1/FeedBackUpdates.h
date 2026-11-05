@@ -2,6 +2,8 @@
 
 #include "AIUpdates.h"
 
+#include <string>
+
 enum EFeedBack
 {
 	EFB_WIN = 0,
@@ -70,11 +72,27 @@ enum EFeedBack
 	EFB_ENGINEER_WORK_FINISHED,
 	EFB_WORK_TERMINATED, // nParam == makelong( x y )
 
-	EFB_GAIN_EXP,                   // reinforcement gain some XP
-	EFB_RIVER_POINT,                // nParam == makelong( x y )
-	EFB_LOCAL_PLAYER_UNITS_PRESENT, // nParam == bPresent
-	EFB_OBJECTIVE_MOVED,            // units list is passed
-	EFB_UNITS_GIVEN,                // nParam == makelong( x y )
+	EFB_GAIN_EXP,                      // reinforcement gain some XP
+	EFB_RIVER_POINT,                   // nParam == makelong( x y )
+	EFB_LOCAL_PLAYER_UNITS_PRESENT,    // nParam == bPresent
+	EFB_OBJECTIVE_MOVED,               // units list is passed
+	EFB_UNITS_GIVEN,                   // nParam == makelong( x y )
+	EFB_KEEP_OBJECTIVE_NOTIFIED,       // nParam == (objective index << 8) | keep flag
+	EFB_UPDATE_OBJECTIVE_NOTIFICATION, // nParam == objective index, pParam carries the UTF-8 postfix
+};
+
+// Notification text travels through the normal client update queue, without changing simulation state.
+struct SFeedBackObjectiveNotification : public CObjectBase
+{
+	OBJECT_BASIC_METHODS( SFeedBackObjectiveNotification )
+public:
+	std::string szPostfix;
+
+	int operator&( IBinSaver &saver ) override
+	{
+		saver.Add( 2, &szPostfix );
+		return 0;
+	}
 };
 
 struct SFeedBackObjectiveState : public CObjectBase

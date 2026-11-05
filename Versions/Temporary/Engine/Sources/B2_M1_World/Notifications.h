@@ -3,6 +3,7 @@
 // Defensive member defaults; explicit constructor values still take precedence.
 
 #include <cstdint>
+#include <string>
 
 namespace NTimer
 {
@@ -103,6 +104,11 @@ struct IVisualNotifications : public CObjectBase
 	virtual void OnEvent( const SEventParams &params ) {}
 
 	virtual void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID ) {}
+
+	// Persistent objective entries are removed only by their matching script call.
+	virtual void KeepObjectiveNotified( int nID, bool bKeep ) {}
+
+	virtual void UpdateObjectiveNotification( int nID, const std::string &szPostfix ) {}
 
 	virtual void PlaceMarker( const CVec2 &vPos ) {}
 };

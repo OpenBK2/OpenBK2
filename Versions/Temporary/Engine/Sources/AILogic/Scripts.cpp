@@ -329,6 +329,8 @@ SRegFunction CScripts::pRegList[] = {
 	{ "Trace", CScripts::Trace },
 	{ "DisplayTrace", CScripts::DisplayTrace },
 	{ "ObjectiveChanged", CScripts::ObjectiveChanged },
+	{ "KeepObjectiveNotified", CScripts::KeepObjectiveNotified },
+	{ "UpdateObjectiveNotification", CScripts::UpdateObjectiveNotification },
 	{ "GetNAmmo", CScripts::GetNAmmo },
 
 	{ "GetPartyOfUnits", CScripts::GetPartyOfUnits },
@@ -3150,6 +3152,39 @@ int CScripts::ObjectiveChanged( struct lua_State *state )
 
 	updater.AddUpdate( EFB_OBJECTIVE_CHANGED, ( nObj << 8 ) | nValue, 0 );
 
+	return 0;
+}
+
+int CScripts::KeepObjectiveNotified( struct lua_State *state )
+{
+	Script script( state );
+	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "KeepObjectiveNotified: expected an objective index", script );
+	CHECK_ERROR( script.GetObject( 2 ).IsNumber(), "KeepObjectiveNotified: expected 0 or 1", script );
+	const double fObjective = script.GetObject( 1 ).GetNumber();
+	const double fKeep = script.GetObject( 2 ).GetNumber();
+	// Validate before conversion so fractions, NaN and out-of-range values cannot become another objective.
+	CHECK_ERROR( fObjective >= 0 && fObjective < 255 && std::floor( fObjective ) == fObjective && pMapInfo &&
+	                 fObjective < pMapInfo->objectives.size() && pMapInfo->objectives[int( fObjective )],
+	             "KeepObjectiveNotified: invalid objective index",
+	             script );
+	CHECK_ERROR( fKeep == 0 || fKeep == 1, "KeepObjectiveNotified: expected 0 or 1", script );
+	updater.AddUpdate( EFB_KEEP_OBJECTIVE_NOTIFIED, ( int( fObjective ) << 8 ) | int( fKeep ), nullptr );
+	return 0;
+}
+
+int CScripts::UpdateObjectiveNotification( struct lua_State *state )
+{
+	Script script( state );
+	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "UpdateObjectiveNotification: expected an objective index", script );
+	CHECK_ERROR( script.GetObject( 2 ).IsString(), "UpdateObjectiveNotification: expected a postfix string", script );
+	const double fObjective = script.GetObject( 1 ).GetNumber();
+	CHECK_ERROR( fObjective >= 0 && fObjective < 255 && std::floor( fObjective ) == fObjective && pMapInfo &&
+	                 fObjective < pMapInfo->objectives.size() && pMapInfo->objectives[int( fObjective )],
+	             "UpdateObjectiveNotification: invalid objective index",
+	             script );
+	CPtr<SFeedBackObjectiveNotification> pPostfix = new SFeedBackObjectiveNotification;
+	pPostfix->szPostfix = script.GetObject( 2 ).GetString();
+	updater.AddUpdate( EFB_UPDATE_OBJECTIVE_NOTIFICATION, int( fObjective ), pPostfix );
 	return 0;
 }
 

@@ -54,6 +54,7 @@ const std::wstring &GetMessagePart( const NDb::SUIConstsB2 *pConsts, const std::
 	}
 	// These are backups for old game data, never the primary localization source.
 	static const std::pair<const wchar_t *, std::wstring> defaults[] = {
+		{ L"OBJECTIVE_NOTIFICATION_PREFIX", L"Objective: " },
 		{ L"MP_CHAT_TEAM_SUFFIX", L" (Team)" },
 		{ L"MP_GAME_TYPE_CLASSIC", L"CLASSIC" },
 		{ L"MP_GAME_TYPE_COOP", L"COOP" },
