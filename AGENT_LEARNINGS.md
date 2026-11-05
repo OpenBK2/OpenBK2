@@ -431,3 +431,16 @@ context. Read `git diff` of every touched file before building.
 - `NTimer::STime` is unsigned. A test deadline of -1 is in the future, not already
   elapsed. Advance the real serialized simulation clock instead of relying on a
   signed-time assumption when testing reinforcement timers.
+
+## Editor reinforcement defaults
+
+- The stock common deploy template is
+  `Reinforcements/DeployTemplate/Game/Common_DeployTemplate.xdb` in `data.pak`.
+  Store the database path in private editor preferences, not the installation path.
+- `CObjectBaseController::AddInsertOperation` and `AddChangeOperation` apply their
+  changes immediately. Initialize a new point through the same controller before
+  `Redo(false, true, ...)` notifies views, so undo/redo retains its template and
+  coordinates instead of re-reading the user's current defaults.
+- A GUI test failed when it passed a button label to `wxWindow::FindWindow`.
+  That overload searches window names. Set an explicit name or inspect child
+  buttons' `GetLabel()` values when locating controls in tests.

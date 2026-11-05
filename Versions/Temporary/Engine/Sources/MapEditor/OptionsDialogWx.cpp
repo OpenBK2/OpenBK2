@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/DefaultsOptions.h"
 #include "MapEditorLib/IconRenderingOptions.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "OptionsDialogWx.h"
@@ -12,6 +14,7 @@
 #include <wx/simplebook.h>
 #include <wx/spinctrl.h>
 #include <wx/statline.h>
+#include <wx/textctrl.h>
 
 namespace
 {
@@ -20,6 +23,7 @@ class COptionsDialog : public wxDialog
 	wxSpinCtrl *pWidth;
 	wxSpinCtrl *pHeight;
 	wxCheckBox *pSeparatePak;
+	wxTextCtrl *pDeployTemplate;
 
 	bool Apply()
 	{
@@ -44,6 +48,13 @@ class COptionsDialog : public wxDialog
 			return false;
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_ICON_RENDERING, ID_ICON_SETTINGS_CHANGED, 0 );
+		NEditorDefaults::SOptions defaults;
+		defaults.szDeployTemplate = pDeployTemplate->GetValue().ToStdString( wxConvUTF8 );
+		if ( !NEditorDefaults::SaveOptions( defaults ) )
+		{
+			wxMessageBox( "Could not save the default settings.", "Options", wxOK | wxICON_ERROR, this );
+			return false;
+		}
 		return true;
 	}
 
@@ -57,6 +68,7 @@ public:
 		auto *pBody = new wxBoxSizer( wxHORIZONTAL );
 		auto *pTabs = NWx::Child<wxListBox>( this, wxID_ANY );
 		pTabs->Append( "Icon Rendering" );
+		pTabs->Append( "Defaults" );
 		pTabs->SetSelection( 0 );
 		pTabs->SetMinSize( FromDIP( wxSize( 155, -1 ) ) );
 		auto *pBook = NWx::Child<wxSimplebook>( this, wxID_ANY );
@@ -114,6 +126,56 @@ public:
 											 pRender->Enable();
 										 }
 									 } );
+
+		auto *pDefaultsPage = NWx::Child<wxPanel>( pBook );
+		pBook->AddPage( pDefaultsPage, "Defaults" );
+		auto *pDefaultsSizer = new wxBoxSizer( wxVERTICAL );
+		auto *pDefaultsTitle = NWx::Child<wxStaticText>( pDefaultsPage, wxID_ANY, "Defaults" );
+		pDefaultsTitle->SetFont( pDefaultsTitle->GetFont().Bold() );
+		pDefaultsSizer->Add( pDefaultsTitle, 0, wxBOTTOM, FromDIP( 18 ) );
+		pDefaultsSizer->Add( NWx::Child<wxStaticText>( pDefaultsPage, wxID_ANY, "Reinforcement point deploy template" ),
+		                     0,
+		                     wxBOTTOM,
+		                     FromDIP( 8 ) );
+		const auto defaults = NEditorDefaults::LoadOptions();
+		pDeployTemplate = NWx::Child<wxTextCtrl>( pDefaultsPage,
+		                                          wxID_ANY,
+		                                          wxString::FromUTF8( defaults.szDeployTemplate ),
+		                                          wxDefaultPosition,
+		                                          wxDefaultSize,
+		                                          wxTE_READONLY );
+		pDeployTemplate->SetName( "DefaultDeployTemplate" );
+		pDeployTemplate->SetToolTip( wxString::FromUTF8( defaults.szDeployTemplate ) );
+		pDefaultsSizer->Add( pDeployTemplate, 0, wxEXPAND | wxBOTTOM, FromDIP( 10 ) );
+		auto *pTemplateButtons = new wxBoxSizer( wxHORIZONTAL );
+		auto *pBrowse = NWx::Child<wxButton>( pDefaultsPage, wxID_ANY, "Browse..." );
+		auto *pReset = NWx::Child<wxButton>( pDefaultsPage, wxID_ANY, "Use Common Template" );
+		pTemplateButtons->Add( pBrowse, 0, wxRIGHT, FromDIP( 10 ) );
+		pTemplateButtons->Add( pReset );
+		pDefaultsSizer->Add( pTemplateButtons, 0, wxBOTTOM, FromDIP( 18 ) );
+		pDefaultsSizer->Add( NWx::Child<wxStaticText>(
+				pDefaultsPage,
+				wxID_ANY,
+				"Assigned automatically to new reinforcement points.\nExisting points keep their templates." ) );
+		pDefaultsPage->SetSizer( pDefaultsSizer );
+		pBrowse->Bind( wxEVT_BUTTON,
+		               [this]( wxCommandEvent & )
+		               {
+										 CDBID dbid;
+										 std::string szType = "DeployTemplate";
+										 // Restrict the picker to deploy templates and disallow an empty selection.
+										 if ( Singleton<IMainFrameContainer>()->Get()->BrowseForObject( &dbid, &szType, false, false ) )
+										 {
+											 pDeployTemplate->SetValue( wxString::FromUTF8( dbid.ToString() ) );
+											 pDeployTemplate->SetToolTip( pDeployTemplate->GetValue() );
+										 }
+									 } );
+		pReset->Bind( wxEVT_BUTTON,
+		              [this]( wxCommandEvent & )
+		              {
+										pDeployTemplate->SetValue( wxString::FromUTF8( NEditorDefaults::COMMON_DEPLOY_TEMPLATE ) );
+										pDeployTemplate->SetToolTip( pDeployTemplate->GetValue() );
+									} );
 
 		// A proportional sidebar leaves room for more categories without
 		// squeezing the controls when the dialog is resized or DPI changes.
