@@ -91,6 +91,21 @@ struct IAIScenarioTracker : public CObjectBase
 		return true;
 	}
 
+	// Signed base ownership bonuses default to the original multiplayer rules.
+	virtual void SetOnBaseCaptureReinfPointsGain( int nPoints ) {}
+
+	virtual int GetOnBaseCaptureReinfPointsGain() const
+	{
+		return 1;
+	}
+
+	virtual void SetOnBaseLostReinfPointsLoss( int nPoints ) {}
+
+	virtual int GetOnBaseLostReinfPointsLoss() const
+	{
+		return -1;
+	}
+
 	// reinforcements
 	virtual const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const = 0;
 	virtual int GetReinforcementCallsLeft( int nPlayer ) = 0;

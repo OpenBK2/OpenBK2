@@ -14,7 +14,9 @@
 #include "Stats_B2_M1/ReinfUpdates.h"
 #include "System/RandomGen.h"
 
+#include <algorithm>
 #include <cstdint>
+#include <limits>
 
 #include <fmt/format.h>
 
@@ -931,15 +933,15 @@ void CPlayerReinforcement::GiveReinforcementCalls( int nCalls, bool bResetCounte
 		return;
 	}
 
-	int nOldCalls = pScenarioTracker->GetReinforcementCallsLeft( nPlayer );
-
 	if ( nCalls > 0 )
 	{
 		pScenarioTracker->IncreaseReinforcementCallsLeft( nPlayer, nCalls );
 	}
 	else if ( nCalls < 0 )
 	{
-		pScenarioTracker->DecreaseReinforcementCallsLeft( nPlayer, -nCalls );
+		// INT_MIN cannot be negated; INT_MAX already removes every available credit.
+		const int nMaxCalls = ( std::numeric_limits<int>::max )();
+		pScenarioTracker->DecreaseReinforcementCallsLeft( nPlayer, -(std::max)( nCalls, -nMaxCalls ) );
 	}
 
 	if ( bResetCounter && pScenarioTracker->GetAddReinfsWithTimer() )

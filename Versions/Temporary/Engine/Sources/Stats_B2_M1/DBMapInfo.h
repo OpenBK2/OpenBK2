@@ -825,6 +825,8 @@ namespace NDb
 		std::vector< int > allowedNations;
 		bool bSpawnStartingUnits;
 		bool bAddReinfsWithTimer;
+		int nOnBaseCaptureReinfPointsGain;
+		int nOnBaseLostReinfPointsLoss;
 
 		SMultiplayerMap() :
 			__dwCheckSum( 0 ),
@@ -834,7 +836,9 @@ namespace NDb
 			eGameType( CLASSIC ),
 			nForcedTechLevel( -1 ),
 			bSpawnStartingUnits( true ),
-			bAddReinfsWithTimer( true )
+			bAddReinfsWithTimer( true ),
+			nOnBaseCaptureReinfPointsGain( 1 ),
+			nOnBaseLostReinfPointsLoss( -1 )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

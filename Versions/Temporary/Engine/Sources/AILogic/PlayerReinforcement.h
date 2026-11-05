@@ -176,7 +176,7 @@ class CPlayerReinforcementArray : public std::vector<CPlayerReinforcement>
 {
 public:
 	void Segment();
-	void InitPlayerReinforcementArray( const NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *pConsts );
+	AILOGIC_EXPORT void InitPlayerReinforcementArray( const NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *pConsts );
 	void SetRecycleCoeff( const int nPlayer, const float fNewCoeff ); // -1 == doesn't recycle
 	int operator&( IBinSaver &saver );
 
@@ -185,3 +185,5 @@ public:
 	                             const int nCalls,
 	                             const bool bResetCounter ); // Adjust calls number (add/subtract) externally
 };
+
+extern AILOGIC_EXPORT CPlayerReinforcementArray theReinfArray;
