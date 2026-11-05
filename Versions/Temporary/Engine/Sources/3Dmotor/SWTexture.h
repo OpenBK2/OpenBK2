@@ -1,6 +1,7 @@
 #pragma once
 #include "GPixelFormat.h"
 #include "Misc/2Darray.h"
+#include "Misc/Geom.h"
 #include "System/GResource.h"
 
 namespace NGfx
@@ -28,6 +29,8 @@ class CSWTextureData : public CObjectBase
 public:
 	std::vector<CArray2D<NGfx::SPixel8888>> mips;
 	std::vector<CArray2D<SBumpPixel>> bumpMips;
+	CVec2 vTexelScale = CVec2( 1, 1 );
+	bool bFilterUI = false;
 
 	void PrepareBump();
 

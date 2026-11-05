@@ -415,6 +415,10 @@ void C2DQuadsRenderer::Flush()
 	}
 	ASSERT( pPrevContainer || ( dm & QRM_RENDER_MASK ) == QRM_SOLID );
 	rc.Use();
+	// Large UI images have their own mip chain; interpolate between levels
+	// when their on-screen size lies between two reductions.
+	CDynamicCast<I2DBuffer> textureBuffer( pPrevContainer );
+	const EFilterMode filter = textureBuffer && textureBuffer->GetNumMipLevels() > 1 ? FILTER_BEST : FILTER_LINEAR;
 	if ( IsTnLDevice() )
 	{
 		switch ( dm & QRM_RENDER_MASK )
@@ -423,14 +427,14 @@ void C2DQuadsRenderer::Flush()
 			{
 				rc.SetPixelShader( psDiffuseTexture );
 				rc.SetVertexShader( NGfx::TNLVS_NONE );
-				rc.SetTexture( 0, pPrevContainer, FILTER_LINEAR );
+				rc.SetTexture( 0, pPrevContainer, filter );
 			}
 			break;
 			case QRM_NOCOLOR:
 			{
 				rc.SetPixelShader( psTextureCopyAlpha );
 				rc.SetVertexShader( NGfx::TNLVS_NONE );
-				rc.SetTexture( 0, pPrevContainer, FILTER_LINEAR );
+				rc.SetTexture( 0, pPrevContainer, filter );
 			}
 			break;
 			case QRM_SOLID:
@@ -453,7 +457,7 @@ void C2DQuadsRenderer::Flush()
 				rc.SetPixelShader( psDiffuseTexture );
 				rc.SetVertexShader( vsRender2D );
 				rc.SetVSConst( 16, CVec4( fScaleU, fScaleV, 0, 0 ) );
-				rc.SetTexture( 0, pPrevContainer, FILTER_LINEAR );
+				rc.SetTexture( 0, pPrevContainer, filter );
 			}
 			break;
 			case QRM_NOCOLOR:
@@ -462,7 +466,7 @@ void C2DQuadsRenderer::Flush()
 				//rc.SetVertexShader( vsTextureScale );
 				rc.SetVertexShader( vsRender2D ); //TextureScale );
 				rc.SetVSConst( 16, CVec4( fScaleU, fScaleV, 0, 0 ) );
-				rc.SetTexture( 0, pPrevContainer, FILTER_LINEAR );
+				rc.SetTexture( 0, pPrevContainer, filter );
 			}
 			break;
 			case QRM_SOLID:

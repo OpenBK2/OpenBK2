@@ -169,6 +169,196 @@ struct CZipFile::SZipFileHeader
 
 #pragma pack()
 
+// Entry names.
+//
+// Narrow strings are UTF-8 throughout the engine, and the VFS hands names to
+// std::filesystem::u8path, which throws on bytes that are not UTF-8. A zip says
+// its names are UTF-8 with bit 11 of the flags; without it the format's default
+// is code page 437, the IBM PC's, which is what the zip tools of the game's day
+// wrote. MOD-18's Daten.pak is such an archive: "38_cm_Sturmm\x94rser" is
+// "Sturmmoerser" with a CP437 o-umlaut, and reading it ended the process. Such a
+// name is converted here, once, so everything past the reader sees UTF-8 and the
+// name matches the UTF-8 hrefs in the records that point at it.
+//
+// Many writers put UTF-8 names in without setting the flag, so a name that is
+// valid UTF-8 is taken as it is; CP437 text other than plain ASCII is very
+// unlikely to happen to be valid UTF-8 too. An Info-ZIP Unicode Path extra field
+// (0x7075), which some writers add beside a legacy name, is preferred when its
+// checksum shows it belongs to this name.
+namespace
+{
+
+const uint16_t ZIP_FLAG_UTF8 = 0x0800;
+const uint16_t ZIP_EXTRA_UNICODE_PATH = 0x7075;
+
+// The upper half of code page 437 as Unicode code points; the lower half is ASCII.
+// Kept as a grid of 8 a row, in byte order from 0x80, so a byte can be found by eye.
+// clang-format off
+const uint16_t CP437_HIGH[128] = {
+	0x00C7, 0x00FC, 0x00E9, 0x00E2, 0x00E4, 0x00E0, 0x00E5, 0x00E7,
+	0x00EA, 0x00EB, 0x00E8, 0x00EF, 0x00EE, 0x00EC, 0x00C4, 0x00C5,
+	0x00C9, 0x00E6, 0x00C6, 0x00F4, 0x00F6, 0x00F2, 0x00FB, 0x00F9,
+	0x00FF, 0x00D6, 0x00DC, 0x00A2, 0x00A3, 0x00A5, 0x20A7, 0x0192,
+	0x00E1, 0x00ED, 0x00F3, 0x00FA, 0x00F1, 0x00D1, 0x00AA, 0x00BA,
+	0x00BF, 0x2310, 0x00AC, 0x00BD, 0x00BC, 0x00A1, 0x00AB, 0x00BB,
+	0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x2561, 0x2562, 0x2556,
+	0x2555, 0x2563, 0x2551, 0x2557, 0x255D, 0x255C, 0x255B, 0x2510,
+	0x2514, 0x2534, 0x252C, 0x251C, 0x2500, 0x253C, 0x255E, 0x255F,
+	0x255A, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550, 0x256C, 0x2567,
+	0x2568, 0x2564, 0x2565, 0x2559, 0x2558, 0x2552, 0x2553, 0x256B,
+	0x256A, 0x2518, 0x250C, 0x2588, 0x2584, 0x258C, 0x2590, 0x2580,
+	0x03B1, 0x00DF, 0x0393, 0x03C0, 0x03A3, 0x03C3, 0x00B5, 0x03C4,
+	0x03A6, 0x0398, 0x03A9, 0x03B4, 0x221E, 0x03C6, 0x03B5, 0x2229,
+	0x2261, 0x00B1, 0x2265, 0x2264, 0x2320, 0x2321, 0x00F7, 0x2248,
+	0x00B0, 0x2219, 0x00B7, 0x221A, 0x207F, 0x00B2, 0x25A0, 0x00A0,
+};
+// clang-format on
+
+// Strict UTF-8: shortest forms only, no surrogates, nothing above U+10FFFF,
+// the same rules MSVC's conversion behind u8path applies.
+bool IsValidUTF8( const std::string &szText )
+{
+	const size_t nSize = szText.size();
+	size_t i = 0;
+	while ( i < nSize )
+	{
+		const uint8_t c = szText[i];
+		int nTail = 0;
+		uint32_t nCode = 0;
+		uint32_t nMin = 0;
+		if ( c < 0x80 )
+		{
+			++i;
+			continue;
+		}
+		else if ( ( c & 0xE0 ) == 0xC0 )
+		{
+			nTail = 1;
+			nCode = c & 0x1F;
+			nMin = 0x80;
+		}
+		else if ( ( c & 0xF0 ) == 0xE0 )
+		{
+			nTail = 2;
+			nCode = c & 0x0F;
+			nMin = 0x800;
+		}
+		else if ( ( c & 0xF8 ) == 0xF0 )
+		{
+			nTail = 3;
+			nCode = c & 0x07;
+			nMin = 0x10000;
+		}
+		else
+		{
+			return false;
+		}
+		// the continuation bytes must all be there
+		if ( i + nTail >= nSize )
+		{
+			return false;
+		}
+		for ( int k = 1; k <= nTail; ++k )
+		{
+			const uint8_t t = szText[i + k];
+			if ( ( t & 0xC0 ) != 0x80 )
+			{
+				return false;
+			}
+			nCode = ( nCode << 6 ) | ( t & 0x3F );
+		}
+		if ( nCode < nMin || nCode > 0x10FFFF || ( nCode >= 0xD800 && nCode <= 0xDFFF ) )
+		{
+			return false;
+		}
+		i += nTail + 1;
+	}
+	return true;
+}
+
+void AppendUTF8( std::string *pRes, const uint32_t nCode )
+{
+	if ( nCode < 0x80 )
+	{
+		pRes->push_back( char( nCode ) );
+	}
+	else if ( nCode < 0x800 )
+	{
+		pRes->push_back( char( 0xC0 | ( nCode >> 6 ) ) );
+		pRes->push_back( char( 0x80 | ( nCode & 0x3F ) ) );
+	}
+	else
+	{
+		// CP437 reaches no further than the Basic Multilingual Plane
+		pRes->push_back( char( 0xE0 | ( nCode >> 12 ) ) );
+		pRes->push_back( char( 0x80 | ( ( nCode >> 6 ) & 0x3F ) ) );
+		pRes->push_back( char( 0x80 | ( nCode & 0x3F ) ) );
+	}
+}
+
+std::string CP437ToUTF8( const std::string &szText )
+{
+	std::string szRes;
+	szRes.reserve( szText.size() * 2 );
+	for ( const char c : szText )
+	{
+		const uint8_t b = c;
+		AppendUTF8( &szRes, b < 0x80 ? b : CP437_HIGH[b - 0x80] );
+	}
+	return szRes;
+}
+
+// The UTF-8 name an Info-ZIP Unicode Path extra field carries for szRawName,
+// or an empty string when there is no such field or it is not for this name:
+// the field holds the CRC-32 of the legacy name it replaces, so a tool that
+// renamed the entry without updating the field is caught.
+std::string GetUnicodePathField( const char *pExtra, const int nExtraLen, const std::string &szRawName )
+{
+	int nPos = 0;
+	while ( nPos + 4 <= nExtraLen )
+	{
+		const uint8_t *p = reinterpret_cast<const uint8_t *>( pExtra + nPos );
+		const uint16_t wID = p[0] | ( p[1] << 8 );
+		const uint16_t wSize = p[2] | ( p[3] << 8 );
+		if ( nPos + 4 + wSize > nExtraLen )
+		{
+			break;
+		}
+		// version (1 byte), CRC-32 of the legacy name (4 bytes), then the UTF-8 name
+		if ( wID == ZIP_EXTRA_UNICODE_PATH && wSize > 5 && p[4] == 1 )
+		{
+			const uint32_t dwCRC = p[5] | ( p[6] << 8 ) | ( p[7] << 16 ) | ( uint32_t( p[8] ) << 24 );
+			const uint32_t dwNameCRC =
+					crc32( 0, reinterpret_cast<const Bytef *>( szRawName.data() ), static_cast<uInt>( szRawName.size() ) );
+			std::string szName( reinterpret_cast<const char *>( p + 9 ), wSize - 5 );
+			if ( dwCRC == dwNameCRC && IsValidUTF8( szName ) )
+			{
+				return szName;
+			}
+		}
+		nPos += 4 + wSize;
+	}
+	return std::string();
+}
+
+} // namespace
+
+std::string CZipFile::DecodeEntryName(
+		const char *pszRawName, const int nNameLen, const uint16_t wFlags, const char *pExtra, const int nExtraLen )
+{
+	const std::string szRawName( pszRawName, nNameLen );
+	if ( ( wFlags & ZIP_FLAG_UTF8 ) != 0 || IsValidUTF8( szRawName ) )
+	{
+		return szRawName;
+	}
+	const std::string szUnicode = GetUnicodePathField( pExtra, nExtraLen, szRawName );
+	if ( !szUnicode.empty() )
+	{
+		return szUnicode;
+	}
+	return CP437ToUTF8( szRawName );
+}
+
 void CZipFile::SFileHeader::Init( const SZipFileHeader &hdr )
 {
 	dwModDateTime = uint32_t( ( hdr.wModDate ) << 16 ) | uint32_t( hdr.wModTime );
@@ -176,9 +366,11 @@ void CZipFile::SFileHeader::Init( const SZipFileHeader &hdr )
 	dwUSize = hdr.dwUSize;
 	wExtAttr = hdr.wExtAttr;
 	dwHdrOffset = hdr.dwHdrOffset;
-	pszFileName = new char[hdr.wFileNameLen + 1];
-	memcpy( (void *)pszFileName, hdr.GetName(), hdr.wFileNameLen );
-	( (char *)pszFileName )[hdr.wFileNameLen] = 0;
+	// UTF-8 whatever the archive used, see DecodeEntryName
+	const std::string szName =
+			DecodeEntryName( hdr.GetName(), hdr.wFileNameLen, hdr.flag, hdr.GetExtra(), hdr.wExtraLen );
+	pszFileName = new char[szName.size() + 1];
+	memcpy( (void *)pszFileName, szName.c_str(), szName.size() + 1 );
 }
 
 CZipFile::CZipFile( const char *pszName )

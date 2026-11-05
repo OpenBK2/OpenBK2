@@ -86,6 +86,9 @@
 // Shared File menu actions for local editor data.
 #define ID_FILE_CLEAR_ICON_CACHE 924
 #define ID_FILE_OPEN_EDITOR_FOLDER 925
+#define ID_FILE_OPTIONS 926
+#define ID_ICON_RENDER_ALL 927
+#define ID_ICON_SETTINGS_CHANGED 928
 
 #define ID_HELP_CONTENTS 930
 #define ID_HELP_ABOUT 931

@@ -79,6 +79,7 @@ public:
 
 	// Icons creations
 	void CreateIcon();
+	void ReRenderAllMechUnits();
 	void RestoreCameraParametersFromStats();
 
 	// Targeting for creating icons shots

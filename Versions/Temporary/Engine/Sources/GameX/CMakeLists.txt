@@ -114,6 +114,7 @@ set(SOURCES
     SuperWeapon.cpp
     UIElementsHelper.cpp
     UnitFullInfoHelper.cpp
+    UnitIconCache.cpp
     Utils.cpp
     WorldClient.cpp
     WorldClientActions.cpp

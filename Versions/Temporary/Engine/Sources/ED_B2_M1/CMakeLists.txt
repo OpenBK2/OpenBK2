@@ -81,6 +81,8 @@ set(SOURCES
     HeightViewV3Wx.cpp
     HPObjectRPGStatsExporter.cpp
     IconsCreation.cpp
+    MechIconRenderer.cpp
+    MechIconPak.cpp
     InfantryRPGStatsBuilder.cpp
     LakeState.cpp
     LightExporter.cpp

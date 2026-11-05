@@ -37,6 +37,7 @@ set(SOURCES
     ResourceMenus.cpp
     ResourceStrings.cpp
     OpenModViewWx.cpp
+    OptionsDialogWx.cpp
     PC_BaseDialog.cpp
     ProgressViewWx.cpp
     BuildDataView.cpp

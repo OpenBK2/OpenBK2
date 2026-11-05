@@ -2328,3 +2328,33 @@ D3DRS_ALPHAFUNC D3DCMP_GREATEREQUAL
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // } G5 Shaders
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+// Brightness, contrast and gamma from the options screen, applied to the
+// finished frame when the game runs in a window, where the device gamma ramp
+// does nothing. s0 is the frame. s1 is a 256x1 table holding the corrected
+// value of every 8-bit level, per channel. c0.x and c0.y move level n/255 onto
+// the centre of texel n, so the point sampled lookup is exact.
+[PS] GammaRamp
+ps.2.0
+def c0, 0.99609375, 0.001953125, 0.5, 1
+dcl t0.xy
+dcl_2d s0
+dcl_2d s1
+texld r0, t0, s0
+mad r0, r0, c0.x, c0.y
+mov r1, c0.z
+mov r2, c0.z
+mov r3, c0.z
+mov r1.x, r0.r
+mov r2.x, r0.g
+mov r3.x, r0.b
+texld r1, r1, s1
+texld r2, r2, s1
+texld r3, r3, s1
+mov r4, c0.w
+mov r4.r, r1.r
+mov r4.g, r2.g
+mov r4.b, r3.b
+mov oC0, r4
+[RS]
+D3DRS_ALPHATESTENABLE FALSE

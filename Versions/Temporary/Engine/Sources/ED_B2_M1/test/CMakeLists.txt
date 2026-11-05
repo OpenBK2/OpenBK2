@@ -1,4 +1,20 @@
 # Exercise the builder, database and editor controls with isolated test resources.
+add_unit_test(IconCapture System Misc)
+target_compile_definitions(IconCapture_test PRIVATE NOMINMAX)
+
+add_unit_test(MechIconPak MapEditorLib UI 3Dmotor Stats_B2_M1 Image libdb System Misc gr2 zlib wx::wx
+    SOURCES ../MechIconPak.cpp)
+target_compile_definitions(MechIconPak_test PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN
+    ICON_PAK_SCHEMA="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+copy_wx_runtime(MechIconPak_test)
+if(WIN32)
+    target_sources(MechIconPak_test PRIVATE ../../Game/utf8.manifest)
+    set_property(TARGET MechIconPak_test APPEND PROPERTY LINK_DEPENDS
+        $<TARGET_FILE:libdb> $<TARGET_FILE:System> $<TARGET_FILE:3Dmotor> $<TARGET_FILE:UI>)
+    set_tests_properties(MechIconPak_test PROPERTIES ENVIRONMENT_MODIFICATION
+        "PATH=path_list_prepend:$<TARGET_FILE_DIR:ffmpeg::avcodec>")
+endif()
+
 add_unit_test(VisObjBuilder MapEditor GameX wx::wx ED_Common MapEditorLib 3Dmotor Stats_B2_M1 libdb System Misc gr2 zlib fastgltf::fastgltf
     SOURCES ../VisObjBuilder.cpp ../SeasonMnemonics.cpp
     ../../MapEditor/FolderCallback.cpp ../../MapEditor/ViewContainer.cpp

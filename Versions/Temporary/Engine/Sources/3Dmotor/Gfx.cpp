@@ -4,6 +4,8 @@
 #include "Gfx.h"
 #include "GfxBuffers.h"
 #include "GfxInternal.h"
+#include "GfxShaders.h"
+#include "GfxShadersDescr.h"
 #include "Misc/2Darray.h"
 #include "Misc/DetMath.h"
 #include "Misc/HPTimer.h"
@@ -90,6 +92,23 @@ static NWin32Helper::com_ptr<IDirect3DSwapChain9> pWindowSwapChain;
 static NWin32Helper::com_ptr<IDirect3DSurface9> pResolvedScreen;
 static int nPresentWidth = 0, nPresentHeight = 0;
 
+// Brightness, contrast and gamma in a borderless window. The device gamma ramp
+// does nothing to a windowed swap chain on current Windows, so there the same
+// correction is applied by the GammaRamp pixel shader (GfxShaders.txt) while
+// the frame is copied into the window: pGammaTable is the 256x1 lookup built
+// from nGammaCorrectionR/G/B, and pGammaFrame holds the finished frame to
+// sample, since D3D9 cannot sample a back buffer. pGammaState saves and restores
+// the device state around the pass, so the render state cache in GfxRender.cpp
+// stays true. Without ps.2.0 these stay null and the device ramp is used as
+// before.
+static NWin32Helper::com_ptr<IDirect3DTexture9> pGammaFrame, pGammaTable;
+static NWin32Helper::com_ptr<IDirect3DPixelShader9> pGammaShader;
+static NWin32Helper::com_ptr<IDirect3DStateBlock9> pGammaState;
+// The tables are the identity, so the frame is copied as it was before the pass existed
+static bool bGammaTableIdentity = true;
+// The tables changed since pGammaTable was last filled
+static bool bGammaTableDirty = true;
+
 static bool IsBorderlessGame()
 {
 	return pp.Windowed && NWinFrame::IsGameWindow( hWnd );
@@ -124,6 +143,166 @@ static HRESULT UpdateWindowSwapChain()
 	return hr;
 }
 
+static bool IsGammaPassActive()
+{
+	return pGammaFrame && pGammaTable && pGammaShader && pGammaState && !bGammaTableIdentity;
+}
+
+// Creates what the gamma pass needs. Called on every device (re)creation in a
+// borderless window; a failure leaves the pass off rather than failing the device.
+static void CreateGammaPass()
+{
+	if ( !bHardwarePixelShaders || !bHardwarePixelShaders20 || !psGammaRamp.pShader11 )
+	{
+		return;
+	}
+	HRESULT hr = pDevice->CreateTexture( pp.BackBufferWidth,
+	                                     pp.BackBufferHeight,
+	                                     1,
+	                                     D3DUSAGE_RENDERTARGET,
+	                                     pp.BackBufferFormat,
+	                                     D3DPOOL_DEFAULT,
+	                                     pGammaFrame.GetAddr(),
+	                                     0 );
+	if ( SUCCEEDED( hr ) )
+	{
+		hr = pDevice->CreateTexture( 256, 1, 1, 0, D3DFMT_X8R8G8B8, D3DPOOL_MANAGED, pGammaTable.GetAddr(), 0 );
+	}
+	if ( SUCCEEDED( hr ) )
+	{
+		// ShaderCompiler puts every array in the first slot, whatever its version
+		hr = pDevice->CreatePixelShader( psGammaRamp.pShader11, pGammaShader.GetAddr() );
+	}
+	if ( SUCCEEDED( hr ) )
+	{
+		hr = pDevice->CreateStateBlock( D3DSBT_ALL, pGammaState.GetAddr() );
+	}
+	if ( FAILED( hr ) )
+	{
+		DebugTrace( "Gamma pass unavailable (0x%08x), brightness/contrast/gamma will not show in a window",
+		            static_cast<unsigned>( hr ) );
+		pGammaFrame = 0;
+		pGammaTable = 0;
+		pGammaShader = 0;
+		pGammaState = 0;
+	}
+	bGammaTableDirty = true;
+}
+
+static void FillGammaTable()
+{
+	D3DLOCKED_RECT locked;
+	if ( FAILED( pGammaTable->LockRect( 0, &locked, 0, 0 ) ) )
+	{
+		return;
+	}
+	uint32_t *pTexels = static_cast<uint32_t *>( locked.pBits );
+	for ( int k = 0; k < 256; ++k )
+	{
+		pTexels[k] = D3DCOLOR_XRGB( nGammaCorrectionR[k], nGammaCorrectionG[k], nGammaCorrectionB[k] );
+	}
+	pGammaTable->UnlockRect( 0 );
+	bGammaTableDirty = false;
+}
+
+// Draws pSource into rectangle dest of pDestination through the gamma lookup.
+// The device is outside BeginScene/EndScene here, as Flip has ended the frame.
+static HRESULT DrawGammaPass( IDirect3DSurface9 *pSource, IDirect3DSurface9 *pDestination, const RECT &dest )
+{
+	if ( bGammaTableDirty )
+	{
+		FillGammaTable();
+	}
+	NWin32Helper::com_ptr<IDirect3DSurface9> pFrame;
+	HRESULT hr = pGammaFrame->GetSurfaceLevel( 0, pFrame.GetAddr() );
+	if ( FAILED( hr ) )
+	{
+		return hr;
+	}
+	// Resolves a multisampled back buffer as well
+	hr = pDevice->StretchRect( pSource, 0, pFrame, 0, D3DTEXF_NONE );
+	if ( FAILED( hr ) )
+	{
+		return hr;
+	}
+
+	// The state block holds neither the render target nor the depth buffer, so
+	// those two are put back by hand. Get calls on them are allowed on a pure device.
+	NWin32Helper::com_ptr<IDirect3DSurface9> pOldTarget, pOldDepth;
+	pDevice->GetRenderTarget( 0, pOldTarget.GetAddr() );
+	pDevice->GetDepthStencilSurface( pOldDepth.GetAddr() );
+	pGammaState->Capture();
+
+	// SetRenderTarget also sets the viewport to the whole of pDestination. The
+	// depth buffer is game sized and the window can be larger, so none is bound.
+	pDevice->SetRenderTarget( 0, pDestination );
+	pDevice->SetDepthStencilSurface( 0 );
+	pDevice->SetRenderState( D3DRS_ZENABLE, D3DZB_FALSE );
+	pDevice->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
+	pDevice->SetRenderState( D3DRS_STENCILENABLE, FALSE );
+	pDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
+	pDevice->SetRenderState( D3DRS_ALPHATESTENABLE, FALSE );
+	pDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
+	pDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_SOLID );
+	pDevice->SetRenderState( D3DRS_SCISSORTESTENABLE, FALSE );
+	pDevice->SetRenderState( D3DRS_CLIPPLANEENABLE, 0 );
+	pDevice->SetRenderState( D3DRS_FOGENABLE, FALSE );
+	pDevice->SetRenderState( D3DRS_SRGBWRITEENABLE, FALSE );
+	pDevice->SetRenderState( D3DRS_COLORWRITEENABLE, 0xf );
+	pDevice->SetVertexShader( 0 );
+	pDevice->SetFVF( D3DFVF_XYZRHW | D3DFVF_TEX1 );
+	pDevice->SetPixelShader( pGammaShader );
+
+	// The frame is filtered as the StretchRect it replaces was; the table is
+	// point sampled, as the shader puts every level on the centre of its texel.
+	const bool bScaled = dest.right - dest.left != static_cast<LONG>( pp.BackBufferWidth ) ||
+	                     dest.bottom - dest.top != static_cast<LONG>( pp.BackBufferHeight );
+	const DWORD linearCaps = D3DPTFILTERCAPS_MINFLINEAR | D3DPTFILTERCAPS_MAGFLINEAR;
+	const D3DTEXTUREFILTERTYPE frameFilter =
+			bScaled && ( devCaps.TextureFilterCaps & linearCaps ) == linearCaps ? D3DTEXF_LINEAR : D3DTEXF_POINT;
+	pDevice->SetTexture( 0, pGammaFrame );
+	pDevice->SetTexture( 1, pGammaTable );
+	for ( DWORD nSampler = 0; nSampler < 2; ++nSampler )
+	{
+		const D3DTEXTUREFILTERTYPE filter = nSampler == 0 ? frameFilter : D3DTEXF_POINT;
+		pDevice->SetSamplerState( nSampler, D3DSAMP_MINFILTER, filter );
+		pDevice->SetSamplerState( nSampler, D3DSAMP_MAGFILTER, filter );
+		pDevice->SetSamplerState( nSampler, D3DSAMP_MIPFILTER, D3DTEXF_NONE );
+		pDevice->SetSamplerState( nSampler, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );
+		pDevice->SetSamplerState( nSampler, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP );
+		pDevice->SetSamplerState( nSampler, D3DSAMP_SRGBTEXTURE, FALSE );
+	}
+
+	// Pretransformed corners of dest. The half pixel offset lines texel centres
+	// up with pixel centres, which D3D9 places on integer coordinates.
+	struct SVertex
+	{
+		float x, y, z, rhw, u, v;
+	};
+
+	const float fLeft = dest.left - 0.5f, fTop = dest.top - 0.5f;
+	const float fRight = dest.right - 0.5f, fBottom = dest.bottom - 0.5f;
+	const SVertex quad[4] = {
+		{ fLeft, fTop, 0, 1, 0, 0 },
+		{ fRight, fTop, 0, 1, 1, 0 },
+		{ fLeft, fBottom, 0, 1, 0, 1 },
+		{ fRight, fBottom, 0, 1, 1, 1 },
+	};
+	hr = pDevice->BeginScene();
+	if ( SUCCEEDED( hr ) )
+	{
+		hr = pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, quad, sizeof( SVertex ) );
+		pDevice->EndScene();
+	}
+
+	// Apply restores the viewport too, so it comes after the render target, and
+	// stream 0, which DrawPrimitiveUP leaves unset.
+	pDevice->SetRenderTarget( 0, pOldTarget );
+	pDevice->SetDepthStencilSurface( pOldDepth );
+	pGammaState->Apply();
+	return hr;
+}
+
 static HRESULT PresentWindow()
 {
 	HRESULT hr = UpdateWindowSwapChain();
@@ -131,6 +310,7 @@ static HRESULT PresentWindow()
 	{
 		return hr;
 	}
+	const bool bGammaPass = IsGammaPassActive();
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSource, pDestination;
 	hr = pDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, pSource.GetAddr() );
 	if ( FAILED( hr ) )
@@ -142,10 +322,11 @@ static HRESULT PresentWindow()
 	{
 		return hr;
 	}
-	if ( pResolvedScreen )
+	if ( pResolvedScreen && !bGammaPass )
 	{
 		// D3D9 MSAA resolve must precede resizing: resolve at game resolution,
 		// then stretch the non-multisampled image to the presentation rectangle.
+		// The gamma pass resolves into its own texture instead.
 		hr = pDevice->StretchRect( pSource, 0, pResolvedScreen, 0, D3DTEXF_NONE );
 		if ( FAILED( hr ) )
 		{
@@ -161,10 +342,17 @@ static HRESULT PresentWindow()
 	const auto viewport =
 			NWinFrame::SWindowViewport::Fit( pp.BackBufferWidth, pp.BackBufferHeight, nPresentWidth, nPresentHeight );
 	const RECT dest = { viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height };
-	const DWORD linearCaps = D3DPTFILTERCAPS_MINFLINEAR | D3DPTFILTERCAPS_MAGFLINEAR;
-	const D3DTEXTUREFILTERTYPE filter =
-			( devCaps.StretchRectFilterCaps & linearCaps ) == linearCaps ? D3DTEXF_LINEAR : D3DTEXF_NONE;
-	hr = pDevice->StretchRect( pSource, 0, pDestination, &dest, filter );
+	if ( bGammaPass )
+	{
+		hr = DrawGammaPass( pSource, pDestination, dest );
+	}
+	else
+	{
+		const DWORD linearCaps = D3DPTFILTERCAPS_MINFLINEAR | D3DPTFILTERCAPS_MAGFLINEAR;
+		const D3DTEXTUREFILTERTYPE filter =
+				( devCaps.StretchRectFilterCaps & linearCaps ) == linearCaps ? D3DTEXF_LINEAR : D3DTEXF_NONE;
+		hr = pDevice->StretchRect( pSource, 0, pDestination, &dest, filter );
+	}
 	if ( FAILED( hr ) )
 	{
 		return hr;
@@ -189,6 +377,12 @@ static void DestroyLostableDXObjects()
 	pResolvedScreen = 0;
 	pWindowSwapChain = 0;
 	nPresentWidth = nPresentHeight = 0;
+	// State blocks too. The managed table would survive, but it is cheaper to
+	// rebuild than to track which device it belongs to.
+	pGammaFrame = 0;
+	pGammaTable = 0;
+	pGammaShader = 0;
+	pGammaState = 0;
 }
 
 static void DestroyManagedDXObjects()
@@ -229,6 +423,7 @@ static HRESULT InitDXObjects()
 				return hr;
 			}
 		}
+		CreateGammaPass();
 	}
 	return bInitOk ? D3D_OK : D3DERR_NOTAVAILABLE;
 }
@@ -1303,19 +1498,25 @@ void SetGamma( bool bGamma )
 	if ( bGamma )
 	{
 		pDevice->GetGammaRamp( 0, &keptGamma );
+		bool bIdentity = true;
 		for ( int k = 0; k < 256; ++k )
 		{
-			float f = k / 256.0f;
+			// k / 255 and rounding to the nearest level, where this was k / 256
+			// and truncation. That took white to 254 with every setting at its
+			// default, which the device ramp hid but which would now keep the
+			// gamma pass running for a correction nobody asked for.
+			float f = k / 255.0f;
 			//if ( f < 0.0031308f ) f = f * 12.92f; else 	f = 1.055f * exp( log( f ) / 2.4f ) - 0.055f;
 			//if ( f < 0.026175f ) f = f * 4; else 	f = 1.1466f * exp( log( f ) / 2.4f ) - 0.1466f;
 			f = NDetMath::Exp( NDetMath::Log( f ) / fGamma );
-			uint16_t wRes = Float2Int( f * 65535 );
+			const uint16_t wRes = Clamp( Float2Int( f * 65535 ), 0, 65535 );
 			if ( !gammaRamp.empty() )
 			{
-				const NGfx::SPixel8888 &c = gammaRamp[wRes >> 8];
-				gamma.red[k] = c.r << 8;
-				gamma.green[k] = c.g << 8;
-				gamma.blue[k] = c.b << 8;
+				const NGfx::SPixel8888 &c = gammaRamp[Clamp( Float2Int( f * 255 ), 0, 255 )];
+				// * 257 spreads 0..255 over the whole 0..65535 the ramp takes
+				gamma.red[k] = c.r * 257;
+				gamma.green[k] = c.g * 257;
+				gamma.blue[k] = c.b * 257;
 			}
 			else
 			{
@@ -1323,10 +1524,14 @@ void SetGamma( bool bGamma )
 				gamma.green[k] = wRes;
 				gamma.blue[k] = wRes;
 			}
-			nGammaCorrectionR[k] = gamma.red[k] >> 8;
-			nGammaCorrectionG[k] = gamma.green[k] >> 8;
-			nGammaCorrectionB[k] = gamma.blue[k] >> 8;
+			// rounded rather than shifted, so the device ramp and the table agree
+			nGammaCorrectionR[k] = static_cast<unsigned char>( ( gamma.red[k] + 128 ) / 257 );
+			nGammaCorrectionG[k] = static_cast<unsigned char>( ( gamma.green[k] + 128 ) / 257 );
+			nGammaCorrectionB[k] = static_cast<unsigned char>( ( gamma.blue[k] + 128 ) / 257 );
+			bIdentity = bIdentity && nGammaCorrectionR[k] == k && nGammaCorrectionG[k] == k && nGammaCorrectionB[k] == k;
 		}
+		bGammaTableIdentity = bIdentity;
+		bGammaTableDirty = true;
 	}
 	else
 	{
@@ -1365,7 +1570,14 @@ void SetGamma( bool bGamma )
 			}
 		}
 	}
-	pDevice->SetGammaRamp( 0, D3DSGR_NO_CALIBRATION, &gamma );
+	// With the gamma pass the device ramp is left alone: in a window it would do
+	// nothing at best, and at worst a driver honouring it would apply the
+	// correction twice, or to the whole desktop. The pass needs no restoring
+	// when the window loses focus, as it touches only the game's own image.
+	if ( !( IsBorderlessGame() && pGammaState ) )
+	{
+		pDevice->SetGammaRamp( 0, D3DSGR_NO_CALIBRATION, &gamma );
+	}
 	bGammaIsSet = bGamma;
 	fLastGamma = fGamma;
 	bChangedGammaRamp = false;

@@ -3,6 +3,7 @@
 #include "FileReaders.h"
 
 #include <cstdint>
+#include <string>
 
 class CZipFile : public CObjectBase
 {
@@ -54,6 +55,9 @@ class CZipFile : public CObjectBase
 	int nTotalSize;
 	//
 	CDataStream *OpenFile( const SFileHeader &hdr );
+	// An entry's name as UTF-8, whichever encoding the archive stored it in
+	static std::string
+	DecodeEntryName( const char *pszRawName, int nNameLen, uint16_t wFlags, const char *pExtra, int nExtraLen );
 	//
 	~CZipFile() override;
 

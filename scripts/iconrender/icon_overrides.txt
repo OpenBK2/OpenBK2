@@ -1,0 +1,39 @@
+# Per-unit camera corrections shared by IconRender and the map editor.
+# Compiled into SceneB2 as the default set. IconRender --overrides=FILE replaces
+# it with a custom set; --overrides=none disables it.
+#
+# Most units keep the camera the model editor saved for their icon, which
+# reproduces the shipped picture. These are the ones where it does not suit, or
+# that never had one saved. One unit per line: the stats path, then the
+# corrections, described at the top of IconRender/main.cpp:
+#   frame           fill the window the way the shipped icons do
+#   fill=F          with frame, the share of the window the longer side fills (0.93)
+#   angle           turn to the view that best matches the shipped silhouette (frames too)
+#   yaw=A pitch=A   set the angle; yaw+=D pitch+=D turn it by D degrees
+#   distance*=K     move the camera K times further out
+
+# The shipped icon shows something else, so only the framing is wanted
+Units/Technics/Allies/Trains/passenger_wagon_allies/MechUnitRPGStats.xdb frame
+
+# Saved camera too close: the aircraft overflows the window
+Units/Technics/German/Aviation/ar_234_blitz/MechUnitRPGStats.xdb frame
+
+Units/Technics/German/Trains/passenger_wagon_german/MechUnitRPGStats.xdb frame
+
+# No saved camera; the shipped icon shows the view to match
+Units/Technics/Japan/Aviation/Nakadzima_Ki-43_Hayabusa/MechUnitRPGStats.xdb angle
+Units/Technics/ScriptMovieUnits/H_39_France/MechUnitRPGStats.xdb angle
+Units/Technics/ScriptMovieUnits/su_152_short/MechUnitRPGStats.xdb angle
+
+# Too small in the window
+Units/Technics/ScriptMovieUnits/sdkfz_222/mechunitrpgstats.xdb frame
+Units/Technics/ScriptMovieUnits/willys_slow/MechUnitRPGStats.xdb frame
+
+# Cut off at the edges. LSM-1's visual object is the LVT's, while both
+# shipped icons are the same generic ship picture
+Units/Technics/US/Ships/LSM-1_usa/MechUnitRPGStats.xdb frame
+Units/Technics/US/Ships/LVT(A)-4_usa/MechUnitRPGStats.xdb frame
+
+# Its visual object is the railway gun's shell, and it borrows tm_2_12's icon:
+# draw tm_2_12 the way that unit's own icon is drawn
+Units/Technics/USSR/Trains/tm_2_12_super/MechUnitRPGStats.xdb like=Units/Technics/USSR/Trains/tm_2_12/MechUnitRPGStats.xdb

@@ -84,6 +84,8 @@ add_subdirectory("TestSupport")
 add_subdirectory("Misc")
 add_subdirectory("System")
 add_subdirectory("Game")
+# Re-renders the unit icons through the game's renderer; see IconRender/CMakeLists.txt.
+add_subdirectory("IconRender")
 add_subdirectory("GameX")
 add_subdirectory("Main")
 add_subdirectory("Input")
