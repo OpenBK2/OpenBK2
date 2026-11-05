@@ -292,3 +292,10 @@ context. Read `git diff` of every touched file before building.
 - Running IconRender from the Windows build tree needs `gr2` in its link closure
   and the FFmpeg `bin` directory on PATH for codec DLL dependencies. An exit code
   of 0xc0000135 before any output is a loader failure, not an empty icon render.
+- Mistake: the private icon view omitted Scene::AddObject's model precache and
+  treated WaitForLoad(true) as a blocking load. It only sets a flag for Draw;
+  geometry can finish loading after first-frame bounds were evaluated. Precache
+  the model and call LoadEverything before RenderTarget advances the DG frame.
+  A few isolated renders missed this: full 512x512 batches failed on different
+  valid units across cold runs, while the corrected batches rendered all 396
+  model-backed records in the installed 403-unit data set.

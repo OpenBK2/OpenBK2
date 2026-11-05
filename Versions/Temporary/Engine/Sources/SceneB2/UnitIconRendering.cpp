@@ -785,6 +785,9 @@ bool Render(
 	}
 	SRenderContext render;
 	render.pView->SetAmbient( pLight );
+	// Match Scene::AddObject: queue every mesh/material before creating the render nodes.
+	// Otherwise the first capture can race lazy resource loading and contain only the clear color.
+	CObj<CObjectBase> pPrecache = render.pView->Precache( pModel );
 	render.pCamera->SetHandleType( true );
 	render.pCamera->SwitchAutoPositioning( false );
 	render.pCamera->SwitchManualScrolling( "IconRendering", false );
@@ -822,7 +825,9 @@ bool Render(
 		*pszError = "could not create the model render mesh";
 		return false;
 	}
-	render.pView->WaitForLoad( true );
+	// WaitForLoad only sets a flag for Draw. Finish loading here, then let RenderTarget
+	// advance the dependency-graph frame so bounds/transforms see the loaded geometry.
+	render.pView->LoadEverything();
 
 	SCameraShot &shot = pResult->shot;
 	if ( !ReadCameraShot( modelDBID, options.bEditorDatabase, &shot ) )
