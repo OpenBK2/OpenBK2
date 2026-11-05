@@ -17,6 +17,7 @@ set(SOURCES
     DefaultController.cpp
     DefaultExporter.cpp
     DefaultInputState.cpp
+    DefaultsOptions.cpp
     DefaultView.cpp
     DialogState.cpp
     EditorBase.cpp

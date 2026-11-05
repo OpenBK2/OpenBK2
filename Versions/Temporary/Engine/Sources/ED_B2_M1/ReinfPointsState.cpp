@@ -2,6 +2,7 @@
 
 #include "DrawToolsDC.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/DefaultsOptions.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/MessageBoxes.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -51,8 +52,6 @@ bool CReinfPointsState::CreateReinfPoint()
 
 	if ( pObjectController->AddInsertOperation( szName, NODE_ADD_INDEX, pMapInfoMan ) )
 	{
-		pObjectController->Redo( false, true, pMapInfoEditor );
-		Singleton<IControllerContainer>()->Add( pObjectController );
 		// setting new point coords
 		int nPointsCount = 0;
 		if ( !CManipulatorManager::GetValue( &nPointsCount, pMapInfoMan, szName ) )
@@ -60,13 +59,21 @@ bool CReinfPointsState::CreateReinfPoint()
 			return false;
 		}
 
-		const std::string szCurReinfPos = szName + fmt::format( ".[{}].Position", nPointsCount - 1 );
-		const std::string szCurAviaReinfPos = szName + fmt::format( ".[{}].AviationPosition", nPointsCount - 1 );
-		//
-		CManipulatorManager::SetValue( vCamAnchor.x, pMapInfoMan, szCurReinfPos + ".x" );
-		CManipulatorManager::SetValue( vCamAnchor.y, pMapInfoMan, szCurReinfPos + ".y" );
-		CManipulatorManager::SetValue( vCamAnchor.x, pMapInfoMan, szCurAviaReinfPos + ".x" );
-		CManipulatorManager::SetValue( vCamAnchor.y, pMapInfoMan, szCurAviaReinfPos + ".y" );
+		const std::string szPoint = szName + fmt::format( ".[{}]", nPointsCount - 1 );
+		// Record initialization with the insertion so redo restores the same template
+		// and position even if the editor defaults have changed in the meantime.
+		const CVec2 vPosition( vCamAnchor.x, vCamAnchor.y );
+		pObjectController->AddChangeVec2Operation<CVec2, float>( szPoint + ".Position", vPosition, pMapInfoMan );
+		pObjectController->AddChangeVec2Operation<CVec2, float>( szPoint + ".AviationPosition", vPosition, pMapInfoMan );
+		const auto defaults = NEditorDefaults::LoadOptions();
+		if ( !pObjectController->AddChangeOperation(
+						 szPoint + ".Template", CDBID( defaults.szDeployTemplate ), pMapInfoMan ) )
+		{
+			Singleton<IMainFrameContainer>()->Get()->Log(
+					LT_ERROR, "Could not assign the default deploy template: " + defaults.szDeployTemplate );
+		}
+		pObjectController->Redo( false, true, pMapInfoEditor );
+		Singleton<IControllerContainer>()->Add( pObjectController );
 	}
 
 	return true;
