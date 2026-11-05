@@ -437,6 +437,18 @@ void CFileTexture::Recalc()
 			ASSERT( 0 );
 			break;
 	}
+	// A replacement picture, when a source has one for this texture; while it
+	// is still being made, the texture on disk stands in for it
+	if ( LoadOverride( eUsage, eWrap ) )
+	{
+		return;
+	}
+	if ( bOverridePending && IsValid( pValue ) && !bIsFakeTexture && !IsValid( pRequest ) )
+	{
+		return;
+	}
+	// from here on the picture comes from disk, at the record's own size
+	nTexelScale = 1;
 	if ( !IsValid( pRequest ) )
 	{
 		pRequest = CreateFileRequiest( pTex->szDestName.c_str(), 0 ); //"Textures", GetRealTextureID( pTex ) );
@@ -554,7 +566,64 @@ void CFileTexture::Recalc()
 bool CFileTexture::NeedUpdate()
 {
 	bool bRes = TParent::NeedUpdate();
-	return bIsFakeTexture || bRes;
+	return bIsFakeTexture || bOverridePending || bRes;
+}
+
+static ITextureOverride *pTextureOverride = 0;
+
+void SetTextureOverride( ITextureOverride *pOverride )
+{
+	pTextureOverride = pOverride;
+}
+
+// True when the texture now holds a replacement picture. Otherwise the texture
+// on disk is (or stays) loaded, and bOverridePending says whether to look again.
+bool CFileTexture::LoadOverride( const NGfx::ETextureUsage eUsage, const NGfx::EWrap eWrap )
+{
+	bOverridePending = false;
+	if ( !pTextureOverride )
+	{
+		return false;
+	}
+	CArray2D<NGfx::SPixel8888> image;
+	int nScale = 1;
+	switch ( pTextureOverride->GetOverride( GetKey().tKey.pTexture, &image, &nScale ) )
+	{
+		case ITextureOverride::OVERRIDE_PENDING:
+			bOverridePending = true;
+			return false;
+		case ITextureOverride::OVERRIDE_READY:
+			break;
+		default:
+			return false;
+	}
+	if ( image.GetSizeX() <= 0 || image.GetSizeY() <= 0 || nScale < 1 )
+	{
+		return false;
+	}
+	// One level: the picture is made for the size it is shown at
+	CObj<NGfx::CTexture> pTexture =
+			NGfx::MakeTexture( image.GetSizeX(), image.GetSizeY(), 1, NGfx::SPixel8888::ID, eUsage, eWrap );
+	if ( !pTexture )
+	{
+		return false;
+	}
+	{
+		NGfx::CTextureLock<NGfx::SPixel8888> lock( pTexture, 0, NGfx::INPLACE );
+		for ( int y = 0; y < image.GetSizeY(); ++y )
+		{
+			for ( int x = 0; x < image.GetSizeX(); ++x )
+			{
+				lock[y][x] = image[y][x];
+			}
+		}
+	}
+	pValue = pTexture;
+	nTexelScale = nScale;
+	bIsFakeTexture = false;
+	// a disk read started for the stand-in is no longer wanted
+	pRequest = 0;
+	return true;
 }
 
 // CFileCubeTexture

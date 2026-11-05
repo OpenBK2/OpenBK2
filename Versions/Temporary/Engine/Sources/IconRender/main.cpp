@@ -24,7 +24,12 @@
 //
 //   IconRender [--out=DIR] [--filter=TEXT] [--scale=N] [--supersample=N]
 //              [--light=DBID] [--limit=N] [--mod=NAME] [--overrides=FILE]
-//              [--install=DIR]
+//              [--install=DIR] [--cache]
+//
+// --cache also writes each unit's high resolution picture into the game's unit
+// icon cache (GameX/UnitIconCache.h), so the game shows it without rendering
+// it first. Without --scale it uses the scale the game picks for the screen in
+// the profile, and the most supersampling that still fits the target.
 //
 // --mod attaches a folder under MODs, as the game's own --mod does.
 //
@@ -59,6 +64,7 @@
 #include "3Dmotor/GRTShare.h"
 #include "3Dmotor/GView.h"
 #include "AILogic/CreateAI.h"
+#include "GameX/UnitIconCache.h"
 #include "Image/Image.h" // EImageType, which ImageDDS.h uses without including
 #include "Image/ImageDDS.h"
 #include "Image/ImageTGA.h"
@@ -131,6 +137,9 @@ struct SOptions
 	std::string szMod;
 	std::string szOverrides;
 	std::string szInstall;
+	bool bCache = false;
+	bool bScaleGiven = false;
+	bool bSupersampleGiven = false;
 };
 
 // One line of the --overrides file, see the comment at the top.
@@ -208,10 +217,12 @@ bool ParseCommandLine( const std::vector<std::string> &arguments, SOptions *pOpt
 		else if ( szName == "--scale" )
 		{
 			bOk = ParseInt( szValue, &pOptions->nScale ) && pOptions->nScale >= 1;
+			pOptions->bScaleGiven = true;
 		}
 		else if ( szName == "--supersample" )
 		{
 			bOk = ParseInt( szValue, &pOptions->nSupersample ) && pOptions->nSupersample >= 1;
+			pOptions->bSupersampleGiven = true;
 		}
 		else if ( szName == "--mod" )
 		{
@@ -220,6 +231,10 @@ bool ParseCommandLine( const std::vector<std::string> &arguments, SOptions *pOpt
 		else if ( szName == "--overrides" )
 		{
 			pOptions->szOverrides = szValue;
+		}
+		else if ( szName == "--cache" )
+		{
+			pOptions->bCache = true;
 		}
 		else if ( szName == "--install" )
 		{
@@ -1096,7 +1111,22 @@ int RenderAll( const SOptions &_options )
 
 	std::string szManifest =
 			"folder\tstats\tname\tcamera\tanchor_x\tanchor_y\tanchor_z\tdistance\tpitch\tyaw\tfov\tlight\tscale\tstatus\tcorrections\n";
+	if ( options.bCache && !options.bScaleGiven )
+	{
+		// what the game will ask for on this screen
+		options.nScale = NUnitIcons::GetScale();
+		if ( !options.bSupersampleGiven )
+		{
+			options.nSupersample = (std::max)( 1, N_TARGET_SIZE / ( N_ICON_SIZE * options.nScale ) );
+		}
+		fmt::print( "cache scale {}, supersample {}\n", options.nScale, options.nSupersample );
+	}
 	const int nHQWindow = N_ICON_SIZE * options.nScale * options.nSupersample;
+	if ( nHQWindow > N_TARGET_SIZE )
+	{
+		fmt::print( stderr, "a {} pixel window does not fit the {} pixel target\n", nHQWindow, N_TARGET_SIZE );
+		return 1;
+	}
 	int nDone = 0;
 	for ( const std::string &szStatsPath : units )
 	{
@@ -1212,6 +1242,15 @@ int RenderAll( const SOptions &_options )
 				if ( !WriteTGA( szUnitDir + "x1.tga", x1 ) || !WriteTGA( szUnitDir + "hq.tga", hq ) )
 				{
 					szStatus = "write failed";
+				}
+				if ( options.bCache )
+				{
+					const std::string szCacheFile = NUnitIcons::GetCacheFile( szPortablePath, options.nScale );
+					NFile::CreatePath( GetFolder( szCacheFile ) );
+					if ( !WriteTGA( szCacheFile, hq ) )
+					{
+						szStatus = "cache write failed";
+					}
 				}
 			}
 			Scene()->RemoveObject( nObjectID );

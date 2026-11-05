@@ -33,6 +33,7 @@
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
 #include "UISpecificB2/DBUISpecificB2.h"
+#include "UnitIconCache.h"
 
 #include "GameX_export.h"
 #include "Main_export.h"
@@ -118,6 +119,9 @@ GAMEX_EXPORT bool Initialize()
 
 		//MP to UI message manager
 		NSingleton::RegisterSingleton( CreateMPManager(), IMPToUIManager::tidTypeID );
+
+		// unit icons at the resolution of the screen
+		NUnitIcons::Initialize();
 	}
 	catch ( ... )
 	{
@@ -154,6 +158,8 @@ void InitConsts()
 GAMEX_EXPORT void PostStorageInitialize()
 {
 	InitConsts();
+	// the database may now hold another mod's units
+	NUnitIcons::Reset();
 	// This common hook also handles campaign/tutorial selection detaching a mod.
 	if ( bMPDataVersionChecksumInitialized )
 	{

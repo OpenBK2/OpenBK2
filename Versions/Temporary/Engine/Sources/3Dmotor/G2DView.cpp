@@ -85,6 +85,25 @@ CObjectBase *C2DGameView::CreateTexture( const NGScene::STextureKey &key )
 	return shareTextures.Get( key );
 }
 
+// The UI addresses a texture in the texels of its record (Width and Height).
+// A replacement picture from an ITextureOverride is a whole multiple of that
+// size, so the coordinates are scaled onto it; the rectangle drawn on screen,
+// and with it the layout, stays as it was.
+static int GetTexelScale( CFileTexture *pTexture )
+{
+	CDGPtr<CPtrFuncBase<NGfx::CTexture>> pRefresh( pTexture );
+	pRefresh.Refresh();
+	return pTexture->GetTexelScale();
+}
+
+static void ScaleTexRect( CTRect<float> *pRect, const int nScale )
+{
+	pRect->x1 *= nScale;
+	pRect->y1 *= nScale;
+	pRect->x2 *= nScale;
+	pRect->y2 *= nScale;
+}
+
 void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
                                       const CRectLayout &sLayout,
                                       const CTPoint<float> &sPosition,
@@ -93,11 +112,21 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
 	if ( !pTexture ) //CObjectBase *pRes = pScene->Create
 	{
 		pScene->CreateDynamicRects( 0, sLayout, sPosition, sWindow );
+		return;
 	}
-	else
+	CFileTexture *pFileTexture = shareTextures.Get( STextureKey( pTexture ) );
+	const int nScale = GetTexelScale( pFileTexture );
+	if ( nScale == 1 )
 	{
-		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), sLayout, sPosition, sWindow );
+		pScene->CreateDynamicRects( pFileTexture, sLayout, sPosition, sWindow );
+		return;
 	}
+	CRectLayout scaled( sLayout );
+	for ( auto &rect : scaled.rects )
+	{
+		ScaleTexRect( &rect.sTex.rcTexRect, nScale );
+	}
+	pScene->CreateDynamicRects( pFileTexture, scaled, sPosition, sWindow );
 }
 
 void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
@@ -108,11 +137,12 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
 	if ( !pTexture ) //CObjectBase *pRes = pScene->Create
 	{
 		pScene->CreateDynamicRects( 0, pPos4, pColors4, rectTexture );
+		return;
 	}
-	else
-	{
-		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), pPos4, pColors4, rectTexture );
-	}
+	CFileTexture *pFileTexture = shareTextures.Get( STextureKey( pTexture ) );
+	CTRect<float> scaled( rectTexture );
+	ScaleTexRect( &scaled, GetTexelScale( pFileTexture ) );
+	pScene->CreateDynamicRects( pFileTexture, pPos4, pColors4, scaled );
 }
 
 void C2DGameView::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
