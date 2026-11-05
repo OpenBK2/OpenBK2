@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Mission scripts can pin objective notifications with `KeepObjectiveNotified(index, 1)` and replace their postfix with `UpdateObjectiveNotification(index, text)`. Pinned entries use the regular objective icon and remain until `KeepObjectiveNotified(index, 0)` removes them. Postfixes are remembered while hidden, and pins and text survive save/load. The `Objective: ` prefix can be localized through `OBJECTIVE_NOTIFICATION_PREFIX`. A countdown example is in `OBK2_Examples/PersistentObjectiveNotifications`.
+
 - Multiplayer maps can set `OnBaseCaptureReinfPointsGain` and `OnBaseLostReinfPointsLoss` to change reinforcement points awarded to each eligible teammate on capturing or losing a base. These are signed integers, defaulting to `1` and `-1`; `0` disables the respective point change. Existing maps keep the original rules, and saves and replays preserve custom values. Examples are in `OBK2_Examples/MultiplayerBaseReinforcementPoints`.
 
 - Multiplayer maps can set `AddReinfsWithTimer` to `false` to disable periodic extra reinforcement calls and hide the HUD countdown in CLASSIC or COOP. Initial credits, explicit grants and normal cooldowns remain available. The default is `true`, and replays preserve the setting. Examples are in `OBK2_Examples/MultiplayerReinforcementTimer`.
