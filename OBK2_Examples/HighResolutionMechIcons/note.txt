@@ -1,0 +1,24 @@
+MechUnitIcons.pak contains the 405 icons from the existing editor export, with
+their texture records corrected for the updated game renderer. DDS images remain
+512x512; Width and Height in each Texture record are 42, the logical UI size.
+The game maps those logical coordinates to the complete DDS image.
+
+The renderer builds filtered mip levels when loading these high-resolution
+textures. Hardware rendering interpolates between mip levels, and outlined icons
+also use filtered sampling. No re-export or package update is needed for smoother
+downscaling with the updated renderer.
+
+Build/install the updated game and editor before using this package. To use the
+example, back up your previous MechUnitIcons.pak and copy this one into the same
+Data or mod directory, then restart the game. This example is not auto-installed.
+It contains the exported unit records as well as their textures, so use it with
+the same game/mod data from which those units were exported.
+
+Future exports from File -> Options -> Icon Rendering already write the correct
+metadata, including exports to loose files. To repair another existing package
+without re-rendering, run:
+
+python OBK2_Examples/HighResolutionMechIcons/fix_logical_size.py PATH/MechUnitIcons.pak
+
+This writes the corrected package beside this script and leaves its input alone.
+Use --output PATH to choose another destination. No database schema change is needed.

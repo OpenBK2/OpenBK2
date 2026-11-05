@@ -4,7 +4,11 @@
 #include "GfxBuffers.h"
 #include "GTexture.h"
 #include "Image/DDS.h"
+#include "Image/Image.h"
+#include "Image/ImageDDS.h"
 #include "System/Commands.h"
+#include "TextureCoordinates.h"
+#include "UITextureFilter.h"
 
 #include "3Dmotor_export.h"
 
@@ -338,6 +342,7 @@ static NGfx::CTexture *LoadConvertTo16Bit( CDataStream *pStream,
 
 void CFileTexture::CreateChecker()
 {
+	vTexelScale = CVec2( 1, 1 );
 	NGfx::SPixel8888 colors[2];
 	colors[0] = NGfx::SPixel8888( 0, 0, 0, 255 );
 	colors[1] = NGfx::SPixel8888( 255, 255, 255, 255 );
@@ -380,7 +385,59 @@ void FixMips( SDDSHeader *pRes )
 	NGfx::EPixelFormat format = GetPixelFormat( *pRes );
 	int nMaxPossibleLevels = GetMSB( (std::min)( pRes->dwWidth, pRes->dwHeight ) ) -
 	                         ( ( format >= NGfx::CF_DXT1 ) && ( format <= NGfx::CF_DXT5 ) ? 2 : 0 );
-	pRes->dwMipMapCount = (std::min)( (int)pRes->dwMipMapCount, (int)nMaxPossibleLevels );
+	// Even a one-pixel-wide icon has a base level to upload.
+	nMaxPossibleLevels = (std::max)( 1, nMaxPossibleLevels );
+	pRes->dwMipMapCount = (std::min)( (int)pRes->dwMipMapCount, nMaxPossibleLevels );
+}
+
+static NGfx::CTexture *CreateFilteredUITexture( const CArray2D<NGfx::SPixel8888> &image )
+{
+	std::vector<CArray2D<NGfx::SPixel8888>> mips;
+	BuildUITextureMips( &mips, image );
+	if ( mips.empty() )
+	{
+		return nullptr;
+	}
+	// Atlas textures only have one level. Use a separate managed texture so
+	// reducing a large icon averages its detail rather than skipping texels.
+	const bool b16Bit = NGfx::Is16BitTextures();
+	CObj<NGfx::CTexture> texture = NGfx::MakeTexture( mips[0].GetSizeX(),
+	                                                  mips[0].GetSizeY(),
+	                                                  int( mips.size() ),
+	                                                  b16Bit ? NGfx::SPixel4444::ID : NGfx::SPixel8888::ID,
+	                                                  NGfx::REGULAR,
+	                                                  NGfx::CLAMP );
+	if ( !texture )
+	{
+		return nullptr;
+	}
+	for ( int i = 0; i < mips.size(); ++i )
+	{
+		const auto &level = mips[i];
+		if ( b16Bit )
+		{
+			NGfx::CTextureLock<NGfx::SPixel4444> lock( texture, i, NGfx::INPLACE );
+			for ( int y = 0; y < level.GetSizeY(); ++y )
+			{
+				for ( int x = 0; x < level.GetSizeX(); ++x )
+				{
+					lock[y][x] = DoConvert( level[y][x], (NGfx::SPixel4444 *)0 );
+				}
+			}
+		}
+		else
+		{
+			NGfx::CTextureLock<NGfx::SPixel8888> lock( texture, i, NGfx::INPLACE );
+			for ( int y = 0; y < level.GetSizeY(); ++y )
+			{
+				for ( int x = 0; x < level.GetSizeX(); ++x )
+				{
+					lock[y][x] = level[y][x];
+				}
+			}
+		}
+	}
+	return texture.Extract();
 }
 
 void CFileTexture::Recalc()
@@ -447,8 +504,9 @@ void CFileTexture::Recalc()
 	{
 		return;
 	}
-	// from here on the picture comes from disk, at the record's own size
-	nTexelScale = 1;
+	// DDS dimensions and UI dimensions are independent, just as they are for
+	// cached icon overrides. Fill the ratio when the image header is available.
+	vTexelScale = CVec2( 1, 1 );
 	if ( !IsValid( pRequest ) )
 	{
 		pRequest = CreateFileRequiest( pTex->szDestName.c_str(), 0 ); //"Textures", GetRealTextureID( pTex ) );
@@ -514,6 +572,32 @@ void CFileTexture::Recalc()
 		file->Seek( 0 );
 		file->Read( &hdr, sizeof( hdr ) );
 		FixMips( &hdr.header );
+		vTexelScale = GetTextureTexelScale( hdr.header.dwWidth, hdr.header.dwHeight, pTex->nWidth, pTex->nHeight );
+		if ( eUsage == NGfx::TEXTURE_2D && ( vTexelScale.x > 1 || vTexelScale.y > 1 ) )
+		{
+			CArray2D<uint32_t> pixels;
+			file->Seek( 0 );
+			if ( NImage::LoadImageDDS( &pixels, file.GetStream() ) )
+			{
+				CArray2D<NGfx::SPixel8888> image( pixels.GetSizeX(), pixels.GetSizeY() );
+				for ( int y = 0; y < pixels.GetSizeY(); ++y )
+				{
+					for ( int x = 0; x < pixels.GetSizeX(); ++x )
+					{
+						image[y][x].dwColor = pixels[y][x];
+					}
+				}
+				pValue = CreateFilteredUITexture( image );
+				if ( pValue )
+				{
+					pRequest = 0;
+					ReleaseFileRequestHolder();
+					return;
+				}
+			}
+			// Preserve the ordinary loader as a fallback for unsupported images.
+			file->Seek( sizeof( hdr ) );
+		}
 
 		nCutMips = (std::min)( nCutMips, int( hdr.header.dwMipMapCount ) - 1 );
 		if ( GetPixelFormat( hdr.header ) == NGfx::CF_A8R8G8B8 && NGfx::Is16BitTextures() )
@@ -601,7 +685,18 @@ bool CFileTexture::LoadOverride( const NGfx::ETextureUsage eUsage, const NGfx::E
 	{
 		return false;
 	}
-	// One level: the picture is made for the size it is shown at
+	if ( eUsage == NGfx::TEXTURE_2D && nScale > 1 )
+	{
+		pValue = CreateFilteredUITexture( image );
+		if ( pValue )
+		{
+			vTexelScale = CVec2( nScale, nScale );
+			bIsFakeTexture = false;
+			pRequest = 0;
+			return true;
+		}
+	}
+	// Keep ordinary UI images in the shared atlas.
 	CObj<NGfx::CTexture> pTexture =
 			NGfx::MakeTexture( image.GetSizeX(), image.GetSizeY(), 1, NGfx::SPixel8888::ID, eUsage, eWrap );
 	if ( !pTexture )
@@ -619,7 +714,7 @@ bool CFileTexture::LoadOverride( const NGfx::ETextureUsage eUsage, const NGfx::E
 		}
 	}
 	pValue = pTexture;
-	nTexelScale = nScale;
+	vTexelScale = CVec2( nScale, nScale );
 	bIsFakeTexture = false;
 	// a disk read started for the stand-in is no longer wanted
 	pRequest = 0;

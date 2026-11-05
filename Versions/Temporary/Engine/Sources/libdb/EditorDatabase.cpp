@@ -902,6 +902,35 @@ void CEditorDatabase::MarkChanged( const CDBID &dbid )
 	CBasicDatabase::ReportObjectChanged( dbid );
 }
 
+bool SerializeObject( IObjMan *pObject, CDataStream *pStream )
+{
+	auto *pBind = dynamic_cast<NBind::CBindStruct *>( pObject );
+	if ( !pBind || !pStream || !pStream->IsOk() || !pStream->CanWrite() )
+	{
+		return false;
+	}
+	// Use the editor bindings so hidden metadata and unsaved values survive an
+	// archive export. Do not reset dirty flags or write the database index here.
+	NLXML::CXMLDocument document;
+	document.AddChild( new NLXML::CXMLDeclaration );
+	auto *pRoot = new NLXML::CXMLElement;
+	pRoot->SetValue( pBind->GetTypeName() );
+	for ( const auto &attribute : pBind->GetAttributes() )
+	{
+		pRoot->SetAttribute( attribute.first, WideToUTF8( attribute.second ) );
+	}
+	document.AddChild( pRoot );
+	if ( !pBind->SaveXML( "", pBind->GetMetaInfo()->pStructTypeDef, pRoot ) )
+	{
+		return false;
+	}
+	{
+		NLXML_STREAM stream( pStream );
+		document.Store( stream );
+	}
+	return pStream->IsOk();
+}
+
 void CEditorDatabase::SaveChanges()
 {
 	szLastSaveError.clear();
@@ -915,36 +944,11 @@ void CEditorDatabase::SaveChanges()
 			CMemoryStream fileStream;
 			if ( fileStream.IsOk() )
 			{
-				NLXML::CXMLDocument xmlDocument;
-				// add XML declaration
-				NLXML::CXMLDeclaration *pDeclaration = new NLXML::CXMLDeclaration();
-				xmlDocument.AddChild( pDeclaration );
-				// create root element and set attributes
-				const std::string &szTypeName = itElement->second.pBind->GetTypeName();
-				const NBind::CAttributesList &attributes = itElement->second.pBind->GetAttributes();
-				NLXML::CXMLElement *pBaseNode = new NLXML::CXMLElement();
-				pBaseNode->SetValue( itElement->second.pBind->GetTypeName() );
-				for ( NBind::CAttributesList::const_iterator itAttribute = attributes.begin(); itAttribute != attributes.end();
-				      ++itAttribute )
-				{
-					std::string szUTF8Attribute;
-					szUTF8Attribute = WideToUTF8( itAttribute->second );
-					pBaseNode->SetAttribute( itAttribute->first, szUTF8Attribute );
-				}
-				xmlDocument.AddChild( pBaseNode );
-				// save object to root element
-				if ( !itElement->second.pBind->SaveXML(
-								 "", itElement->second.pBind->GetMetaInfo()->pStructTypeDef, pBaseNode ) )
+				if ( !SerializeObject( itElement->second.pBind, &fileStream ) )
 				{
 					ReportSaveError( "Cannot serialize " + szFileName );
 					bHasFailedElements = true;
 					continue;
-				}
-				//
-				{
-					// Flush the XML writer's final buffered bytes before committing.
-					NLXML_STREAM stream( &fileStream );
-					xmlDocument.Store( stream );
 				}
 				std::string error;
 				if ( !NVFS::WriteFile( GetFileCreator(), szFileName, fileStream, &error ) )

@@ -18,6 +18,7 @@
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxResourceImages.h"
+#include "OptionsDialogWx.h"
 #include "port/vkcodes.h"
 #include "ResourceDefines.h"
 #include "System/GeneralSettings.h"
@@ -466,6 +467,7 @@ void AddEditorFolderMenu( wxMenuBar *pMenuBar )
 	pFile->Insert(
 			nPosition++, ToWxID( ID_FILE_OPEN_EDITOR_FOLDER ), "Open &Editor Folder", "Open your local editor data folder" );
 	pFile->InsertSeparator( nPosition );
+	pFile->Insert( nPosition++, ToWxID( ID_FILE_OPTIONS ), "&Options...", "Configure editor options" );
 }
 
 struct SNamedLayout
@@ -1674,6 +1676,9 @@ private:
 				// CWinApp::OnAppExit: close the main window.
 				Close();
 				return;
+			case ID_FILE_OPTIONS:
+				NOptionsDialog::Show( this );
+				return;
 			case ID_FILE_CLEAR_ICON_CACHE:
 			{
 				std::string szError;
@@ -1831,6 +1836,7 @@ private:
 				return;
 			case ID_HELP_ABOUT:
 			case ID_APP_EXIT:
+			case ID_FILE_OPTIONS:
 			case ID_VIEW_RESET_GUI:
 			case ID_VIEW_SAVE_LAYOUT:
 				( *pbEnable ) = true;

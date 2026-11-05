@@ -8,6 +8,7 @@
 #include "GTexture.h"
 #include "Locale.h"
 #include "System/BasicShare.h"
+#include "TextureCoordinates.h"
 
 namespace NGScene
 {
@@ -86,22 +87,12 @@ CObjectBase *C2DGameView::CreateTexture( const NGScene::STextureKey &key )
 }
 
 // The UI addresses a texture in the texels of its record (Width and Height).
-// A replacement picture from an ITextureOverride is a whole multiple of that
-// size, so the coordinates are scaled onto it; the rectangle drawn on screen,
-// and with it the layout, stays as it was.
-static int GetTexelScale( CFileTexture *pTexture )
+// Map those coordinates to the loaded DDS or override, preserving the layout.
+static CVec2 GetTexelScale( CFileTexture *pTexture )
 {
 	CDGPtr<CPtrFuncBase<NGfx::CTexture>> pRefresh( pTexture );
 	pRefresh.Refresh();
 	return pTexture->GetTexelScale();
-}
-
-static void ScaleTexRect( CTRect<float> *pRect, const int nScale )
-{
-	pRect->x1 *= nScale;
-	pRect->y1 *= nScale;
-	pRect->x2 *= nScale;
-	pRect->y2 *= nScale;
 }
 
 void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
@@ -115,8 +106,8 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
 		return;
 	}
 	CFileTexture *pFileTexture = shareTextures.Get( STextureKey( pTexture ) );
-	const int nScale = GetTexelScale( pFileTexture );
-	if ( nScale == 1 )
+	const CVec2 vScale = GetTexelScale( pFileTexture );
+	if ( vScale.x == 1 && vScale.y == 1 )
 	{
 		pScene->CreateDynamicRects( pFileTexture, sLayout, sPosition, sWindow );
 		return;
@@ -124,7 +115,7 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
 	CRectLayout scaled( sLayout );
 	for ( auto &rect : scaled.rects )
 	{
-		ScaleTexRect( &rect.sTex.rcTexRect, nScale );
+		ScaleTextureRect( &rect.sTex.rcTexRect, vScale );
 	}
 	pScene->CreateDynamicRects( pFileTexture, scaled, sPosition, sWindow );
 }
@@ -141,7 +132,7 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
 	}
 	CFileTexture *pFileTexture = shareTextures.Get( STextureKey( pTexture ) );
 	CTRect<float> scaled( rectTexture );
-	ScaleTexRect( &scaled, GetTexelScale( pFileTexture ) );
+	ScaleTextureRect( &scaled, GetTexelScale( pFileTexture ) );
 	pScene->CreateDynamicRects( pFileTexture, pPos4, pColors4, scaled );
 }
 

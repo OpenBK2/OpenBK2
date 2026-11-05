@@ -4,6 +4,8 @@
 #include "Image/DDS.h"
 #include "Image/GUnpackDXT.h"
 #include "SWTexture.h"
+#include "TextureCoordinates.h"
+#include "UITextureFilter.h"
 
 #include <cstdint>
 #include <thread>
@@ -125,6 +127,11 @@ void CSWTexture::LoadTexture()
 	int nMips = hdr.header.dwMipMapCount;
 	int nSizeX = hdr.header.dwWidth;
 	int nSizeY = hdr.header.dwHeight;
+	const NDb::STexture *pTex = GetKey().tKey;
+	if ( pTex )
+	{
+		pValue->vTexelScale = GetTextureTexelScale( nSizeX, nSizeY, pTex->nWidth, pTex->nHeight );
+	}
 	// fill with data
 	switch ( GetPixelFormat( hdr.header ) )
 	{
@@ -156,6 +163,12 @@ void CSWTexture::LoadTexture()
 			ASSERT( 0 );
 			CreateChecker( pValue );
 			break;
+	}
+	if ( pTex && pTex->eType == NDb::STexture::TEXTURE_2D && ( pValue->vTexelScale.x > 1 || pValue->vTexelScale.y > 1 ) &&
+	     !pValue->mips.empty() )
+	{
+		BuildUITextureMips( &pValue->mips, pValue->mips[0] );
+		pValue->bFilterUI = true;
 	}
 }
 

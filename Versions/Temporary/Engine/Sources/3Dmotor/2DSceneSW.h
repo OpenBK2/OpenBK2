@@ -1,4 +1,6 @@
 #pragma once
+#include "GPixelFormat.h"
+#include "Misc/2Darray.h"
 #include "System/Dg.h"
 
 #include "3Dmotor_export.h"
@@ -33,6 +35,7 @@ public:
 	virtual void AddGrayingFilter( const CVec4 &vConvolution ) = 0;
 
 	virtual void Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, bool bClear ) = 0;
+	virtual void DrawImage( CArray2D<NGfx::SPixel8888> *pImage, const CTPoint<int> &vViewport ) = 0;
 	virtual void DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport ) = 0;
 	virtual void DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, float fScale ) = 0;
 };

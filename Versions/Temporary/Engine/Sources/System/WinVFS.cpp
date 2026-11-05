@@ -656,7 +656,22 @@ bool WriteFile( IFileCreator *pCreator, const std::string &path, const CDataStre
 		{
 			std::filesystem::permissions( temporary, status.permissions() );
 		}
-		std::filesystem::rename( temporary, target );
+		std::filesystem::rename( temporary, target, ec );
+#if BOOST_OS_WINDOWS
+		// An editor-generated .pak can still be mounted by the VFS. Windows'
+		// rename-with-replacement rejects an open destination even when its
+		// handle allows deletion. ReplaceFile keeps existing mapped readers on
+		// the old file while publishing the completed replacement for new opens.
+		if ( ec && std::filesystem::exists( target ) &&
+		     ReplaceFileW( target.c_str(), temporary.c_str(), nullptr, 0, nullptr, nullptr ) )
+		{
+			ec.clear();
+		}
+#endif
+		if ( ec )
+		{
+			throw std::filesystem::filesystem_error( "Cannot replace file", temporary, target, ec );
+		}
 		return true;
 	}
 	catch ( const std::exception &error )

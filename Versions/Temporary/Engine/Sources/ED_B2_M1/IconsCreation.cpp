@@ -4,27 +4,43 @@
 #include "3Dmotor/GfxBuffers.h"
 #include "3Dmotor/GRTShare.h"
 #include "EditorScene.h"
+#include "IconCapture.h"
 #include "Image/ImageTGA.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/Interface_Progress.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "MechIconPak.h"
+#include "MechIconRenderer.h"
 #include "ModelEditor.h"
 #include "SceneB2/Camera.h"
 #include "Stats_B2_M1/DBVisObj.h"
 #include "Stats_B2_M1/RPGStats.h"
+#include "System/VFSOperations.h"
 #include "TargetMesh.h"
 
+#include <algorithm>
 #include <cstdint>
+#include <exception>
+#include <filesystem>
 
-const int N_ICONS_SIZE_X = 42;
-const int N_ICONS_SIZE_Y = 42;
-const int N_TARGET_SIZE_X = 512;
-const int N_TARGET_SIZE_Y = 512;
+namespace
+{
+void CreateIconTarget( const NIconRendering::SOptions &options )
+{
+	const float fScale = NIconRendering::GetFramingScale( options );
+	NTargetMesh::CreateTargetMesh( options.nWidth / ( fScale * NIconRendering::TARGET_SIZE ),
+	                               options.nHeight / ( fScale * NIconRendering::TARGET_SIZE ) );
+}
 
-static bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture, IEditorScene *pScene )
+bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture,
+                       IEditorScene *pScene,
+                       const NIconRendering::SOptions &options )
 {
 	if ( !pScene )
 	{
@@ -33,7 +49,7 @@ static bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture, IEditorScene
 
 	// Prepare target texture
 	NGScene::CRTPtr *pTarget = NGScene::GetFrameTransitionCapture2();
-	if ( !pTarget )
+	if ( !pTarget || !pTarget->GetTexture() || !NGScene::Is3DActive() )
 	{
 		return false;
 	}
@@ -42,46 +58,63 @@ static bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture, IEditorScene
 	CVec4 vPrevColor = pScene->SetBackgroundColor( CVec4( 0.5f, 0.5f, 0.5f, 0.0f ) );
 	bool bPrevGetSizes = pScene->ToggleGetSizeFromTarget( true );
 	NTargetMesh::DeleteTargetMesh();
+	const float fPreviousFOV = Camera()->GetFOV();
+
+	// Restore all preview state even if loading a model or readback fails.
+	struct SRestorePreview
+	{
+		IEditorScene *pScene;
+		CVec4 vColor;
+		bool bGetSizes;
+		float fFOV;
+		NIconRendering::SOptions options;
+
+		~SRestorePreview()
+		{
+			Camera()->SetFOV( fFOV );
+			pScene->SetBackgroundColor( vColor );
+			pScene->ToggleGetSizeFromTarget( bGetSizes );
+			CreateIconTarget( options );
+		}
+	} restore{ pScene, vPrevColor, bPrevGetSizes, fPreviousFOV, options };
+
+	Camera()->SetFOV( NIconRendering::GetCaptureFOV( fPreviousFOV, options ) );
 
 	// Draw scene to target
+	pScene->GetGView()->WaitForLoad( true );
 	pScene->Draw( pTarget );
-
-	// Restore scene
-	pScene->SetBackgroundColor( vPrevColor );
-	pScene->ToggleGetSizeFromTarget( bPrevGetSizes );
-	NTargetMesh::CreateTargetMesh( N_ICONS_SIZE_X / (float)N_TARGET_SIZE_X, N_ICONS_SIZE_Y / (float)N_TARGET_SIZE_Y );
 
 	// Getting data
 	NGfx::GetRenderTargetData( pTexture, pTarget->GetTexture() );
 
-	return true;
+	return pTexture->GetSizeX() >= options.nWidth && pTexture->GetSizeY() >= options.nHeight;
 }
 
-static bool WriteTGA( const std::string &szFileName, const CArray2D<NGfx::SPixel8888> &texture )
+bool WriteTGA( const std::string &szFileName,
+               const CArray2D<NGfx::SPixel8888> &texture,
+               const NIconRendering::SOptions &options )
 {
-	const int nIconSizeX = N_ICONS_SIZE_X;
-	const int nIconSizeY = N_ICONS_SIZE_Y;
-
-	// Prepare image for writing
-	if ( nIconSizeX > texture.GetSizeX() || nIconSizeY > texture.GetSizeY() )
+	CArray2D<NGfx::SPixel8888> cropped;
+	if ( !NIconRendering::CropCapture( &cropped, texture, options ) )
 	{
 		return false;
 	}
-
-	int nStartX = ( texture.GetSizeX() - nIconSizeX ) / 2;
-	int nStartY = ( texture.GetSizeY() - nIconSizeY ) / 2;
-
 	CArray2D<uint32_t> image;
-	image.SetSizes( nIconSizeX, nIconSizeY );
-
-	for ( int iX = 0; iX < nIconSizeX; ++iX )
+	image.SetSizes( options.nWidth, options.nHeight );
+	for ( int y = 0; y < options.nHeight; ++y )
 	{
-		for ( int iY = 0; iY < nIconSizeY; ++iY )
+		for ( int x = 0; x < options.nWidth; ++x )
 		{
-			image[iX][iY] = texture[iX + nStartX][iY + nStartY].dwColor;
+			image[y][x] = cropped[y][x].dwColor;
 		}
 	}
 
+	std::error_code error;
+	std::filesystem::create_directories( std::filesystem::u8path( szFileName ).parent_path(), error );
+	if ( error )
+	{
+		return false;
+	}
 	// Write file
 	CFileStream fileTGA( szFileName, CFileStream::WIN_CREATE );
 	if ( !fileTGA.IsOk() )
@@ -90,11 +123,12 @@ static bool WriteTGA( const std::string &szFileName, const CArray2D<NGfx::SPixel
 	}
 
 	NImage::SaveImageAsTGA( &fileTGA, image );
+	fileTGA.Flush();
 
-	return true;
+	return fileTGA.IsOk();
 }
 
-static bool CreateTextureItem( const std::string &szTextureName, const std::string &szTgaName )
+bool CreateTextureItem( const std::string &szTextureName, const std::string &szTgaName )
 {
 	// Creating object
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -126,13 +160,17 @@ static bool CreateTextureItem( const std::string &szTextureName, const std::stri
 		return false;
 	}
 
-	// Export object
-	Singleton<IExporterContainer>()->ExportObject( pTexMan, "Texture", szTextureName, true, false );
-
-	return true;
+	if ( Singleton<IExporterContainer>()->ExportObject( pTexMan, "Texture", szTextureName, true, false ) != ER_SUCCESS )
+	{
+		return false;
+	}
+	// The exporter records the DDS's pixel dimensions. Unit icons must retain
+	// their authored UI footprint while the renderer samples all of those pixels.
+	return CManipulatorManager::SetValue( NIconRendering::DEFAULT_SIZE, pTexMan, "Width" ) &&
+	       CManipulatorManager::SetValue( NIconRendering::DEFAULT_SIZE, pTexMan, "Height" );
 }
 
-static bool SaveCameraPosition( NDb::IObjMan *pManipulator )
+bool SaveCameraPosition( NDb::IObjMan *pManipulator )
 {
 	// Getting parameters from camera
 	float fDistance;
@@ -154,61 +192,188 @@ static bool SaveCameraPosition( NDb::IObjMan *pManipulator )
 	return bResult;
 }
 
-void CModelEditor::CreateIcon()
+bool ExportIcon( const CDBID &dbid,
+                 const CArray2D<NGfx::SPixel8888> &texture,
+                 const NIconRendering::SOptions &options,
+                 std::string *pError )
 {
-	const NDb::SMechUnitRPGStats *pUnitStats =
-			NDb::Get<NDb::SMechUnitRPGStats>( GetObjectSet().objectNameSet.begin()->first );
-	if ( !pUnitStats )
+	CPtr<NDb::IObjMan> pManipulator = NDb::GetManipulator( dbid );
+	if ( !pManipulator )
 	{
-		return;
+		*pError = "could not open the unit for editing";
+		return false;
 	}
-
-	// Creating screenshot
-	CArray2D<NGfx::SPixel8888> texture;
-	if ( !CreateScreenShot( &texture, EditorScene() ) )
-	{
-		return;
-	}
-
 	// Get unit name and generate directories and icon file names.
-	const std::string &szUnitName = pUnitStats->GetDBID().ToString();
+	const std::string &szUnitName = dbid.ToString();
 
 	std::string szDirectory;
 	CStringManager::SplitFileName( &szDirectory, 0, 0, szUnitName );
+	// SplitFileName returns legacy backslashes, which are literal filename
+	// characters on Linux. Normalize before touching the physical source tree.
+	NFile::NormalizePath( &szDirectory );
 
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	const std::string &szExportSourceFolder = pUserData->constUserData.szExportSourceFolder;
 
 	const std::string szIconTgaName = szDirectory + "icon.tga";
-	const std::string szIconFullPath = szExportSourceFolder + szIconTgaName;
+	const std::string szIconFullPath = NFile::JoinPath( szExportSourceFolder, szIconTgaName );
 	const std::string szTextureItemName = szDirectory + "icon_texture.xdb";
 
 	// Prepare icons data and write tga
-	if ( !WriteTGA( szIconFullPath, texture ) )
+	if ( !WriteTGA( szIconFullPath, texture, options ) )
 	{
-		return;
+		*pError = "could not write " + szIconFullPath;
+		return false;
 	}
 
 	// Create "Texture" item for icon and export it
 	if ( !CreateTextureItem( szTextureItemName, szIconTgaName ) )
 	{
-		return;
+		*pError = "could not export texture " + szTextureItemName;
+		return false;
 	}
 
 	// Link texture with stats
-	NDb::IObjMan *pManipulator = NDb::GetManipulator( pUnitStats->GetDBID() );
-	if ( !pManipulator )
+	if ( !pManipulator->SetValue( "IconTexture", szTextureItemName ) )
+	{
+		*pError = "could not set IconTexture";
+		return false;
+	}
+	return true;
+}
+} // namespace
+
+void CModelEditor::CreateIcon()
+{
+	if ( GetObjectSet().szObjectTypeName != "MechUnitRPGStats" || GetObjectSet().objectNameSet.empty() )
 	{
 		return;
 	}
-
-	pManipulator->SetValue( "IconTexture", szTextureItemName );
-
-	// Save camera position to object
-	if ( !SaveCameraPosition( pManipulator ) )
+	const CDBID dbid( GetObjectSet().objectNameSet.begin()->first );
+	const NIconRendering::SOptions options = NIconRendering::LoadOptions();
+	try
 	{
+		CArray2D<NGfx::SPixel8888> texture;
+		std::string szError;
+		if ( !CreateScreenShot( &texture, EditorScene(), options ) )
+		{
+			szError = "could not capture the model preview";
+		}
+		else if ( ExportIcon( dbid, texture, options, &szError ) && !SaveCameraPosition( NDb::GetManipulator( dbid ) ) )
+		{
+			szError = "could not save the icon camera";
+		}
+		if ( !szError.empty() )
+		{
+			NLog::Log( LT_ERROR, "Icon rendering: %s: %s\n", dbid.ToString().c_str(), szError.c_str() );
+		}
+	}
+	catch ( const std::exception &error )
+	{
+		NLog::Log( LT_ERROR, "Icon rendering: %s: %s\n", dbid.ToString().c_str(), error.what() );
+	}
+	catch ( ... )
+	{
+		NLog::Log( LT_ERROR, "Icon rendering: %s: unexpected error\n", dbid.ToString().c_str() );
+	}
+}
+
+void CModelEditor::ReRenderAllMechUnits()
+{
+	const NIconRendering::SOptions options = NIconRendering::LoadOptions();
+	std::vector<CDBID> units;
+	if ( !NDb::GetObjectsList( &units, "MechUnitRPGStats" ) )
+	{
+		NLog::Log( LT_ERROR, "Icon rendering: could not enumerate MechUnitRPGStats objects.\n" );
 		return;
 	}
+	// Snapshot the IDs before exporting, since creating textures changes the database.
+	std::sort( units.begin(), units.end(), []( const CDBID &a, const CDBID &b ) { return a.ToString() < b.ToString(); } );
+	NLog::Log( LT_IMPORTANT,
+	           "Re-rendering %d mech unit icons at %d x %d.\n",
+	           static_cast<int>( units.size() ),
+	           options.nWidth,
+	           options.nHeight );
+	NProgress::Create( true );
+
+	struct SProgressScope
+	{
+		~SProgressScope()
+		{
+			NProgress::Destroy();
+		}
+	} progress;
+
+	NProgress::SetRange( 0, static_cast<int>( units.size() ) );
+	std::unique_ptr<CMechIconPak> pPak;
+	if ( options.bSeparatePak )
+	{
+		pPak = std::make_unique<CMechIconPak>();
+	}
+	int nSucceeded = 0;
+	int nFailed = 0;
+	for ( const CDBID &dbid : units )
+	{
+		NProgress::SetMessage( "Rendering icon: " + dbid.ToString() );
+		std::string szError;
+		try
+		{
+			CArray2D<NGfx::SPixel8888> texture;
+			if ( NMechIconRenderer::Render( dbid, options, &texture, &szError ) &&
+			     ( pPak ? pPak->Add( dbid, texture, options, &szError ) : ExportIcon( dbid, texture, options, &szError ) ) )
+			{
+				++nSucceeded;
+			}
+		}
+		catch ( const std::exception &error )
+		{
+			szError = error.what();
+		}
+		catch ( ... )
+		{
+			szError = "unexpected error";
+		}
+		if ( !szError.empty() )
+		{
+			++nFailed;
+			NLog::Log( LT_ERROR, "Icon rendering: %s: %s\n", dbid.ToString().c_str(), szError.c_str() );
+		}
+		NProgress::IteratePosition();
+	}
+	if ( pPak )
+	{
+		const std::string szDestination = NFile::JoinPath(
+				Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ), "MechUnitIcons.pak" );
+		std::string szError;
+		try
+		{
+			NProgress::SetMessage( "Saving MechUnitIcons.pak" );
+			if ( pPak->Save( szDestination, &szError ) )
+			{
+				NLog::Log( LT_IMPORTANT,
+				           "Icon rendering finished: %d icons saved, %d failed. Archive: %s\n",
+				           nSucceeded,
+				           nFailed,
+				           NVFS::GetWritePath( NVFS::GetMainFileCreator(), szDestination ).c_str() );
+				return;
+			}
+		}
+		catch ( const std::exception &error )
+		{
+			szError = error.what();
+		}
+		catch ( ... )
+		{
+			szError = "unexpected error saving the icon archive";
+		}
+		NLog::Log( LT_ERROR, "Icon rendering: could not save %s: %s\n", szDestination.c_str(), szError.c_str() );
+		return;
+	}
+	NLog::Log(
+			LT_IMPORTANT,
+			"Icon rendering finished: %d succeeded, %d failed. Save editor changes to keep updated texture records and links.\n",
+			nSucceeded,
+			nFailed );
 }
 
 void CModelEditor::RestoreCameraParametersFromStats()
@@ -262,7 +427,7 @@ void CModelEditor::RestoreCameraParametersFromStats()
 
 void CModelEditor::CreateTarget()
 {
-	NTargetMesh::CreateTargetMesh( N_ICONS_SIZE_X / (float)N_TARGET_SIZE_X, N_ICONS_SIZE_Y / (float)N_TARGET_SIZE_Y );
+	CreateIconTarget( NIconRendering::LoadOptions() );
 }
 
 void CModelEditor::DeleteTarget()

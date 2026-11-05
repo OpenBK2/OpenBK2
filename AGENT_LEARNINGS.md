@@ -243,3 +243,42 @@ context. Read `git diff` of every touched file before building.
 - Mistake (2026-11-05): ran a bare `python -` again, as a leftover no-op in a chained command, and it hung until stopped. Never chain `python -` into anything; use `python -I -c` or a script file.
 - `.gitignore` carries the macOS `Icon?` pattern, and this clone matches case-insensitively, so a new `scripts/icons/` folder is silently ignored and never shows in `git status`. Run `git check-ignore -v` on a new folder whose files do not appear as untracked.
 - Zip entry names without flag bit 11 are CP437 by the format, and older mod paks use it (MOD-18: `Sturmm\x94rser`). `CZipFile` now converts them to UTF-8 when it reads the directory; before that, `u8path` in `NVFS::PreprocessPath` threw and ended the process. A new Windows executable that writes files named from game data needs `Game/utf8.manifest` in its sources, or narrow Win32 calls use the ANSI code page and produce mojibake paths.
+
+## Editor icon exports
+
+- Hardware UI quads already use bilinear filtering, but their atlas has only one
+  mip level. Large icon reductions need separate mipmapped textures, not just a
+  sampler-state change. Generate alpha-weighted mips at load time so existing paks
+  benefit too; the outline compositor needs its own filtered CPU sampling.
+
+- Mistake (2026-11-05): exported high-resolution icons with their pixel dimensions
+  in Texture Width/Height. The 42x42 UI then sampled a transparent corner, although
+  archive loading and image roundtrip tests passed. Keep the logical UI footprint
+  separate from DDS dimensions and verify actual UI drawing, including outlines.
+  The software texture iterator also assumed power-of-two dimensions; test 42x42,
+  rectangular non-power-of-two images, and one-pixel dimensions as well as 512x512.
+
+- `CArray2D` is indexed `[y][x]`. The legacy square icon crop hid swapped axes;
+  exercise non-square source and output sizes when changing image dimensions.
+- `CStringManager::SplitFileName` returns backslashes even on Linux. Normalize
+  its directory result before joining a physical output path.
+- Icon camera fields are editor-only metadata, available through `IObjMan`.
+  A private `IGameView` and camera can render units without replacing the open
+  editor scene; lock manual scrolling on that camera as well as auto positioning.
+- A new test linking MapEditorLib needed an explicit `gr2` dependency for its
+  Windows runtime copy. The `granny::granny` interface dependency did not put
+  `granny2_x64.dll` beside that executable; inspect DLL imports on 0xc0000135.
+- Archive exports need the editor binding serializer to retain hidden camera
+  metadata without saving unrelated edits. Package the texture dimensions and
+  unit references as well as DDS pixels, and test them through the game VFS.
+- `wxZipOutputStream` marks non-ASCII names as UTF-8 when given `wxConvUTF8`;
+  `wxZipEntry::SetFlags` is protected. Store UTC wall-clock entry timestamps to
+  match the VFS's comparison with loose files.
+- A headless test must not call `Is3DActive` to anchor the renderer DLL: it
+  dereferences the graphics device. `GetFrameTransitionCapture2` returns the
+  static target holder without requiring a device. Tests linking mech stats
+  also need the FFmpeg runtime PATH and a UTF-8 manifest for non-ASCII fixtures.
+- On Windows, `std::filesystem::rename` can reject replacement of a mounted
+  archive even with delete sharing. `ReplaceFileW` succeeds while existing
+  mapped readers retain the old bytes; use it as the atomic writer's fallback
+  and test replacement with both old and new archive mounts alive.

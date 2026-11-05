@@ -2,6 +2,7 @@
 #include "DBScene.h"
 #include "GPixelFormat.h"
 #include "Misc/2Darray.h"
+#include "Misc/Geom.h"
 #include "System/GResource.h"
 
 #include "3Dmotor_export.h"
@@ -100,8 +101,8 @@ class CFileTexture : public CResourceLoader<STextureKey, NGfx::CTexture>
 	bool bIsFakeTexture;
 	// an ITextureOverride picture is expected; ask again each frame
 	bool bOverridePending;
-	// texels of the loaded picture per texel of the record (ITextureOverride)
-	int nTexelScale;
+	// Actual image texels per logical texel of the database record.
+	CVec2 vTexelScale;
 	CObj<CFileRequest> pRequest;
 
 	bool LoadOverride( NGfx::ETextureUsage eUsage, NGfx::EWrap eWrap );
@@ -114,7 +115,7 @@ public:
 	CFileTexture()
 		: bIsFakeTexture( false )
 		, bOverridePending( false )
-		, nTexelScale( 1 )
+		, vTexelScale( 1, 1 )
 	{
 	}
 
@@ -125,11 +126,10 @@ public:
 		pValue = 0;
 	}
 
-	// Texels of the current picture per texel of the texture record: 1, or an
-	// ITextureOverride picture's scale once it has replaced the one on disk
-	int GetTexelScale() const
+	// Includes both high-resolution DDS files and ITextureOverride pictures.
+	const CVec2 &GetTexelScale() const
 	{
-		return nTexelScale;
+		return vTexelScale;
 	}
 };
 

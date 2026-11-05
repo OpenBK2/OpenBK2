@@ -25,6 +25,7 @@ set(SOURCES
     ExporterFactory.cpp
     FocusMemoryWx.cpp
     FolderController.cpp
+    IconRenderingOptions.cpp
     InteractiveMaya.cpp
     InteractiveProcess.cpp
     Logger.cpp

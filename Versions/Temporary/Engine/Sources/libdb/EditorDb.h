@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+class CDataStream;
+
 namespace NDb
 {
 struct IObjMan;
@@ -44,6 +46,9 @@ LIBDB_EXPORT uint64_t GetPropertyChangeVersion();
 LIBDB_EXPORT void SaveChanges();
 //! First failure from the last save, including its destination. Empty on success.
 LIBDB_EXPORT const std::string &GetLastSaveError();
+//! Serialize an editor object, including hidden fields, without saving or changing its dirty state.
+//! The caller owns the output stream. Only a root object manipulator is accepted.
+LIBDB_EXPORT bool SerializeObject( IObjMan *pObject, CDataStream *pStream );
 //! Persist newly registered files without saving unrelated edited resources.
 LIBDB_EXPORT bool SaveChangedIndex();
 //! drop all cached resources

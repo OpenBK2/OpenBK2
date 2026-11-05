@@ -2,6 +2,7 @@ project(3Dmotor)
 set(SOURCES
     2DScene.cpp
     2DSceneSW.cpp
+    UITextureFilter.cpp
     4dCalcs.cpp
     aiInterval.cpp
     aiMap.cpp

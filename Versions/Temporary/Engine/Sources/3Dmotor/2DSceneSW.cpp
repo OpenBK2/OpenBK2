@@ -9,6 +9,8 @@
 #include "Render.h"
 #include "SWTexture.h"
 #include "System/BasicShare.h"
+#include "TextureCoordinates.h"
+#include "UITextureFilter.h"
 
 #include <boost/config.hpp>
 
@@ -81,6 +83,8 @@ struct STextureIterator
 {
 	unsigned int nU, nDU, nV, nDV, nVShift;
 	int nUMask, nVMask;
+	int nWidth, nHeight;
+	bool bPowerOfTwo;
 	int nMip;
 	const T *pMip;
 
@@ -106,12 +110,36 @@ struct STextureIterator
 		nVShift = 16 - nXBits;
 		nUMask = nXSize - 1;
 		nVMask = ( nYSize - 1 ) << nXBits;
+		nWidth = nXSize;
+		nHeight = nYSize;
+		bPowerOfTwo = ( nXSize & ( nXSize - 1 ) ) == 0 && ( nYSize & ( nYSize - 1 ) ) == 0;
 		pMip = &tex[nMip][0][0];
+	}
+
+	BOOST_FORCEINLINE int GetIndex() const
+	{
+		if ( bPowerOfTwo )
+		{
+			return ( ( nV >> nVShift ) & nVMask ) + ( ( nU >> 16 ) & nUMask );
+		}
+		// Exported UI images may have any dimensions. Bit masks only wrap
+		// power-of-two textures correctly; retain that fast path for terrain.
+		int nX = ( static_cast<int>( nU ) >> 16 ) % nWidth;
+		int nY = ( static_cast<int>( nV ) >> 16 ) % nHeight;
+		if ( nX < 0 )
+		{
+			nX += nWidth;
+		}
+		if ( nY < 0 )
+		{
+			nY += nHeight;
+		}
+		return nY * nWidth + nX;
 	}
 
 	BOOST_FORCEINLINE const T &Fetch()
 	{
-		const T &r = pMip[( ( nV >> nVShift ) & nVMask ) + ( ( nU >> 16 ) & nUMask )];
+		const T &r = pMip[GetIndex()];
 		nU += nDU;
 		nV += nDV;
 		return r;
@@ -122,7 +150,7 @@ struct STextureIterator
 	BOOST_FORCEINLINE const TT &Fetch( const std::vector<CArray2D<TT>> &tex )
 	{
 		const TT *pData = &tex[nMip][0][0];
-		const TT &r = pData[( ( nV >> nVShift ) & nVMask ) + ( ( nU >> 16 ) & nUMask )];
+		const TT &r = pData[GetIndex()];
 		nU += nDU;
 		nV += nDV;
 		return r;
@@ -134,8 +162,45 @@ class CTrueColorRender : public CSomeRender<CTrueColorRender, NGfx::SPixel8888>
 {
 public:
 private:
+	void RasterFilteredUI( int nY, int nLeft, int nRight )
+	{
+		// Use both screen derivatives, including vertical or rotated reductions.
+		const float fFootprint = (std::max)( std::hypot( texMapping.ptDU.x, texMapping.ptDV.x ),
+		                                     std::hypot( texMapping.ptDU.y, texMapping.ptDV.y ) );
+		const float fLOD = std::log2( (std::max)( 1.0f, fFootprint ) );
+		float fU = texMapping.ptDU.w + ( nLeft + 0.5f ) * texMapping.ptDU.x + ( nY + 0.5f ) * texMapping.ptDU.y;
+		float fV = texMapping.ptDV.w + ( nLeft + 0.5f ) * texMapping.ptDV.x + ( nY + 0.5f ) * texMapping.ptDV.y;
+		for ( int x = nLeft; x < nRight; ++x )
+		{
+			auto src = SampleUITexture( pTexture->mips, fU, fV, fLOD );
+			auto &dst = res[nY][x];
+			if ( bDoMask )
+			{
+				const uint32_t invA = 256 - src.a;
+				dst.r = src.r + ( ( dst.r * invA ) >> 8 );
+				dst.g = src.g + ( ( dst.g * invA ) >> 8 );
+				dst.b = src.b + ( ( dst.b * invA ) >> 8 );
+				dst.a = src.a + ( ( dst.a * invA ) >> 8 );
+			}
+			else
+			{
+				dst.r = ( src.r * multColor.r ) / 255;
+				dst.g = ( src.g * multColor.g ) / 255;
+				dst.b = ( src.b * multColor.b ) / 255;
+				dst.a = ( src.a * multColor.a ) / 255;
+			}
+			fU += texMapping.ptDU.x;
+			fV += texMapping.ptDV.x;
+		}
+	}
+
 	void RasterSpan( int nY, int nLeft, int nRight, float fZ, float fDZ, int nBackface )
 	{
+		if ( pTexture->bFilterUI )
+		{
+			RasterFilteredUI( nY, nLeft, nRight );
+			return;
+		}
 		STextureIterator<NGfx::SPixel8888> tex;
 		float fU = texMapping.ptDU.w + nLeft * texMapping.ptDU.x + nY * texMapping.ptDU.y;
 		float fV = texMapping.ptDV.w + nLeft * texMapping.ptDV.x + nY * texMapping.ptDV.y;
@@ -286,7 +351,11 @@ class CSWRects : public ISWRects
 		{
 			const CRectLayout::SRect &r = layout.rects[nTemp];
 			CVec3 vGeom[4], vMaskRect[4], vTextureRect[4];
-			FillTextureRect( vTextureRect, r.sTex.rcTexRect );
+			// Outlined icons use this software compositor, so map their logical
+			// coordinates to the full DDS just like the hardware 2D view does.
+			CTRect<float> textureRect = r.sTex.rcTexRect;
+			ScaleTextureRect( &textureRect, pTextureData->vTexelScale );
+			FillTextureRect( vTextureRect, textureRect );
 			float fWidth = r.fSizeX;
 			float fHeight = r.fSizeY;
 			vGeom[0] = CVec3( r.fX, r.fY, 0 );
@@ -635,6 +704,7 @@ public:
 	void AddPostFilter( CPtrFuncBase<CSWTextureData> *pTexture, int _nCenterX, int _nCenterY ) override;
 	void AddGrayingFilter( const CVec4 &vConvolution ) override;
 	void Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, bool bClear ) override;
+	void DrawImage( CArray2D<NGfx::SPixel8888> *pImage, const CTPoint<int> &vViewport ) override;
 	void DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport ) override;
 	void DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, float fScale ) override;
 };
@@ -757,6 +827,16 @@ void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, b
 		}
 		CalcMip( &r.res );
 	}
+}
+
+void CSW2DScene::DrawImage( CArray2D<NGfx::SPixel8888> *pImage, const CTPoint<int> &vViewport )
+{
+	// The same compositor as Draw(), with CPU output for previews and tests.
+	CTrueColorRender r;
+	r.SetRegion( CTRect<int>( 0, 0, vViewport.x, vViewport.y ) );
+	r.res.FillZero();
+	DrawSet( &r, &rects );
+	*pImage = r.res;
 }
 
 void CSW2DScene::DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport )

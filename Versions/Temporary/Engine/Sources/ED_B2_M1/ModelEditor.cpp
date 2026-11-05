@@ -46,6 +46,9 @@ CModelEditor::CModelEditor()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_EDITOR, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MODEL_EDITOR, ID_MODEL_VIEW_TOOLBAR, ID_MODEL_VIEW_TOOL );
+	// This handler exists even when a map, rather than a model, is open.
+	Singleton<ICommandHandlerContainer>()->Set( CHID_ICON_RENDERING, this );
+	Singleton<ICommandHandlerContainer>()->Register( CHID_ICON_RENDERING, ID_ICON_RENDER_ALL, ID_ICON_SETTINGS_CHANGED );
 }
 
 void CModelEditor::ResetGUI( bool bActive )
@@ -145,6 +148,8 @@ void CModelEditor::PreDestroyControls()
 
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MODEL_EDITOR );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MODEL_EDITOR );
+	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_ICON_RENDERING );
+	Singleton<ICommandHandlerContainer>()->Remove( CHID_ICON_RENDERING );
 	Destroy();
 }
 
@@ -213,6 +218,15 @@ bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch ( nCommandID )
 	{
+		case ID_ICON_RENDER_ALL:
+			ReRenderAllMechUnits();
+			return true;
+		case ID_ICON_SETTINGS_CHANGED:
+			if ( pModelState && GetObjectSet().szObjectTypeName == "MechUnitRPGStats" )
+			{
+				CreateTarget();
+			}
+			return true;
 		case ID_MODEL_VIEW_TOOLBAR:
 		{
 			if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
