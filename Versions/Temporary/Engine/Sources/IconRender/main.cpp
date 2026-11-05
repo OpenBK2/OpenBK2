@@ -26,8 +26,13 @@
 //              [--light=DBID] [--limit=N] [--mod=NAME] [--overrides=FILE]
 //              [--install=DIR] [--cache]
 //
-// --cache also writes each unit's high resolution picture into the game's unit
-// icon cache (GameX/UnitIconCache.h), so the game shows it without rendering
+// The comparison files go to --out, by default IconRender/ in the
+// installation. A folder that cannot be created stops the run before anything
+// is rendered.
+//
+// --cache writes each unit's high resolution picture into the game's unit
+// icon cache (GameX/UnitIconCache.h), and only that unless --out is given too,
+// so the game shows it without rendering
 // it first. Without --scale it uses the scale the game picks for the screen in
 // the profile, and the most supersampling that still fits the target.
 //
@@ -84,6 +89,7 @@
 #include "Stats_B2_M1/Vis2AI.h"
 #include "System/Dg.h"
 #include "System/FilePath.h"
+#include "System/FileUtils.h"
 #include "System/GeneralSettings.h"
 #include "System/GResource.h"
 #include "System/PlatformPaths.h"
@@ -1072,12 +1078,25 @@ int Run( const std::vector<std::string> &arguments )
 int RenderAll( const SOptions &_options )
 {
 	SOptions options = _options;
-	if ( options.szOutDir.empty() )
+	// The comparison files: wanted unless only the cache is being filled
+	const bool bWriteOut = !options.bCache || !options.szOutDir.empty();
+	if ( bWriteOut )
 	{
-		options.szOutDir = NFile::JoinPath( NMainLoop::GetBaseDir(), "IconRender" );
+		if ( options.szOutDir.empty() )
+		{
+			options.szOutDir = NFile::JoinPath( NMainLoop::GetBaseDir(), "IconRender" );
+		}
+		NFile::AppendSlash( &options.szOutDir, '/' );
+		// Checked once here rather than reported unit by unit: a shell that
+		// passed --out="$env:TEMP\x" unexpanded gave a name with a colon in it,
+		// and every unit then failed its writes after rendering
+		NFile::CreatePath( options.szOutDir );
+		if ( !NFile::DoesFolderExist( options.szOutDir ) )
+		{
+			fmt::print( stderr, "cannot create the output folder {}\n", options.szOutDir );
+			return 1;
+		}
 	}
-	NFile::AppendSlash( &options.szOutDir, '/' );
-	NFile::CreatePath( options.szOutDir );
 
 	const NDb::SAmbientLight *pLight = NDb::Get<NDb::SAmbientLight>( CDBID( options.szLight ) );
 	if ( !pLight )
@@ -1107,7 +1126,10 @@ int RenderAll( const SOptions &_options )
 	{
 		units.resize( options.nLimit );
 	}
-	fmt::print( "{} units, light {}, output {}\n", units.size(), options.szLight, options.szOutDir );
+	fmt::print( "{} units, light {}, output {}\n",
+	            units.size(),
+	            options.szLight,
+	            bWriteOut ? options.szOutDir : std::string( "the cache only" ) );
 
 	std::string szManifest =
 			"folder\tstats\tname\tcamera\tanchor_x\tanchor_y\tanchor_z\tdistance\tpitch\tyaw\tfov\tlight\tscale\tstatus\tcorrections\n";
@@ -1189,7 +1211,10 @@ int RenderAll( const SOptions &_options )
 		if ( pModel )
 		{
 			const std::string szUnitDir = options.szOutDir + szFolder;
-			NFile::CreatePath( szUnitDir );
+			if ( bWriteOut )
+			{
+				NFile::CreatePath( szUnitDir );
+			}
 			// The shipped icon, from wherever the VFS finds it (a mod or a patch
 			// pak may replace it). Its .dds sits beside the texture record.
 			CArray2D<uint32_t> original;
@@ -1204,7 +1229,10 @@ int RenderAll( const SOptions &_options )
 				std::string szDDS;
 				if ( ReadVFSFile( szDDSPath, &szDDS ) )
 				{
-					WriteFile( szUnitDir + "orig.dds", szDDS );
+					if ( bWriteOut )
+					{
+						WriteFile( szUnitDir + "orig.dds", szDDS );
+					}
 					std::unique_ptr<CDataStream> pStream( NVFS::GetMainVFS()->OpenFile( szDDSPath ) );
 					bOriginal = pStream && NImage::LoadImageDDS( &original, pStream.get() );
 				}
@@ -1239,7 +1267,7 @@ int RenderAll( const SOptions &_options )
 			else
 			{
 				Downsample( &hq, hqFull, options.nSupersample );
-				if ( !WriteTGA( szUnitDir + "x1.tga", x1 ) || !WriteTGA( szUnitDir + "hq.tga", hq ) )
+				if ( bWriteOut && ( !WriteTGA( szUnitDir + "x1.tga", x1 ) || !WriteTGA( szUnitDir + "hq.tga", hq ) ) )
 				{
 					szStatus = "write failed";
 				}
@@ -1275,7 +1303,7 @@ int RenderAll( const SOptions &_options )
 		++nDone;
 		fmt::print( "[{}/{}] {} {} {}\n", nDone, units.size(), szStatus, szStatsPath, szCorrections );
 	}
-	if ( !WriteFile( options.szOutDir + "manifest.tsv", szManifest ) )
+	if ( bWriteOut && !WriteFile( options.szOutDir + "manifest.tsv", szManifest ) )
 	{
 		fmt::print( stderr, "cannot write {}manifest.tsv\n", options.szOutDir );
 		return 1;
