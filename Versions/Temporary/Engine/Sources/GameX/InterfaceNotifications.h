@@ -1,10 +1,11 @@
 #pragma once
 
+#include "B2_M1_World/MapObj.h"
 #include "B2_M1_World/Notifications.h"
 #include "Misc/HashFuncs.h"
+#include "System/det_map.h"
 #include "UISpecificB2/UISpecificB2.h"
 
-class CMapObj;
 struct IAILogic;
 
 namespace NDb
@@ -75,6 +76,7 @@ public:
 		int nID;
 		std::vector<CPtr<CMapObj>> objects;
 		std::wstring wszText;
+		bool bPersistentObjective = false;
 
 		ZEND int operator&( IBinSaver &f ) override
 		{
@@ -86,6 +88,7 @@ public:
 			f.Add( 7, &nID );
 			f.Add( 8, &objects );
 			f.Add( 9, &wszText );
+			f.Add( 10, &bPersistentObjective );
 			return 0;
 		}
 	};
@@ -156,6 +159,8 @@ private:
 	std::vector<int> freeIDs;
 	std::unordered_map<int, SMapPointers> pointers;
 	CPtr<IAILogic> pAI;
+	// Keep postfixes while entries are hidden, so a later pin restores the latest script text.
+	det_map<int, std::wstring> objectivePostfixes;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -183,6 +188,11 @@ private:
 		f.Add( 29, &freeIDs );
 		f.Add( 30, &pointers );
 		f.Add( 31, &pAI );
+		if ( f.IsReading() )
+		{
+			objectivePostfixes.clear();
+		}
+		f.Add( 32, &objectivePostfixes );
 		return 0;
 	}
 
@@ -234,6 +244,7 @@ private:
 	void RemoveObjectivePointers( int nID );
 	void UpdateObjectivePointers( int nID );
 	void AddObjectiveNotification( int nID, NDb::ENotificationType eType );
+	void UpdateObjectiveNotificationText( SEvent *pEvent );
 	void NewObjective( bool bChecked );
 	void UpdateMarkers();
 
@@ -268,6 +279,8 @@ public:
 
 	void OnEvent( const SEventParams &params ) override;
 	void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID ) override;
+	void KeepObjectiveNotified( int nID, bool bKeep ) override;
+	void UpdateObjectiveNotification( int nID, const std::string &szPostfix ) override;
 
 	void PlaceMarker( const CVec2 &vPos ) override;
 	//}

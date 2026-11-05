@@ -10,6 +10,7 @@
 #include "InterfaceMisc.h"
 #include "InterfaceNotifications.h"
 #include "InterfaceState.h"
+#include "MessageParts.h"
 #include "Misc/StrProc.h"
 #include "SaveLoadHelper.h"
 #include "ScenarioTracker.h"
@@ -871,6 +872,10 @@ void CVisualNotifications::OnBtn( const std::string &szSender, bool bRightBtn )
 		{
 			if ( bRightBtn )
 			{
+				if ( pEvent->bPersistentObjective )
+				{
+					return;
+				}
 				if ( pParent )
 				{
 					pParent->RemoveChild( pEvent->pItemWnd );
@@ -1066,7 +1071,8 @@ void CVisualNotifications::UpdateEvents( float fDeltaTime )
 		SEvent *pEvent = *it;
 
 		pEvent->fVisibleTime += fDeltaTime;
-		if ( pEvent->pDBEvent->fAutoRemoveTime > 0.0f && pEvent->fVisibleTime > pEvent->pDBEvent->fAutoRemoveTime )
+		if ( !pEvent->bPersistentObjective && pEvent->pDBEvent->fAutoRemoveTime > 0.0f &&
+		     pEvent->fVisibleTime > pEvent->pDBEvent->fAutoRemoveTime )
 		{
 			if ( pParent )
 			{
@@ -1090,7 +1096,7 @@ void CVisualNotifications::UpdateEvents( float fDeltaTime )
 
 			SEvent *pEvent = *it;
 
-			if ( pEvent->pDBEvent->fAutoRemoveTime > 0.0f ) // can auto remove
+			if ( !pEvent->bPersistentObjective && pEvent->pDBEvent->fAutoRemoveTime > 0.0f ) // can auto remove
 			{
 				if ( pParent )
 				{
@@ -1129,7 +1135,7 @@ void CVisualNotifications::RearrangeEvents()
 
 void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 {
-	*pErase = ( pEvent->pDBEvent->fAutoRemoveTime > 0.0f );
+	*pErase = !pEvent->bPersistentObjective && pEvent->pDBEvent->fAutoRemoveTime > 0.0f;
 
 	vLastCameraPos = Camera()->GetAnchor();
 
@@ -1372,7 +1378,9 @@ void CVisualNotifications::RemoveEvent( NDb::ENotificationEventType eEventType, 
 	{
 		SEvent *pEvent = *it;
 
-		if ( ( eEventType == (NDb::ENotificationEventType)( -1 ) || pEvent->pDBEvent->eType == eEventType ) &&
+		// Generic feedback cleanup can share an ID with an objective; only its pin call may remove it.
+		if ( !pEvent->bPersistentObjective &&
+		     ( eEventType == (NDb::ENotificationEventType)( -1 ) || pEvent->pDBEvent->eType == eEventType ) &&
 		     ( nID == -1 || pEvent->nID == nID ) )
 		{
 			if ( pParent )
@@ -1408,7 +1416,8 @@ const NDb::SMissionObjective *CVisualNotifications::GetObjective( int nID )
 		return 0;
 	}
 
-	const NDb::SMapInfo *pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission();
+	const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+	const NDb::SMapInfo *pMapInfo = pTracker ? pTracker->GetCurrentMission() : nullptr;
 	if ( !pMapInfo )
 	{
 		return 0;
@@ -1443,6 +1452,93 @@ void CVisualNotifications::OnEvent( const SEventParams &params )
 void CVisualNotifications::OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID )
 {
 	RemoveEvent( eEventType, nID );
+}
+
+void CVisualNotifications::KeepObjectiveNotified( int nID, bool bKeep )
+{
+	const auto existing =
+			std::find_if( events.begin(),
+	                  events.end(),
+	                  [nID]( const auto &event ) { return event->bPersistentObjective && event->nID == nID; } );
+	if ( !bKeep )
+	{
+		if ( existing != events.end() )
+		{
+			if ( pParent )
+			{
+				pParent->RemoveChild( ( *existing )->pItemWnd );
+			}
+			events.erase( existing );
+			RearrangeEvents();
+		}
+		return;
+	}
+	const NDb::SMissionObjective *pObjective = GetObjective( nID );
+	if ( existing != events.end() || !pObjective )
+	{
+		return;
+	}
+
+	SEventParams params;
+	params.eEventType = NDb::NEVT_OBJECTIVE_RECEIVED;
+	params.nID = nID;
+	params.positions = pObjective->mapPositions;
+	SEvent *pEvent = CreateEventItem( params );
+	if ( !pEvent )
+	{
+		return;
+	}
+	pEvent->bPersistentObjective = true;
+	events.push_back( pEvent );
+	UpdateObjectiveNotificationText( pEvent );
+	CreateEventItemView( pEvent );
+	RearrangeEvents();
+}
+
+void CVisualNotifications::UpdateObjectiveNotificationText( SEvent *pEvent )
+{
+	const NDb::SMissionObjective *pObjective = GetObjective( pEvent->nID );
+	if ( !pObjective )
+	{
+		return;
+	}
+	std::wstring wszText = NGameX::GetMessagePart( NGameX::GetUIConsts(), L"OBJECTIVE_NOTIFICATION_PREFIX" );
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pObjective->, Header ) )
+	{
+		wszText += GET_TEXT_PRE( pObjective->, Header );
+	}
+	const auto postfix = objectivePostfixes.find( pEvent->nID );
+	if ( postfix != objectivePostfixes.end() )
+	{
+		wszText += postfix->second;
+	}
+	if ( pEvent->wszText == wszText )
+	{
+		return;
+	}
+	pEvent->wszText = wszText;
+	// Update the existing text control only: countdown ticks must not recreate the icon or replay its sound.
+	if ( ITextView *pDescView = GetChildChecked<ITextView>( pEvent->pItemWnd, "Desc", true ) )
+	{
+		pDescView->SetText( pDescView->GetDBText() + InterfaceState()->GetMissionConsoleMLTag() + wszText );
+	}
+}
+
+void CVisualNotifications::UpdateObjectiveNotification( int nID, const std::string &szPostfix )
+{
+	if ( !GetObjective( nID ) )
+	{
+		return;
+	}
+	objectivePostfixes[nID] = NStr::ToUnicode( szPostfix );
+	for ( const auto &event : events )
+	{
+		if ( event->bPersistentObjective && event->nID == nID )
+		{
+			UpdateObjectiveNotificationText( event );
+			break;
+		}
+	}
 }
 
 bool CVisualNotifications::GetEventPos( CVec2 *pPos, const SEvent *pEvent ) const
