@@ -1,4 +1,6 @@
-# Per-unit camera corrections for IconRender (--overrides=this file).
+# Per-unit camera corrections shared by IconRender and the map editor.
+# Compiled into SceneB2 as the default set. IconRender --overrides=FILE replaces
+# it with a custom set; --overrides=none disables it.
 #
 # Most units keep the camera the model editor saved for their icon, which
 # reproduces the shipped picture. These are the ones where it does not suit, or

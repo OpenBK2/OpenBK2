@@ -282,3 +282,13 @@ context. Read `git diff` of every touched file before building.
   archive even with delete sharing. `ReplaceFileW` succeeds while existing
   mapped readers retain the old bytes; use it as the atomic writer's fallback
   and test replacement with both old and new archive mounts alive.
+- IconRender and editor batch exports now share `SceneB2/UnitIconRendering`.
+  Keep camera corrections in `scripts/iconrender/icon_overrides.txt`; CMake embeds
+  that file for both callers. The editor supplies its saved lighting/grid and
+  reads live camera metadata, while the CLI reads the hidden fields from XML.
+- Camera regression fixtures must call `IsPropertyModified` before changing a
+  value to enable its lazy baseline capture. Checking only after the edit reports
+  false even when the unsaved value is correctly retained.
+- Running IconRender from the Windows build tree needs `gr2` in its link closure
+  and the FFmpeg `bin` directory on PATH for codec DLL dependencies. An exit code
+  of 0xc0000135 before any output is a loader failure, not an empty icon render.

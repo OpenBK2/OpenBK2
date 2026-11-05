@@ -19,6 +19,8 @@ set(SOURCES
 )
 bk2_add_executable(IconRender ${SOURCES})
 target_link_libraries(IconRender PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools GameX Image Input libdb Main MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib fmt::fmt-header-only)
+# Make the skeleton runtime available beside the executable in the build tree too.
+target_link_libraries(IconRender PRIVATE gr2)
 if(WIN32)
     target_link_libraries(IconRender PRIVATE winapi)
     # The game's UTF-8 code page manifest: narrow strings are UTF-8 in the

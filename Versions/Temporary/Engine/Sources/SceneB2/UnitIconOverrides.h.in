@@ -1,0 +1,4 @@
+#pragma once
+
+// Generated from scripts/iconrender/icon_overrides.txt at configure time.
+constexpr const char SZ_UNIT_ICON_OVERRIDES[] = R"icon_overrides(@UNIT_ICON_OVERRIDES@)icon_overrides";
