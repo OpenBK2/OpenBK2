@@ -3,6 +3,7 @@
 #include "MapEditor/CommandHandlerContainer.h"
 #include "MapEditor/OptionsDialogWx.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/DefaultsOptions.h"
 #include "MapEditorLib/IconRenderingOptions.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -17,7 +18,9 @@
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
 #include <wx/listbox.h>
+#include <wx/simplebook.h>
 #include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 
 namespace
 {
@@ -124,10 +127,16 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 	NSingleton::RegisterSingleton( new CCommandHandlerContainer, ICommandHandlerContainer::tidTypeID );
 	CRenderHandler handler;
 	Singleton<ICommandHandlerContainer>()->Set( CHID_ICON_RENDERING, &handler );
+	EXPECT_EQ( NEditorDefaults::COMMON_DEPLOY_TEMPLATE, NEditorDefaults::LoadOptions().szDeployTemplate );
 
 	WithDialog(
 			[]( wxDialog *pDialog )
 			{
+				auto *pTemplate = dynamic_cast<wxTextCtrl *>( pDialog->FindWindow( "DefaultDeployTemplate" ) );
+				ASSERT_NE( nullptr, pTemplate );
+				EXPECT_EQ( NEditorDefaults::COMMON_DEPLOY_TEMPLATE, pTemplate->GetValue().ToStdString( wxConvUTF8 ) );
+				// A cancelled options dialog must discard the template selection too.
+				pTemplate->SetValue( "Reinforcements/cancelled.xdb" );
 				std::vector<wxSpinCtrl *> controls;
 				FindControls( pDialog, &controls );
 				ASSERT_EQ( 2u, controls.size() );
@@ -145,10 +154,14 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 	EXPECT_EQ( 42, NIconRendering::LoadOptions().nWidth );
 	EXPECT_EQ( 42, NIconRendering::LoadOptions().nHeight );
 	EXPECT_TRUE( NIconRendering::LoadOptions().bSeparatePak );
+	EXPECT_EQ( NEditorDefaults::COMMON_DEPLOY_TEMPLATE, NEditorDefaults::LoadOptions().szDeployTemplate );
 
 	WithDialog(
 			[]( wxDialog *pDialog )
 			{
+				auto *pTemplate = dynamic_cast<wxTextCtrl *>( pDialog->FindWindow( "DefaultDeployTemplate" ) );
+				ASSERT_NE( nullptr, pTemplate );
+				pTemplate->SetValue( wxString::FromUTF8( u8"Reinforcements/\u00dcberfall.xdb" ) );
 				std::vector<wxSpinCtrl *> controls;
 				FindControls( pDialog, &controls );
 				ASSERT_EQ( 2u, controls.size() );
@@ -158,6 +171,7 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 				FindControls( pDialog, &checks );
 				ASSERT_EQ( 1u, checks.size() );
 				Click( pDialog, wxID_APPLY );
+				EXPECT_EQ( u8"Reinforcements/\u00dcberfall.xdb", NEditorDefaults::LoadOptions().szDeployTemplate );
 				EXPECT_EQ( 84, NIconRendering::LoadOptions().nWidth );
 				EXPECT_EQ( 126, NIconRendering::LoadOptions().nHeight );
 				// Re-render must also apply edits made since the last Apply.
@@ -199,7 +213,37 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 				FindControls( pDialog, &tabs );
 				ASSERT_EQ( 1u, tabs.size() );
 				EXPECT_EQ( "Icon Rendering", tabs[0]->GetStringSelection().ToStdString() );
+				ASSERT_EQ( 2u, tabs[0]->GetCount() );
+				EXPECT_EQ( "Defaults", tabs[0]->GetString( 1 ).ToStdString() );
+				tabs[0]->SetSelection( 1 );
+				wxCommandEvent select( wxEVT_LISTBOX, tabs[0]->GetId() );
+				select.SetInt( 1 );
+				tabs[0]->GetEventHandler()->ProcessEvent( select );
+				std::vector<wxSimplebook *> books;
+				FindControls( pDialog, &books );
+				ASSERT_EQ( 1u, books.size() );
+				EXPECT_EQ( 1, books[0]->GetSelection() );
+				auto *pTemplate = dynamic_cast<wxTextCtrl *>( pDialog->FindWindow( "DefaultDeployTemplate" ) );
+				ASSERT_NE( nullptr, pTemplate );
+				EXPECT_TRUE( pTemplate->IsShownOnScreen() );
+				EXPECT_EQ( u8"Reinforcements/\u00dcberfall.xdb", pTemplate->GetValue().ToStdString( wxConvUTF8 ) );
+				std::vector<wxButton *> buttons;
+				FindControls( pDialog, &buttons );
+				wxButton *pReset = nullptr;
+				for ( wxButton *pButton : buttons )
+				{
+					if ( pButton->GetLabel() == "Use Common Template" )
+					{
+						pReset = pButton;
+					}
+				}
+				ASSERT_NE( nullptr, pReset );
+				Click( pReset, pReset->GetId() );
+				EXPECT_EQ( NEditorDefaults::COMMON_DEPLOY_TEMPLATE, pTemplate->GetValue().ToStdString( wxConvUTF8 ) );
+				Click( pDialog, wxID_APPLY );
 			} );
+	EXPECT_EQ( NEditorDefaults::COMMON_DEPLOY_TEMPLATE, NEditorDefaults::LoadOptions().szDeployTemplate );
+	EXPECT_FALSE( NEditorDefaults::SaveOptions( { "" } ) );
 	EXPECT_TRUE( NIconRendering::LoadOptions().bSeparatePak );
 	EXPECT_FALSE( NIconRendering::SaveOptions( { 0, 42 } ) );
 	EXPECT_EQ( 168, NIconRendering::LoadOptions().nWidth );
