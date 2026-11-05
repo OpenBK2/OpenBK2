@@ -86,8 +86,8 @@ private:
 	struct SReinforcementObject
 	{
 		ZDATA
-		SMapObjectInfo mapObject;
-		CDBPtr<SHPObjectRPGStats> pStats;
+		NDb::SMapObjectInfo mapObject;
+		CDBPtr<NDb::SHPObjectRPGStats> pStats;
 
 		ZEND int operator&( IBinSaver &f )
 		{
@@ -98,8 +98,8 @@ private:
 
 		SReinforcementObject() {}
 
-		SReinforcementObject( const SMapObjectInfo &_mapObject,
-		                      const SHPObjectRPGStats *_pStats /*, IScenarioUnit *_pScenarioUnit*/ )
+		SReinforcementObject( const NDb::SMapObjectInfo &_mapObject,
+		                      const NDb::SHPObjectRPGStats *_pStats /*, IScenarioUnit *_pScenarioUnit*/ )
 			: mapObject( _mapObject )
 			, pStats( _pStats ) /*, pScenarioUnit( _pScenarioUnit ) */
 		{
@@ -139,9 +139,9 @@ private:
 	// проставить новые линки подкреплению
 	void SetNewLinksToReinforcement( CReinfList *pReinf, det_map<int, int> *pOld2NewLinks );
 	//
-	bool CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift );
-	bool CanFormationLand( const SMapObjectInfo &mapObject, const CVec2 &vShift = VNULL2 );
-	bool CanUnitLand( const SMapObjectInfo &mapObject, const CVec2 &vShift = VNULL2 );
+	bool CanLandWithShift( const NDb::SMapObjectInfo &mapObject, CVec2 *pvShift );
+	bool CanFormationLand( const NDb::SMapObjectInfo &mapObject, const CVec2 &vShift = VNULL2 );
+	bool CanUnitLand( const NDb::SMapObjectInfo &mapObject, const CVec2 &vShift = VNULL2 );
 
 	void LandReinforcementWithoutLandCheck( CReinfList *pReinf, const CVec2 &vShift );
 	void LandSuspendedReiforcements();
@@ -184,9 +184,9 @@ public:
 
 	int GetScriptID( CUpdatableObj *pObj ) const;
 	void AddObjToScriptGroup( CUpdatableObj *pObj, const int nGroup );
-	void AddUnitToReinforcGroup( const SMapObjectInfo &mapObject,
+	void AddUnitToReinforcGroup( const NDb::SMapObjectInfo &mapObject,
 	                             const int nGroup,
-	                             const struct SHPObjectRPGStats *pStats /*, IScenarioUnit *pScenarioUnit */ );
+	                             const NDb::SHPObjectRPGStats *pStats /*, IScenarioUnit *pScenarioUnit */ );
 	// удалить все невалидные юниты в группе,
 	void DelInvalidUnits( const int scriptId );
 
@@ -344,6 +344,9 @@ public:
 
 	// params: <number of objective> <new value of objective>; returns: none;
 	static int ObjectiveChanged( struct lua_State *state );
+	// Pin/unpin an objective notification and replace its UTF-8 postfix independently of objective state.
+	AILOGIC_EXPORT static int KeepObjectiveNotified( struct lua_State *state );
+	AILOGIC_EXPORT static int UpdateObjectiveNotification( struct lua_State *state );
 
 	// params: <script id of unit>; returns: <number of primary ammo> <number of secondary ammo>
 	static int GetNAmmo( struct lua_State *state );

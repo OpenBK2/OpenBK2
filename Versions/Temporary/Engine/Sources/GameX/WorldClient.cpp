@@ -2618,6 +2618,20 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 
 	switch ( pUpdate->info.feedBackType )
 	{
+		case EFB_KEEP_OBJECTIVE_NOTIFIED:
+		{
+			pNotifications->KeepObjectiveNotified( pUpdate->info.nParam >> 8, ( pUpdate->info.nParam & 0xff ) != 0 );
+			break;
+		}
+		case EFB_UPDATE_OBJECTIVE_NOTIFICATION:
+		{
+			const auto *pPostfix = dynamic_cast<const SFeedBackObjectiveNotification *>( pUpdate->info.pParam.GetPtr() );
+			if ( pPostfix )
+			{
+				pNotifications->UpdateObjectiveNotification( pUpdate->info.nParam, pPostfix->szPostfix );
+			}
+			break;
+		}
 		case EFB_OBJECTIVE_CHANGED:
 		{
 			int nObjective = pUpdate->info.nParam >> 8;
