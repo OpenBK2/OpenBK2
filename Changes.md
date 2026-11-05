@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Multiplayer maps can set `OnBaseCaptureReinfPointsGain` and `OnBaseLostReinfPointsLoss` to change reinforcement points awarded to each eligible teammate on capturing or losing a base. These are signed integers, defaulting to `1` and `-1`; `0` disables the respective point change. Existing maps keep the original rules, and saves and replays preserve custom values. Examples are in `OBK2_Examples/MultiplayerBaseReinforcementPoints`.
+
 - Multiplayer maps can set `AddReinfsWithTimer` to `false` to disable periodic extra reinforcement calls and hide the HUD countdown in CLASSIC or COOP. Initial credits, explicit grants and normal cooldowns remain available. The default is `true`, and replays preserve the setting. Examples are in `OBK2_Examples/MultiplayerReinforcementTimer`.
 
 - Surrendering in COOP now shows the defeat camera and results instead of leaving a stopped mission on screen. A personal surrender does not declare a victory for the AI or a defeat for the remaining humans; its replay stays unfinished until the map script declares an outcome.
