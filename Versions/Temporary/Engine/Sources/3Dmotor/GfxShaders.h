@@ -116,5 +116,6 @@ extern SPShader psG5DiffuseTexSpec;
 extern SPShader psG5DiffuseTexSpecLM;
 extern SPShader psG5DiffuseTexTerrain;
 extern SPShader psG5DiffuseTex2Terrain;
+extern SPShader psGammaRamp;
 
-extern SPShader *psAllShaders[62];
+extern SPShader *psAllShaders[63];

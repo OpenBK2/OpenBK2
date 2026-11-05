@@ -86,7 +86,7 @@ std::string Hex( uint32_t dw )
 TEST( ShaderAsm, MatchesD3DXOnEveryGameShader )
 {
 	const std::vector<SEntry> entries = ReadCorpus( GFXSHADERS_CORPUS );
-	ASSERT_EQ( entries.size(), 116u ) << "reading " << GFXSHADERS_CORPUS;
+	ASSERT_EQ( entries.size(), 117u ) << "reading " << GFXSHADERS_CORPUS;
 
 	int nMatched = 0;
 	for ( const SEntry &e : entries )

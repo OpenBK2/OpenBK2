@@ -504,9 +504,12 @@ static void CalcGammaRamp2Bounded( NGfx::SPixel8888 *pRamp, float fBrightness, f
 		float fGammaValue = NDetMath::Pow( fVal, fPower );
 		float fContrastValue = Clamp( fA * fGammaValue + fB, 0.0f, 1.0f );
 		float fResult = Clamp( fContrastValue + fBrightness, 0.0f, 1.0f );
-		pRamp[i].r = fResult * 255.0f;
-		pRamp[i].g = fResult * 255.0f;
-		pRamp[i].b = fResult * 255.0f;
+		// rounded, where truncation took some levels one down with every
+		// setting at its default (i / 255 * 255 can come out just under i)
+		const uint8_t nLevel = static_cast<uint8_t>( Float2Int( fResult * 255.0f ) );
+		pRamp[i].r = nLevel;
+		pRamp[i].g = nLevel;
+		pRamp[i].b = nLevel;
 	}
 }
 
@@ -530,9 +533,12 @@ inline void CalcGammaRamp( NGfx::SPixel8888 *pRamp, float fBrightness, float fCo
 
 void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 {
-	static float s_fLastGamma = NGamma::s_fGamma;
-	static float s_fLastContrast = NGamma::s_fContrast;
-	static float s_fLastBrightness = NGamma::s_fBrightness;
+	// -1 is outside the 0..1 the options screen sets, so the first frame always
+	// builds the ramp. Starting from the current values, as this did, meant
+	// settings loaded from the profile were never applied until changed again.
+	static float s_fLastGamma = -1;
+	static float s_fLastContrast = -1;
+	static float s_fLastBrightness = -1;
 	//
 	if ( NGamma::s_fGamma != s_fLastGamma || NGamma::s_fContrast != s_fLastContrast ||
 	     NGamma::s_fBrightness != s_fLastBrightness )
