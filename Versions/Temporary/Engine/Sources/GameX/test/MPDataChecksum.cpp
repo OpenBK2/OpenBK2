@@ -132,6 +132,8 @@ TEST_F( MPDataChecksum, OlderBinaryMapKeepsClassicDefaultsAndUnrestrictedTechnol
 	EXPECT_TRUE( map->allowedNations.empty() );
 	EXPECT_TRUE( map->bSpawnStartingUnits );
 	EXPECT_TRUE( map->bAddReinfsWithTimer );
+	EXPECT_EQ( map->nOnBaseCaptureReinfPointsGain, 1 );
+	EXPECT_EQ( map->nOnBaseLostReinfPointsLoss, -1 );
 }
 
 TEST_F( MPDataChecksum, MultiplayerArmyDefaultsSupportOldXmlAndIgnoreRetiredBinaryDifficulty )
@@ -142,6 +144,8 @@ TEST_F( MPDataChecksum, MultiplayerArmyDefaultsSupportOldXmlAndIgnoreRetiredBina
 	EXPECT_EQ( legacy->nPlayers, 4 );
 	EXPECT_TRUE( legacy->bSpawnStartingUnits );
 	EXPECT_TRUE( legacy->bAddReinfsWithTimer );
+	EXPECT_EQ( legacy->nOnBaseCaptureReinfPointsGain, 1 );
+	EXPECT_EQ( legacy->nOnBaseLostReinfPointsLoss, -1 );
 	WriteScript( "disabled-starting-units.xdb",
 	             "<MultiplayerMap><SpawnStartingUnits>false</SpawnStartingUnits></MultiplayerMap>" );
 	CDBPtr<NDb::SMultiplayerMap> disabled = NDb::Get<NDb::SMultiplayerMap>( CDBID( "disabled-starting-units.xdb" ) );
@@ -233,6 +237,73 @@ TEST_F( MPDataChecksum, StartingArmyAndTimedCallPoliciesAffectClassicAndCoopComp
 		map->bAddReinfsWithTimer = true;
 		pConsts->RecalculateMPDataVersionChecksum();
 		EXPECT_EQ( enabled, pConsts->GetMPDataVersionChecksumWithMap( map ) );
+	}
+}
+
+TEST_F( MPDataChecksum, BaseCaptureBonusesLoadAuthoredXmlAndKeepIndependentBinaryChunks )
+{
+	WriteScript( "base-bonuses.xdb",
+	             "<MultiplayerMap><OnBaseCaptureReinfPointsGain>3</OnBaseCaptureReinfPointsGain>"
+	             "<OnBaseLostReinfPointsLoss>-2</OnBaseLostReinfPointsLoss></MultiplayerMap>" );
+	CDBPtr<NDb::SMultiplayerMap> authored = NDb::Get<NDb::SMultiplayerMap>( CDBID( "base-bonuses.xdb" ) );
+	ASSERT_NE( authored, nullptr );
+	EXPECT_EQ( authored->nOnBaseCaptureReinfPointsGain, 3 );
+	EXPECT_EQ( authored->nOnBaseLostReinfPointsLoss, -2 );
+	WriteScript( "no-base-bonuses.xdb",
+	             "<MultiplayerMap><OnBaseCaptureReinfPointsGain>0</OnBaseCaptureReinfPointsGain>"
+	             "<OnBaseLostReinfPointsLoss>0</OnBaseLostReinfPointsLoss></MultiplayerMap>" );
+	CDBPtr<NDb::SMultiplayerMap> disabled = NDb::Get<NDb::SMultiplayerMap>( CDBID( "no-base-bonuses.xdb" ) );
+	ASSERT_NE( disabled, nullptr );
+	EXPECT_EQ( disabled->nOnBaseCaptureReinfPointsGain, 0 );
+	EXPECT_EQ( disabled->nOnBaseLostReinfPointsLoss, 0 );
+
+	auto *original = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	auto *restored = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	ASSERT_NE( original, nullptr );
+	ASSERT_NE( restored, nullptr );
+	for ( const auto values : { std::pair<int, int>( 3, -2 ), { 0, 0 }, { -4, 5 } } )
+	{
+		original->nOnBaseCaptureReinfPointsGain = values.first;
+		original->nOnBaseLostReinfPointsLoss = values.second;
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			original->operator&( *saver );
+		}
+		stream.Seek( 0 );
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+			EXPECT_TRUE( saver->HasChunk( 13 ) );
+			EXPECT_TRUE( saver->HasChunk( 14 ) );
+			restored->operator&( *saver );
+		}
+		EXPECT_EQ( restored->nOnBaseCaptureReinfPointsGain, values.first );
+		EXPECT_EQ( restored->nOnBaseLostReinfPointsLoss, values.second );
+	}
+}
+
+TEST_F( MPDataChecksum, EachBaseCaptureBonusAffectsClassicAndCoopCompatibility )
+{
+	auto *map = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	ASSERT_NE( map, nullptr );
+	for ( const auto mode : { NDb::CLASSIC, NDb::COOP } )
+	{
+		SCOPED_TRACE( int( mode ) );
+		map->eGameType = mode;
+		map->nOnBaseCaptureReinfPointsGain = 1;
+		map->nOnBaseLostReinfPointsLoss = -1;
+		pConsts->RecalculateMPDataVersionChecksum();
+		const uint32_t classic = pConsts->GetMPDataVersionChecksumWithMap( map );
+		map->nOnBaseCaptureReinfPointsGain = 0;
+		pConsts->RecalculateMPDataVersionChecksum();
+		EXPECT_NE( classic, pConsts->GetMPDataVersionChecksumWithMap( map ) );
+		map->nOnBaseCaptureReinfPointsGain = 1;
+		map->nOnBaseLostReinfPointsLoss = 0;
+		pConsts->RecalculateMPDataVersionChecksum();
+		EXPECT_NE( classic, pConsts->GetMPDataVersionChecksumWithMap( map ) );
+		map->nOnBaseLostReinfPointsLoss = -1;
+		pConsts->RecalculateMPDataVersionChecksum();
+		EXPECT_EQ( classic, pConsts->GetMPDataVersionChecksumWithMap( map ) );
 	}
 }
 

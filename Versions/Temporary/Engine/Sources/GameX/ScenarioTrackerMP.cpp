@@ -15,6 +15,7 @@
 #include "GameX_export.h"
 
 #include <algorithm>
+#include <limits>
 
 #include <fmt/format.h>
 #include <zconf.h>
@@ -135,6 +136,8 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 	nMultiplayerDifficulty = 0;
 	bSpawnStartingUnits = true;
 	bAddReinfsWithTimer = true;
+	nOnBaseCaptureReinfPointsGain = 1;
+	nOnBaseLostReinfPointsLoss = -1;
 
 	nSecondsToReinf = 0;
 
@@ -1065,7 +1068,9 @@ void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, i
 		return;
 	}
 
-	players[nPlayer].nReinforcementCallsLeft += nCalls;
+	// A large authored base bonus must leave subsequent timer grants safe as well.
+	const int nCapacity = ( std::numeric_limits<int>::max )() - (std::max)( players[nPlayer].nReinforcementCallsLeft, 0 );
+	players[nPlayer].nReinforcementCallsLeft += (std::min)( nCalls, nCapacity );
 	const auto message = fmt::format( "Player {} reinf qty increase", nPlayer );
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1, message.c_str() );
 }
