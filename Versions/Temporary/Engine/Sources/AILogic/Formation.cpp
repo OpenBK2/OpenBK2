@@ -605,6 +605,8 @@ void CFormation::ChangePlayer( const uint8_t _cPlayer )
 				( *this )[i]->ChangePlayer( cPlayer );
 			}
 		}
+		// Hand over the complete formation once, after all its soldiers have changed owner.
+		theSupremeBeing.GiveNewUnitsToGenerals( { this }, true );
 	}
 }
 

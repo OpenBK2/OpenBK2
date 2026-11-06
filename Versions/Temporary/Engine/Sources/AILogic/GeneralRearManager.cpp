@@ -1,11 +1,14 @@
 #include "stdafx.h"
 
+#include "Diplomacy.h"
 #include "Formation.h"
 #include "GeneralAirForce.h"
 #include "GeneralInternal.h"
 #include "PlayerReinforcement.h"
 #include "Reinforcement.h"
 #include "Soldier.h"
+
+#include <cmath>
 
 #include <fmt/format.h>
 
@@ -16,6 +19,7 @@
 #define AIR_REINF_TURN_LIMIT 2
 
 extern NTimer::STime curTime;
+extern CDiplomacy theDipl;
 extern CPlayerReinforcementArray theReinfArray;
 
 void CGeneral::InitRearManager()
@@ -37,18 +41,24 @@ static const bool IsAviationReinfType( const int /*NDb::EReinforcementType*/ eRT
 
 void CGeneral::CheckAvailableReinforcement()
 {
+	// Reinforcements belong to map players, not their shared diplomacy side.
+	const int nPlayer = GetPlayer();
+	if ( nPlayer < 0 || nPlayer >= theReinfArray.size() )
+	{
+		return;
+	}
 	int nReinfTypeNeeded, nReinfTypeToCall = -2;
 	float fEffect, fMaxEffect = enemyByRType[0];
 	bool bReinfFound = false;
 
 	// there is no ground reinforcements
-	if ( !theReinfArray[nParty].HasGroundReinforcements() )
+	if ( !theReinfArray[nPlayer].HasGroundReinforcements() )
 	{
 		pAirForce->PassTurn();
 		return;
 	}
 
-	if ( !theReinfArray[nParty].CanCallNow() )
+	if ( !theReinfArray[nPlayer].CanCallNow() )
 	{
 		return;
 	}
@@ -87,7 +97,7 @@ void CGeneral::CheckAvailableReinforcement()
 	int nARQuantity = 0;
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
 	{
-		if ( !theReinfArray[nParty].HasReinforcement( NDb::EReinforcementType( i ) ) || IsAviationReinfType( i ) )
+		if ( !theReinfArray[nPlayer].HasReinforcement( NDb::EReinforcementType( i ) ) || IsAviationReinfType( i ) )
 		{
 			continue;
 		}
@@ -96,11 +106,12 @@ void CGeneral::CheckAvailableReinforcement()
 		fEffect = 0;
 		for ( int j = 0; j < NDb::_RT_NONE; ++j )
 		{
+			// Air categories can outweigh the selected ground category. Use distance
+			// between needs so their weight stays finite and decreases with that distance.
+			const float fNeedDistance = 1.0f + std::fabs( enemyByRType[nReinfTypeNeeded] - enemyByRType[j] );
 			fEffect +=
 					NReinforcement::GetReinforcementExpediency( NDb::EReinforcementType( i ), NDb::EReinforcementType( j ) ) /
-					( 1 + enemyByRType[nReinfTypeNeeded] - enemyByRType[j] )   // Weigh according to how close it is to
-					/ ( 1 + enemyByRType[nReinfTypeNeeded] - enemyByRType[j] ) // the most needed (squared)
-					* ( ( j == nReinfTypeNeeded ) ? 2 : 1 );                   // and added multiplier for the exact hit
+					fNeedDistance / fNeedDistance * ( ( j == nReinfTypeNeeded ) ? 2 : 1 );
 		}
 		if ( fEffect > fMaxEffect )
 		{
@@ -115,14 +126,14 @@ void CGeneral::CheckAvailableReinforcement()
 	}
 	if ( bReinfFound ) // if there was a reinforcement available, call it
 	{
-		//theReinfArray[nParty].CallReinforcement( NDb::EReinforcementType( nReinfTypeToCall ),	theReinfArray[nParty].GetRandomPoint(), -1 );
+		//theReinfArray[nPlayer].CallReinforcement( NDb::EReinforcementType( nReinfTypeToCall ),	theReinfArray[nPlayer].GetRandomPoint(), -1 );
 		//CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "Calling reinforcement %d", nReinfTypeToCall ) );
 		float fRandValue = NRandom::Random( 0.0f, fSum );
 		RecordRandomCall();
 		const int i = NReinforcement::SelectByCumulativeWeight( fReinfEff, nARQuantity, fRandValue );
 		// check if this reinforcement will increase mobile tanks nuber over the maximum allowed number
 		// don't call if it will
-		int nWorkers = theReinfArray[nParty].GetNEntries( NDb::EReinforcementType( nAvailReinfs[i] ) );
+		int nWorkers = theReinfArray[nPlayer].GetNEntries( NDb::EReinforcementType( nAvailReinfs[i] ) );
 		for ( Tasks::iterator it = tasks.begin(); it != tasks.end(); ++it )
 		{
 			nWorkers += ( *it )->GetWorkerCount();
@@ -131,15 +142,17 @@ void CGeneral::CheckAvailableReinforcement()
 
 		if ( nWorkers <= nMaxAllowedMobileTanks )
 		{
-			theReinfArray[nParty].CallReinforcement(
-					NDb::EReinforcementType( nAvailReinfs[i] ), theReinfArray[nParty].GetRandomPoint(), -1 );
+			theReinfArray[nPlayer].CallReinforcement(
+					NDb::EReinforcementType( nAvailReinfs[i] ), theReinfArray[nPlayer].GetRandomPoint(), -1 );
 		}
 	}
 }
 
 void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 {
-	if ( IsValidObj( _pUnit ) == false )
+	const bool bRemoving = eAction == BA_REMOVE_OWN || eAction == BA_REMOVE_ENEMY;
+	// Death notifications still have valid stats and ownership after IsAlive becomes false.
+	if ( !_pUnit || !_pUnit->IsRefValid() || ( !bRemoving && !_pUnit->IsAlive() ) )
 	{
 		return;
 	}
@@ -158,6 +171,23 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 
 	CAIUnit *pUnit = dynamic_cast<CAIUnit *>( _pUnit );
 	NI_VERIFY( pUnit, "Invalid unit (not AIUnit)", return );
+	const int nUnitPlayer = pUnit->GetPlayer();
+	if ( nUnitPlayer < 0 || nUnitPlayer >= theReinfArray.size() )
+	{
+		return;
+	}
+	if ( theDipl.IsNetGame() )
+	{
+		// Visibility changes and formation callbacks may report a soldier more than once.
+		// Each registered unit contributes to the COOP balance exactly once until removal.
+		det_set<int> &registered =
+				( eAction == BA_ADD_OWN || eAction == BA_REMOVE_OWN ) ? balanceOwnUnits : balanceEnemyUnits;
+		const bool bAdding = eAction == BA_ADD_OWN || eAction == BA_ADD_ENEMY;
+		if ( bAdding ? !registered.insert( pUnit->GetUniqueId() ).second : !registered.erase( pUnit->GetUniqueId() ) )
+		{
+			return;
+		}
+	}
 	const NDb::SUnitBaseRPGStats *pUnitStats = pUnit->GetStats();
 	NDb::EDBUnitRPGType eUType = pUnitStats->eDBtype;
 	NDb::EReinforcementType eRType = pUnit->GetReinforcementType();
@@ -172,7 +202,6 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 		}
 	}
 
-	int nUnitParty = pUnit->GetParty();
 	int nAvail;
 	int nAffected = 0;
 
@@ -192,7 +221,7 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 		effects[i] = 0.0;
 
 		// Get availability for enemy
-		nAvail = theReinfArray[nUnitParty].GetUnitAvailability( eUType, NDb::EReinforcementType( i ) );
+		nAvail = theReinfArray[nUnitPlayer].GetUnitAvailability( eUType, NDb::EReinforcementType( i ) );
 
 		if ( nAvail )
 		{

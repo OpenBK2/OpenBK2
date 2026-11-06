@@ -2,8 +2,9 @@
 
 COOP runs two or more human players on diplomacy side 0 against map-configured
 AI_BOT players on side 1. The last map player is neutral (side 2). Existing maps
-default to CLASSIC. Strategic AI generals are not enabled by this mode; use
-mission Lua to direct the computer units.
+default to CLASSIC. Each COOP bot has a strategic AI General using that player's
+existing `general` configuration. Mission Lua can still direct separate scripted
+groups. See the [AI General guide](../CoopAIGeneral/README.md) for setup and checks.
 
 These files are authoring examples, not a complete playable map or a replacement
 for your mod's database. Start with a working multiplayer map and its terrain,
@@ -184,5 +185,5 @@ A disabled reinforcement-credit timer displays `never` instead of a countdown.
 7. Give an objective with `MapPositions`, check its arrows on both maps, then
    complete or remove it and confirm the arrows disappear during normal play.
 
-The example does not create terrain, unit records, strategic general behavior or
+The example does not create terrain, unit records, General parcels or
 campaign-style objectives.

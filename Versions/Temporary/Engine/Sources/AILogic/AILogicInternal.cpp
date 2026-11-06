@@ -392,8 +392,7 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 						pResult = CAIUnit::GetUnitByUniqueID( id );
 						scripts.AddObjToScriptGroup( CAIUnit::GetUnitByUniqueID( id ), object.nScriptID );
 
-						if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() && !bInitialization &&
-						     theSupremeBeing.IsMobileReinforcement( theDipl.GetNParty( nPlayer ), object.nScriptID ) )
+						if ( !bInitialization && theSupremeBeing.IsMobileReinforcement( nPlayer, object.nScriptID ) )
 						{
 							theSupremeBeing.AddReinforcement( CAIUnit::GetUnitByUniqueID( id ) );
 						}
@@ -1315,7 +1314,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	UpdateUnitsOnBridges();
 
 	// init general
-	if ( !theDipl.IsNetGame() )
+	if ( !theDipl.IsNetGame() || GetScenarioTracker()->IsCooperative() )
 	{
 		std::list<CCommonUnit *> pUnits;
 		for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
@@ -1326,7 +1325,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 		theSupremeBeing.Init( pMapInfo );
 		theSupremeBeing.GiveNewUnitsToGenerals( pUnits );
 	}
-	else if ( GetScenarioTracker()->IsMultiplayer() )
+	if ( GetScenarioTracker()->IsMultiplayer() )
 	{
 		// Apply the map's starting-army rule; COOP bot armies remain map-controlled.
 		theReinfArray.PlaceInitialUnits();
@@ -1408,11 +1407,12 @@ void CAILogic::UpdateCheckSum( bool bSend )
 
 		if ( GetScenarioTracker()->IsCooperative() )
 		{
-			// Pending scripted orders and the result can differ before unit positions do.
+			// Scripted orders and strategic AI can diverge before unit positions do.
 			CPtr<IBinSaver> pCheckSumSaver = CreateCheckSumSaver( &checkSum, nullptr, curTime );
 			scripts.SerializeCommandQueue( *pCheckSumSaver );
 			int nScriptOutcome = GetScenarioTracker()->GetScriptOutcome();
 			pCheckSumSaver->Add( 21, &nScriptOutcome );
+			pCheckSumSaver->Add( 22, &theSupremeBeing );
 		}
 
 		//CPtr<IBinSaver> pCheckSumSaver = CreateCheckSumSaver( &checkSum, pCheckSumLog, curTime );

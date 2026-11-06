@@ -167,6 +167,7 @@ private:
 
 	float fSeverity = {};
 	int nParty = {};
+	int nPlayer = {};
 	CPtr<CBuilding> pStorage;
 	CPtr<CCommonUnit> pRepairTransport;
 	SAIAngle wRequestID;
@@ -179,6 +180,14 @@ private:
 		f.Add( 5, &pStorage );
 		f.Add( 6, &pRepairTransport );
 		f.Add( 7, &wRequestID );
+		if ( f.IsReading() )
+		{
+			nPlayer = nParty;
+		}
+		if ( !f.IsReading() || f.HasChunk( 8 ) )
+		{
+			f.Add( 8, &nPlayer );
+		}
 		return 0;
 	}
 
@@ -187,7 +196,7 @@ private:
 public:
 	CGeneralTaskToDefendStorage() {}
 
-	CGeneralTaskToDefendStorage( CBuilding *pStorage, const int nParty );
+	CGeneralTaskToDefendStorage( CBuilding *pStorage, int nPlayer, int nParty );
 
 	ETaskName GetName() const override
 	{
@@ -376,14 +385,9 @@ class CFreeArtilleryHolder : public CAIObjectBase
 	NTimer::STime timeFromReset = {};
 	ZDATA
 	TArtilleries artilleries;
-	ZONSERIALIZE
+
 public:
-	ZEND int operator&( IBinSaver &f ) override
-	{
-		f.Add( 2, &artilleries );
-		OnSerialize( f );
-		return 0;
-	}
+	ZEND AILOGIC_EXPORT int operator&( IBinSaver &f ) override;
 
 private:
 	const bool IsExists( const int nUnitID ) const
@@ -394,7 +398,6 @@ private:
 	const bool IsValidCurrent() const;
 	const bool IsFreeCurrent() const;
 	void ResetIterator();
-	void OnSerialize( IBinSaver &f );
 
 public:
 	CFreeArtilleryHolder()
@@ -404,14 +407,14 @@ public:
 	}
 
 	// add artillery to holder
-	void AddArtillery( CArtillery *pArtillery );
+	AILOGIC_EXPORT void AddArtillery( CArtillery *pArtillery );
 	// remove artillery from holder
 	void RemoveArtillery( CArtillery *pArtillery );
 	// switch to next artillery or to null (if no artillry in holder or too early)
-	void Segment();
+	AILOGIC_EXPORT void Segment();
 
 	// get artillry for searching
-	CArtillery *Get() const;
+	AILOGIC_EXPORT CArtillery *Get() const;
 	// set 'catching' flag for current artillery
 	void TryCatch( CFormation *pFormation );
 };
@@ -451,6 +454,7 @@ private:
 	bool bInitedByParcel = {};
 
 	int nParty = {};
+	int nPlayer = {};
 	CFreeArtilleryHolder freeArtilleryHolder;
 
 	ZEND int operator&( IBinSaver &f ) override
@@ -465,6 +469,14 @@ private:
 		f.Add( 9, &bInitedByParcel );
 		f.Add( 10, &nParty );
 		f.Add( 11, &freeArtilleryHolder );
+		if ( f.IsReading() )
+		{
+			nPlayer = nParty;
+		}
+		if ( !f.IsReading() || f.HasChunk( 12 ) )
+		{
+			f.Add( 12, &nPlayer );
+		}
 		return 0;
 	}
 
@@ -479,7 +491,8 @@ public:
 	{
 	}
 
-	CGeneralIntendant( const int nPlayer, CCommander *pGeneral );
+	CGeneralIntendant( int nPlayer, int nParty, CCommander *pGeneral );
+	bool OwnsUnit( const CCommonUnit *pUnit ) const;
 
 	void Init();
 	void AddReiforcePositions( const struct NDb::SAIGeneralParcel &_patchInfo );
