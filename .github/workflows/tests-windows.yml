@@ -33,6 +33,7 @@ jobs:
       # TextVerticalAlignment's clipping regression tests.
       # GLB_format_usage is the example glTF units GltfBounds_test loads (4 MB).
       # UnitTransferUI reads the example pak plus these stock UI descriptor/texture directories.
+      # SceneB2 embeds scripts/iconrender/icon_overrides.txt during configuration.
       - uses: actions/checkout@v6
         with:
           submodules: recursive
@@ -40,6 +41,7 @@ jobs:
           sparse-checkout: |
             .github
             cmake
+            scripts/iconrender
             third_party
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts
@@ -91,6 +93,7 @@ jobs:
   benchmark:
     runs-on: windows-2025-vs2026
     steps:
+      # Benchmark configuration also reads SceneB2's embedded icon overrides.
       - uses: actions/checkout@v6
         with:
           submodules: recursive
@@ -98,6 +101,7 @@ jobs:
           sparse-checkout: |
             .github
             cmake
+            scripts/iconrender
             third_party
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts

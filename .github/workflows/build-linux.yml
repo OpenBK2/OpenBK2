@@ -59,6 +59,7 @@ jobs:
       # TextVerticalAlignment's clipping regression tests.
       # GLB_format_usage is the example glTF units GltfBounds_test loads (4 MB).
       # UnitTransferUI reads the example pak plus these stock UI descriptor/texture directories.
+      # SceneB2 embeds scripts/iconrender/icon_overrides.txt during configuration.
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v6
         with:
@@ -67,6 +68,7 @@ jobs:
           sparse-checkout: |
             .github
             cmake
+            scripts/iconrender
             third_party
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts
@@ -177,6 +179,7 @@ jobs:
           sparse-checkout: |
             .github
             cmake
+            scripts/iconrender
             third_party
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts

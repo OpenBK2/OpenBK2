@@ -289,6 +289,10 @@ context. Read `git diff` of every touched file before building.
 - Camera regression fixtures must call `IsPropertyModified` before changing a
   value to enable its lazy baseline capture. Checking only after the edit reports
   false even when the unsaved value is correctly retained.
+- Files embedded at CMake configure time must be included in every build job's
+  sparse checkout, including tests and benchmarks. SceneB2's shared icon overrides
+  live under scripts/iconrender, outside the engine source tree; a full local
+  checkout hid the missing CI dependency on Windows and Linux.
 - Running IconRender from the Windows build tree needs `gr2` in its link closure
   and the FFmpeg `bin` directory on PATH for codec DLL dependencies. An exit code
   of 0xc0000135 before any output is a loader failure, not an empty icon render.
