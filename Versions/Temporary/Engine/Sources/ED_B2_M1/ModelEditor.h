@@ -2,6 +2,7 @@
 
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/EditorBase.h"
+#include "MapEditorLib/IconRenderingOptions.h"
 
 #include "ED_B2_M1_export.h"
 // ModelView.h rather than ModelWindow.h: which toolkit draws the palette is
@@ -79,7 +80,7 @@ public:
 
 	// Icons creations
 	void CreateIcon();
-	void ReRenderAllMechUnits();
+	void ReRenderAllIcons( NIconRendering::EBatchType eType );
 	void RestoreCameraParametersFromStats();
 
 	// Targeting for creating icons shots

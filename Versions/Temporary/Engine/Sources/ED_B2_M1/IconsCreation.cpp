@@ -15,12 +15,12 @@
 #include "MapEditorLib/Interface_Progress.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ManipulatorManager.h"
-#include "MechIconPak.h"
-#include "MechIconRenderer.h"
 #include "ModelEditor.h"
 #include "SceneB2/Camera.h"
 #include "Stats_B2_M1/DBVisObj.h"
 #include "Stats_B2_M1/RPGStats.h"
+#include "StatsIconPak.h"
+#include "StatsIconRenderer.h"
 #include "System/VFSOperations.h"
 #include "TargetMesh.h"
 
@@ -195,12 +195,13 @@ bool SaveCameraPosition( NDb::IObjMan *pManipulator )
 bool ExportIcon( const CDBID &dbid,
                  const CArray2D<NGfx::SPixel8888> &texture,
                  const NIconRendering::SOptions &options,
-                 std::string *pError )
+                 std::string *pError,
+                 const std::string &szBatchFolder = "" )
 {
 	CPtr<NDb::IObjMan> pManipulator = NDb::GetManipulator( dbid );
 	if ( !pManipulator )
 	{
-		*pError = "could not open the unit for editing";
+		*pError = "could not open the stats for editing";
 		return false;
 	}
 	// Get unit name and generate directories and icon file names.
@@ -215,9 +216,18 @@ bool ExportIcon( const CDBID &dbid,
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	const std::string &szExportSourceFolder = pUserData->constUserData.szExportSourceFolder;
 
-	const std::string szIconTgaName = szDirectory + "icon.tga";
+	// Batch variants can share a source directory. Give each record a unique
+	// texture path, matching its archive namespace, instead of overwriting siblings.
+	std::string szIconBase = szDirectory + "icon";
+	if ( !szBatchFolder.empty() )
+	{
+		std::string szStatsPath = NDb::GetFileName( dbid );
+		NFile::NormalizePath( &szStatsPath );
+		szIconBase = szBatchFolder + "/" + szStatsPath.substr( 0, szStatsPath.size() - 4 ) + ".icon";
+	}
+	const std::string szIconTgaName = szIconBase + ".tga";
 	const std::string szIconFullPath = NFile::JoinPath( szExportSourceFolder, szIconTgaName );
-	const std::string szTextureItemName = szDirectory + "icon_texture.xdb";
+	const std::string szTextureItemName = szBatchFolder.empty() ? szIconBase + "_texture.xdb" : szIconBase + ".xdb";
 
 	// Prepare icons data and write tga
 	if ( !WriteTGA( szIconFullPath, texture, options ) )
@@ -278,20 +288,22 @@ void CModelEditor::CreateIcon()
 	}
 }
 
-void CModelEditor::ReRenderAllMechUnits()
+void CModelEditor::ReRenderAllIcons( NIconRendering::EBatchType eType )
 {
 	const NIconRendering::SOptions options = NIconRendering::LoadOptions();
+	const auto &batch = NIconRendering::BATCHES[eType];
 	std::vector<CDBID> units;
-	if ( !NDb::GetObjectsList( &units, "MechUnitRPGStats" ) )
+	if ( !NDb::GetObjectsList( &units, batch.pszTypeName ) )
 	{
-		NLog::Log( LT_ERROR, "Icon rendering: could not enumerate MechUnitRPGStats objects.\n" );
+		NLog::Log( LT_ERROR, "Icon rendering: could not enumerate %s objects.\n", batch.pszTypeName );
 		return;
 	}
 	// Snapshot the IDs before exporting, since creating textures changes the database.
 	std::sort( units.begin(), units.end(), []( const CDBID &a, const CDBID &b ) { return a.ToString() < b.ToString(); } );
 	NLog::Log( LT_IMPORTANT,
-	           "Re-rendering %d mech unit icons at %d x %d.\n",
+	           "Re-rendering %d %s icons at %d x %d.\n",
 	           static_cast<int>( units.size() ),
+	           batch.pszTypeName,
 	           options.nWidth,
 	           options.nHeight );
 	NProgress::Create( true );
@@ -305,10 +317,10 @@ void CModelEditor::ReRenderAllMechUnits()
 	} progress;
 
 	NProgress::SetRange( 0, static_cast<int>( units.size() ) );
-	std::unique_ptr<CMechIconPak> pPak;
-	if ( options.bSeparatePak )
+	std::unique_ptr<CStatsIconPak> pPak;
+	if ( options.*batch.pSeparatePak )
 	{
-		pPak = std::make_unique<CMechIconPak>();
+		pPak = std::make_unique<CStatsIconPak>( eType );
 	}
 	int nSucceeded = 0;
 	int nFailed = 0;
@@ -319,10 +331,15 @@ void CModelEditor::ReRenderAllMechUnits()
 		try
 		{
 			CArray2D<NGfx::SPixel8888> texture;
-			if ( NMechIconRenderer::Render( dbid, options, &texture, &szError ) &&
-			     ( pPak ? pPak->Add( dbid, texture, options, &szError ) : ExportIcon( dbid, texture, options, &szError ) ) )
+			if ( NStatsIconRenderer::Render( dbid, options, &texture, &szError ) &&
+			     ( pPak ? pPak->Add( dbid, texture, options, &szError )
+			            : ExportIcon( dbid, texture, options, &szError, batch.pszArchiveBase ) ) )
 			{
 				++nSucceeded;
+			}
+			else if ( szError.empty() )
+			{
+				szError = "could not render or export the icon";
 			}
 		}
 		catch ( const std::exception &error )
@@ -342,12 +359,13 @@ void CModelEditor::ReRenderAllMechUnits()
 	}
 	if ( pPak )
 	{
+		const std::string szArchiveName = std::string( batch.pszArchiveBase ) + ".pak";
 		const std::string szDestination = NFile::JoinPath(
-				Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ), "MechUnitIcons.pak" );
+				Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ), szArchiveName );
 		std::string szError;
 		try
 		{
-			NProgress::SetMessage( "Saving MechUnitIcons.pak" );
+			NProgress::SetMessage( "Saving " + szArchiveName );
 			if ( pPak->Save( szDestination, &szError ) )
 			{
 				NLog::Log( LT_IMPORTANT,

@@ -7,7 +7,7 @@
 #include "3Dmotor/SWTexture.h"
 #include "3Dmotor/TextureCoordinates.h"
 #include "3Dmotor/UITextureFilter.h"
-#include "ED_B2_M1/MechIconPak.h"
+#include "ED_B2_M1/StatsIconPak.h"
 #include "Image/Image.h"
 #include "Image/ImageDDS.h"
 #include "libdb/Db.h"
@@ -140,7 +140,7 @@ TEST_F( MechIconPak, ArchiveLoadsThroughGameVFSWithoutLooseIconsOrLiveDatabaseCh
 	ASSERT_TRUE( NDb::AddNewObject( "new.xdb", CDBID( "new.xdb" ), fresh ) );
 	const std::string original = Snapshot( szUnit );
 	EXPECT_TRUE( NDb::IsPropertyModified( CDBID( szUnit ), "CameraPlacementIconShot.Distance" ) );
-	CMechIconPak pak;
+	CStatsIconPak pak;
 	std::string error;
 	for ( const auto &name : { szUnit, szVariant, std::string( "iconless.xdb" ), std::string( "new.xdb" ) } )
 	{
@@ -195,9 +195,66 @@ TEST_F( MechIconPak, ArchiveLoadsThroughGameVFSWithoutLooseIconsOrLiveDatabaseCh
 	}
 }
 
+TEST_F( MechIconPak, ObjectTypeArchivesPreserveStatsAndLoadIndependentTextures )
+{
+	const char *types[] = { "BuildingRPGStats", "BridgeRPGStats", "FenceRPGStats", "ObjectRPGStats" };
+	const char *folders[] = { "BuildingIcons", "BridgeIcons", "FenceIcons", "ObjectIcons" };
+	std::vector<CObj<NVFS::IVFS>> mounts{ NVFS::GetMainVFS() };
+	for ( int i = 0; i < 4; ++i )
+	{
+		SCOPED_TRACE( types[i] );
+		const std::string name = std::string( "Objects/" ) + types[i] + ".xdb";
+		CPtr<NDb::IObjMan> stats = NDb::CreateNewObject( types[i] );
+		ASSERT_TRUE( stats );
+		ASSERT_TRUE( NDb::AddNewObject( name, CDBID( name ), stats ) );
+		EXPECT_FALSE( NDb::IsPropertyModified( CDBID( name ), "MaxHP" ) );
+		ASSERT_TRUE( stats->SetValue( "MaxHP", 123.0f + i ) );
+		const std::string original = Snapshot( name );
+		CStatsIconPak pak( static_cast<NIconRendering::EBatchType>( i + 1 ) );
+		std::string error;
+		EXPECT_FALSE( pak.Add( CDBID( szUnit ), capture, options, &error ) );
+		ASSERT_TRUE( pak.Add( CDBID( name ), capture, options, &error ) ) << error;
+		EXPECT_EQ( original, Snapshot( name ) );
+		EXPECT_TRUE( NDb::IsPropertyModified( CDBID( name ), "MaxHP" ) );
+		EXPECT_FALSE( fs::exists( root / name ) );
+		const std::string archive = std::string( "Export/" ) + folders[i] + ".pak";
+		ASSERT_TRUE( pak.Save( archive, &error ) ) << error;
+		mounts.push_back( NVFS::CreateWinVFS( ( root / archive ).generic_u8string() ) );
+	}
+	EXPECT_EQ( 4, std::distance( fs::directory_iterator( root / "Export" ), fs::directory_iterator() ) );
+	NDb::CloseDatabase();
+	CObj<NVFS::ICombinerVFS> combined = NVFS::CreateCombinerVFS( NVFS::GetMainVFS() );
+	combined->SetVFSList( mounts );
+	NVFS::SetMainVFS( combined );
+	ASSERT_TRUE( NDb::OpenDatabase( combined, nullptr, NDb::DATABASE_MODE_GAME ) );
+	for ( int i = 0; i < 4; ++i )
+	{
+		SCOPED_TRACE( types[i] );
+		const std::string name = std::string( "Objects/" ) + types[i] + ".xdb";
+		const auto *stats = NDb::Get<NDb::SHPObjectRPGStats>( CDBID( name ) );
+		ASSERT_NE( nullptr, stats );
+		EXPECT_FLOAT_EQ( 123.0f + i, stats->fMaxHP );
+		ASSERT_NE( nullptr, stats->pIconTexture.GetPtr() );
+		EXPECT_EQ( std::string( folders[i] ) + "/Objects/" + types[i] + ".icon.xdb",
+		           stats->pIconTexture->GetDBID().ToString() );
+		EXPECT_EQ( 42, stats->pIconTexture->nWidth );
+		EXPECT_EQ( 42, stats->pIconTexture->nHeight );
+		std::unique_ptr<CDataStream> image( mounts[i + 1]->OpenFile( stats->pIconTexture->szDestName ) );
+		ASSERT_NE( nullptr, image );
+		CArray2D<uint32_t> pixels;
+		ASSERT_TRUE( NImage::LoadImageDDS( &pixels, image.get() ) );
+		ASSERT_EQ( 3, pixels.GetSizeX() );
+		ASSERT_EQ( 5, pixels.GetSizeY() );
+		EXPECT_EQ( capture[2][2].dwColor, pixels[0][0] );
+		std::vector<std::string> names;
+		mounts[i + 1]->GetAllFileNames( &names, "" );
+		EXPECT_EQ( 3u, names.size() );
+	}
+}
+
 TEST_F( MechIconPak, HighResolutionIconsDrawTheModelInsteadOfTheTransparentCorner )
 {
-	CMechIconPak pak;
+	CStatsIconPak pak;
 	std::string error;
 	const NIconRendering::SOptions sizes[] = { { 512, 512 }, { 113, 67 }, { 42, 42 }, { 1, 67 } };
 	const std::string units[] = { szUnit, szVariant, "iconless.xdb", "tiny.xdb" };
@@ -309,7 +366,7 @@ TEST_F( MechIconPak, DownscalingAveragesFineDetailAndKeepsTransparentColorsOutOf
 		}
 	}
 	std::string error;
-	CMechIconPak pak;
+	CStatsIconPak pak;
 	ASSERT_TRUE( pak.Add( CDBID( szUnit ), capture, { 512, 512 }, &error ) ) << error;
 	ASSERT_TRUE( pak.Save( "Export/MechUnitIcons.pak", &error ) ) << error;
 	NDb::CloseDatabase();
@@ -366,13 +423,13 @@ TEST_F( MechIconPak, FailedUnitsAndFailedSavesPreserveExistingArchive )
 {
 	std::ofstream( root / "MechUnitIcons.pak" ) << "previous archive";
 	std::string error;
-	CMechIconPak empty;
+	CStatsIconPak empty;
 	EXPECT_FALSE( empty.Add( CDBID( szUnit ), capture, { 512, 512 }, &error ) );
 	EXPECT_FALSE( empty.Save( "MechUnitIcons.pak", &error ) );
 	CFileStream original( ( root / "MechUnitIcons.pak" ).generic_u8string(), CFileStream::WIN_READ_ONLY );
 	EXPECT_EQ( "previous archive",
 	           std::string( reinterpret_cast<const char *>( original.GetBuffer() ), original.GetSize() ) );
-	CMechIconPak pak;
+	CStatsIconPak pak;
 	ASSERT_TRUE( pak.Add( CDBID( szUnit ), capture, options, &error ) ) << error;
 	std::ofstream( root / "blocked" ) << "a file cannot be an output directory";
 	EXPECT_FALSE( pak.Save( "blocked/MechUnitIcons.pak", &error ) );
@@ -383,13 +440,13 @@ TEST_F( MechIconPak, FailedUnitsAndFailedSavesPreserveExistingArchive )
 TEST_F( MechIconPak, ReplacesAnExistingMountedArchive )
 {
 	std::string error;
-	CMechIconPak first;
+	CStatsIconPak first;
 	ASSERT_TRUE( first.Add( CDBID( szUnit ), capture, options, &error ) ) << error;
 	ASSERT_TRUE( first.Save( "Export/MechUnitIcons.pak", &error ) ) << error;
 	const std::string file = ( root / "Export/MechUnitIcons.pak" ).generic_u8string();
 	CObj<NVFS::IVFS> previous = NVFS::CreateWinVFS( file );
 	ASSERT_TRUE( previous->DoesFileExist( szUnit ) );
-	CMechIconPak replacement;
+	CStatsIconPak replacement;
 	ASSERT_TRUE( replacement.Add( CDBID( szVariant ), capture, options, &error ) ) << error;
 	ASSERT_TRUE( replacement.Save( "Export/MechUnitIcons.pak", &error ) ) << error;
 	CFileStream previousUnit( previous, szUnit );

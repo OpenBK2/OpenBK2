@@ -3,7 +3,7 @@
 add_unit_test(RiverHeight B2_M1_Terrain Stats_B2_M1 libdb System Misc zlib gr2)
 
 # Shared capture math, bundled corrections and editor/game camera metadata readers.
-add_unit_test(UnitIconRendering SceneB2 Stats_B2_M1 libdb System Misc gr2 zlib)
+add_unit_test(UnitIconRendering SceneB2 3Dmotor Stats_B2_M1 libdb System Misc gr2 zlib)
 target_compile_definitions(UnitIconRendering_test PRIVATE NOMINMAX
     ICON_CAMERA_SCHEMA="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 if(WIN32)

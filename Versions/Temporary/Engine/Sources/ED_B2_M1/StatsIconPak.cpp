@@ -4,7 +4,7 @@
 #include "Image/DDS.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
-#include "MechIconPak.h"
+#include "StatsIconPak.h"
 #include "System/VFSOperations.h"
 
 #include <algorithm>
@@ -38,7 +38,7 @@ void TextField( wxXmlNode *pRoot, const wxString &name, const wxString &value )
 }
 } // namespace
 
-struct CMechIconPak::SImpl
+struct CStatsIconPak::SImpl
 {
 	wxMemoryOutputStream data;
 	// wx sets ZIP flag bit 11 when this converter is UTF-8.
@@ -46,6 +46,7 @@ struct CMechIconPak::SImpl
 	bool bBroken = false;
 	bool bClosed = false;
 	int nUnits = 0;
+	NIconRendering::EBatchType eType = NIconRendering::MECH_UNITS;
 
 	bool AddEntry( const std::string &name, const void *pData, size_t nSize )
 	{
@@ -61,17 +62,18 @@ struct CMechIconPak::SImpl
 	}
 };
 
-CMechIconPak::CMechIconPak()
+CStatsIconPak::CStatsIconPak( NIconRendering::EBatchType eType )
 	: pImpl( std::make_unique<SImpl>() )
 {
+	pImpl->eType = eType;
 }
 
-CMechIconPak::~CMechIconPak() = default;
+CStatsIconPak::~CStatsIconPak() = default;
 
-bool CMechIconPak::Add( const CDBID &dbid,
-                        const CArray2D<NGfx::SPixel8888> &capture,
-                        const NIconRendering::SOptions &options,
-                        std::string *pError )
+bool CStatsIconPak::Add( const CDBID &dbid,
+                         const CArray2D<NGfx::SPixel8888> &capture,
+                         const NIconRendering::SOptions &options,
+                         std::string *pError )
 {
 	// wx errors go through the caller's Log Window message instead of opening
 	// a modal error dialog for every bad resource in a batch.
@@ -81,7 +83,7 @@ bool CMechIconPak::Add( const CDBID &dbid,
 		*pError = message;
 		return false;
 	};
-	if ( pImpl->bBroken || pImpl->bClosed )
+	if ( pImpl->bBroken || pImpl->bClosed || pImpl->eType < 0 || pImpl->eType >= NIconRendering::BATCH_COUNT )
 	{
 		return Fail( "the icon archive is no longer writable" );
 	}
@@ -91,7 +93,7 @@ bool CMechIconPak::Add( const CDBID &dbid,
 	if ( unitPath.empty() || unitPath.is_absolute() || unitPath.has_root_name() || *unitPath.begin() == ".." ||
 	     unitPath.extension() != ".xdb" )
 	{
-		return Fail( "invalid unit resource path: " + szUnitName );
+		return Fail( "invalid stats resource path: " + szUnitName );
 	}
 	szUnitName = unitPath.generic_u8string();
 	CArray2D<NGfx::SPixel8888> pixels;
@@ -103,19 +105,20 @@ bool CMechIconPak::Add( const CDBID &dbid,
 	CMemoryStream snapshot;
 	if ( !NDb::SerializeObject( NDb::GetManipulator( dbid ), &snapshot ) )
 	{
-		return Fail( "could not serialize the unit for the icon archive" );
+		return Fail( "could not serialize the stats for the icon archive" );
 	}
 	wxMemoryInputStream input( snapshot.GetBuffer(), snapshot.GetSize() );
 	wxXmlDocument unit;
-	if ( !unit.Load( input ) || !unit.GetRoot() || unit.GetRoot()->GetName() != "MechUnitRPGStats" )
+	const auto &batch = NIconRendering::BATCHES[pImpl->eType];
+	if ( !unit.Load( input ) || !unit.GetRoot() || unit.GetRoot()->GetName() != batch.pszTypeName )
 	{
-		return Fail( "could not read the unit's XML snapshot" );
+		return Fail( "could not read the expected stats type from the XML snapshot" );
 	}
 
-	// Give each unit its own texture, including variants that previously shared
+	// Give each stats record its own texture, including variants that previously shared
 	// an icon. All references live in the archive, including previously iconless
 	// or unsaved units. The original records and their dirty flags stay untouched.
-	const std::string szBase = "MechUnitIcons/" + szUnitName.substr( 0, szUnitName.size() - 4 );
+	const std::string szBase = std::string( batch.pszArchiveBase ) + "/" + szUnitName.substr( 0, szUnitName.size() - 4 );
 	const std::string szTextureName = szBase + ".icon.xdb";
 	const std::string szDDSName = szBase + ".icon.dds";
 	wxXmlNode *pIcon = Field( unit.GetRoot(), "IconTexture" );
@@ -180,7 +183,7 @@ bool CMechIconPak::Add( const CDBID &dbid,
 	return true;
 }
 
-bool CMechIconPak::Save( const std::string &szDestination, std::string *pError )
+bool CStatsIconPak::Save( const std::string &szDestination, std::string *pError )
 {
 	wxLogNull quiet;
 	if ( pImpl->bBroken || pImpl->bClosed || pImpl->nUnits == 0 )

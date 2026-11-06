@@ -3,7 +3,7 @@ add_unit_test(IconCapture System Misc)
 target_compile_definitions(IconCapture_test PRIVATE NOMINMAX)
 
 add_unit_test(MechIconPak MapEditorLib UI 3Dmotor Stats_B2_M1 Image libdb System Misc gr2 zlib wx::wx
-    SOURCES ../MechIconPak.cpp)
+    SOURCES ../StatsIconPak.cpp)
 target_compile_definitions(MechIconPak_test PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN
     ICON_PAK_SCHEMA="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 copy_wx_runtime(MechIconPak_test)

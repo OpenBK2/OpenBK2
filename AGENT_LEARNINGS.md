@@ -465,3 +465,14 @@ context. Read `git diff` of every touched file before building.
 - Constructing a bare AI does not initialize the updater's client transformers.
   A queue test first returned generic action updates; restoring the real updater
   through BinSaver initializes the registry and tests pending payload persistence.
+
+## Stats icon batches
+
+- Fences commonly leave `visualObject` empty. Select an intact model from
+  `centerSegments.visObjes` for their icons. Only mech stats define the hidden
+  `CameraPlacementIconShot` fields; frame other stats from model geometry.
+- Directly constructing generated stats in a new test caused Windows linker
+  errors because those constructors and virtual methods are not exported. Use
+  the registered object factory and retain the objects with `CObj`; anchor the
+  DLLs that register their types. Pass raw pointers to `CDBPtr` constructors
+  when emplacing them in a vector, since conversion from `CObj` is not implicit.

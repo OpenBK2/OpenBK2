@@ -11,14 +11,14 @@ class CDBID;
 
 // Builds an independent overlay without changing live database objects. The
 // destination is replaced only once the complete ZIP has been finalized.
-class CMechIconPak
+class CStatsIconPak
 {
 	struct SImpl;
 	std::unique_ptr<SImpl> pImpl;
 
 public:
-	CMechIconPak();
-	~CMechIconPak();
+	explicit CStatsIconPak( NIconRendering::EBatchType eType = NIconRendering::MECH_UNITS );
+	~CStatsIconPak();
 	bool Add( const CDBID &dbid,
 	          const CArray2D<NGfx::SPixel8888> &capture,
 	          const NIconRendering::SOptions &options,

@@ -103,11 +103,10 @@ namespace
 		return pShot->fDistance > FP_EPSILON;
 	}
 
-	const NDb::SModel *GetSummerModel( const NDb::SMechUnitRPGStats *pStats )
+	const NDb::SModel *GetSummerModel( const NDb::SVisObj *pVisObj )
 	{
 		// The model editor's choice (CModelState::UpdateModels): the summer model,
 		// or the first one when there is none.
-		const NDb::SVisObj *pVisObj = pStats->pvisualObject;
 		if ( !pVisObj || pVisObj->models.empty() )
 		{
 			return 0;
@@ -746,6 +745,30 @@ bool ReadCameraShot( const CDBID &dbid, bool bEditorDatabase, SCameraShot *pShot
 	return pShot->bFromStats;
 }
 
+const NDb::SModel *GetIconModel( const NDb::SHPObjectRPGStats *pStats )
+{
+	if ( !pStats )
+	{
+		return nullptr;
+	}
+	if ( const auto *pModel = GetSummerModel( pStats->pvisualObject ) )
+	{
+		return pModel;
+	}
+	// Shipped fences leave visualObject empty and store intact models here.
+	if ( const auto *pFence = dynamic_cast<const NDb::SFenceRPGStats *>( pStats ) )
+	{
+		for ( const auto &pVisObj : pFence->centerSegments.visObjes )
+		{
+			if ( const auto *pModel = GetSummerModel( pVisObj ) )
+			{
+				return pModel;
+			}
+		}
+	}
+	return nullptr;
+}
+
 bool Render(
 		const CDBID &dbid, const SOptions &options, const SOverride *pOverride, SResult *pResult, std::string *pszError )
 {
@@ -757,15 +780,15 @@ bool Render(
 		*pszError = "invalid icon size or supersampling factor";
 		return false;
 	}
-	const NDb::SMechUnitRPGStats *pStats = NDb::Get<NDb::SMechUnitRPGStats>( dbid );
+	const NDb::SHPObjectRPGStats *pStats = NDb::Get<NDb::SHPObjectRPGStats>( dbid );
 	if ( !pStats )
 	{
-		*pszError = "no mech unit stats";
+		*pszError = "no object stats";
 		return false;
 	}
 	const CDBID modelDBID = pOverride && !pOverride->szLike.empty() ? CDBID( pOverride->szLike ) : dbid;
-	const NDb::SMechUnitRPGStats *pModelStats = NDb::Get<NDb::SMechUnitRPGStats>( modelDBID );
-	const NDb::SModel *pModel = pModelStats ? GetSummerModel( pModelStats ) : nullptr;
+	const NDb::SHPObjectRPGStats *pModelStats = NDb::Get<NDb::SHPObjectRPGStats>( modelDBID );
+	const NDb::SModel *pModel = GetIconModel( pModelStats );
 	if ( !pModel || !pModel->pGeometry )
 	{
 		*pszError = "no usable model or geometry for " + modelDBID.ToString();
@@ -830,7 +853,10 @@ bool Render(
 	render.pView->LoadEverything();
 
 	SCameraShot &shot = pResult->shot;
-	if ( !ReadCameraShot( modelDBID, options.bEditorDatabase, &shot ) )
+	// Only mech stats define CameraPlacementIconShot. Other types use the same
+	// geometry framing without querying nonexistent editor properties.
+	if ( pModelStats->GetTypeID() != NDb::SMechUnitRPGStats::typeID ||
+	     !ReadCameraShot( modelDBID, options.bEditorDatabase, &shot ) )
 	{
 		// Fit the geometry's bounding sphere into the old 42-pixel window.
 		// This conservative fit also covers tall units and long gun barrels.

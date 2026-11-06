@@ -1,10 +1,13 @@
 #include "SceneB2/stdafx.h"
 
+#include "3Dmotor/FrameTransition.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "SceneB2/UnitIconRendering.h"
 #include "Stats_B2_M1/ActionCommand.h"
 #include "Stats_B2_M1/ActionsRemap.h"
+#include "Stats_B2_M1/DBVisObj.h"
+#include "Stats_B2_M1/RPGStats.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
@@ -16,6 +19,52 @@
 #include <gtest/gtest.h>
 
 using namespace NUnitIconRendering;
+
+TEST( UnitIconRendering, ObjectTypesUseSummerModelsAndFencesUseIntactSegments )
+{
+	// Generated records are registered by their DLLs; their constructors are not exported.
+	ASSERT_EQ( GetCommandByAction( NDb::USER_ACTION_MOVE ), ACTION_COMMAND_MOVE_TO );
+	ASSERT_NE( nullptr, NGScene::GetFrameTransitionCapture2() );
+	CObj<NDb::SModel> winter = MakeObject<NDb::SModel>( NDb::SModel::typeID );
+	CObj<NDb::SModel> summer = MakeObject<NDb::SModel>( NDb::SModel::typeID );
+	CObj<NDb::SVisObj> visual = MakeObject<NDb::SVisObj>( NDb::SVisObj::typeID );
+	ASSERT_TRUE( winter );
+	ASSERT_TRUE( summer );
+	ASSERT_TRUE( visual );
+	visual->models.resize( 2 );
+	visual->models[0].eSeason = NDb::SEASON_WINTER;
+	visual->models[0].pModel = winter;
+	visual->models[1].eSeason = NDb::SEASON_SUMMER;
+	visual->models[1].pModel = summer;
+	std::vector<CObj<NDb::SHPObjectRPGStats>> objects;
+	const int types[] = { NDb::SMechUnitRPGStats::typeID,
+	                      NDb::SBuildingRPGStats::typeID,
+	                      NDb::SBridgeRPGStats::typeID,
+	                      NDb::SFenceRPGStats::typeID,
+	                      NDb::SObjectRPGStats::typeID };
+	for ( int type : types )
+	{
+		objects.emplace_back( MakeObject<NDb::SHPObjectRPGStats>( type ) );
+	}
+	for ( const auto &stats : objects )
+	{
+		ASSERT_TRUE( stats );
+		EXPECT_EQ( nullptr, GetIconModel( stats ) );
+		stats->pvisualObject = visual;
+		EXPECT_EQ( summer.GetPtr(), GetIconModel( stats ) );
+	}
+	visual->models.resize( 1 );
+	EXPECT_EQ( winter.GetPtr(), GetIconModel( objects[1] ) );
+	CObj<NDb::SFenceRPGStats> fence = MakeObject<NDb::SFenceRPGStats>( NDb::SFenceRPGStats::typeID );
+	ASSERT_TRUE( fence );
+	fence->centerSegments.visObjes.push_back( nullptr );
+	fence->centerSegments.visObjes.emplace_back( visual.GetPtr() );
+	EXPECT_EQ( winter.GetPtr(), GetIconModel( fence ) );
+	fence->centerSegments.visObjes.clear();
+	fence->damagedSegments.visObjes.emplace_back( visual.GetPtr() );
+	EXPECT_EQ( nullptr, GetIconModel( fence ) );
+	EXPECT_EQ( nullptr, GetIconModel( nullptr ) );
+}
 
 TEST( UnitIconRendering, BundledCorrectionsUseTheOriginalRulesAndPortablePaths )
 {
