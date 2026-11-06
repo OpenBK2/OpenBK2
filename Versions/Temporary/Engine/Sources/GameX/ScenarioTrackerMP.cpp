@@ -2,6 +2,7 @@
 
 #include "AILogic/B2AI.h"
 #include "AILogic/DBAIConsts.h"
+#include "B2_M1_World/MapObj.h"
 #include "B2_M1_World/MissionObjectiveStates.h"
 #include "GetConsts.h"
 #include "InterfaceState.h"
@@ -138,6 +139,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 	bAddReinfsWithTimer = true;
 	nOnBaseCaptureReinfPointsGain = 1;
 	nOnBaseLostReinfPointsLoss = -1;
+	ResetObjectives();
 
 	nSecondsToReinf = 0;
 
@@ -321,9 +323,120 @@ int CScenarioTrackerMultiplayer::GetPlayerSide( int nPlayer ) const
 	return 2;
 }
 
+void CScenarioTrackerMultiplayer::ResetObjectives()
+{
+	objectives.assign( IsCooperative() && pMission ? pMission->objectives.size() : 0, EMOS_WAITING );
+	knownObjectives.clear();
+	objectivesObjects.clear();
+}
+
+void CScenarioTrackerMultiplayer::SerializeObjectives( IBinSaver &f )
+{
+	// These states are delivered through local UI updates and must not affect lockstep checksums.
+	if ( f.IsChecksum() )
+	{
+		return;
+	}
+	if ( f.IsReading() )
+	{
+		ResetObjectives();
+	}
+	// Older saves have no objective chunks; retain the current map's WAITING defaults.
+	if ( !f.IsReading() || f.HasChunk( 29 ) )
+	{
+		f.Add( 29, &objectives );
+	}
+	f.Add( 30, &knownObjectives );
+	f.Add( 31, &objectivesObjects );
+}
+
+bool CScenarioTrackerMultiplayer::IsValidObjective( int nID ) const
+{
+	return IsCooperative() && pMission && nID >= 0 && nID < objectives.size() && nID < pMission->objectives.size() &&
+	       pMission->objectives[nID];
+}
+
+int CScenarioTrackerMultiplayer::GetKnownObjectiveCount() const
+{
+	return IsCooperative() && pMission ? knownObjectives.size() : 0;
+}
+
+int CScenarioTrackerMultiplayer::GetKnownObjectiveID( const int nIndex )
+{
+	if ( nIndex < 0 || nIndex >= GetKnownObjectiveCount() || !IsValidObjective( knownObjectives[nIndex] ) )
+	{
+		return -1;
+	}
+	return knownObjectives[nIndex];
+}
+
+int CScenarioTrackerMultiplayer::GetObjectiveCount() const
+{
+	return IsCooperative() && pMission ? objectives.size() : 0;
+}
+
 enum EMissionObjectiveState CScenarioTrackerMultiplayer::GetObjectiveState( const int nID ) const
 {
-	return EMOS_MIN;
+	return IsValidObjective( nID ) ? objectives[nID] : EMOS_MIN;
+}
+
+void CScenarioTrackerMultiplayer::SetObjectiveState( const int nID, const EMissionObjectiveState eState )
+{
+	if ( !IsValidObjective( nID ) || eState < EMOS_MIN || eState > EMOS_MAX )
+	{
+		return;
+	}
+
+	const auto it = std::find( knownObjectives.begin(), knownObjectives.end(), nID );
+	if ( eState == EMOS_WAITING )
+	{
+		if ( it != knownObjectives.end() )
+		{
+			knownObjectives.erase( it );
+		}
+	}
+	else if ( it == knownObjectives.end() )
+	{
+		knownObjectives.push_back( nID );
+	}
+	// COOP objectives describe mission progress without awarding single-player campaign XP.
+	objectives[nID] = eState;
+}
+
+bool CScenarioTrackerMultiplayer::GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const
+{
+	if ( !pPlaces )
+	{
+		return false;
+	}
+	pPlaces->clear();
+	if ( !IsValidObjective( nID ) )
+	{
+		return false;
+	}
+	const auto it = objectivesObjects.find( nID );
+	return NObjectivePresentation::ResolvePlaces(
+			pMission->objectives[nID], it == objectivesObjects.end() ? nullptr : &it->second, pPlaces );
+}
+
+void CScenarioTrackerMultiplayer::SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects )
+{
+	if ( !IsValidObjective( nID ) )
+	{
+		return;
+	}
+	// An explicitly empty binding suppresses the authored static markers, as in single player.
+	std::vector<CPtr<CMapObj>> &objectiveObjects = objectivesObjects[nID];
+	objectiveObjects.resize( objects.size() );
+	for ( int i = 0; i < objects.size(); ++i )
+	{
+		objectiveObjects[i] = objects[i];
+	}
+}
+
+bool CScenarioTrackerMultiplayer::IsDynamicObjective( int nID ) const
+{
+	return IsValidObjective( nID ) && objectivesObjects.find( nID ) != objectivesObjects.end();
 }
 
 void CScenarioTrackerMultiplayer::AddPlayer( const int nPlayer )
