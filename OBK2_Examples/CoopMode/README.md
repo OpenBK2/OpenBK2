@@ -2,8 +2,8 @@
 
 COOP runs two or more human players on diplomacy side 0 against map-configured
 AI_BOT players on side 1. The last map player is neutral (side 2). Existing maps
-default to CLASSIC. Strategic AI generals and the campaign objective panel are
-not enabled by this mode; use mission Lua to direct the computer units.
+default to CLASSIC. Strategic AI generals are not enabled by this mode; use
+mission Lua to direct the computer units.
 
 These files are authoring examples, not a complete playable map or a replacement
 for your mod's database. Start with a working multiplayer map and its terrain,
@@ -92,6 +92,12 @@ and marker positions continue to come from the replay snapshot.
 
 ## Mission script
 
+Received objectives use their existing `MapPositions` to display arrows in the
+3D scene and on the minimap, as in single player. Completing, failing or removing
+an objective updates its markers and the normal objectives list. Replay script
+feedback restores the same presentation; this does not award campaign XP or
+change the map's scripted win/loss rules. No additional GUI data or `.pak` is needed.
+
 Point `MapInfo.ScriptFileRef` to your mission script. `mission.lua` demonstrates
 an AI attack, an appended second order, and script-controlled victory/defeat.
 Before using it, create the script groups and areas named in its comments.
@@ -175,6 +181,8 @@ A disabled reinforcement-credit timer displays `never` instead of a countdown.
 5. Replay from each recorded human viewpoint with checksum verification enabled.
 6. Check victory and defeat camera sequences, including skipping them, and verify
    both human and named AI rows in the results.
+7. Give an objective with `MapPositions`, check its arrows on both maps, then
+   complete or remove it and confirm the arrows disappear during normal play.
 
 The example does not create terrain, unit records, strategic general behavior or
 campaign-style objectives.
