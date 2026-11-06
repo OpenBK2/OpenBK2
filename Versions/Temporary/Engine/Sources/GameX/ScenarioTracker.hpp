@@ -23,6 +23,13 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission,
                                    CReinforcementTypes *pChapterReinf,
                                    int nPlayer );
 
+namespace NObjectivePresentation
+{
+	bool ResolvePlaces( const NDb::SMissionObjective *pObjective,
+	                    const std::vector<CPtr<CMapObj>> *pObjects,
+	                    std::vector<CVec3> *pPlaces );
+}
+
 // BEGIN new scenario tracker
 
 class CScenarioTracker : public IScenarioTracker
@@ -612,14 +619,23 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		{
 			f.Add( 28, &nOnBaseLostReinfPointsLoss );
 		}
+		SerializeObjectives( f );
 		return 0;
 	}
 
 	int nLocalPlayer = {};
 	bool bMissionWon = {}; // special serialization
 	int nSecondsToReinf = {};
+	// Objective visibility and map-object bindings belong to each client's presentation.
+	std::vector<EMissionObjectiveState> objectives;
+	std::vector<int> knownObjectives;
+	det_map<int, std::vector<CPtr<CMapObj>>> objectivesObjects;
 
 private:
+	void ResetObjectives();
+	void SerializeObjectives( IBinSaver &f );
+	bool IsValidObjective( int nID ) const;
+
 	void OnSerialize( IBinSaver &f )
 	{
 		if ( !f.IsChecksum() )
@@ -739,37 +755,19 @@ public:
 
 	// objectives
 	// Задания, про которые игрок уже знает
-	int GetKnownObjectiveCount() const override
-	{
-		return 0;
-	}
+	int GetKnownObjectiveCount() const override;
 
 	// Возвращает ID задания
-	int GetKnownObjectiveID( const int nIndex ) override
-	{
-		return -1;
-	}
+	int GetKnownObjectiveID( const int nIndex ) override;
 
-	int GetObjectiveCount() const override
-	{
-		return 0;
-	}
+	int GetObjectiveCount() const override;
 	enum EMissionObjectiveState GetObjectiveState( const int nID ) const override;
 
 	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
-	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) override {}
-
-	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const override
-	{
-		return false;
-	}
-
-	void SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects ) override {}
-
-	bool IsDynamicObjective( int nID ) const override
-	{
-		return false;
-	}
+	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) override;
+	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const override;
+	void SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects ) override;
+	bool IsDynamicObjective( int nID ) const override;
 
 	// mission
 	void MissionStart( const NDb::SMapInfo *pMission, const int _nTechLevel = -1 ) override;

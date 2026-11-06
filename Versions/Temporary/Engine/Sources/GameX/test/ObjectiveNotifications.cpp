@@ -1,8 +1,16 @@
 #include "AILogic/stdafx.h"
 
 #include "AILogic/B2AI.h"
+#include "AILogic/DBAIConsts.h"
 #include "AILogic/NewUpdater.h"
 #include "AILogic/Scripts.h"
+#include "B2_M1_World/MapObj.h"
+#include "B2_M1_World/MissionObjectiveStates.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/Checksums.h"
+#include "GameX/DBConsts.h"
+#include "GameX/DBGameRoot.h"
+#include "GameX/DBMPConsts.h"
 #include "GameX/InterfaceNotifications.h"
 #include "GameX/InterfaceState.h"
 #include "GameX/MessageParts.h"
@@ -29,6 +37,7 @@
 #include <functional>
 #include <list>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -46,14 +55,29 @@ struct SFields
 	}
 };
 
+struct SMapPointerFields
+{
+	CVec3 position;
+	bool bPlaced = false;
+
+	int operator&( IBinSaver &saver )
+	{
+		saver.Add( 4, &position );
+		saver.Add( 5, &bPlaced );
+		return 0;
+	}
+};
+
 struct SNotificationFields
 {
 	std::list<CObj<CVisualNotifications::SEvent>> events;
 	det_map<int, std::wstring> postfixes;
+	std::unordered_map<int, std::vector<SMapPointerFields>> pointers;
 
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 20, &events );
+		saver.Add( 30, &pointers );
 		saver.Add( 32, &postfixes );
 		return 0;
 	}
@@ -100,7 +124,10 @@ protected:
 	CObj<IWindow> row;
 	CObj<IMiniMap> minimap;
 	CObj<CObjectBase> figures;
+	CObj<CAIMap> aiMap;
 	NDb::SMapInfo *map = nullptr;
+	NDb::SMissionObjective *objective = nullptr;
+	NDb::STexture *objectiveTexture = nullptr;
 	NDb::SNotificationEvent *objectiveEvent = nullptr;
 	NDb::SUIConstsB2 *uiConsts = nullptr;
 
@@ -194,7 +221,7 @@ protected:
 		TextFile( "header.txt", u"Hold the \u017d bridge" );
 		map = Record<NDb::SMapInfo>( "MapInfo" );
 		ASSERT_NE( map, nullptr );
-		auto *objective = Record<NDb::SMissionObjective>( "MissionObjective" );
+		objective = Record<NDb::SMissionObjective>( "MissionObjective" );
 		ASSERT_NE( objective, nullptr );
 		objective->szHeaderFileRef = "header.txt";
 		map->objectives.assign( 3, objective );
@@ -253,6 +280,8 @@ protected:
 		figures = nullptr;
 		NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
 		logic = nullptr;
+		SetAIMap( nullptr );
+		aiMap = nullptr;
 		NSingleton::UnRegisterSingleton( ICamera::tidTypeID );
 		camera = nullptr;
 		NSingleton::UnRegisterSingleton( IGameTimer::tidTypeID );
@@ -263,6 +292,7 @@ protected:
 		interfaceState = nullptr;
 		NSingleton::UnRegisterSingleton( IUIInitialization::tidTypeID );
 		NGlobal::RemoveVar( "ui_consts" );
+		NGlobal::RemoveVar( "game_root" );
 		NGlobal::RemoveVar( "game_mode_editor" );
 		records.clear();
 		NDb::CloseDatabase();
@@ -293,6 +323,72 @@ protected:
 		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, external );
 		loader->Add( 1, &result );
 		return result;
+	}
+
+	void StartCooperativeObjectives()
+	{
+		auto *root = Record<NDb::SGameRoot>( "GameRoot" );
+		ASSERT_NE( root, nullptr );
+		NGlobal::SetVar( "game_root", std::to_string( records.size() ) + ".xdb" );
+		auto *constants = Record<NDb::SGameConsts>( "GameConsts" );
+		ASSERT_NE( constants, nullptr );
+		constants->pAI = Record<NDb::SAIGameConsts>( "AIGameConsts" );
+		constants->pMultiplayer = Record<NDb::SMultiplayerConsts>( "MultiplayerConsts" );
+		root->pConsts = constants;
+		objectiveTexture = Record<NDb::STexture>( "Texture" );
+		ASSERT_NE( objectiveTexture, nullptr );
+		root->textures.resize( 2 );
+		root->textures[0].szTextID = "TX_MINIMAP_OBJECTIVE_NORMAL";
+		root->textures[1].szTextID = "TX_MINIMAP_OBJECTIVE_SELECTED";
+		for ( auto &entry : root->textures )
+		{
+			entry.pTexture = objectiveTexture;
+		}
+		map->players.resize( 3 );
+		map->players[1].nDiplomacySide = 1;
+		map->players.back().nDiplomacySide = 2;
+		tracker->SetGameType( IAIScenarioTracker::EGT_MULTI_COOP );
+		tracker->MissionStart( map, 0 );
+		// Real flat terrain supplies GetZ for authored positions without rendering a scene.
+		aiMap = new CAIMap( 16, 16, 32, 2, 16 );
+		SetAIMap( aiMap );
+	}
+
+	std::vector<IMiniMap::SMarker> ReadMarkers()
+	{
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, external );
+			saver->AddPolymorphicBase( 1, minimap );
+		}
+		stream.Seek( 0 );
+		std::vector<IMiniMap::SMarker> markers;
+		SFields fields{ [&]( IBinSaver &saver ) { saver.Add( 19, &markers ); } };
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, external );
+		loader->Add( 1, &fields );
+		return markers;
+	}
+
+	void SetMapObject( CMapObj *object, CVec3 position, bool visible, float hp )
+	{
+		// Restore the real scene-side object without CreateSceneObject or a graphics device.
+		SFields base{ [&]( IBinSaver &saver )
+		              {
+										saver.Add( 3, &position );
+										saver.Add( 6, &hp );
+										saver.Add( 12, &visible );
+									} };
+		Hydrate( object, { [&]( IBinSaver &saver ) { saver.Add( 1, &base ); } } );
+	}
+
+	uint32_t TrackerChecksum()
+	{
+		uint32_t checksum = 1;
+		{
+			CPtr<IBinSaver> saver = CreateCheckSumSaver( &checksum, nullptr, 0 );
+			saver->AddPolymorphicBase( 1, tracker );
+		}
+		return checksum;
 	}
 
 	std::vector<CObj<SAIFeedbackUpdate>> RunLua( const char *source )
@@ -507,5 +603,189 @@ TEST_F( ObjectiveNotifications, InvalidLuaArgumentsAndMissingObjectivesProduceNo
 	notifications->UpdateObjectiveNotification( 3, "ignored" );
 	notifications->KeepObjectiveNotified( 3, true );
 	EXPECT_TRUE( ReadNotifications().events.empty() );
+}
+
+TEST_F( ObjectiveNotifications, CoopTracksKnownObjectivesAndResetsWithoutChangingClassic )
+{
+	StartCooperativeObjectives();
+	ASSERT_EQ( tracker->GetObjectiveCount(), 3 );
+	EXPECT_EQ( tracker->GetKnownObjectiveCount(), 0 );
+	EXPECT_EQ( tracker->GetObjectiveState( 0 ), EMOS_WAITING );
+	tracker->SetObjectiveState( 2, EMOS_RECEIVED );
+	tracker->SetObjectiveState( 0, EMOS_RECEIVED );
+	tracker->SetObjectiveState( 2, EMOS_RECEIVED );
+	ASSERT_EQ( tracker->GetKnownObjectiveCount(), 2 );
+	EXPECT_EQ( tracker->GetKnownObjectiveID( 0 ), 2 );
+	EXPECT_EQ( tracker->GetKnownObjectiveID( 1 ), 0 );
+	tracker->SetObjectiveState( 2, EMOS_COMPLETED );
+	tracker->SetObjectiveState( 0, EMOS_WAITING );
+	EXPECT_EQ( tracker->GetKnownObjectiveCount(), 1 );
+	EXPECT_EQ( tracker->GetObjectiveState( 2 ), EMOS_COMPLETED );
+	tracker->SetObjectiveState( 2, EMOS_FAILED );
+	EXPECT_EQ( tracker->GetObjectiveState( 2 ), EMOS_FAILED );
+	EXPECT_EQ( tracker->GetScriptOutcome(), -1 );
+	// Bad script IDs, missing authored records, and invalid states cannot create markers.
+	map->objectives[1] = nullptr;
+	tracker->SetObjectiveState( -1, EMOS_RECEIVED );
+	tracker->SetObjectiveState( 3, EMOS_RECEIVED );
+	tracker->SetObjectiveState( 1, EMOS_RECEIVED );
+	tracker->SetObjectiveState( 0, static_cast<EMissionObjectiveState>( 255 ) );
+	EXPECT_EQ( tracker->GetKnownObjectiveCount(), 1 );
+	EXPECT_EQ( tracker->GetKnownObjectiveID( -1 ), -1 );
+	EXPECT_EQ( tracker->GetKnownObjectiveID( 1 ), -1 );
+	EXPECT_EQ( tracker->GetObjectiveState( -1 ), EMOS_MIN );
+	EXPECT_EQ( tracker->GetObjectiveState( 0 ), EMOS_WAITING );
+	tracker->SetObjectiveObjects( 2, {} );
+	ASSERT_TRUE( tracker->IsDynamicObjective( 2 ) );
+	tracker->MissionStart( map, 0 );
+	EXPECT_EQ( tracker->GetKnownObjectiveCount(), 0 );
+	EXPECT_EQ( tracker->GetObjectiveState( 2 ), EMOS_WAITING );
+	EXPECT_FALSE( tracker->IsDynamicObjective( 2 ) );
+	tracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
+	tracker->MissionStart( map, 0 );
+	tracker->SetObjectiveState( 0, EMOS_RECEIVED );
+	tracker->SetObjectiveObjects( 0, {} );
+	EXPECT_EQ( tracker->GetObjectiveCount(), 0 );
+	EXPECT_EQ( tracker->GetKnownObjectiveCount(), 0 );
+	EXPECT_FALSE( tracker->IsDynamicObjective( 0 ) );
+	std::vector<CVec3> places( 1, CVec3( 1, 2, 3 ) );
+	EXPECT_FALSE( tracker->GetObjectivePlaces( 0, &places ) );
+	EXPECT_TRUE( places.empty() );
+}
+
+TEST_F( ObjectiveNotifications, CoopStaticLocationsReachMinimapAndMapPointerRequests )
+{
+	StartCooperativeObjectives();
+	objective->mapPositions = { CVec2( 128, 160 ), CVec2( 224, 256 ) };
+	CObj<IScenarioTracker> single = dynamic_cast<IScenarioTracker *>( NObjectFactory::MakeObject( 0x11165340 ) );
+	ASSERT_NE( single, nullptr );
+	CDBPtr<NDb::SMapInfo> mapPointer = map;
+	Hydrate( single, { [&]( IBinSaver &saver ) { saver.Add( 9, &mapPointer ); } } );
+	std::vector<CVec3> expected;
+	std::vector<CVec3> places;
+	ASSERT_TRUE( single->GetObjectivePlaces( 0, &expected ) );
+	ASSERT_TRUE( tracker->GetObjectivePlaces( 0, &places ) );
+	ASSERT_EQ( places.size(), 2 );
+	EXPECT_EQ( places, expected );
+	EXPECT_EQ( places[0], CVec3( 128, 160, Vis2AI( 5.0f ) ) );
+	EXPECT_EQ( places[1], CVec3( 224, 256, Vis2AI( 5.0f ) ) );
+	NGlobal::SetVar( "game_mode_editor", 0 );
+	tracker->SetObjectiveState( 0, EMOS_RECEIVED );
+	ASSERT_TRUE( notifications->Notify( EVNT_RECEIVE_OBJECTIVE, 0, VNULL2 ) );
+	const auto state = ReadNotifications();
+	const auto pointers = state.pointers.find( 0 );
+	ASSERT_NE( pointers, state.pointers.end() );
+	ASSERT_EQ( pointers->second.size(), 2 );
+	EXPECT_EQ( pointers->second[0].position, places[0] );
+	EXPECT_EQ( pointers->second[1].position, places[1] );
+	// No pointer model is loaded in this fixture; creation requests still carry the correct locations.
+	EXPECT_FALSE( pointers->second[0].bPlaced );
+	auto markers = ReadMarkers();
+	ASSERT_EQ( markers.size(), 2 );
+	EXPECT_EQ( markers[0].vPos, objective->mapPositions[0] );
+	EXPECT_EQ( markers[1].vPos, objective->mapPositions[1] );
+	EXPECT_EQ( markers[0].pTexture, objectiveTexture );
+	tracker->SetObjectiveState( 0, EMOS_COMPLETED );
+	ASSERT_TRUE( notifications->Notify( EVNT_COMPLETE_OBJECTIVE, 0, VNULL2 ) );
+	EXPECT_TRUE( ReadNotifications().pointers.empty() );
+	EXPECT_TRUE( ReadMarkers().empty() );
+	// Like SP, opening the objective list may show completed locations; ordinary play hides them.
+	ASSERT_TRUE( notifications->Notify( EVNT_SHOW_OBJECTIVES, 0, VNULL2 ) );
+	EXPECT_EQ( ReadMarkers().size(), 2 );
+	ASSERT_TRUE( notifications->Notify( EVNT_HIDE_OBJECTIVES, 0, VNULL2 ) );
+	EXPECT_TRUE( ReadMarkers().empty() );
+}
+
+TEST_F( ObjectiveNotifications, CoopDynamicLocationsFollowOnlyLivingVisibleObjects )
+{
+	StartCooperativeObjectives();
+	objective->mapPositions = { CVec2( 64, 96 ) };
+	CObj<CMapObj> moving = dynamic_cast<CMapObj *>( NObjectFactory::MakeObject( 0x100A7484 ) );
+	CObj<CMapObj> hidden = dynamic_cast<CMapObj *>( NObjectFactory::MakeObject( 0x100A7484 ) );
+	CObj<CMapObj> dead = dynamic_cast<CMapObj *>( NObjectFactory::MakeObject( 0x100A7484 ) );
+	CObj<CMapObj> removed = dynamic_cast<CMapObj *>( NObjectFactory::MakeObject( 0x100A7484 ) );
+	ASSERT_NE( moving, nullptr );
+	ASSERT_NE( hidden, nullptr );
+	ASSERT_NE( dead, nullptr );
+	ASSERT_NE( removed, nullptr );
+	SetMapObject( moving, CVec3( 200, 220, 17 ), true, 1.0f );
+	SetMapObject( hidden, CVec3( 300, 320, 19 ), false, 1.0f );
+	SetMapObject( dead, CVec3( 400, 420, 21 ), true, 0.0f );
+	SetMapObject( removed, CVec3( 450, 470, 23 ), true, 1.0f );
+	tracker->SetObjectiveObjects( 0, { moving, hidden, dead, removed, nullptr } );
+	removed = nullptr;
+	tracker->SetObjectiveState( 0, EMOS_RECEIVED );
+	std::vector<CVec3> places;
+	ASSERT_TRUE( tracker->GetObjectivePlaces( 0, &places ) );
+	ASSERT_EQ( places.size(), 1 );
+	EXPECT_EQ( places.front(), moving->GetCenter() );
+	SetMapObject( moving, CVec3( 232, 252, 18 ), true, 1.0f );
+	ASSERT_TRUE( tracker->GetObjectivePlaces( 0, &places ) );
+	EXPECT_EQ( places.front(), moving->GetCenter() );
+	NGlobal::SetVar( "game_mode_editor", 0 );
+	notifications->Step( 0, true );
+	auto markers = ReadMarkers();
+	ASSERT_EQ( markers.size(), 1 );
+	EXPECT_EQ( markers.front().vPos, CVec2( 232, 252 ) );
+	SetMapObject( moving, moving->GetCenter(), false, 1.0f );
+	notifications->Step( 0, true );
+	EXPECT_TRUE( ReadMarkers().empty() );
+	tracker->SetObjectiveObjects( 0, {} );
+	EXPECT_TRUE( tracker->IsDynamicObjective( 0 ) );
+	EXPECT_TRUE( tracker->GetObjectivePlaces( 0, &places ) );
+	EXPECT_TRUE( places.empty() );
+	// Clearing a dynamic group must not revive the old authored coordinate.
+	EXPECT_FALSE( tracker->GetObjectivePlaces( 99, &places ) );
+	EXPECT_TRUE( places.empty() );
+}
+
+TEST_F( ObjectiveNotifications, CoopObjectivePresentationSurvivesSaveLoadAndStaysOutOfChecksums )
+{
+	StartCooperativeObjectives();
+	const uint32_t baseline = TrackerChecksum();
+	CObj<CMapObj> object = dynamic_cast<CMapObj *>( NObjectFactory::MakeObject( 0x100A7484 ) );
+	ASSERT_NE( object, nullptr );
+	SetMapObject( object, CVec3( 112, 144, 8 ), true, 1.0f );
+	tracker->SetObjectiveState( 2, EMOS_COMPLETED );
+	tracker->SetObjectiveState( 0, EMOS_RECEIVED );
+	tracker->SetObjectiveObjects( 0, { object } );
+	EXPECT_EQ( TrackerChecksum(), baseline );
+	// Client objects remain externally owned as they are by the loaded world.
+	std::vector<SBinSaverExternalObject> worldObjects{ { 1000, object } };
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, worldObjects );
+		saver->AddPolymorphicBase( 1, tracker );
+	}
+	CObj<IScenarioTracker> restored = CreateScenarioTrackerMultiplayer();
+	stream.Seek( 0 );
+	{
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, worldObjects );
+		loader->AddPolymorphicBase( 1, restored );
+	}
+	ASSERT_EQ( restored->GetKnownObjectiveCount(), 2 );
+	EXPECT_EQ( restored->GetKnownObjectiveID( 0 ), 2 );
+	EXPECT_EQ( restored->GetKnownObjectiveID( 1 ), 0 );
+	EXPECT_EQ( restored->GetObjectiveState( 2 ), EMOS_COMPLETED );
+	EXPECT_EQ( restored->GetObjectiveState( 0 ), EMOS_RECEIVED );
+	EXPECT_TRUE( restored->IsDynamicObjective( 0 ) );
+	std::vector<CVec3> places;
+	ASSERT_TRUE( restored->GetObjectivePlaces( 0, &places ) );
+	ASSERT_EQ( places.size(), 1 );
+	EXPECT_EQ( places.front(), object->GetCenter() );
+	CDBPtr<NDb::SMapInfo> mapPointer = map;
+	auto mode = IAIScenarioTracker::EGT_MULTI_COOP;
+	// An old COOP save loaded into a reused tracker has no objective chunks 29-31.
+	Hydrate( restored,
+	         { [&]( IBinSaver &saver )
+	           {
+							 saver.Add( 2, &mapPointer );
+							 saver.Add( 19, &mode );
+						 } } );
+	EXPECT_EQ( restored->GetObjectiveCount(), 3 );
+	EXPECT_EQ( restored->GetKnownObjectiveCount(), 0 );
+	EXPECT_EQ( restored->GetObjectiveState( 0 ), EMOS_WAITING );
+	EXPECT_EQ( restored->GetObjectiveState( 2 ), EMOS_WAITING );
+	EXPECT_FALSE( restored->IsDynamicObjective( 0 ) );
 }
 } // namespace

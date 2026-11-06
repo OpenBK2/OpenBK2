@@ -1194,17 +1194,17 @@ void CScenarioTracker::SetObjectiveState( const int nID, const EMissionObjective
 	objectives[nID] = eState;
 }
 
-bool CScenarioTracker::GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const
+bool NObjectivePresentation::ResolvePlaces( const NDb::SMissionObjective *pObjective,
+                                            const std::vector<CPtr<CMapObj>> *pObjects,
+                                            std::vector<CVec3> *pPlaces )
 {
-	CObjectivesObjects::const_iterator it = objectivesObjects.find( nID );
-	if ( it != objectivesObjects.end() )
+	pPlaces->clear();
+	if ( pObjects )
 	{
-		const CObjectiveObjects &objectiveObjects = it->second;
-		pPlaces->clear();
-		pPlaces->reserve( objectiveObjects.size() );
-		for ( int i = 0; i < objectiveObjects.size(); ++i )
+		pPlaces->reserve( pObjects->size() );
+		for ( int i = 0; i < pObjects->size(); ++i )
 		{
-			const CMapObj *pMO = objectiveObjects[i];
+			const CMapObj *pMO = ( *pObjects )[i];
 			if ( pMO && pMO->IsRefValid() && pMO->IsVisible() && pMO->IsAlive() )
 			{
 				pPlaces->push_back( pMO->GetCenter() );
@@ -1213,12 +1213,6 @@ bool CScenarioTracker::GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces 
 		return true;
 	}
 
-	pPlaces->clear();
-	const NDb::SMissionObjective *pObjective = 0;
-	if ( pMission && nID >= 0 && nID < pMission->objectives.size() )
-	{
-		pObjective = pMission->objectives[nID];
-	}
 	if ( !pObjective )
 	{
 		return false;
@@ -1234,6 +1228,19 @@ bool CScenarioTracker::GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces 
 		( *pPlaces )[i] = vPos;
 	}
 	return true;
+}
+
+bool CScenarioTracker::GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const
+{
+	// Share marker placement with COOP while retaining SP's dynamic-binding precedence.
+	const CObjectivesObjects::const_iterator it = objectivesObjects.find( nID );
+	const NDb::SMissionObjective *pObjective = nullptr;
+	if ( pMission && nID >= 0 && nID < pMission->objectives.size() )
+	{
+		pObjective = pMission->objectives[nID];
+	}
+	return NObjectivePresentation::ResolvePlaces(
+			pObjective, it == objectivesObjects.end() ? nullptr : &it->second, pPlaces );
 }
 
 void CScenarioTracker::SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects )

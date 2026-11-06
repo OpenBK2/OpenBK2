@@ -452,6 +452,15 @@ context. Read `git diff` of every touched file before building.
 
 ## Persistent objective notifications
 
+- Minimap objective arrows need known objective IDs and states as well as
+  locations. The old MP tracker discarded all three. Keep COOP objective UI
+  state and local object bindings outside simulation checksums, and share the
+  single-player location resolver so arrow heights and visibility filtering agree.
+- Dynamic objective feedback carries the objective ID in the units-array payload,
+  while its outer feedback parameter is -1. The older world consumer and spatial
+  feedback batching have separate limitations; do not confuse those with static
+  MapPositions markers or claim that a tracker-only fix repairs that routing.
+
 - BinSaver supports `det_map`, not `std::map`; an unsupported container can select
   its raw-byte fallback. Check the serializer overloads before adding saved state.
   Clear new maps before reading an optional chunk so older saves cannot keep stale

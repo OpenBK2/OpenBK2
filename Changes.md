@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- COOP mission objectives now retain their state and map positions, restoring objective arrows in the 3D scene and on the minimap. Completed, failed or removed objectives update the markers normally; objective presentation is saved separately from multiplayer simulation checksums. Existing mission data and arrow artwork are reused.
+
 - Mission scripts can pin objective notifications with `KeepObjectiveNotified(index, 1)` and replace their postfix with `UpdateObjectiveNotification(index, text)`. Pinned entries use the regular objective icon and remain until `KeepObjectiveNotified(index, 0)` removes them. Postfixes are remembered while hidden, and pins and text survive save/load. The `Objective: ` prefix can be localized through `OBJECTIVE_NOTIFICATION_PREFIX`. A countdown example is in `OBK2_Examples/PersistentObjectiveNotifications`.
 
 - Multiplayer maps can set `OnBaseCaptureReinfPointsGain` and `OnBaseLostReinfPointsLoss` to change reinforcement points awarded to each eligible teammate on capturing or losing a base. These are signed integers, defaulting to `1` and `-1`; `0` disables the respective point change. Existing maps keep the original rules, and saves and replays preserve custom values. Examples are in `OBK2_Examples/MultiplayerBaseReinforcementPoints`.

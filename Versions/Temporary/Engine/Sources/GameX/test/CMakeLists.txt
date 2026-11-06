@@ -5,7 +5,7 @@ add_unit_test(MPDataChecksum GameX libdb System Misc Main AILogic Stats_B2_M1 zl
 add_unit_test(MPCoopRules GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 add_unit_test(MessageParts GameX UISpecificB2 UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 # Exercise persistent objective controls and the real Lua-to-client feedback queue without a graphics device.
-add_unit_test(ObjectiveNotifications GameX UISpecificB2 UI SceneB2 Script libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+add_unit_test(ObjectiveNotifications GameX UISpecificB2 UI SceneB2 B2_M1_World Common_RTS_AI Script libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 target_compile_definitions(ObjectiveNotifications_test PRIVATE
     OBJECTIVE_NOTIFICATION_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 if(WIN32)
