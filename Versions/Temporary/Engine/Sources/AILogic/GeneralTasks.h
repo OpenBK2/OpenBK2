@@ -99,6 +99,7 @@ class CGeneralTaskToHoldReinforcement : public IGeneralTask, public IWorkerEnume
 	CommonUnits tanksFree;
 	NDb::SAIGeneralParcel patchInfo;
 	UnitsPositions unitsPositions;
+	CPtr<CGeneral> pOwner;
 
 	float fSeverity = {}; // current severity of this task
 	int nCurReinforcePoint = {};
@@ -110,11 +111,16 @@ class CGeneralTaskToHoldReinforcement : public IGeneralTask, public IWorkerEnume
 		f.Add( 4, &unitsPositions );
 		f.Add( 5, &fSeverity );
 		f.Add( 6, &nCurReinforcePoint );
+		if ( f.IsReading() )
+		{
+			pOwner = 0;
+		}
+		f.Add( 7, &pOwner );
 		return 0;
 	}
 
 public:
-	CGeneralTaskToHoldReinforcement();
+	explicit CGeneralTaskToHoldReinforcement( CGeneral *pOwner = nullptr );
 	void Init( const struct NDb::SAIGeneralParcel &_patchInfo );
 
 	//empty reinforcement parcell. uses unit's initial positions as reinforcements positions.
@@ -157,6 +163,7 @@ class CGeneralTaskRecaptureStorage : public IGeneralTask, public IWorkerEnumerat
 	OBJECT_BASIC_METHODS( CGeneralTaskRecaptureStorage );
 	ZDATA
 	CommonUnits tanksFree;
+	CPtr<CGeneral> pOwner;
 	CVec2 vReinforcePoint;
 	float fSeverity = {}; // current severity of this task
 
@@ -168,13 +175,18 @@ class CGeneralTaskRecaptureStorage : public IGeneralTask, public IWorkerEnumerat
 		f.Add( 3, &vReinforcePoint );
 		f.Add( 4, &fSeverity );
 		f.Add( 5, &bFinished );
+		if ( f.IsReading() )
+		{
+			pOwner = 0;
+		}
+		f.Add( 6, &pOwner );
 		return 0;
 	}
 
 public:
 	CGeneralTaskRecaptureStorage() {}
 
-	CGeneralTaskRecaptureStorage( const CVec2 &vReinforcePoint );
+	CGeneralTaskRecaptureStorage( const CVec2 &vReinforcePoint, CGeneral *pOwner = nullptr );
 
 	//ITask
 	ETaskName GetName() const override
@@ -258,6 +270,7 @@ class CGeneralTaskToSwarmToPoint : public IGeneralTask, public IWorkerEnumerator
 	bool IsTimeToRun() const;
 	void Run();
 	void SendToGroupPoint();
+	void RemoveUnavailableWorkers();
 
 public:
 	CGeneralTaskToSwarmToPoint();

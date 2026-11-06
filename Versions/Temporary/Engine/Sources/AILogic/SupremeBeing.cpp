@@ -3,7 +3,9 @@
 #include "AIUnit.h"
 #include "AIUnitInfoForGeneral.h"
 #include "Diplomacy.h"
+#include "GeneralConsts.h"
 #include "GeneralInternal.h"
+#include "ScenarioTracker.h"
 #include "Scripts.h"
 
 CSupremeBeing theSupremeBeing;
@@ -16,24 +18,31 @@ extern CScripts *pScripts;
 //*											CSupremeBeing																*
 //*******************************************************************
 
-struct IEnemyContainer *CSupremeBeing::GetEnemyConatiner( int nParty )
+struct IEnemyContainer *CSupremeBeing::GetEnemyConatiner( int nPlayer )
 {
-	return generals[nParty];
+	const auto it = generals.find( nPlayer );
+	return it == generals.end() ? nullptr : it->second.GetPtr();
 }
 
 void CSupremeBeing::SetAAVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible )
 {
-	if ( generals.find( nGeneralParty ) != generals.end() )
+	for ( const auto &entry : generals )
 	{
-		generals[nGeneralParty]->SetAAVisible( pUnit, bVisible );
+		if ( entry.second->GetParty() == nGeneralParty )
+		{
+			entry.second->SetAAVisible( pUnit, bVisible );
+		}
 	}
 }
 
 void CSupremeBeing::SetUnitVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible )
 {
-	if ( generals.find( nGeneralParty ) != generals.end() )
+	for ( const auto &entry : generals )
 	{
-		generals[nGeneralParty]->SetUnitVisible( pUnit, bVisible );
+		if ( entry.second->GetParty() == nGeneralParty )
+		{
+			entry.second->SetUnitVisible( pUnit, bVisible );
+		}
 	}
 }
 
@@ -46,30 +55,53 @@ void CSupremeBeing::Clear()
 {
 	delayedTasks.clear();
 	generals.clear();
+	ironmans.clear();
 }
 
 void CSupremeBeing::Init( const NDb::SMapInfo *pMapInfo )
 {
-	if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() )
+	Clear();
+	const bool bCooperative = GetScenarioTracker() && GetScenarioTracker()->IsCooperative();
+	if ( !pMapInfo || ( theDipl.IsNetGame() ? !bCooperative : NGlobal::GetVar( "nogeneral", 0 ) != 0 ) )
 	{
-		for ( int i = 0; i < pMapInfo->players.size(); ++i )
+		return;
+	}
+	// Local developer overrides must never change a network simulation.
+	SGeneralConsts::Init( bCooperative );
+	for ( int i = 0; i < pMapInfo->players.size() && i < theDipl.GetNeutralPlayer(); ++i )
+	{
+		const int nParty = theDipl.GetNParty( i );
+		if ( bCooperative ? theDipl.IsAIPlayer( i ) && theDipl.IsPlayerExist( i ) : nParty == 1 && generals.empty() )
 		{
-			const int nParty = theDipl.GetNParty( i );
-			if ( generals.find( nParty ) == generals.end() && nParty == 1 )
-			{
-				//generals.insert( std::pair<int, CPtr<CGeneral> >( nParty, new CGeneral( nParty ) ) );
-				generals[nParty] = new CGeneral( nParty );
-				generals[nParty]->Init( pMapInfo->players[i].general );
-			}
+			generals[i] = new CGeneral( i, nParty );
+			generals[i]->Init( pMapInfo->players[i].general );
 		}
 	}
 }
 
 void CSupremeBeing::GiveNewUnitsToGenerals( const std::list<CCommonUnit *> &pUnits, bool bFromReinforcement )
 {
-	if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() )
+	for ( const auto &entry : generals )
 	{
-		generals[1]->GiveNewUnits( pUnits, bFromReinforcement );
+		entry.second->GiveNewUnits( pUnits, bFromReinforcement );
+		// Initial fog notifications can precede General creation. Seed visible map
+		// units now, and also observe newly spawned enemy/neutral units in later batches.
+		std::vector<CAIUnit *> visibleUnits;
+		for ( CCommonUnit *pUnit : pUnits )
+		{
+			CAIUnit *pAIUnit = dynamic_cast<CAIUnit *>( pUnit );
+			if ( pAIUnit && pAIUnit->IsRefValid() && pAIUnit->IsAlive() && pAIUnit->IsVisible( entry.second->GetParty() ) )
+			{
+				visibleUnits.push_back( pAIUnit );
+			}
+		}
+		std::sort( visibleUnits.begin(),
+		           visibleUnits.end(),
+		           []( const CAIUnit *a, const CAIUnit *b ) { return a->GetUniqueId() < b->GetUniqueId(); } );
+		for ( CAIUnit *pUnit : visibleUnits )
+		{
+			entry.second->SetUnitVisible( pUnit, true );
+		}
 	}
 }
 
@@ -83,29 +115,34 @@ bool CSupremeBeing::IsIronman( const int nScriptGroup ) const
 	return ironmans.find( nScriptGroup ) != ironmans.end();
 }
 
-bool CSupremeBeing::IsMobileReinforcement( int nParty, int nGroup ) const
+bool CSupremeBeing::IsMobileReinforcement( int nPlayer, int nGroup ) const
 {
-	Generals::const_iterator it = generals.find( nParty );
-	if ( it != generals.end() )
+	for ( const auto &entry : generals )
 	{
-		return ( it->second )->IsMobileReinforcement( nGroup );
+		if ( theDipl.IsNetGame() ? entry.first == nPlayer : entry.second->GetParty() == theDipl.GetNParty( nPlayer ) )
+		{
+			return entry.second->IsMobileReinforcement( nGroup );
+		}
 	}
 	return false;
 }
 
 void CSupremeBeing::AddReinforcement( class CAIUnit *pUnit )
 {
-	if ( generals.find( pUnit->GetPlayer() ) != generals.end() )
+	for ( const auto &entry : generals )
 	{
-		generals[pUnit->GetPlayer()]->Give( pUnit );
+		if ( entry.second->OwnsUnit( pUnit ) )
+		{
+			entry.second->GiveNewUnits( { pUnit }, true );
+		}
 	}
 }
 
 void CSupremeBeing::Segment()
 {
-	if ( !NGlobal::GetVar( "temp.nogeneral_sript", 0 ) )
+	if ( theDipl.IsNetGame() || !NGlobal::GetVar( "temp.nogeneral_sript", 0 ) )
 	{
-		if ( !theDipl.IsNetGame() )
+		if ( IsActive() )
 		{
 			// запуск отложенных заждач
 			for ( DelayedTasks::iterator it = delayedTasks.begin(); it != delayedTasks.end(); )
@@ -143,16 +180,18 @@ void CSupremeBeing::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
                                          const CVec2 &vLastVisibleAntiArtCenter,
                                          const float fDistToLastVisibleAntiArt )
 {
-	const int nGeneralParty = 1 - pInfo->GetOwner()->GetParty();
-
-	if ( nGeneralParty == 1 && generals.find( nGeneralParty ) != generals.end() )
+	for ( const auto &entry : generals )
 	{
-		generals[nGeneralParty]->UpdateEnemyUnitInfo( pInfo,
-		                                              lastVisibleTimeDelta,
-		                                              vLastVisiblePos,
-		                                              lastAntiArtTimeDelta,
-		                                              vLastVisibleAntiArtCenter,
-		                                              fDistToLastVisibleAntiArt );
+		if ( theDipl.GetDiplStatusForParties( entry.second->GetParty(), pInfo->GetOwner()->GetParty() ) != EDI_ENEMY )
+		{
+			continue;
+		}
+		entry.second->UpdateEnemyUnitInfo( pInfo,
+		                                   lastVisibleTimeDelta,
+		                                   vLastVisiblePos,
+		                                   lastAntiArtTimeDelta,
+		                                   vLastVisibleAntiArtCenter,
+		                                   fDistToLastVisibleAntiArt );
 	}
 }
 
@@ -176,10 +215,12 @@ void CSupremeBeing::UnitChangedPosition( class CCommonUnit *pUnit, const CVec2 &
 {
 	if ( AICellsTiles::GetGeneralCell( pUnit->GetCenterPlain() ) != AICellsTiles::GetGeneralCell( vNewPos ) )
 	{
-		Generals::iterator it = generals.find( pUnit->GetParty() );
-		if ( it != generals.end() )
+		for ( const auto &entry : generals )
 		{
-			it->second->UnitChangedPosition( pUnit, vNewPos );
+			if ( entry.second->OwnsUnit( pUnit ) )
+			{
+				entry.second->UnitChangedPosition( pUnit, vNewPos );
+			}
 		}
 	}
 }
@@ -200,10 +241,12 @@ void CSupremeBeing::UnitAskedForResupply( class CCommonUnit *pUnit, const EResup
 	}
 	else
 	{
-		Generals::iterator it = generals.find( pUnit->GetParty() );
-		if ( it != generals.end() )
+		for ( const auto &entry : generals )
 		{
-			it->second->UnitAskedForResupply( pUnit, eType, bSet );
+			if ( entry.second->OwnsUnit( pUnit ) )
+			{
+				entry.second->UnitAskedForResupply( pUnit, eType, bSet );
+			}
 		}
 	}
 }
@@ -221,9 +264,12 @@ void CSupremeBeing::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 
 bool CSupremeBeing::IsInResistanceCircle( const CVec2 &vPoint, const int nGeneralParty )
 {
-	if ( generals.find( nGeneralParty ) != generals.end() )
+	for ( const auto &entry : generals )
 	{
-		return generals[nGeneralParty]->IsInResistanceCircle( vPoint );
+		if ( entry.second->GetParty() == nGeneralParty && entry.second->IsInResistanceCircle( vPoint ) )
+		{
+			return true;
+		}
 	}
 	return false;
 }

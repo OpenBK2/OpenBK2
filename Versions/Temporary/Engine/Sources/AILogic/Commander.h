@@ -4,6 +4,8 @@ class CCommonUnit;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "GeneralInternalInterfaces.h"
 
+#include "AILogic_export.h"
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ****
 //  generic manager, tracks for more than 1 task at a time
@@ -11,71 +13,9 @@ class CCommonUnit;
 class CCommander : public ICommander
 {
 public:
-	int operator&( IBinSaver &saver ) override;
+	AILOGIC_EXPORT int operator&( IBinSaver &saver ) override;
 
 private:
-	;
-
-	//
-	struct STaskSortPresicate
-	{
-		bool operator()( const IGeneralTask *pT1, const IGeneralTask *pT2 ) const
-		{
-			return pT1->GetSeverity() > pT2->GetSeverity();
-		}
-	};
-
-	//
-	struct STaskBadSituationPredicate
-	{
-		bool operator()( const IGeneralTask *pT ) const
-		{
-			return pT->GetSeverity() < 0;
-		}
-	};
-
-	//
-	struct SFinishedPredicate
-	{
-		bool operator()( const IGeneralTask *pT ) const
-		{
-			return pT->IsFinished();
-		}
-	};
-
-	//
-	struct SSegmentPredicate
-	{
-		void operator()( IGeneralTask *pT )
-		{
-			pT->Segment();
-		}
-	};
-
-	struct SCalcRatingPredicate
-	{
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		IWorkerEnumerator *pEn = {};
-		EForceType eType = {};
-
-		SCalcRatingPredicate( IWorkerEnumerator *_pEn, EForceType _eType )
-			: pEn( _pEn )
-			, eType( _eType )
-		{
-		}
-
-		void operator()( std::pair<float, CPtr<CCommonUnit>> &value )
-		{
-			value.first = pEn->EvaluateWorkerRating( value.second, eType );
-		}
-
-		bool operator()( const std::pair<float, CPtr<CCommonUnit>> &v1, const std::pair<float, CPtr<CCommonUnit>> &v2 )
-		{
-			return v1.first < v2.first;
-		}
-	};
-
-	//
 	struct STaskCalcSeverityPredicate
 	{
 		int nNumberPositive = {}, nNumberNegative = {};
@@ -100,33 +40,17 @@ private:
 		const float GetSeverity() const;
 	};
 
-	//
-	struct STakeWorkersPredicate
-	{
-		CPtr<ICommander> pManager;
-
-		void operator()( IGeneralTask *pT )
-		{
-			pT->ReleaseWorker( pManager, 0 );
-		}
-
-		STakeWorkersPredicate( struct ICommander *pManager )
-			: pManager( pManager )
-		{
-		}
-	};
-
 protected:
 	typedef std::vector<CObj<IGeneralTask>> Tasks;
 	Tasks tasks; // all tasks of this colonel.
 	float fMeanSeverity = {};
 
-	void EnumWorkersInternal( const enum EForceType eType, IWorkerEnumerator *pEn, CommonUnits *pUnits );
+	AILOGIC_EXPORT void EnumWorkersInternal( const enum EForceType eType, IWorkerEnumerator *pEn, CommonUnits *pUnits );
 
 public:
-	CCommander();
-	float GetMeanSeverity() const override;
-	void Segment() override;
+	AILOGIC_EXPORT CCommander();
+	AILOGIC_EXPORT float GetMeanSeverity() const override;
+	AILOGIC_EXPORT void Segment() override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

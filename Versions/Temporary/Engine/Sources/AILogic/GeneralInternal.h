@@ -33,7 +33,7 @@ class CGeneral : public CCommander, public IEnemyContainer
 	ZONSERIALIZE
 	CFreeIds requestIDs;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	int nParty = {}; // general is for this player
+	int nParty = {}; // diplomacy side used for shared fog and enemy queries
 
 	CEnemyVisibility enemys;
 	CEnemyVisibility antiAviation;
@@ -64,12 +64,16 @@ class CGeneral : public CCommander, public IEnemyContainer
 	uint8_t cBombardmentType = {};
 	bool bSendReserves = {}; // send tanks to swarm
 	int nMaxAllowedMobileTanks = {};
+	// A COOP bot owns a map player slot, which is independent of its diplomacy side.
+	int nPlayer = -1;
+	det_set<int> balanceOwnUnits;
+	det_set<int> balanceEnemyUnits;
+	det_set<int> controlledUnits;
 
 public:
 	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommander *)this );
-		OnSerialize( f );
 		f.Add( 2, &requestIDs );
 		f.Add( 3, &nParty );
 		f.Add( 4, &enemys );
@@ -92,6 +96,24 @@ public:
 		f.Add( 21, &cBombardmentType );
 		f.Add( 22, &bSendReserves );
 		f.Add( 23, &nMaxAllowedMobileTanks );
+		if ( f.IsReading() )
+		{
+			nPlayer = nParty; // Older single-player saves keyed generals by side.
+		}
+		if ( !f.IsReading() || f.HasChunk( 24 ) )
+		{
+			f.Add( 24, &nPlayer );
+		}
+		if ( f.IsReading() )
+		{
+			balanceOwnUnits.clear();
+			balanceEnemyUnits.clear();
+			controlledUnits.clear();
+		}
+		f.Add( 26, &balanceOwnUnits );
+		f.Add( 27, &balanceEnemyUnits );
+		f.Add( 28, &controlledUnits );
+		OnSerialize( f );
 		return 0;
 	}
 
@@ -132,8 +154,9 @@ public:
 		curProcessed = enemys.end();
 	}
 
-	CGeneral( const int _nParty )
+	CGeneral( const int _nPlayer, const int _nParty )
 		: nParty( _nParty )
+		, nPlayer( _nPlayer )
 		, lastBombardmentCheck( 0 )
 		, timeNextUpdate( 1000 )
 		, nAirReinfTurnCounter( 0 )
@@ -142,7 +165,7 @@ public:
 	}
 
 	// сервисные функции
-	void Init( const struct NDb::SAIGeneralSide &mapInfo );
+	AILOGIC_EXPORT void Init( const struct NDb::SAIGeneralSide &mapInfo );
 	void Init();
 	// появились новые юниты
 	void GiveNewUnits( const std::list<CCommonUnit *> &pUnits, bool bFromReinforcement = false );
@@ -151,7 +174,7 @@ public:
 	bool IsMobileReinforcement( int nGroupID ) const;
 
 	// для того, чтобы следить за видимыми врагами
-	void SetUnitVisible( class CAIUnit *pUnit, const bool bVisible );
+	AILOGIC_EXPORT void SetUnitVisible( class CAIUnit *pUnit, const bool bVisible );
 	void SetAAVisible( class CAIUnit *pUnit, const bool bVisible );
 
 	//IEnemyContainer
@@ -183,13 +206,13 @@ public:
 	int /*request ID*/ RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) override;
 
 	// для очагов сопротивления
-	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
-	                          const NTimer::STime lastVisibleTimeDelta,
-	                          const CVec2 &vLastVisiblePos,
-	                          const NTimer::STime lastAntiArtTimeDelta,
-	                          const CVec2 &vLastVisibleAntiArtCenter,
-	                          const float fDistToLastVisibleAntiArt );
-	void UnitDied( class CAIUnitInfoForGeneral *pInfo );
+	AILOGIC_EXPORT void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
+	                                         const NTimer::STime lastVisibleTimeDelta,
+	                                         const CVec2 &vLastVisiblePos,
+	                                         const NTimer::STime lastAntiArtTimeDelta,
+	                                         const CVec2 &vLastVisibleAntiArtCenter,
+	                                         const float fDistToLastVisibleAntiArt );
+	AILOGIC_EXPORT void UnitDied( class CAIUnitInfoForGeneral *pInfo );
 	void UnitDied( class CCommonUnit *pUnit );
 	void UnitChangedParty( CAIUnit *pUnit, const int nNewParty );
 
@@ -204,4 +227,11 @@ public:
 	{
 		return nParty;
 	}
+
+	int GetPlayer() const
+	{
+		return nPlayer;
+	}
+
+	AILOGIC_EXPORT bool OwnsUnit( const CCommonUnit *pUnit ) const;
 };

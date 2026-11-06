@@ -16,6 +16,7 @@ struct SGeneralHelper
 	//return true if any removed
 	static bool RemoveDead( CommonUnits *pUnits );
 	static bool RemoveNotCurrentPlayer( CommonUnits *pUnits, int nPlayer );
+	static bool RemoveNotOwned( CommonUnits *pUnits, const class CGeneral *pGeneral );
 
 	//
 	struct SRandomFunctor

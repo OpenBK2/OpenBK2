@@ -866,10 +866,14 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const uint8_t party, const bool bVis
 {
 	const int bVisibilityChanged = int( bVisibility ) != visible4Party[party];
 	int bNewVisibility = visible4Party[party];
-	if ( lastTimeOfVis[party] == 0 && ( party == theCheats.GetNPartyForWarFog() || party == theDipl.GetMyParty() ) )
+	if ( lastTimeOfVis[party] == 0 )
 	{
+		// Fog history drives strategic AI too, so every peer initializes every side.
 		UpdateCrewAndTruckVisibility( party, bVisibility );
-		updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, this, bVisibility );
+		if ( party == theCheats.GetNPartyForWarFog() || party == theDipl.GetMyParty() )
+		{
+			updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, this, bVisibility );
+		}
 		lastTimeOfVis[party] = curTime;
 	}
 
@@ -1002,7 +1006,7 @@ void CAIUnit::Segment()
 	if ( pAntiArtillery )
 	{
 		pAntiArtillery->Segment( IsVisible( theDipl.GetMyParty() ) );
-		if ( theDipl.GetNeutralPlayer() != GetPlayer() )
+		if ( GetParty() != theDipl.GetNeutralParty() )
 		{
 			const int nEnemyParty = 1 - GetParty();
 			pUnitInfoForGeneral->UpdateAntiArtFire( pAntiArtillery->GetLastHeardTime( nEnemyParty ),
@@ -1043,7 +1047,10 @@ void CAIUnit::FreezeSegment()
 				theCombatEstimator.DelUnit( this );
 			}
 		}
-
+	}
+	if ( !theDipl.IsNetGame() || theSupremeBeing.IsActive() )
+	{
+		// Enemy observations use the opposing diplomacy side, never the replay/local viewpoint.
 		pUnitInfoForGeneral->Segment();
 	}
 
@@ -1088,9 +1095,7 @@ void CAIUnit::CalcVisibility( const bool bIgnoreTime )
 			if ( bVisibilityChanged )
 			{
 				theSupremeBeing.SetUnitVisible( this, i, bVisibility );
-				// Strategic generals remain disabled in MP, including scripted COOP bots.
-				if ( !theDipl.IsNetGame() && theDipl.GetNeutralPlayer() != GetPlayer() && !theDipl.IsAIPlayer( GetPlayer() ) &&
-				     theDipl.IsAIPlayer( i ) )
+				if ( theSupremeBeing.IsActive() && theDipl.GetDiplStatusForParties( GetParty(), i ) == EDI_ENEMY )
 				{
 					pUnitInfoForGeneral->UpdateVisibility( bVisibility );
 				}
@@ -1297,7 +1302,7 @@ void CAIUnit::Fired( const float fGunRadius, const int nGun )
 
 void CAIUnit::UpdateUnitsRequestsForResupply()
 {
-	if ( !theDipl.IsNetGame() )
+	if ( !theDipl.IsNetGame() || theSupremeBeing.IsActive() )
 	{
 		if ( !IsAlive() || IsRefInvalid() )
 		{
@@ -1356,10 +1361,11 @@ void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 	if ( GetParty() != theDipl.GetNParty( cPlayer ) )
 	{
 		theFeedBackSystem.RemovedAllFeedbacks( nUniqueID );
-		if ( !theDipl.IsNetGame() )
-		{
-			theSupremeBeing.UnitChangedParty( this, theDipl.GetNParty( cPlayer ) );
-		}
+	}
+	if ( cOldPlayer != cPlayer )
+	{
+		// Also release units transferred between allied bots with different generals.
+		theSupremeBeing.UnitChangedParty( this, theDipl.GetNParty( cPlayer ) );
 	}
 
 	if ( theBalanceTest.IsActive() && !theBalanceTest.HasShoot( GetPlayer() ) )
@@ -1417,6 +1423,11 @@ void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 	if ( GetFormation() )
 	{
 		GetFormation()->ChangePlayer( cPlayer );
+	}
+	else if ( cOldPlayer != cPlayer )
+	{
+		// Register only after ownership-dependent state and fog have been updated.
+		theSupremeBeing.AddReinforcement( this );
 	}
 
 	if ( !transferredExperience.IsTransferred() )

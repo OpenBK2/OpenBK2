@@ -1,6 +1,31 @@
 
 # AGENT LEARNINGS
 
+## Cooperative strategic AI
+
+- Diplomacy parties are team IDs 0/1/2, not map player slots. Strategic fog and
+  enemy queries use the party; reinforcement pools and COOP unit ownership use
+  the bot's actual player ID. Multiple bots also need separate threat contributions
+  instead of mutating one shared unit's previous position/weight.
+- `det_map` preserves insertion order, not sorted-key order. Normalize General
+  owner order on load and use stable unit IDs or saved task ordinals for ties.
+  Never inspect a `remove_if` tail to find removed tasks: it contains moved values.
+- Missing primitive BinSaver chunks can overwrite an initialized fallback with
+  zero. Guard optional nonzero defaults with `HasChunk`. Rebuild saved iterators
+  after their containers load, using a stable key, and include their progress in
+  checksums. Hash logical fields instead of legacy struct padding.
+- Retain worker registration until the old task has discarded transferred units.
+  Clearing it immediately permits duplicate assignment on an A-to-B-to-A transfer
+  within one tick. Formation handoff must wait until every soldier has changed
+  owner; towed guns retain their truck's effective ownership during the transition.
+- A Windows compile rejected `IsValid(const CCommonUnit*)` because the legacy
+  helper casts to non-const object bases. Use explicit null and `IsRefValid()`
+  checks. Verify geometry constructors before calling vectors uninitialized:
+  `CVec2` already initializes its coordinates to zero.
+- Discover header paths with `rg --files` before adding includes. A guessed
+  `3DLib/Point.h` did not exist; `CVec2` lives in `Misc/Geom.h`. Use `rg -g` for
+  filename patterns instead of passing wildcard paths to Windows `rg`.
+
 - A successful workspace build does not refresh the configured CMake install.
   A new map flag was tested against old installed GameX, AILogic and Stats DLLs
   even though its schema was updated. Compare deployed binary hashes, then

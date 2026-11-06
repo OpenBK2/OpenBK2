@@ -1,10 +1,14 @@
 #include "stdafx.h"
 
 #include "Commander.h"
+#include "CommonUnit.h"
 #include "GeneralHelper.h"
 #include "TimeCounter.h"
 
 #include <algorithm>
+#include <cmath>
+#include <limits>
+#include <numeric>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern NAI::CTimeCounter timeCounter;
@@ -47,126 +51,145 @@ float CCommander::GetMeanSeverity() const
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCommander::Segment()
 {
+	for ( const auto &pTask : tasks )
+	{
+		pTask->Segment();
+	}
 
-	// проделать раблту всеми тасками
-	SSegmentPredicate segmentPred;
-	for_each( tasks.begin(), tasks.end(), segmentPred );
+	// Release the actual finished task before erasing it. remove_if's tail contains
+	// moved entries and cannot be used to identify which tasks have finished.
+	for ( auto it = tasks.begin(); it != tasks.end(); )
+	{
+		if ( ( *it )->IsFinished() )
+		{
+			( *it )->ReleaseWorker( this, 0 );
+			it = tasks.erase( it );
+		}
+		else
+		{
+			++it;
+		}
+	}
 
-	// выбрать завершенные задачи
-	SFinishedPredicate finishedPred;
-	Tasks::iterator finishedFirst = remove_if( tasks.begin(), tasks.end(), finishedPred );
+	// The saved task sequence supplies a unique tie-breaker without pointer addresses.
+	std::vector<size_t> order( tasks.size() );
+	std::iota( order.begin(), order.end(), 0 );
+	std::sort( order.begin(),
+	           order.end(),
+	           [this]( size_t a, size_t b )
+	           {
+							 const float fA = tasks[a]->GetSeverity();
+							 const float fB = tasks[b]->GetSeverity();
+							 if ( std::isnan( fA ) != std::isnan( fB ) )
+							 {
+								 return !std::isnan( fA );
+							 }
+							 if ( fA > fB )
+							 {
+								 return true;
+							 }
+							 if ( fA < fB )
+							 {
+								 return false;
+							 }
+							 return a < b;
+						 } );
+	Tasks ordered;
+	ordered.reserve( tasks.size() );
+	for ( size_t nIndex : order )
+	{
+		ordered.push_back( tasks[nIndex] );
+	}
+	tasks.swap( ordered );
 
-	// забрать всех работников у завершенных задач
-	STakeWorkersPredicate takeWorkers( this );
-	for_each( finishedFirst, tasks.end(), takeWorkers );
-
-	// удалить завершенные задачи
-	tasks.erase( finishedFirst, tasks.end() );
-
-	// отсортировать задачи по приоритетам
-	STaskSortPresicate pr;
-	sort( tasks.begin(), tasks.end(), pr );
-
-	// посчитать среднюю сложность всех тасков
 	STaskCalcSeverityPredicate calcSeverity;
-	calcSeverity = for_each( tasks.begin(), tasks.end(), calcSeverity );
+	calcSeverity = std::for_each( tasks.begin(), tasks.end(), calcSeverity );
 	fMeanSeverity = calcSeverity.GetSeverity();
 
-	// у тасков, которых все хорошо попытаться забрать лишние юниты
-	for ( Tasks::iterator i = tasks.begin(); i != tasks.end(); ++i )
+	for ( const auto &pTask : tasks )
 	{
-		( *i )->ReleaseWorker( this, calcSeverity.nNumberNegative ? -1.0f : fMeanSeverity );
+		pTask->ReleaseWorker( this, calcSeverity.nNumberNegative ? -1.0f : fMeanSeverity );
 	}
-
-	if ( !tasks.empty() )
+	for ( auto it = tasks.rbegin(); it != tasks.rend(); ++it )
 	{
-		for ( Tasks::iterator it = tasks.end();; )
-		{
-			--it;
-			( *it )->AskForWorker( this, fMeanSeverity );
-			if ( it == tasks.begin() )
-			{
-				break;
-			}
-		}
+		( *it )->AskForWorker( this, fMeanSeverity );
 	}
-	/*
-	for ( Tasks::reverse_iterator i = tasks.rbegin(); i != tasks.rend(); ++i )
-		(*i)->AskForWorker( this, fMeanSeverity );
-	*/
 }
 
-struct SCommonUnitCompare
-{
-	CPtr<CCommonUnit> pUnit;
-
-	SCommonUnitCompare( CCommonUnit *_pUnit )
-		: pUnit( _pUnit )
-	{
-	}
-
-	bool operator()( const CPtr<CCommonUnit> _pUnit ) const
-	{
-		return pUnit == _pUnit;
-	}
-};
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumerator *pEn, CommonUnits *pUnits )
 {
-	// the simple optimisation
-	if ( pEn->NeedNBest( eType ) > 1 )
+	SGeneralHelper::RemoveDead( pUnits );
+	// Enumeration without ratings must also be independent of registration order.
+	pUnits->sort( []( const CPtr<CCommonUnit> &a, const CPtr<CCommonUnit> &b )
+	              { return a->GetUniqueId() < b->GetUniqueId(); } );
+	pUnits->unique();
+
+	const int nBest = pEn->NeedNBest( eType );
+	if ( nBest > 1 )
 	{
 		std::vector<std::pair<float, CPtr<CCommonUnit>>> units;
-		for ( CommonUnits::iterator it = pUnits->begin(); it != pUnits->end(); ++it )
+		for ( const auto &pUnit : *pUnits )
 		{
-			units.push_back( std::pair<float, CPtr<CCommonUnit>>( 0, *it ) );
+			float fRating = pEn->EvaluateWorkerRating( pUnit, eType );
+			if ( std::isnan( fRating ) )
+			{
+				fRating = -std::numeric_limits<float>::infinity();
+			}
+			units.emplace_back( fRating, pUnit );
 		}
 		pUnits->clear();
-		SCalcRatingPredicate calcRating( pEn, eType );
-		for_each( units.begin(), units.end(), calcRating );
-		sort( units.begin(), units.end(), calcRating );
+		std::sort( units.begin(),
+		           units.end(),
+		           []( const auto &a, const auto &b )
+		           {
+								 if ( a.first != b.first )
+								 {
+									 return a.first > b.first;
+								 }
+								 return a.second->GetUniqueId() < b.second->GetUniqueId();
+							 } );
 
 		bool bNeedMore = true;
-		for ( int i = 0; i < units.size(); ++i )
+		for ( const auto &unit : units )
 		{
-			if ( bNeedMore && pEn->EvaluateWorker( units[i].second, eType ) )
+			if ( bNeedMore && pEn->EvaluateWorker( unit.second, eType ) )
 			{
-				if ( pEn->EnumWorker( units[i].second, eType ) )
-				{
-					bNeedMore = true;
-				}
+				bNeedMore = pEn->EnumWorker( unit.second, eType );
 			}
 			else
 			{
-				pUnits->push_back( units[i].second );
+				pUnits->push_back( unit.second );
 			}
 		}
 	}
-	else if ( 1 == pEn->NeedNBest( eType ) )
+	else if ( nBest == 1 )
 	{
 		SGeneralHelper::SFindBestByEnumeratorPredicate prBest( pEn, eType );
-		prBest = for_each( pUnits->begin(), pUnits->end(), prBest );
+		prBest = std::for_each( pUnits->begin(), pUnits->end(), prBest );
 		if ( prBest.pBest )
 		{
 			pEn->EnumWorker( prBest.pBest, eType );
-			SCommonUnitCompare pr( prBest.pBest );
-			CommonUnits::iterator added = find_if( pUnits->begin(), pUnits->end(), pr );
-			pUnits->erase( added );
+			pUnits->remove( prBest.pBest );
 		}
 	}
 	else
 	{
-		SGeneralHelper::SFindByEnumeratorPredicate pr( pEn, eType );
-		CommonUnits::iterator suitable = remove_if( pUnits->begin(), pUnits->end(), pr );
-
-		bool bNeedMore = true;
-		for ( CommonUnits::iterator it = suitable; it != pUnits->end() && bNeedMore; )
+		// Erase only accepted workers; rejected candidates remain available to other tasks.
+		for ( auto it = pUnits->begin(); it != pUnits->end(); )
 		{
-			bNeedMore = pEn->EnumWorker( *it, eType );
-			it = pUnits->erase( it );
+			if ( pEn->EvaluateWorker( *it, eType ) )
+			{
+				CPtr<CCommonUnit> pWorker = *it;
+				it = pUnits->erase( it );
+				if ( !pEn->EnumWorker( pWorker, eType ) )
+				{
+					break;
+				}
+			}
+			else
+			{
+				++it;
+			}
 		}
 	}
 }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

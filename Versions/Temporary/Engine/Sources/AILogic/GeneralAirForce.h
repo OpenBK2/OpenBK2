@@ -3,6 +3,8 @@
 #include "Commander.h"
 #include "System/FreeIDs.h"
 
+#include "AILogic_export.h"
+
 namespace NDb
 {
 enum EReinforcementType : int;
@@ -40,6 +42,13 @@ class CGeneralAirForce : public CCommander
 			, nResistanceCellNumber( -1 )
 		{
 		}
+
+		int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &vPoint );
+			f.Add( 3, &nResistanceCellNumber );
+			return 0;
+		}
 	};
 
 	ZDATA_( CCommander )
@@ -66,6 +75,20 @@ public:
 		f.Add( 7, &timeWaitForReinforceSystem );
 		f.Add( 8, &nCurrentRequest );
 		f.Add( 9, &bOurTurn );
+		// Pending support requests drive future commands and must survive save/load and checksums.
+		if ( f.IsReading() )
+		{
+			requests.clear();
+		}
+		f.Add( 10, &requests );
+		if ( f.IsReading() && !f.HasChunk( 11 ) )
+		{
+			nOwnerPlayer = nParty;
+		}
+		else
+		{
+			f.Add( 11, &nOwnerPlayer );
+		}
 		return 0;
 	}
 
@@ -75,10 +98,12 @@ public:
 
 private:
 	RequestsByForceType requests;
+	int nOwnerPlayer = -1;
+	bool CanControlPlayer( int nPlayer ) const;
 
 	void LaunchScoutFree( const int nPlayer, const NDb::EReinforcementType eType );
 	bool PrepeareFighters( int nPlayer );
-	void CallReinforcement( const int nPlayer,
+	bool CallReinforcement( const int nPlayer,
 	                        NDb::EReinforcementType eType,
 	                        RequestsByForceType *pRequests,
 	                        EForceType eForceType );
@@ -96,14 +121,14 @@ private:
 public:
 	CGeneralAirForce() {}
 
-	CGeneralAirForce( const int nPlayer, IEnemyContainer *pEnemyContainer );
+	CGeneralAirForce( int nParty, int nPlayer, IEnemyContainer *pEnemyContainer );
 
 	void Segment() override;
 	void Give( CCommonUnit *pWorker ) override;
 
 	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) override {}
 
-	int /*request ID*/
+	AILOGIC_EXPORT int /*request ID*/
 	RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType, int nResistanceCellNumber = -1 );
 	void CancelRequest( int nRequestID, enum EForceType eType ) override;
 

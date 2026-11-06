@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AILogic_export.h"
+
 #include <algorithm>
 
 //
@@ -126,14 +128,35 @@ class CResistancesContainer
 	CCellsWeights cellsWeights;
 	std::list<CCircle> excluded; // general will not shoot to these circles
 	CCellsWithGoodWeight goodWeight;
+	// Each bot tracks its own contributions; shared unit metadata cannot belong to two generals.
+	det_map<int, std::pair<int, float>> registeredUnits;
 
 public:
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &resistances );
-		f.Add( 3, &cellsWeights );
+		if ( f.IsChecksum() )
+		{
+			// SSellInfo's legacy save layout has padding; hash only its initialized fields.
+			std::vector<std::pair<int, std::pair<float, std::pair<bool, bool>>>> cells;
+			for ( const auto &entry : cellsWeights )
+			{
+				cells.push_back(
+						{ entry.first, { entry.second.fCellWeight, { entry.second.bInUse, entry.second.bAllowShoot } } } );
+			}
+			f.Add( 3, &cells );
+		}
+		else
+		{
+			f.Add( 3, &cellsWeights );
+		}
 		f.Add( 4, &excluded );
 		f.Add( 5, &goodWeight );
+		if ( f.IsReading() )
+		{
+			registeredUnits.clear();
+		}
+		f.Add( 6, &registeredUnits );
 		return 0;
 	}
 
@@ -180,16 +203,19 @@ public:
 	{
 		resistances.clear();
 		cellsWeights.clear();
+		registeredUnits.clear();
+		goodWeight.clear();
+		excluded.clear();
 	}
 
-	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
-	                          const NTimer::STime lastVisibleTimeDelta,
-	                          const CVec2 &vLastVisiblePos,
-	                          const NTimer::STime lastAntiArtTimeDelta,
-	                          const CVec2 &vLastVisibleAntiArtCenter,
-	                          const float fDistToLastVisibleAntiArt );
+	AILOGIC_EXPORT void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
+	                                         const NTimer::STime lastVisibleTimeDelta,
+	                                         const CVec2 &vLastVisiblePos,
+	                                         const NTimer::STime lastAntiArtTimeDelta,
+	                                         const CVec2 &vLastVisibleAntiArtCenter,
+	                                         const float fDistToLastVisibleAntiArt );
 
-	void UnitDied( CAIUnitInfoForGeneral *pInfo );
+	AILOGIC_EXPORT void UnitDied( CAIUnitInfoForGeneral *pInfo );
 	void UnitChangedParty( CAIUnitInfoForGeneral *pInfo );
 
 	bool IsEmpty() const

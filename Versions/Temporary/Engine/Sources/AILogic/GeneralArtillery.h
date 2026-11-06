@@ -3,6 +3,8 @@
 
 #include "GeneralInternalInterfaces.h"
 
+#include "AILogic_export.h"
+
 class CAntiArtillery;
 class CAIUnit;
 class CGeneralArtillery;
@@ -157,7 +159,7 @@ public:
 	// чтобы они вернулись на резервные позиции
 	void CheckEscapingUnits();
 
-	void CalculateTimeToSendAntiArtilleryAck();
+	AILOGIC_EXPORT void CalculateTimeToSendAntiArtilleryAck();
 
 	void SetBombardmentFinished();
 
@@ -175,7 +177,7 @@ public:
 	                       const float fRadius,
 	                       const int nCellNumber );
 
-	void Segment();
+	AILOGIC_EXPORT void Segment();
 
 	bool IsTaskFinished() const
 	{
@@ -217,6 +219,7 @@ public:
 	void TakeArtillery( CAIUnit *pUnit );
 	// the same for trucks
 	void TakeTruck( CAIUnit *pUnit );
+	AILOGIC_EXPORT bool CanControlUnit( const CCommonUnit *pUnit ) const;
 
 	void Segment();
 	bool CanBombardRegion( const CVec2 &vRegionCenter );

@@ -127,6 +127,30 @@ endif()
 
 # COOP role state must be independent of the local client and survive replay/save loading.
 add_unit_test(CooperativeDiplomacy AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
+add_unit_test(Commander AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
+add_unit_test(GeneralArtillery AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
+set_tests_properties(GeneralArtillery_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(GeneralArtillery_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET GeneralArtillery_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:AILogic>)
+endif()
+set_tests_properties(Commander_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(Commander_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET Commander_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:AILogic>)
+endif()
+add_unit_test(CooperativeGeneral AILogic Common_RTS_AI Stats_B2_M1 GameX libdb System Misc Main zlib gr2)
+target_compile_definitions(CooperativeGeneral_test PRIVATE
+    COOPERATIVE_GENERAL_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(CooperativeGeneral_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(CooperativeGeneral_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET CooperativeGeneral_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:AILogic> $<TARGET_FILE:GameX>)
+endif()
 add_unit_test(ScriptCommands AILogic Common_RTS_AI Stats_B2_M1 Script System Misc GameX libdb zlib gr2)
 set_tests_properties(CooperativeDiplomacy_test ScriptCommands_test PROPERTIES TIMEOUT 60)
 if(WIN32)

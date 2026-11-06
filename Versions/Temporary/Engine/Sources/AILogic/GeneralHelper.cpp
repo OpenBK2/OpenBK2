@@ -2,6 +2,7 @@
 
 #include "AIUnit.h"
 #include "GeneralHelper.h"
+#include "GeneralInternal.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern NTimer::STime curTime;
@@ -28,7 +29,7 @@ void SGeneralHelper::SFindBestByEnumeratorPredicate::operator()( class CCommonUn
 	{
 		const float fNewRating = pEn->EvaluateWorkerRating( pU1, eType );
 
-		if ( !pBest || fNewRating > fRating )
+		if ( !pBest || fNewRating > fRating || ( fNewRating == fRating && pU1->GetUniqueId() < pBest->GetUniqueId() ) )
 		{
 			pBest = pU1;
 			fRating = fNewRating;
@@ -112,4 +113,16 @@ bool SGeneralHelper::RemoveNotCurrentPlayer( CommonUnits *pUnits, int nPlayer )
 	const bool bDeleted = firstDead != pUnits->end();
 	pUnits->erase( firstDead, pUnits->end() );
 	return bDeleted;
+}
+
+bool SGeneralHelper::RemoveNotOwned( CommonUnits *pUnits, const CGeneral *pGeneral )
+{
+	const auto firstRemoved =
+			std::remove_if( pUnits->begin(),
+	                    pUnits->end(),
+	                    [pGeneral]( CCommonUnit *pUnit )
+	                    { return !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() || !pGeneral->OwnsUnit( pUnit ); } );
+	const bool bRemoved = firstRemoved != pUnits->end();
+	pUnits->erase( firstRemoved, pUnits->end() );
+	return bRemoved;
 }

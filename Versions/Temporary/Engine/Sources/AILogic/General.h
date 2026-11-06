@@ -1,5 +1,17 @@
 #pragma once
+
+#include "System/Basic.h"
+#include "System/det_map.h"
+#include "System/det_set.h"
+
+#include "AILogic_export.h"
+
+#include <cstdint>
+#include <list>
+
 class CGeneral;
+class CVec2;
+class IBinSaver;
 struct IGeneralDelayedTask;
 
 namespace NDb
@@ -22,7 +34,7 @@ enum EResupplyType
 class CSupremeBeing
 {
 public:
-	int operator&( IBinSaver &saver );
+	AILOGIC_EXPORT int operator&( IBinSaver &saver );
 
 private:
 	;
@@ -34,8 +46,8 @@ private:
 	det_set<int /*Link ID*/> ironmans;
 
 public:
-	void Segment();
-	void Clear();
+	AILOGIC_EXPORT void Segment();
+	AILOGIC_EXPORT void Clear();
 
 	void SetUnitVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible );
 
@@ -44,22 +56,29 @@ public:
 
 	// creates number of generals
 	// каждый генерал знает о юнитах, которые являются мобильным резервом
-	void Init( const NDb::SMapInfo *pMapInfo );
+	AILOGIC_EXPORT void Init( const NDb::SMapInfo *pMapInfo );
 	// раздать юниты генералам
-	void GiveNewUnitsToGenerals( const std::list<class CCommonUnit *> &pUnits, bool bFromReinforcement = false );
+	AILOGIC_EXPORT void GiveNewUnitsToGenerals( const std::list<class CCommonUnit *> &pUnits,
+	                                            bool bFromReinforcement = false );
 
-	bool IsMobileReinforcement( int nParty, int nGroup ) const;
+	bool IsMobileReinforcement( int nPlayer, int nGroup ) const;
 	void AddReinforcement( class CAIUnit *pUnit );
-	struct IEnemyContainer *GetEnemyConatiner( int nParty );
+	AILOGIC_EXPORT struct IEnemyContainer *GetEnemyConatiner( int nPlayer );
+
+	// Strategic work runs in single player and COOP, never in CLASSIC MP.
+	bool IsActive() const
+	{
+		return !generals.empty();
+	}
 
 	bool MustShootToObstacles( const int nPlayer );
 	void RegisterDelayedTask( struct IGeneralDelayedTask *pTask );
 
 	// для очагов сопротивления
 	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
-	                          const NTimer::STime lastVisibleTimeDelta,
+	                          const uint32_t lastVisibleTimeDelta,
 	                          const CVec2 &vLastVisiblePos,
-	                          const NTimer::STime lastAntiArtTimeDelta,
+	                          const uint32_t lastAntiArtTimeDelta,
 	                          const CVec2 &vLastVisibleAntiArtCenter,
 	                          const float fDistToLastVisibleAntiArt );
 	void UnitChangedParty( class CAIUnit *pUnit, const int nNewParty );

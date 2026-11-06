@@ -35,6 +35,15 @@ extern CSupremeBeing theSupremeBeing;
 extern NTimer::STime curTime;
 extern CGlobalWarFog theWarFog;
 
+namespace
+{
+bool IsOwnedWorker( const CCommonUnit *pUnit, int nPlayer, int nParty )
+{
+	return pUnit && pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->GetParty() == nParty &&
+	       ( !theDipl.IsNetGame() || pUnit->GetPlayer() == nPlayer );
+}
+} // namespace
+
 //BASIC_REGISTER_CLASS( CGeneralIntendant );
 static const unsigned int INTENDANT_TASKS_PER_SEGMENT = 5;
 
@@ -72,10 +81,11 @@ void CGeneralTaskToDefendStorage::CWaitForChangePlayer::Run()
 //*								CGeneralTaskToDefendStorage*
 //*******************************************************************
 
-CGeneralTaskToDefendStorage::CGeneralTaskToDefendStorage( CBuilding *pStorage, const int nParty )
+CGeneralTaskToDefendStorage::CGeneralTaskToDefendStorage( CBuilding *pStorage, int nPlayer, int nParty )
 	: pStorage( pStorage )
 	, fSeverity( 0 )
 	, nParty( nParty )
+	, nPlayer( nPlayer )
 	,
 	//eState( TS_OPERATE ),
 	wRequestID( 0 )
@@ -200,6 +210,15 @@ void CGeneralTaskToDefendStorage::Recaptured()
 
 void CGeneralTaskToDefendStorage::Segment()
 {
+	// A same-side transfer must not leave a different bot's truck assigned to this task.
+	if ( pRepairTransport && !IsOwnedWorker( pRepairTransport, nPlayer, nParty ) )
+	{
+		pRepairTransport = 0;
+		if ( eState == TS_REPAIR )
+		{
+			fSeverity = -1;
+		}
+	}
 	switch ( eState )
 	{
 		case TS_FINISHED:
@@ -342,6 +361,12 @@ void CGeneralTaskToResupplyCell::CancelTask( ICommander *pManager )
 
 void CGeneralTaskToResupplyCell::Segment()
 {
+	if ( IsValidObj( pResupplyTransport ) && !pCells->OwnsUnit( pResupplyTransport ) )
+	{
+		pResupplyTransport = 0;
+		bFinished = true;
+		return;
+	}
 	//transport was killed.
 	if ( pResupplyTransport && !IsValidObj( pResupplyTransport ) )
 	{
@@ -387,7 +412,7 @@ int CGeneralTaskToResupplyCell::NeedNBest( const enum EForceType _eType ) const
 
 float CGeneralTaskToResupplyCell::EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType _eType ) const
 {
-	return 1000.0f / fabs2( pUnit->GetCenterPlain() - vResupplyCenter );
+	return 1000.0f / ( 1.0f + fabs2( pUnit->GetCenterPlain() - vResupplyCenter ) );
 }
 
 //*******************************************************************
@@ -731,20 +756,42 @@ void CFreeArtilleryHolder::TryCatch( CFormation *pFormation )
 	}
 }
 
-void CFreeArtilleryHolder::OnSerialize( IBinSaver &f )
+int CFreeArtilleryHolder::operator&( IBinSaver &f )
 {
+	// Preserve the next candidate and retry time across load, before the map replaces its nodes.
+	int nCurrentID = -1;
+	if ( !f.IsReading() && itCurrent != artilleries.end() )
+	{
+		nCurrentID = itCurrent->first;
+	}
+	f.Add( 2, &artilleries );
+	f.Add( 3, &nCurrentID );
 	if ( f.IsReading() )
 	{
-		ResetIterator();
+		timeFromReset = 0;
 	}
+	f.Add( 4, &timeFromReset );
+	if ( f.IsReading() )
+	{
+		if ( f.HasChunk( 3 ) )
+		{
+			itCurrent = artilleries.find( nCurrentID );
+		}
+		else
+		{
+			ResetIterator();
+		}
+	}
+	return 0;
 }
 
 //*******************************************************************
 //*								CGeneralIntendant*
 //*******************************************************************
 
-CGeneralIntendant::CGeneralIntendant( const int nParty, CCommander *pGeneral )
+CGeneralIntendant::CGeneralIntendant( int nPlayer, int nParty, CCommander *pGeneral )
 	: nParty( nParty )
+	, nPlayer( nPlayer )
 	, pGeneral( pGeneral )
 	, bInitedByParcel( false )
 {
@@ -754,10 +801,26 @@ CGeneralIntendant::CGeneralIntendant( const int nParty, CCommander *pGeneral )
 	//Init();
 }
 
+bool CGeneralIntendant::OwnsUnit( const CCommonUnit *pUnit ) const
+{
+	return IsOwnedWorker( pUnit, nPlayer, nParty );
+}
+
 void CGeneralIntendant::Give( CCommonUnit *pWorker )
 {
+	if ( !OwnsUnit( pWorker ) )
+	{
+		return;
+	}
 	NI_ASSERT( dynamic_cast<CAIUnit *>( pWorker ) != 0, "not mech unit" );
-	resupplyTrucks.push_back( checked_cast<CAIUnit *>( pWorker ) );
+	if ( std::find( resupplyTrucks.begin(), resupplyTrucks.end(), pWorker ) == resupplyTrucks.end() )
+	{
+		resupplyTrucks.push_back( checked_cast<CAIUnit *>( pWorker ) );
+	}
+	if ( vPositions.empty() )
+	{
+		return;
+	}
 
 	// send worker to nearest reinforcement position.
 	int nBest = 0;
@@ -814,14 +877,16 @@ void CGeneralIntendant::Init()
 	theStatObjs.EnumStoragesForParty( nParty, &en );
 	for ( Storages::iterator storIter = en.storages.begin(); storIter != en.storages.end(); ++storIter )
 	{
-		CGeneralTaskToDefendStorage *pTask = new CGeneralTaskToDefendStorage( *storIter, nParty );
+		CGeneralTaskToDefendStorage *pTask = new CGeneralTaskToDefendStorage( *storIter, nPlayer, nParty );
 		tasks.push_back( pTask );
 	}
 
+	// The enumerator appends; do not create duplicate tasks for our own storages.
+	en.storages.clear();
 	theStatObjs.EnumStoragesForParty( 1 - nParty, &en );
 	for ( Storages::iterator storIter = en.storages.begin(); storIter != en.storages.end(); ++storIter )
 	{
-		CGeneralTaskToDefendStorage *pTask = new CGeneralTaskToDefendStorage( *storIter, nParty );
+		CGeneralTaskToDefendStorage *pTask = new CGeneralTaskToDefendStorage( *storIter, nPlayer, nParty );
 		tasks.push_back( pTask );
 	}
 
@@ -997,10 +1062,11 @@ void CGeneralIntendant::SearchCrewForArtillery()
 			if ( fabs2( vArtCenter - pSoldier->GetCenterPlain() ) < fSightRadius2 )
 			{
 				CPtr<CFormation> pThisFormation = pSoldier->GetFormation();
-				if ( pThisFormation && pThisFormation->CanCatchArtillery( pArtillery ) )
+				if ( OwnsUnit( pThisFormation ) && pThisFormation->CanCatchArtillery( pArtillery ) )
 				{
 					const float fThisDist2 = fabs2( pThisFormation->GetCenterPlain() - vArtCenter );
-					if ( pBestFormation == 0 || fThisDist2 < fBestDist2 )
+					if ( pBestFormation == 0 || fThisDist2 < fBestDist2 ||
+					     ( fThisDist2 == fBestDist2 && pThisFormation->GetUniqueId() < pBestFormation->GetUniqueId() ) )
 					{
 						fBestDist2 = fThisDist2;
 						pBestFormation = pThisFormation;
@@ -1020,8 +1086,8 @@ void CGeneralIntendant::SearchCrewForArtillery()
 
 void CGeneralIntendant::Segment()
 {
+	resupplyTrucks.remove_if( [this]( const CPtr<CCommonUnit> &pUnit ) { return !OwnsUnit( pUnit ); } );
 	CCommander::Segment();
-	SGeneralHelper::RemoveDead( &resupplyTrucks );
 
 	const uint8_t cResupplyAll = ( ( 1 << _ERT_COUNT ) - 1 );
 	uint8_t cResupplyPossible = 0;
