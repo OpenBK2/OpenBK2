@@ -90,6 +90,7 @@ void CGeneral::CancelRequest( int nRequestID, enum EForceType eType )
 				IGeneralTask *pTask = requestedTasks[nRequestID];
 				pTask->CancelTask( this );
 				requestIDs.Return( nRequestID );
+				requestedTasks.erase( it );
 			}
 		}
 		break;
@@ -109,7 +110,7 @@ int /*request ID*/ CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enu
 		case FT_RECAPTURE_STORAGE:
 		{
 			const int nID = requestIDs.Get();
-			CGeneralTaskRecaptureStorage *pTask = new CGeneralTaskRecaptureStorage( vSupportCenter );
+			CGeneralTaskRecaptureStorage *pTask = new CGeneralTaskRecaptureStorage( vSupportCenter, this );
 			requestedTasks[nID] = pTask;
 			tasks.push_back( pTask );
 
@@ -124,7 +125,7 @@ int /*request ID*/ CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enu
 
 void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 {
-	if ( !pWorker || !pWorker->IsRefValid() || !pWorker->IsAlive() )
+	if ( !pWorker || !pWorker->IsRefValid() || !pWorker->IsAlive() || !OwnsUnit( pWorker ) )
 	{
 		return;
 	}
@@ -132,6 +133,7 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 	const int nScriptID = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetScriptID( pWorker );
 	if ( IsMobileReinforcement( nScriptID ) || ( bFromReinforcement && nScriptID == -1 ) )
 	{
+		controlledUnits.insert( pWorker->GetUniqueId() );
 		if ( pWorker->IsFormation() )
 		{
 			CFormation *pFormation = checked_cast<CFormation *>( pWorker );
@@ -252,11 +254,11 @@ void CGeneral::Segment()
 {
 	if ( curTime > timeNextUpdate )
 	{
-		SGeneralHelper::RemoveDead( &infantryInTrenches );
-		SGeneralHelper::RemoveDead( &infantryFree );
-		SGeneralHelper::RemoveDead( &tanksFree );
-		SGeneralHelper::RemoveNotCurrentPlayer( &stationaryTanks, nParty );
-		SGeneralHelper::RemoveDead( &transportsFree );
+		SGeneralHelper::RemoveNotOwned( &infantryInTrenches, this );
+		SGeneralHelper::RemoveNotOwned( &infantryFree, this );
+		SGeneralHelper::RemoveNotOwned( &tanksFree, this );
+		SGeneralHelper::RemoveNotOwned( &stationaryTanks, this );
+		SGeneralHelper::RemoveNotOwned( &transportsFree, this );
 
 		EraseLastSeen();
 
@@ -271,9 +273,26 @@ void CGeneral::Segment()
 		{
 			pIntendant->Segment();
 		}
-		if ( NGlobal::GetVar( "temp.general_reinforcement", true ) )
+		if ( theDipl.IsNetGame() || NGlobal::GetVar( "temp.general_reinforcement", true ) )
 		{
 			CheckAvailableReinforcement();
+		}
+		// Tasks have now released foreign/dead workers. Keep registration until this
+		// cleanup so a same-tick transfer away and back cannot assign a unit twice.
+		for ( auto it = controlledUnits.begin(); it != controlledUnits.end(); )
+		{
+			CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( *it );
+			CAIUnit *pAIUnit = dynamic_cast<CAIUnit *>( pUnit );
+			const bool bOwnedTow = pAIUnit && pAIUnit->GetState() && pAIUnit->GetState()->GetName() == EUSN_BEING_TOWED &&
+			                       OwnsUnit( pAIUnit->GetTruck() );
+			if ( !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() || ( !OwnsUnit( pUnit ) && !bOwnedTow ) )
+			{
+				it = controlledUnits.erase( it );
+			}
+			else
+			{
+				++it;
+			}
 		}
 
 		timeNextUpdate = curTime + SGeneralConsts::GENERAL_UPDATE_PERIOD + NRandom::Random( 1000 );
@@ -513,11 +532,11 @@ void CGeneral::Bombardment()
 			if ( cBombardmentType == 1 )
 			{
 				std::vector<EForceType> availFroces;
-				if ( theReinfArray[nParty].HasReinforcement( NDb::RT_GROUND_ATTACK_PLANES ) )
+				if ( theReinfArray[nPlayer].HasReinforcement( NDb::RT_GROUND_ATTACK_PLANES ) )
 				{
 					availFroces.push_back( FT_AIR_GUNPLANE );
 				}
-				if ( theReinfArray[nParty].HasReinforcement( NDb::RT_BOMBERS ) )
+				if ( theReinfArray[nPlayer].HasReinforcement( NDb::RT_BOMBERS ) )
 				{
 					availFroces.push_back( FT_AIR_BOMBER );
 				}
@@ -650,10 +669,20 @@ void CGeneral::GiveNewUnits( const std::list<CCommonUnit *> &pUnits, bool bFromR
 	Formations formations; // добавляемые формации
 
 	// забрать все юниты, кроме солдат. солдат забирать формациями
-	for ( std::list<CCommonUnit *>::const_iterator iter = pUnits.begin(); iter != pUnits.end(); ++iter )
+	std::vector<CCommonUnit *> units;
+	for ( CCommonUnit *pUnit : pUnits )
 	{
-		CCommonUnit *pUnit = *iter;
-		if ( theDipl.GetDiplStatusForParties( pUnit->GetParty(), nParty ) == EDI_FRIEND )
+		if ( pUnit && pUnit->IsRefValid() && pUnit->IsAlive() )
+		{
+			units.push_back( pUnit );
+		}
+	}
+	std::sort( units.begin(),
+	           units.end(),
+	           []( const CCommonUnit *a, const CCommonUnit *b ) { return a->GetUniqueId() < b->GetUniqueId(); } );
+	for ( CCommonUnit *pUnit : units )
+	{
+		if ( OwnsUnit( pUnit ) )
 		{
 			if ( pUnit->IsInFormation() && pUnit->GetFormation()->GetState()->GetName() != EUSN_GUN_CREW_STATE )
 			{
@@ -661,7 +690,11 @@ void CGeneral::GiveNewUnits( const std::list<CCommonUnit *> &pUnits, bool bFromR
 			}
 			else
 			{
-				Give( pUnit, bFromReinforcement );
+				// A scripted spawn can notify us individually and again as a completed batch.
+				if ( controlledUnits.find( pUnit->GetUniqueId() ) == controlledUnits.end() )
+				{
+					Give( pUnit, bFromReinforcement );
+				}
 				BalanceUpdate( BA_ADD_OWN, pUnit );
 			}
 		}
@@ -672,7 +705,10 @@ void CGeneral::GiveNewUnits( const std::list<CCommonUnit *> &pUnits, bool bFromR
 	{
 		if ( CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( it->first ) )
 		{
-			Give( pUnit, bFromReinforcement );
+			if ( controlledUnits.find( pUnit->GetUniqueId() ) == controlledUnits.end() )
+			{
+				Give( pUnit, bFromReinforcement );
+			}
 			BalanceUpdate( BA_ADD_OWN, pUnit );
 		}
 	}
@@ -687,10 +723,10 @@ void CGeneral::GiveNewUnits( const std::list<CCommonUnit *> &pUnits, bool bFromR
 void CGeneral::Init()
 {
 	bSendReserves = false;
-	SGeneralConsts::Init();
-	pAirForce = new CGeneralAirForce( nParty, this );
+	SGeneralConsts::Init( theDipl.IsNetGame() );
+	pAirForce = new CGeneralAirForce( nParty, nPlayer, this );
 	pGeneralArtillery = new CGeneralArtillery( this );
-	pIntendant = new CGeneralIntendant( nParty, this );
+	pIntendant = new CGeneralIntendant( nPlayer, nParty, this );
 	pIntendant->Init();
 
 	tasks.push_back( new CGeneralTaskToSwarmToPoint( this ) );
@@ -729,7 +765,7 @@ void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 			{
 				bReinforceCreated = true;
 				// манипулирование резервами
-				CGeneralTaskToHoldReinforcement *pTask = new CGeneralTaskToHoldReinforcement;
+				CGeneralTaskToHoldReinforcement *pTask = new CGeneralTaskToHoldReinforcement( this );
 				pTask->Init( mapInfo.parcels[i] );
 				// notify Intendant about points to hold reinforcement.
 				pIntendant->AddReiforcePositions( mapInfo.parcels[i] );
@@ -824,7 +860,13 @@ void CGeneral::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 
 void CGeneral::UnitDied( class CCommonUnit *pUnit )
 {
+	controlledUnits.erase( pUnit->GetUniqueId() );
 	pIntendant->UnitDead( pUnit );
+	if ( theDipl.IsNetGame() )
+	{
+		// Aircraft affect the balance too, even though ground enemy memory excludes them.
+		BalanceUpdate( BA_REMOVE_ENEMY, pUnit );
+	}
 	CEnemyVisibility::iterator it = enemys.find( pUnit->GetUniqueId() );
 	if ( it != enemys.end() )
 	{
@@ -835,7 +877,7 @@ void CGeneral::UnitDied( class CCommonUnit *pUnit )
 		BalanceUpdate( BA_REMOVE_ENEMY, pUnit );
 		enemys.erase( it );
 	}
-	else if ( pUnit->GetPlayer() != uint8_t( -1 ) && pUnit->GetParty() == nParty ) // Own unit died
+	else if ( pUnit->GetPlayer() != uint8_t( -1 ) && OwnsUnit( pUnit ) ) // Own unit died
 	{
 		BalanceUpdate( BA_REMOVE_OWN, pUnit );
 	}
@@ -876,42 +918,28 @@ void CGeneral::UnitAskedForResupply( class CCommonUnit *pUnit, const EResupplyTy
 
 void CGeneral::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 {
-	BalanceUpdate( BA_REMOVE_OWN, pUnit );
-
-	switch ( theDipl.GetDiplStatusForParties( nNewParty, nParty ) )
+	// Called before ownership changes. Remove only this general's old contributions.
+	if ( OwnsUnit( pUnit ) )
 	{
-		case EDI_ENEMY:
-		{
-			resContainer.UnitChangedParty( pUnit->GetUnitInfoForGeneral() );
-
-			pAirForce->DeleteAA( pUnit );
-			if ( !pUnit->GetStats()->IsAviation() )
-			{
-				pIntendant->UnitDead( pUnit );
-			}
-
-			BalanceUpdate( BA_ADD_ENEMY, pUnit );
-		}
-
-		break;
-		case EDI_NEUTRAL:
-		{
-			const SUnitBaseRPGStats *pStats = pUnit->GetStats();
-			if ( !pStats->IsAviation() && !pStats->IsArtillery() )
-			{
-				pIntendant->UnitDead( pUnit );
-			}
-		}
-
-		break;
-		case EDI_FRIEND:
-			if ( !pUnit->GetStats()->IsAviation() )
-			{
-				pIntendant->UnitDead( pUnit );
-			}
-
-			break;
+		BalanceUpdate( BA_REMOVE_OWN, pUnit );
 	}
+	if ( theDipl.IsNetGame() )
+	{
+		BalanceUpdate( BA_REMOVE_ENEMY, pUnit );
+	}
+	const auto enemy = enemys.find( pUnit->GetUniqueId() );
+	if ( enemy != enemys.end() )
+	{
+		if ( curProcessed == enemy )
+		{
+			++curProcessed;
+		}
+		BalanceUpdate( BA_REMOVE_ENEMY, pUnit );
+		enemys.erase( enemy );
+	}
+	resContainer.UnitChangedParty( pUnit->GetUnitInfoForGeneral() );
+	pAirForce->DeleteAA( pUnit );
+	pIntendant->UnitDead( pUnit );
 }
 
 void CGeneral::SetCellInUse( const int nResistanceCellNumber, bool bInUse )
@@ -922,4 +950,10 @@ void CGeneral::SetCellInUse( const int nResistanceCellNumber, bool bInUse )
 bool CGeneral::IsInResistanceCircle( const CVec2 &vPoint ) const
 {
 	return resContainer.IsInResistanceCircle( vPoint );
+}
+
+bool CGeneral::OwnsUnit( const CCommonUnit *pUnit ) const
+{
+	// Single-player maps historically share one general across an enemy side.
+	return pUnit && pUnit->GetParty() == nParty && ( !theDipl.IsNetGame() || pUnit->GetPlayer() == nPlayer );
 }

@@ -25,7 +25,9 @@
 #include "PlanesFormation.h"
 #include "PlayerReinforcement.h"
 #include "RailRoads.h"
+#include "ScenarioTracker.h"
 #include "Shell.h"
+#include "Specific.h"
 #include "StaticObjects.h"
 #include "Statistics.h"
 #include "UnderConstructionObject.h"
@@ -140,6 +142,11 @@ int CGlobalSerializer::operator&( IBinSaver &saver )
 		saver.Add( 15, &theAckManager );
 		saver.Add( 16, &theCombatEstimator );
 		saver.Add( 17, &theStatistics );
+	}
+	// COOP generals issue synchronized gameplay orders, so their future decisions
+	// belong to the simulation checksum. Preserve the old CLASSIC/SP checksum.
+	if ( !saver.IsChecksum() || ( GetScenarioTracker() && GetScenarioTracker()->IsCooperative() ) )
+	{
 		saver.Add( 18, &theSupremeBeing );
 	}
 	saver.Add( 21, &theWeather );

@@ -41,21 +41,33 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AE, CGeneralAirForce );
 //*											CGeneralAirForce*
 //*******************************************************************
 
-CGeneralAirForce::CGeneralAirForce( const int nParty, IEnemyContainer *pEnemyContainer )
+CGeneralAirForce::CGeneralAirForce( const int nParty, const int nPlayer, IEnemyContainer *pEnemyContainer )
 	: pEnemyContainer( pEnemyContainer )
 	, nParty( nParty )
 	, bOurTurn( false )
 	, nCurrentRequest( FT_NONE )
 	, timeWaitForReinforceSystem( curTime )
+	, nOwnerPlayer( nPlayer )
 {
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 	{
-		if ( theDipl.GetNParty( i ) == nParty )
+		if ( CanControlPlayer( i ) )
 		{
 			players.push_back( i );
 		}
 	}
 	requests.clear();
+}
+
+bool CGeneralAirForce::CanControlPlayer( int nPlayer ) const
+{
+	if ( nPlayer < 0 || nPlayer >= theDipl.GetNPlayers() || !theDipl.IsAIPlayer( nPlayer ) ||
+	     !theDipl.IsPlayerExist( nPlayer ) || theDipl.GetNParty( nPlayer ) != nParty )
+	{
+		return false;
+	}
+	// COOP generals own map player slots, even when several bots share one diplomacy side.
+	return !theDipl.IsNetGame() || nPlayer == nOwnerPlayer;
 }
 
 void CGeneralAirForce::PassTurn()
@@ -71,6 +83,12 @@ bool CGeneralAirForce::TurnReturned() const
 void CGeneralAirForce::Segment()
 {
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 5, ( bOurTurn ? "aviation's turn" : "ground general's turn" ) );
+	createdAviation.erase( std::remove_if( createdAviation.begin(),
+	                                       createdAviation.end(),
+	                                       [this]( const CPtr<CAIUnit> &pUnit )
+	                                       { return !IsValidObj( pUnit ) || !CanControlPlayer( pUnit->GetPlayer() ); } ),
+	                       createdAviation.end() );
+	// Ownership cleanup cannot wait for this controller's next reinforcement turn.
 	if ( !bOurTurn )
 	{
 		return;
@@ -78,7 +96,7 @@ void CGeneralAirForce::Segment()
 
 	for ( int i = 0; i < players.size(); ++i )
 	{
-		if ( players[i] != theDipl.GetMyNumber() )
+		if ( CanControlPlayer( players[i] ) && players[i] < theReinfArray.size() )
 		{
 			const int nPlayer = players[i];
 
@@ -95,6 +113,7 @@ void CGeneralAirForce::Segment()
 				GiveOrders( nPlayer );
 				createdAviation.clear();
 				bOurTurn = false;
+				break;
 			}
 			else if ( timeWaitForReinforceSystem > curTime ) // reinforcement already ordered, wait
 			{
@@ -105,19 +124,28 @@ void CGeneralAirForce::Segment()
 			{
 				if ( PrepeareFighters( nPlayer ) )
 				{
-					CallReinforcement( nPlayer, NDb::RT_FIGHTERS, &requests, FT_AIR_FIGHTER );
+					if ( CallReinforcement( nPlayer, NDb::RT_FIGHTERS, &requests, FT_AIR_FIGHTER ) )
+					{
+						break;
+					}
 				}
 			}
 
 			if ( theReinfArray[nPlayer].CanCallNow() &&
 			     theReinfArray[nPlayer].HasReinforcement( NDb::RT_GROUND_ATTACK_PLANES ) )
 			{
-				CallReinforcement( nPlayer, NDb::RT_GROUND_ATTACK_PLANES, &requests, FT_AIR_GUNPLANE );
+				if ( CallReinforcement( nPlayer, NDb::RT_GROUND_ATTACK_PLANES, &requests, FT_AIR_GUNPLANE ) )
+				{
+					break;
+				}
 			}
 
 			if ( theReinfArray[nPlayer].CanCallNow() && theReinfArray[nPlayer].HasReinforcement( NDb::RT_BOMBERS ) )
 			{
-				CallReinforcement( nPlayer, NDb::RT_BOMBERS, &requests, FT_AIR_BOMBER );
+				if ( CallReinforcement( nPlayer, NDb::RT_BOMBERS, &requests, FT_AIR_BOMBER ) )
+				{
+					break;
+				}
 			}
 
 			//CRAP{ UNTILL SCOUTS IN REINFORCEMENTS
@@ -231,24 +259,23 @@ void CGeneralAirForce::GiveOrders( const int nPlayer )
 	nCurrentRequest = FT_NONE;
 }
 
-void CGeneralAirForce::CallReinforcement( const int nPlayer,
+bool CGeneralAirForce::CallReinforcement( const int nPlayer,
                                           NDb::EReinforcementType eType,
                                           RequestsByForceType *pRequests,
                                           EForceType eForceType )
 {
 	RequestsByForceType::const_iterator pos = pRequests->find( eForceType );
-	if ( pos == pRequests->end() )
+	if ( pos == pRequests->end() || pos->second.empty() )
 	{
-		return;
+		return false;
 	}
 
+	// Keep one pending aircraft category until the reinforcement system creates its batch.
 	timeWaitForReinforceSystem = curTime + TIME_WAIT_FOR_REINFORCE_SYSTEM;
 	nCurrentRequest = eForceType;
 	Requests::const_iterator posReq = pos->second.begin();
-	if ( posReq != pos->second.end() )
-	{
-		theReinfArray[nPlayer].AddCallReinforcementCommand( eType, posReq->second.vPoint );
-	}
+	theReinfArray[nPlayer].AddCallReinforcementCommand( eType, posReq->second.vPoint );
+	return true;
 }
 
 float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vFinish, const float fFlyHeight )
@@ -475,8 +502,12 @@ void CGeneralAirForce::CancelRequest( int nRequestID, enum EForceType eType )
 {
 	if ( 0 != nRequestID )
 	{
-		NI_ASSERT( requests[eType].find( nRequestID ) != requests[eType].end(), "wrong cancel request" );
-		requests[eType].erase( nRequestID );
+		const auto type = requests.find( eType );
+		if ( type == requests.end() || type->second.erase( nRequestID ) == 0 )
+		{
+			return;
+		}
+		// Repeated cancellation must not return the same ID to the allocator twice.
 		requestsID.Return( nRequestID );
 	}
 }
@@ -484,7 +515,7 @@ void CGeneralAirForce::CancelRequest( int nRequestID, enum EForceType eType )
 void CGeneralAirForce::Give( CCommonUnit *pWorker )
 {
 	CAIUnit *pUnit = checked_cast<CAIUnit *>( pWorker );
-	if ( pUnit->IsHelicopter() )
+	if ( pUnit->IsHelicopter() || !CanControlPlayer( pUnit->GetPlayer() ) )
 	{
 		return;
 	}

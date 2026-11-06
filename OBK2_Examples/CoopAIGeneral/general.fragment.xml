@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Merge inside the chosen AI_BOT player entry; adapt coordinates and group IDs. -->
+<general>
+	<mobileScriptIDs>
+		<Item>100</Item>
+	</mobileScriptIDs>
+	<parcels>
+		<Item>
+			<reinforcePoints />
+			<Type>EPATCH_DEFENCE</Type>
+			<Center><x>2000</x><y>2000</y></Center>
+			<Radius>500</Radius>
+			<Importance>1</Importance>
+			<DefenceDirection>0</DefenceDirection>
+			<MinUnitsToReinforce>3</MinUnitsToReinforce>
+		</Item>
+		<Item>
+			<reinforcePoints>
+				<Item>
+					<Center><x>0</x><y>0</y></Center>
+					<Direction>0</Direction>
+				</Item>
+			</reinforcePoints>
+			<Type>EPATCH_REINFORCE</Type>
+			<Center><x>2500</x><y>2500</y></Center>
+			<Radius>400</Radius>
+			<Importance>0</Importance>
+			<DefenceDirection>0</DefenceDirection>
+			<MinUnitsToReinforce>3</MinUnitsToReinforce>
+		</Item>
+	</parcels>
+	<MaxMobileTanks>20</MaxMobileTanks>
+</general>

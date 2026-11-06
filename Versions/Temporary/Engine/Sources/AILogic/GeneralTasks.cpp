@@ -204,7 +204,7 @@ void CGeneralTaskToDefendPatch::CalcSeverity( const bool bEnemyUpdated, const bo
 	if ( bEnemyUpdated )
 	{
 		fEnemyForce = 0;
-		theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveEnemies( this );
+		pOwner->GiveEnemies( this );
 	}
 
 	if ( bFriendlyUpdated )
@@ -227,7 +227,7 @@ void CGeneralTaskToDefendPatch::CalcSeverity( const bool bEnemyUpdated, const bo
 
 void CGeneralTaskToDefendPatch::CancelTask( ICommander *pManager )
 {
-	theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->RemoveResistance( patchInfo.vCenter );
+	pOwner->RemoveResistance( patchInfo.vCenter );
 
 	for ( CommonUnits::iterator it = infantryInTrenches.begin(); infantryInTrenches.end() != it; ++it )
 	{
@@ -263,7 +263,7 @@ void CGeneralTaskToDefendPatch::Segment()
 		return;
 	}
 
-	bool bNeedRecalc = false;
+	bool bNeedRecalc = SGeneralHelper::RemoveNotOwned( &newTanks, pOwner );
 
 	// swarm new tanks all if needed amount gained
 	if ( !newTanks.empty() )
@@ -288,10 +288,10 @@ void CGeneralTaskToDefendPatch::Segment()
 
 	// find and remove dead units
 
-	bNeedRecalc |= SGeneralHelper::RemoveNotCurrentPlayer( &infantryFree, pOwner->GetParty() );
-	bNeedRecalc |= SGeneralHelper::RemoveNotCurrentPlayer( &infantryInTrenches, pOwner->GetParty() );
-	bNeedRecalc |= SGeneralHelper::RemoveNotCurrentPlayer( &tanksMobile, pOwner->GetParty() );
-	bNeedRecalc |= SGeneralHelper::RemoveNotCurrentPlayer( &stationaryUnits, pOwner->GetParty() );
+	bNeedRecalc |= SGeneralHelper::RemoveNotOwned( &infantryFree, pOwner );
+	bNeedRecalc |= SGeneralHelper::RemoveNotOwned( &infantryInTrenches, pOwner );
+	bNeedRecalc |= SGeneralHelper::RemoveNotOwned( &tanksMobile, pOwner );
+	bNeedRecalc |= SGeneralHelper::RemoveNotOwned( &stationaryUnits, pOwner );
 
 	// calculate severity
 	CalcSeverity( true, bNeedRecalc );
@@ -299,12 +299,12 @@ void CGeneralTaskToDefendPatch::Segment()
 	if ( fFriendlyForce == 0.0f && !bResistanceRemoved ) // all stationary defenders are killed
 	{
 		bResistanceRemoved = true;
-		theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->RemoveResistance( patchInfo.vCenter );
+		pOwner->RemoveResistance( patchInfo.vCenter );
 	}
 	if ( fFriendlyForce != 0.0f && bResistanceRemoved )
 	{
 		bResistanceRemoved = false;
-		theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->AddResistance( patchInfo.vCenter, patchInfo.fRadius );
+		pOwner->AddResistance( patchInfo.vCenter, patchInfo.fRadius );
 	}
 }
 
@@ -456,9 +456,10 @@ bool CGeneralTaskToDefendPatch::EnumEnemy( class CAIUnit *pEnemy )
 //*											CGeneralTaskToHoldReinforcement							*
 //*******************************************************************
 
-CGeneralTaskToHoldReinforcement::CGeneralTaskToHoldReinforcement()
+CGeneralTaskToHoldReinforcement::CGeneralTaskToHoldReinforcement( CGeneral *pOwner )
 	: fSeverity( 0 )
 	, nCurReinforcePoint( 0 )
+	, pOwner( pOwner )
 {
 }
 
@@ -518,15 +519,20 @@ int CGeneralTaskToHoldReinforcement::GetWorkerCount()
 
 void CGeneralTaskToHoldReinforcement::Segment()
 {
-	if ( SGeneralHelper::RemoveDead( &tanksFree ) )
+	const bool bRemoved =
+			pOwner ? SGeneralHelper::RemoveNotOwned( &tanksFree, pOwner ) : SGeneralHelper::RemoveDead( &tanksFree );
+	if ( bRemoved )
 	{
-		std::list<CPtr<CCommonUnit>> removed;
-		for ( UnitsPositions::iterator it = unitsPositions.begin(); it != unitsPositions.end(); ++it )
+		for ( auto it = unitsPositions.begin(); it != unitsPositions.end(); )
 		{
 			CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( it->first );
-			if ( !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() )
+			if ( !IsValid( pUnit ) || !pUnit->IsAlive() || ( pOwner && !pOwner->OwnsUnit( pUnit ) ) )
 			{
-				removed.push_back( pUnit );
+				it = unitsPositions.erase( it );
+			}
+			else
+			{
+				++it;
 			}
 		}
 	}
@@ -568,7 +574,10 @@ bool CGeneralTaskToHoldReinforcement::EnumWorker( class CCommonUnit *pUnit, cons
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, vLookPoint ), pUnit, true );
 
 		++nCurReinforcePoint;
-		nCurReinforcePoint %= patchInfo.reinforcePoints.size();
+		if ( !patchInfo.reinforcePoints.empty() )
+		{
+			nCurReinforcePoint %= patchInfo.reinforcePoints.size();
+		}
 	}
 	return false; // take 1 worker at a time
 }
@@ -593,8 +602,9 @@ bool CGeneralTaskToHoldReinforcement::EvaluateWorker( CCommonUnit *pUnit, const 
 //*											CGeneralTaskRecaptureStorage								*
 //*******************************************************************
 
-CGeneralTaskRecaptureStorage::CGeneralTaskRecaptureStorage( const CVec2 &vReinforcePoint )
+CGeneralTaskRecaptureStorage::CGeneralTaskRecaptureStorage( const CVec2 &vReinforcePoint, CGeneral *pOwner )
 	: vReinforcePoint( vReinforcePoint )
+	, pOwner( pOwner )
 	, fSeverity( -SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER )
 	, bFinished( false )
 {
@@ -633,7 +643,14 @@ void CGeneralTaskRecaptureStorage::CancelTask( ICommander *pManager )
 
 void CGeneralTaskRecaptureStorage::Segment()
 {
-	SGeneralHelper::RemoveDead( &tanksFree );
+	if ( pOwner )
+	{
+		SGeneralHelper::RemoveNotOwned( &tanksFree, pOwner );
+	}
+	else
+	{
+		SGeneralHelper::RemoveDead( &tanksFree );
+	}
 
 	if ( 0 == fSeverity && tanksFree.empty() )
 	{
@@ -647,7 +664,7 @@ bool CGeneralTaskRecaptureStorage::EnumWorker( class CCommonUnit *pUnit, const e
 	{
 		tanksFree.push_back( pUnit );
 		theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, vReinforcePoint ), pUnit );
-		return ++fSeverity == 0;
+		return ++fSeverity < 0;
 	}
 	NI_ASSERT( false, "wrong type of worker given" );
 	return false;
@@ -692,7 +709,7 @@ bool CGeneralTaskToSwarmToPoint::IsTimeToRun() const
 	for ( CTanks::const_iterator it = swarmingTanks.begin(); it != swarmingTanks.end(); ++it )
 	{
 		CCommonUnit *pUnit = *it;
-		if ( pUnit->IsRefValid() && pUnit->IsAlive() && !pUnit->IsIdle() )
+		if ( IsValid( pUnit ) && pUnit->IsAlive() && pOwner->OwnsUnit( pUnit ) && !pUnit->IsIdle() )
 		{
 			return false;
 		}
@@ -707,6 +724,8 @@ int CGeneralTaskToSwarmToPoint::GetWorkerCount()
 
 void CGeneralTaskToSwarmToPoint::Run()
 {
+	// Delayed tasks can run before the general's next cleanup after ownership changes.
+	RemoveUnavailableWorkers();
 	if ( !swarmingTanks.empty() )
 	{
 		const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
@@ -753,6 +772,7 @@ void CGeneralTaskToSwarmToPoint::AskForWorker( ICommander *pManager, const float
 
 void CGeneralTaskToSwarmToPoint::SendToGroupPoint()
 {
+	RemoveUnavailableWorkers();
 	if ( !swarmingTanks.empty() )
 	{
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
@@ -814,13 +834,23 @@ bool CGeneralTaskToSwarmToPoint::IsFinished() const
 void CGeneralTaskToSwarmToPoint::CancelTask( ICommander *pManager )
 {
 	bFinished = true;
+	bReleaseWorkers = true;
 	ReleaseWorker( pManager, 0 );
+}
+
+void CGeneralTaskToSwarmToPoint::RemoveUnavailableWorkers()
+{
+	swarmingTanks.erase(
+			std::remove_if( swarmingTanks.begin(),
+	                    swarmingTanks.end(),
+	                    [this]( const auto &pUnit )
+	                    { return !IsValid( pUnit ) || !pUnit->IsAlive() || !pOwner->OwnsUnit( pUnit ); } ),
+			swarmingTanks.end() );
 }
 
 void CGeneralTaskToSwarmToPoint::Segment()
 {
-	SGeneralHelper::SDeadPredicate pr;
-	swarmingTanks.erase( remove_if( swarmingTanks.begin(), swarmingTanks.end(), pr ), swarmingTanks.end() );
+	RemoveUnavailableWorkers();
 
 	switch ( eState )
 	{
@@ -831,7 +861,7 @@ void CGeneralTaskToSwarmToPoint::Segment()
 				//fSeverity = - 1;
 				fSeverity = 0;
 				ClearResistanceToAcceptNewTask();
-				theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveResistances( this );
+				pOwner->GiveResistances( this );
 
 				// wait for some time
 				bReleaseWorkers = !curResistanceToAttack.IsInitted();
@@ -911,7 +941,7 @@ void CGeneralTaskToSwarmToPoint::Segment()
 						}
 
 						ClearResistanceToAcceptNewTask();
-						theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveResistances( this );
+						pOwner->GiveResistances( this );
 						if ( curResistanceToAttack.IsInitted() )
 						{
 							SendToGroupPoint();

@@ -15,6 +15,7 @@
 
 #include "AILogic_export.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -31,7 +32,11 @@ bool HasTruck( CAIUnit *pUnit )
 {
 	CAIUnit *pTruck = pUnit->GetTruck();
 	return pTruck && pTruck->IsRefValid() && pTruck->IsAlive() &&
-	       theDipl.GetDiplStatusForParties( pUnit->GetParty(), pTruck->GetParty() ) != EDI_ENEMY;
+	       theDipl.GetDiplStatusForParties( pUnit->GetParty(), pTruck->GetParty() ) != EDI_ENEMY &&
+	       // A COOP general may only issue towing orders to its own truck. Towed guns are temporarily neutral.
+	       ( !theDipl.IsNetGame() || pUnit->GetPlayer() == pTruck->GetPlayer() ||
+	         ( pUnit->GetParty() == theDipl.GetNeutralParty() && pUnit->GetState() &&
+	           pUnit->GetState()->GetName() == EUSN_BEING_TOWED ) );
 }
 
 bool CanUnitBombardRegion( CAIUnit *pUnit, const CVec2 &vRegionCenter )
@@ -80,7 +85,7 @@ void CGeneralArtillery::Segment()
 	// release free trucks
 	for ( CUnitsList::iterator it = trucks.begin(); it != trucks.end(); )
 	{
-		if ( IsValidObj( *it ) )
+		if ( IsValidObj( *it ) && CanControlUnit( *it ) )
 		{
 			if ( !checked_cast_ptr<CAITransportUnit *>( *it )->IsMustTow() )
 			{
@@ -94,7 +99,7 @@ void CGeneralArtillery::Segment()
 		}
 		else
 		{
-			++it;
+			it = trucks.erase( it );
 		}
 	}
 
@@ -103,13 +108,9 @@ void CGeneralArtillery::Segment()
 	{
 		CAIUnit *pUnit = *iter;
 		const bool bValidUnit = pUnit && pUnit->IsRefValid() && pUnit->IsAlive();
-		if ( !bValidUnit || theDipl.GetDiplStatusForParties( pUnit->GetParty(), pOwner->GetParty() ) == EDI_ENEMY )
+		if ( !bValidUnit || !CanControlUnit( pUnit ) )
 		{
-			if ( bValidUnit )
-			{
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
-			}
-
+			// A captured or transferred gun belongs to its new controller; do not overwrite its orders.
 			iter = freeUnits.erase( iter );
 		}
 		else
@@ -137,6 +138,10 @@ bool CGeneralArtillery::CanBombardRegion( const CVec2 &vRegionCenter )
 	for ( CUnitsList::iterator iter = freeUnits.begin(); iter != freeUnits.end(); ++iter )
 	{
 		CAIUnit *pUnit = *iter;
+		if ( !IsValidObj( pUnit ) || !CanControlUnit( pUnit ) )
+		{
+			continue;
+		}
 		CVec2 vDir = vRegionCenter - pUnit->GetCenterPlain();
 		Normalize( &vDir );
 
@@ -164,7 +169,7 @@ int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter,
 	for ( CUnitsList::iterator iter = freeUnits.begin(); iter != freeUnits.end() && cnt < nMaxUnits; )
 	{
 		CAIUnit *pUnit = *iter;
-		if ( pUnit->GetParty() == pOwner->GetParty() && CanUnitBombardRegion( pUnit, vCenter ) &&
+		if ( IsValidObj( pUnit ) && CanControlUnit( pUnit ) && CanUnitBombardRegion( pUnit, vCenter ) &&
 		     ( IsArtilleryFree( pUnit ) || IsArtilleryBeingTowed( pUnit ) ) )
 		{
 			bombardmentUnits.push_back( pUnit );
@@ -201,12 +206,25 @@ bool CGeneralArtillery::EnumEnemy( CAIUnit *pEnemy )
 
 void CGeneralArtillery::TakeTruck( CAIUnit *pUnit )
 {
-	trucks.push_back( pUnit );
+	if ( IsValidObj( pUnit ) && CanControlUnit( pUnit ) &&
+	     std::find( trucks.begin(), trucks.end(), pUnit ) == trucks.end() )
+	{
+		trucks.push_back( pUnit );
+	}
 }
 
 void CGeneralArtillery::TakeArtillery( CAIUnit *pUnit )
 {
-	freeUnits.push_back( pUnit );
+	if ( IsValidObj( pUnit ) && CanControlUnit( pUnit ) &&
+	     std::find( freeUnits.begin(), freeUnits.end(), pUnit ) == freeUnits.end() )
+	{
+		freeUnits.push_back( pUnit );
+	}
+}
+
+bool CGeneralArtillery::CanControlUnit( const CCommonUnit *pUnit ) const
+{
+	return pOwner && pOwner->OwnsUnit( pUnit );
 }
 
 void CGeneralArtillery::SetCellInUse( const int nResistanceCell, bool bInUse )
@@ -424,12 +442,13 @@ void CGeneralArtilleryTask::StartBombardment()
 {
 	const int nUnits = bombardmentUnits.size();
 	const float fShift = ( nUnits == 0 ) ? 0.0f : fBombardmentRadius / 2.0f;
-	uint16_t wDir = 0;
+	uint32_t nDir = 0;
 
 	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
-	      ++iter, wDir += 65536.0f / float( nUnits ) )
+	      ++iter, nDir += 65536u / nUnits )
 	{
-		const CVec2 vCenter = vBombardmentCenter + GetVectorByDirection( wDir ) * fShift;
+		// A full turn is 65536; narrow the integer explicitly instead of overflowing a float-to-uint16 conversion.
+		const CVec2 vCenter = vBombardmentCenter + GetVectorByDirection( static_cast<uint16_t>( nDir ) ) * fShift;
 		CAIUnit *pUnit = iter->pUnit;
 
 		if ( CanUnitBombardRegion( pUnit, vCenter ) )
@@ -666,6 +685,12 @@ void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
 		}
 	}
 
+	if ( cnt == 0 )
+	{
+		// Every gun may already be returning to reserve; there is no valid firing center to report.
+		timeToSendAntiArtilleryAck = 0;
+		return;
+	}
 	vAntiArtilleryAckCenter /= float( cnt );
 	if ( maxTimeToWait != 0 )
 	{
@@ -683,19 +708,16 @@ void CGeneralArtilleryTask::Segment()
 	{
 		CPtr<CAIUnit> pUnit = iter->pUnit;
 
-		bool bWrongParty = false;
+		bool bWrongOwner = false;
 		if ( IsValidObj( pUnit ) )
 		{
-			bWrongParty = !IsArtilleryBeingTowed( pUnit ) && pUnit->GetParty() == theDipl.GetMyParty();
+			// Towed guns temporarily lose their player; their truck still identifies the controlling general.
+			bWrongOwner = !pOwner->CanControlUnit( pUnit ) &&
+			              !( IsArtilleryBeingTowed( pUnit ) && pOwner->CanControlUnit( pUnit->GetTruck() ) );
 		}
 
-		if ( !IsValidObj( pUnit ) || bWrongParty )
+		if ( !IsValidObj( pUnit ) || bWrongOwner )
 		{
-			if ( bWrongParty )
-			{
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
-			}
-
 			iter = bombardmentUnits.erase( iter );
 		}
 		else
