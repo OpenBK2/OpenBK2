@@ -14,6 +14,12 @@
 
 class CDBID;
 
+namespace NDb
+{
+struct SHPObjectRPGStats;
+struct SModel;
+} // namespace NDb
+
 namespace NUnitIconRendering
 {
 constexpr int TARGET_SIZE = 512;
@@ -115,6 +121,8 @@ LoadOverrides( const std::string &szFileName, std::map<std::string, SOverride> *
 SCENEB2_EXPORT const SOverride *FindOverride( const std::map<std::string, SOverride> &overrides, const CDBID &dbid );
 SCENEB2_EXPORT const std::map<std::string, SOverride> &GetDefaultOverrides();
 SCENEB2_EXPORT bool ReadCameraShot( const CDBID &dbid, bool bEditorDatabase, SCameraShot *pShot );
+// Select the intact summer model, including fences whose main visual object is empty.
+SCENEB2_EXPORT const NDb::SModel *GetIconModel( const NDb::SHPObjectRPGStats *pStats );
 SCENEB2_EXPORT bool Render(
 		const CDBID &dbid, const SOptions &options, const SOverride *pOverride, SResult *pResult, std::string *pszError );
 } // namespace NUnitIconRendering

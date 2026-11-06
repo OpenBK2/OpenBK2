@@ -219,7 +219,11 @@ bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	switch ( nCommandID )
 	{
 		case ID_ICON_RENDER_ALL:
-			ReRenderAllMechUnits();
+			if ( dwData >= NIconRendering::BATCH_COUNT )
+			{
+				return false;
+			}
+			ReRenderAllIcons( static_cast<NIconRendering::EBatchType>( dwData ) );
 			return true;
 		case ID_ICON_SETTINGS_CHANGED:
 			if ( pModelState && GetObjectSet().szObjectTypeName == "MechUnitRPGStats" )

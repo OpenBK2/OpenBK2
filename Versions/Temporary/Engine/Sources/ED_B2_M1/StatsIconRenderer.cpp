@@ -3,14 +3,14 @@
 #include "EditorOptions.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "MechIconRenderer.h"
 #include "ModelEditorSettings.h"
 #include "SceneB2/UnitIconRendering.h"
+#include "StatsIconRenderer.h"
 
-bool NMechIconRenderer::Render( const CDBID &dbid,
-                                const NIconRendering::SOptions &options,
-                                CArray2D<NGfx::SPixel8888> *pCapture,
-                                std::string *pError )
+bool NStatsIconRenderer::Render( const CDBID &dbid,
+                                 const NIconRendering::SOptions &options,
+                                 CArray2D<NGfx::SPixel8888> *pCapture,
+                                 std::string *pError )
 {
 	CModelEditorSettings settings;
 	Singleton<IUserDataContainer>()->Get()->SerializeSettings(

@@ -45,13 +45,15 @@ class CRenderHandler : public ICommandHandler
 {
 public:
 	int nRenders = 0;
+	uintptr_t nBatch = 0;
 	NIconRendering::SOptions renderedOptions;
 
-	bool HandleCommand( unsigned nCommandID, uintptr_t ) override
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		if ( nCommandID == ID_ICON_RENDER_ALL )
 		{
 			++nRenders;
+			nBatch = dwData;
 			renderedOptions = NIconRendering::LoadOptions();
 		}
 		return true;
@@ -144,7 +146,7 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 				EXPECT_EQ( 42, controls[1]->GetValue() );
 				std::vector<wxCheckBox *> checks;
 				FindControls( pDialog, &checks );
-				ASSERT_EQ( 1u, checks.size() );
+				ASSERT_EQ( 5u, checks.size() );
 				EXPECT_EQ( "Save a separate .pak", checks[0]->GetLabel().ToStdString() );
 				EXPECT_TRUE( checks[0]->GetValue() );
 				checks[0]->SetValue( false );
@@ -169,7 +171,7 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 				controls[1]->SetValue( 126 );
 				std::vector<wxCheckBox *> checks;
 				FindControls( pDialog, &checks );
-				ASSERT_EQ( 1u, checks.size() );
+				ASSERT_EQ( 5u, checks.size() );
 				Click( pDialog, wxID_APPLY );
 				EXPECT_EQ( u8"Reinforcements/\u00dcberfall.xdb", NEditorDefaults::LoadOptions().szDeployTemplate );
 				EXPECT_EQ( 84, NIconRendering::LoadOptions().nWidth );
@@ -195,6 +197,48 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 	EXPECT_EQ( 168, handler.renderedOptions.nWidth );
 	EXPECT_EQ( 126, handler.renderedOptions.nHeight );
 	EXPECT_FALSE( handler.renderedOptions.bSeparatePak );
+	EXPECT_EQ( NIconRendering::MECH_UNITS, handler.nBatch );
+	// Each button must dispatch its own type and persist independent pak flags.
+	WithDialog(
+			[&handler]( wxDialog *pDialog )
+			{
+				std::vector<wxCheckBox *> checks;
+				FindControls( pDialog, &checks );
+				ASSERT_EQ( 5u, checks.size() );
+				for ( int i = 1; i < NIconRendering::BATCH_COUNT; ++i )
+				{
+					EXPECT_TRUE( checks[i]->GetValue() );
+					checks[i]->SetValue( i % 2 == 0 );
+				}
+				std::vector<wxButton *> buttons;
+				FindControls( pDialog, &buttons );
+				const char *labels[] = {
+					"Re-Render All Buildings", "Re-Render All Bridges", "Re-Render All Fences", "Re-Render All Objects" };
+				for ( int i = 0; i < 4; ++i )
+				{
+					wxButton *pRender = nullptr;
+					for ( auto *pButton : buttons )
+					{
+						if ( pButton->GetLabel() == labels[i] )
+						{
+							pRender = pButton;
+						}
+					}
+					ASSERT_NE( nullptr, pRender );
+					EXPECT_TRUE( pRender->IsEnabled() );
+					EXPECT_TRUE( pRender->IsShownOnScreen() );
+					Click( pRender, pRender->GetId() );
+					EXPECT_EQ( i + 1, handler.nBatch );
+					EXPECT_EQ( i + 2, handler.nRenders );
+					EXPECT_EQ( 168, handler.renderedOptions.nWidth );
+					EXPECT_EQ( 126, handler.renderedOptions.nHeight );
+					EXPECT_FALSE( handler.renderedOptions.bSeparatePak );
+					EXPECT_FALSE( handler.renderedOptions.bBuildingPak );
+					EXPECT_TRUE( handler.renderedOptions.bBridgePak );
+					EXPECT_FALSE( handler.renderedOptions.bFencePak );
+					EXPECT_TRUE( handler.renderedOptions.bObjectPak );
+				}
+			} );
 	WithDialog(
 			[]( wxDialog *pDialog )
 			{
@@ -205,8 +249,12 @@ TEST( IconRenderingOptions, DialogAppliesPersistsAndDispatchesCurrentDimensions 
 				EXPECT_EQ( 126, controls[1]->GetValue() );
 				std::vector<wxCheckBox *> checks;
 				FindControls( pDialog, &checks );
-				ASSERT_EQ( 1u, checks.size() );
+				ASSERT_EQ( 5u, checks.size() );
 				EXPECT_FALSE( checks[0]->GetValue() );
+				EXPECT_FALSE( checks[1]->GetValue() );
+				EXPECT_TRUE( checks[2]->GetValue() );
+				EXPECT_FALSE( checks[3]->GetValue() );
+				EXPECT_TRUE( checks[4]->GetValue() );
 				checks[0]->SetValue( true );
 				Click( pDialog, wxID_APPLY );
 				std::vector<wxListBox *> tabs;
