@@ -293,6 +293,10 @@ context. Read `git diff` of every touched file before building.
   sparse checkout, including tests and benchmarks. SceneB2's shared icon overrides
   live under scripts/iconrender, outside the engine source tree; a full local
   checkout hid the missing CI dependency on Windows and Linux.
+- Linux CI promotes enum-mixing warnings to errors. Use EPixelFormat constants
+  when selecting between pixel formats, since SPixel4444::ID and SPixel8888::ID
+  belong to separate anonymous enums. Use wxSizerFlags for combined layout and
+  border settings instead of bitwise operations across wxWidgets enum types.
 - Running IconRender from the Windows build tree needs `gr2` in its link closure
   and the FFmpeg `bin` directory on PATH for codec DLL dependencies. An exit code
   of 0xc0000135 before any output is a loader failure, not an empty icon render.

@@ -83,7 +83,8 @@ public:
 		pDimensions->Add( pWidth, 0, wxEXPAND );
 		pDimensions->Add( NWx::Child<wxStaticText>( pPage, wxID_ANY, "Icon height (pixels)" ), 0, wxALIGN_CENTER_VERTICAL );
 		pDimensions->Add( pHeight, 0, wxEXPAND );
-		pPageSizer->Add( pDimensions, 0, wxEXPAND | wxBOTTOM, FromDIP( 12 ) );
+		// wxSizerFlags keeps stretch/alignment and border enums separate.
+		pPageSizer->Add( pDimensions, wxSizerFlags().Expand().Border( wxBOTTOM, FromDIP( 12 ) ) );
 		pPageSizer->Add( NWx::Child<wxStaticText>( pPage, wxID_ANY, "Default: 42 x 42. Range: 1-512 pixels." ),
 		                 0,
 		                 wxBOTTOM,
@@ -94,7 +95,7 @@ public:
 		pSeparatePak->SetValue( options.bSeparatePak );
 		pSeparatePak->SetToolTip( "Save MechUnitIcons.pak in the active Data or mod export folder." );
 		auto *pBatch = new wxBoxSizer( wxHORIZONTAL );
-		pBatch->Add( pRender, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP( 16 ) );
+		pBatch->Add( pRender, wxSizerFlags().CentreVertical().Border( wxRIGHT, FromDIP( 16 ) ) );
 		pBatch->Add( pSeparatePak, 0, wxALIGN_CENTER_VERTICAL );
 		pPageSizer->Add( pBatch, 0, wxBOTTOM, FromDIP( 10 ) );
 		auto *pHint = NWx::Child<wxStaticText>(
@@ -117,11 +118,12 @@ public:
 
 		// A proportional sidebar leaves room for more categories without
 		// squeezing the controls when the dialog is resized or DPI changes.
-		pBody->Add( pTabs, 1, wxEXPAND | wxRIGHT, FromDIP( 24 ) );
+		pBody->Add( pTabs, wxSizerFlags( 1 ).Expand().Border( wxRIGHT, FromDIP( 24 ) ) );
 		pBody->Add( pBook, 3, wxEXPAND );
-		pRoot->Add( pBody, 1, wxEXPAND | wxALL, FromDIP( 20 ) );
+		pRoot->Add( pBody, wxSizerFlags( 1 ).Expand().Border( wxALL, FromDIP( 20 ) ) );
 		pRoot->Add( NWx::Child<wxStaticLine>( this ), 0, wxEXPAND );
-		pRoot->Add( CreateButtonSizer( wxOK | wxCANCEL | wxAPPLY ), 0, wxEXPAND | wxALL, FromDIP( 12 ) );
+		pRoot->Add( CreateButtonSizer( wxOK | wxCANCEL | wxAPPLY ),
+		            wxSizerFlags().Expand().Border( wxALL, FromDIP( 12 ) ) );
 		SetSizer( pRoot );
 		SetMinSize( FromDIP( wxSize( 720, 390 ) ) );
 		SetSize( GetMinSize() );
