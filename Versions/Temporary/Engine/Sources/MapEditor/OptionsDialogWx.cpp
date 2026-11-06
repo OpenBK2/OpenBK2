@@ -22,7 +22,8 @@ class COptionsDialog : public wxDialog
 {
 	wxSpinCtrl *pWidth;
 	wxSpinCtrl *pHeight;
-	wxCheckBox *pSeparatePak;
+	wxCheckBox *pSeparatePak[NIconRendering::BATCH_COUNT];
+	wxButton *pRenderButtons[NIconRendering::BATCH_COUNT];
 	wxTextCtrl *pDeployTemplate;
 
 	bool Apply()
@@ -41,7 +42,10 @@ class COptionsDialog : public wxDialog
 		NIconRendering::SOptions options;
 		options.nWidth = static_cast<int>( nWidth );
 		options.nHeight = static_cast<int>( nHeight );
-		options.bSeparatePak = pSeparatePak->GetValue();
+		for ( int i = 0; i < NIconRendering::BATCH_COUNT; ++i )
+		{
+			options.*NIconRendering::BATCHES[i].pSeparatePak = pSeparatePak[i]->GetValue();
+		}
 		if ( !NIconRendering::SaveOptions( options ) )
 		{
 			wxMessageBox( "Could not save the icon rendering settings.", "Options", wxOK | wxICON_ERROR, this );
@@ -101,32 +105,45 @@ public:
 		                 0,
 		                 wxBOTTOM,
 		                 FromDIP( 28 ) );
-		auto *pRender = NWx::Child<wxButton>( pPage, wxID_ANY, "Re-Render All Mech Units" );
-		pRender->Enable( Singleton<ICommandHandlerContainer>()->Get( CHID_ICON_RENDERING ) != nullptr );
-		pSeparatePak = NWx::Child<wxCheckBox>( pPage, wxID_ANY, "Save a separate .pak" );
-		pSeparatePak->SetValue( options.bSeparatePak );
-		pSeparatePak->SetToolTip( "Save MechUnitIcons.pak in the active Data or mod export folder." );
-		auto *pBatch = new wxBoxSizer( wxHORIZONTAL );
-		pBatch->Add( pRender, wxSizerFlags().CentreVertical().Border( wxRIGHT, FromDIP( 16 ) ) );
-		pBatch->Add( pSeparatePak, 0, wxALIGN_CENTER_VERTICAL );
-		pPageSizer->Add( pBatch, 0, wxBOTTOM, FromDIP( 10 ) );
+		auto *pBatches = new wxFlexGridSizer( 2, FromDIP( 10 ), FromDIP( 16 ) );
+		for ( int i = 0; i < NIconRendering::BATCH_COUNT; ++i )
+		{
+			const auto &batch = NIconRendering::BATCHES[i];
+			auto *pRender = NWx::Child<wxButton>( pPage, wxID_ANY, batch.pszButtonLabel );
+			pRenderButtons[i] = pRender;
+			pRender->Enable( Singleton<ICommandHandlerContainer>()->Get( CHID_ICON_RENDERING ) != nullptr );
+			pSeparatePak[i] = NWx::Child<wxCheckBox>( pPage, wxID_ANY, "Save a separate .pak" );
+			pSeparatePak[i]->SetValue( options.*batch.pSeparatePak );
+			pSeparatePak[i]->SetToolTip( wxString::Format( "Save %s.pak in the active Data or mod export folder.",
+			                                               wxString::FromUTF8( batch.pszArchiveBase ) ) );
+			pBatches->Add( pRender, 0, wxEXPAND );
+			pBatches->Add( pSeparatePak[i], 0, wxALIGN_CENTER_VERTICAL );
+			pRender->Bind( wxEVT_BUTTON,
+			               [this, i]( wxCommandEvent & )
+			               {
+											 if ( Apply() )
+											 {
+												 // Progress updates can process UI events; prevent overlapping batches.
+												 for ( auto *pButton : pRenderButtons )
+												 {
+													 pButton->Disable();
+												 }
+												 Singleton<ICommandHandlerContainer>()->HandleCommand(
+														 CHID_ICON_RENDERING, ID_ICON_RENDER_ALL, i );
+												 for ( auto *pButton : pRenderButtons )
+												 {
+													 pButton->Enable();
+												 }
+											 }
+										 } );
+		}
+		pPageSizer->Add( pBatches, 0, wxBOTTOM, FromDIP( 10 ) );
 		auto *pHint = NWx::Child<wxStaticText>(
 				pPage,
 				wxID_ANY,
-				"Saves these settings and renders all unit icons.\nProgress and the output path appear in the Log Window." );
+				"Saves these settings and renders all icons of the selected type.\nProgress and the output path appear in the Log Window." );
 		pPageSizer->Add( pHint, 0, wxEXPAND );
 		pPage->SetSizer( pPageSizer );
-		pRender->Bind( wxEVT_BUTTON,
-		               [this, pRender]( wxCommandEvent & )
-		               {
-										 if ( Apply() )
-										 {
-											 pRender->Disable();
-											 Singleton<ICommandHandlerContainer>()->HandleCommand(
-													 CHID_ICON_RENDERING, ID_ICON_RENDER_ALL, 0 );
-											 pRender->Enable();
-										 }
-									 } );
 
 		auto *pDefaultsPage = NWx::Child<wxPanel>( pBook );
 		pBook->AddPage( pDefaultsPage, "Defaults" );
@@ -184,11 +201,13 @@ public:
 		pBody->Add( pBook, 3, wxEXPAND );
 		pRoot->Add( pBody, wxSizerFlags( 1 ).Expand().Border( wxALL, FromDIP( 20 ) ) );
 		pRoot->Add( NWx::Child<wxStaticLine>( this ), 0, wxEXPAND );
-		pRoot->Add( CreateButtonSizer( wxOK | wxCANCEL | wxAPPLY ),
-		            wxSizerFlags().Expand().Border( wxALL, FromDIP( 12 ) ) );
-		SetSizer( pRoot );
-		SetMinSize( FromDIP( wxSize( 720, 390 ) ) );
-		SetSize( GetMinSize() );
+		pRoot->Add( CreateButtonSizer( wxOK | wxCANCEL | wxAPPLY ), 0, wxEXPAND | wxALL, FromDIP( 12 ) );
+		// Fit every batch row at the current font size and display scale.
+		SetSizerAndFit( pRoot );
+		wxSize minimum = GetSize();
+		minimum.IncTo( FromDIP( wxSize( 720, 390 ) ) );
+		SetMinSize( minimum );
+		SetSize( minimum );
 		CentreOnParent();
 		Bind( wxEVT_BUTTON, [this]( wxCommandEvent & ) { Apply(); }, wxID_APPLY );
 		Bind(
