@@ -99,7 +99,8 @@ public:
 		pDimensions->Add( pWidth, 0, wxEXPAND );
 		pDimensions->Add( NWx::Child<wxStaticText>( pPage, wxID_ANY, "Icon height (pixels)" ), 0, wxALIGN_CENTER_VERTICAL );
 		pDimensions->Add( pHeight, 0, wxEXPAND );
-		pPageSizer->Add( pDimensions, 0, wxEXPAND | wxBOTTOM, FromDIP( 12 ) );
+		// wxSizerFlags keeps stretch/alignment and border enums separate.
+		pPageSizer->Add( pDimensions, wxSizerFlags().Expand().Border( wxBOTTOM, FromDIP( 12 ) ) );
 		pPageSizer->Add( NWx::Child<wxStaticText>( pPage, wxID_ANY, "Default: 42 x 42. Range: 1-512 pixels." ),
 		                 0,
 		                 wxBOTTOM,
@@ -196,9 +197,9 @@ public:
 
 		// A proportional sidebar leaves room for more categories without
 		// squeezing the controls when the dialog is resized or DPI changes.
-		pBody->Add( pTabs, 1, wxEXPAND | wxRIGHT, FromDIP( 24 ) );
+		pBody->Add( pTabs, wxSizerFlags( 1 ).Expand().Border( wxRIGHT, FromDIP( 24 ) ) );
 		pBody->Add( pBook, 3, wxEXPAND );
-		pRoot->Add( pBody, 1, wxEXPAND | wxALL, FromDIP( 20 ) );
+		pRoot->Add( pBody, wxSizerFlags( 1 ).Expand().Border( wxALL, FromDIP( 20 ) ) );
 		pRoot->Add( NWx::Child<wxStaticLine>( this ), 0, wxEXPAND );
 		pRoot->Add( CreateButtonSizer( wxOK | wxCANCEL | wxAPPLY ), 0, wxEXPAND | wxALL, FromDIP( 12 ) );
 		// Fit every batch row at the current font size and display scale.

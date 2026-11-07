@@ -401,10 +401,11 @@ static NGfx::CTexture *CreateFilteredUITexture( const CArray2D<NGfx::SPixel8888>
 	// Atlas textures only have one level. Use a separate managed texture so
 	// reducing a large icon averages its detail rather than skipping texels.
 	const bool b16Bit = NGfx::Is16BitTextures();
+	// Use the shared pixel-format enum; each SPixel type has its own ID enum.
 	CObj<NGfx::CTexture> texture = NGfx::MakeTexture( mips[0].GetSizeX(),
 	                                                  mips[0].GetSizeY(),
 	                                                  int( mips.size() ),
-	                                                  b16Bit ? NGfx::SPixel4444::ID : NGfx::SPixel8888::ID,
+	                                                  b16Bit ? NGfx::CF_A4R4G4B4 : NGfx::CF_A8R8G8B8,
 	                                                  NGfx::REGULAR,
 	                                                  NGfx::CLAMP );
 	if ( !texture )
