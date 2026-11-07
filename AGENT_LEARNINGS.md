@@ -1,6 +1,10 @@
 
 # AGENT LEARNINGS
 
+- Mistake (2026-11-07): printing a full CI log flooded and truncated the tool output.
+  Search large log attachments for errors and failed targets first, then read only
+  the relevant context. Check file size before attempting a complete log read.
+
 ## Cooperative strategic AI
 
 - Diplomacy parties are team IDs 0/1/2, not map player slots. Strategic fog and
