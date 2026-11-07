@@ -489,6 +489,11 @@ context. Read `git diff` of every touched file before building.
 
 ## Persistent objective notifications
 
+- A fixture's `dynamic_cast<NDb::STexture *>` needs a direct `3Dmotor` link
+  dependency. Linux does not resolve its RTTI through GameX's private dependency;
+  both GCC and Clang can fail with "DSO missing from command line" even when the
+  same test links on Windows.
+
 - Minimap objective arrows need known objective IDs and states as well as
   locations. The old MP tracker discarded all three. Keep COOP objective UI
   state and local object bindings outside simulation checksums, and share the
