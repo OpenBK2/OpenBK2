@@ -472,9 +472,35 @@ public:
 	{
 		// Bound, so it runs before wxPropertyGrid's own OnPaint in its event table.
 		Bind( wxEVT_PAINT, &CClassicPropertyGrid::OnClassicPaint, this );
+		Bind( wxEVT_MOTION, &CClassicPropertyGrid::OnDescriptionMotion, this );
+		Bind( wxEVT_LEAVE_WINDOW, &CClassicPropertyGrid::OnDescriptionLeave, this );
 	}
 
 private:
+	void OnDescriptionMotion( wxMouseEvent &rEvent )
+	{
+		const wxPropertyGridHitTestResult hit = HitTest( rEvent.GetPosition() );
+		wxString text;
+		if ( !rEvent.Dragging() && hit.GetColumn() == 2 && hit.GetSplitter() == -1 && hit.GetProperty() != nullptr )
+		{
+			// Use the cell's full text, even when it fits: wxPG_TOOLTIPS only
+			// handles clipped text and would also enable tips on other columns.
+			text = hit.GetProperty()->GetCell( 2 ).GetText();
+		}
+		// Keep the hover delay running while moving within the same description.
+		if ( text != GetToolTipText() )
+		{
+			SetToolTip( text );
+		}
+		rEvent.Skip();
+	}
+
+	void OnDescriptionLeave( wxMouseEvent &rEvent )
+	{
+		UnsetToolTip();
+		rEvent.Skip();
+	}
+
 	void OnClassicPaint( wxPaintEvent &rEvent )
 	{
 		if ( ( m_iFlags & wxPG_FL_FOCUSED ) != 0 )
@@ -764,6 +790,8 @@ public:
 		bCreateControls = true;
 		eExpandMode = EXPAND_USER_DEFINED;
 		pManager->Freeze();
+		// A new selection must not retain the previous object's description tip.
+		pManager->GetGrid()->UnsetToolTip();
 		pManager->ClearPage( 0 );
 		const bool bHaveManipulator = ( GetViewManipulator() != 0 );
 		if ( bHaveManipulator )
