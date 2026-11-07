@@ -164,7 +164,8 @@ public:
 		                                          wxTE_READONLY );
 		pDeployTemplate->SetName( "DefaultDeployTemplate" );
 		pDeployTemplate->SetToolTip( wxString::FromUTF8( defaults.szDeployTemplate ) );
-		pDefaultsSizer->Add( pDeployTemplate, 0, wxEXPAND | wxBOTTOM, FromDIP( 10 ) );
+		// Keep expansion and border flags separate for GCC's enum conversion checks.
+		pDefaultsSizer->Add( pDeployTemplate, wxSizerFlags().Expand().Border( wxBOTTOM, FromDIP( 10 ) ) );
 		auto *pTemplateButtons = new wxBoxSizer( wxHORIZONTAL );
 		auto *pBrowse = NWx::Child<wxButton>( pDefaultsPage, wxID_ANY, "Browse..." );
 		auto *pReset = NWx::Child<wxButton>( pDefaultsPage, wxID_ANY, "Use Common Template" );
@@ -201,7 +202,8 @@ public:
 		pBody->Add( pBook, 3, wxEXPAND );
 		pRoot->Add( pBody, wxSizerFlags( 1 ).Expand().Border( wxALL, FromDIP( 20 ) ) );
 		pRoot->Add( NWx::Child<wxStaticLine>( this ), 0, wxEXPAND );
-		pRoot->Add( CreateButtonSizer( wxOK | wxCANCEL | wxAPPLY ), 0, wxEXPAND | wxALL, FromDIP( 12 ) );
+		pRoot->Add( CreateButtonSizer( wxOK | wxCANCEL | wxAPPLY ),
+		            wxSizerFlags().Expand().Border( wxALL, FromDIP( 12 ) ) );
 		// Fit every batch row at the current font size and display scale.
 		SetSizerAndFit( pRoot );
 		wxSize minimum = GetSize();
