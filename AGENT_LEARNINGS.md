@@ -487,6 +487,11 @@ context. Read `git diff` of every touched file before building.
   That overload searches window names. Set an explicit name or inspect child
   buttons' `GetLabel()` values when locating controls in tests.
 
+- The editor's description column keeps its full text in `wxPGProperty::GetCell(2)`;
+  `CEllipsisRenderer` only crops the drawing. `wxPG_TOOLTIPS` enables clipped-text
+  tips across all columns, so description-only tips use a column hit test instead.
+  `wxPropertyGrid::HitTest` already converts client coordinates for scrolling.
+
 ## Persistent objective notifications
 
 - A fixture's `dynamic_cast<NDb::STexture *>` needs a direct `3Dmotor` link
