@@ -1,9 +1,9 @@
 # Hit processing, armor, cover, and damage
 
-Source investigation dated 2026-11-08, at commit `0c6712bcf`. This describes the
-current implementation, including its exceptions, rather than a proposed combat
-model. No gameplay code was changed. Values from a running mod/profile can differ
-from both the C++ defaults and the profiles checked into this repository.
+Originally investigated on 2026-11-08 at commit `0c6712bcf`, and updated for the
+AABB/cover strength and shell-crack implementation. This describes the current
+implementation, including its exceptions. Values from a running mod/profile can
+differ from both the C++ defaults and the profiles checked into this repository.
 
 ## Main result
 
@@ -13,9 +13,9 @@ For an ordinary direct hit on a unit, the rule is:
 damage is allowed when:
 
 	impact passes the full unit rectangle and height checks
-	AND impact is inside the smaller combat rectangle
+	AND impact is inside the combat rectangle (full size if AABB protection is cracked)
 	AND modified random piercing >= random armor of the selected side
-	AND the cover roll allows the hit
+	AND (cover is cracked OR the cover roll allows the hit)
 ```
 
 Armor is a pass/fail gate, not a subtraction from damage. Excess piercing does not
@@ -38,10 +38,11 @@ Paths below are relative to `Versions/Temporary/Engine/Sources`.
 | Fire, select projectile, and schedule impact | [AILogic/Guns.cpp](../Versions/Temporary/Engine/Sources/AILogic/Guns.cpp#L1731), `CBasicGun::Fire` |
 | Snapshot modifiers and scatter the impact point | [AILogic/Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L380), `CExplosion::Init` |
 | Enumerate targets | [AILogic/Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L623), `CCumulativeExpl::Explode` and `CBurstExpl::Explode` |
-| Direct unit hit, cover, armor, splash | [AILogic/AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L166), `ProcessExactHit`, `ProcessCumulativeExpl`, `ProcessAreaDamage`, `ProcessBurstExpl` |
+| Direct unit hit, cover, armor, splash | [AILogic/AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L167), `ProcessExactHit`, `ProcessCumulativeExpl`, `ProcessAreaDamage`, `ProcessBurstExpl` |
+| Compare shell crack power with unit protection strength | [AILogic/HitProtection.cpp](../Versions/Temporary/Engine/Sources/AILogic/HitProtection.cpp), `NHitProtection::CracksAABB` and `CracksCover` |
 | Infantry splash exception | [AILogic/Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1329), `CSoldier::ProcessAreaDamage` |
 | Static objects and buildings | [AILogic/StaticObject.cpp](../Versions/Temporary/Engine/Sources/AILogic/StaticObject.cpp#L213), `CExistingObject::ProcessCumulativeExpl` |
-| Subtract unit HP | [AILogic/AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1193), `CAIUnit::TakeDamage` |
+| Subtract unit HP | [AILogic/AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1198), `CAIUnit::TakeDamage` |
 
 The similarly named `CExplosion::ProcessExactHit` in `Shell.cpp` duplicates the
 basic test, but the unit path calls **`CAIUnit::ProcessExactHit`**. AI targeting and
@@ -150,7 +151,8 @@ Only after this first gate does the direct path compute the combat rectangle:
 coefficient = target.smallAABBCoeff(target.SmallAABBCoeff)
 combatRect = fullRect
 
-if armorMode != BOTTOM and shooter is valid and not shooter.IgnoreAABBCoeff:
+if armorMode != BOTTOM and shooter is valid and not shooter.IgnoreAABBCoeff
+   and not CracksAABB(shell, target):
 	combatRect.halfLength *= coefficient
 	combatRect.halfWidth  *= coefficient
 ```
@@ -161,17 +163,19 @@ rectangle gate still limits direct hits even if the combat rectangle is larger.
 There is no clamp in `GetRemissiveCoeff` or `SRect::Compress`.
 
 Bottom-armor hits skip compression. The direct path also skips compression when
-the shooter reference is invalid, or its ignore-AABB ability is active. Generic
-splash skips compression only for bottom mode; it does not check that ability.
+the shooter reference is invalid, its ignore-AABB ability is active, or the shell
+cracks the target's AABB protection. Generic splash skips compression for bottom
+mode or a successful AABB crack; it does not check that ability. Cracking restores
+the full rectangle, not a guaranteed hit outside that rectangle or the splash radius.
 
 For a nondegenerate rectangle, `SRect::IsPointInside` excludes an exactly-on-edge
 point. A fully collapsed rectangle instead uses a small squared-distance tolerance
 of `< 0.001` around its center. A zero coefficient therefore is not literally an
 unconditional immunity flag.
 
-Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L207),
-[GetRemissiveCoeff](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1469),
-[GetUnitRect](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L3642),
+Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L209),
+[GetRemissiveCoeff](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1474),
+[GetUnitRect](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L3652),
 [Aviation.cpp](../Versions/Temporary/Engine/Sources/AILogic/Aviation.cpp#L61),
 [Geom.cpp](../Versions/Temporary/Engine/Sources/Misc/Geom.cpp#L285).
 
@@ -209,7 +213,7 @@ rule belongs to the burst constructor.
 There is no impact-angle cosine correction or distance attenuation of piercing
 in these hit-resolution functions.
 
-Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L190),
+Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L192),
 [Geom.cpp](../Versions/Temporary/Engine/Sources/Misc/Geom.cpp#L365),
 [Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L579),
 [Shell.h](../Versions/Temporary/Engine/Sources/AILogic/Shell.h#L663).
@@ -228,7 +232,7 @@ rawDamage = max(0, RandomFloat(DamagePower - DamageRandom,
 damage = shot.weaponDamage(rawDamage)
 
 cover = target.cover(1.0)
-savedByCover = RandomFloat(0, 1) >= cover
+savedByCover = not CracksCover(shell, target) and RandomFloat(0, 1) >= cover
 ```
 
 Clipping happens **after** the raw roll. It is not equivalent to rolling uniformly
@@ -264,9 +268,12 @@ blocking it. Approximately:
 | `0.25` | 75% |
 | `0.0` | 100% |
 
-The exact comparison is `roll >= cover`, so even `1.0` can save on the float
-generator's upper endpoint. No `[0, 1]` clamp is applied here. This is an abstract
-random gate, separate from obstacle/visibility checks used before firing.
+When cover is not cracked, the exact comparison is `roll >= cover`, so even `1.0`
+can save on the float generator's upper endpoint. No `[0, 1]` clamp is applied
+here. A successful cover crack skips that roll entirely, including for effective
+cover `0`. Calls to `IsSavedByCover()` without an explosion retain the original
+behavior. This is an abstract random gate, separate from obstacle/visibility
+checks used before firing.
 
 Sources: [prefix_RPGStats.h](../Versions/Temporary/Engine/Sources/Stats_B2_M1/prefix_RPGStats.h#L90),
 [shell stat helpers](../Versions/Temporary/Engine/Sources/Stats_B2_M1/include_WeaponRPGStats_Shell.h),
@@ -275,7 +282,60 @@ Sources: [prefix_RPGStats.h](../Versions/Temporary/Engine/Sources/Stats_B2_M1/pr
 [infantry armor](../Versions/Temporary/Engine/Sources/Stats_B2_M1/include_InfantryRPGStats.h),
 [HP-object armor](../Versions/Temporary/Engine/Sources/Stats_B2_M1/include_HPObjectRPGStats.h),
 [RandomGen.h](../Versions/Temporary/Engine/Sources/System/RandomGen.h#L63),
-[cover](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L2908).
+[cover](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L2913).
+
+### AABB and cover strength versus shell crack power
+
+The fields live in [RPGStats.cll](../Versions/Temporary/Engine/Sources/Stats_B2_M1/RPGStats.cll).
+All eight are `float` and retain fractional values in the comparison:
+
+| Owner | Fields | Defaults |
+|---|---|---|
+| `SUnitBaseRPGStats` | `AABBStrengthMin`, `AABBStrengthMax` | `1.0`, `1.0` |
+| `SUnitBaseRPGStats` | `CoverStrengthMin`, `CoverStrengthMax` | `1.0`, `1.0` |
+| `SWeaponRPGStats::SShell` | `AABBCrackBase`, `AABBCrackRandom` | `0.0`, `0.0` |
+| `SWeaponRPGStats::SShell` | `CoverCrackBase`, `CoverCrackRandom` | `0.0`, `0.0` |
+
+Each protection has its own comparison, evaluated when that protection is reached:
+
+```text
+strength = RandomFloat(StrengthMin, StrengthMax)
+crack = CrackBase + RandomFloat(-CrackRandom, +CrackRandom)
+cracked = crack >= strength
+```
+
+AABB cracking bypasses the rectangle compression. Cover cracking bypasses the
+cover rejection roll. Neither bypasses armor, height checks, the full direct-hit
+footprint, or splash reach. There are no additional stat modifiers for crack or
+strength: the values come directly from the selected shell and target unit stats.
+The crack roll is not clipped to zero.
+
+For example, unit strengths of `1..1` and shell crack bases of `1` with zero
+variation bypass both protections, while armor must still be penetrated. A shell
+with AABB crack base `1`, variation `0.5`, and target AABB strength `1..1` cracks
+that protection approximately half the time. The cover comparison is independent.
+
+Implementation details that matter for reproducibility:
+
+- An impossible crack (`base + variation < minimum strength`) returns false
+  without any RNG calls. A certain crack (`base - variation >= maximum strength`)
+  returns true without any RNG calls. Equality passes.
+- Otherwise, a nonconstant strength range is rolled first, then a nonzero crack
+  variation. Constant values need no draw. Both use simulation `NRandom`.
+- Negative random amplitudes are treated as zero. A reversed strength interval
+  uses its minimum endpoint as a constant. Authored ranges should be ordered.
+- With the default fields, `0 < 1`, so all new checks fail without consuming RNG.
+  Existing hit decisions and RNG order are preserved for unchanged data.
+- Unit strength fields have binary `preserveDefault` guards: older records that
+  omit them keep `1.0`. Existing chunk IDs are retained. New fields participate in
+  database serialization, editor metadata, and checksums; mixed game builds or
+  different stat data are not promised multiplayer/replay compatibility.
+
+Both direct hits and generic unit splash use these checks. The separate
+standing-infantry outer-radius fallback and static-object rules remain as described
+below; they do not acquire new protection gates.
+
+Source: [HitProtection.cpp](../Versions/Temporary/Engine/Sources/AILogic/HitProtection.cpp).
 
 ## 5. More accurate direct-hit pseudocode
 
@@ -291,14 +351,14 @@ TryDirectUnitHit(target, explosion, armorMode):
 		return false
 
 	armor = target.RollArmor(SelectArmorSide(armorMode, attackDirection, fullRect))
-	combatRect = CompressForDirectHit(fullRect, target, shooter, armorMode)
+	combatRect = CompressForDirectHitUnlessExemptOrCracked(fullRect, target, shooter, shell, armorMode)
 	piercing = explosion.RollPiercing()  // Rolled even if combatRect will miss.
 
 	if not combatRect.Contains(explosion.xy):
 		result = MISS
 	else if piercing < armor:
 		result = REFLECT
-	else if target.IsSavedByCover():    // No cover draw if armor already failed.
+	else if target.IsSavedByCover(explosion):  // Crack check, then cover roll if not cracked.
 		result = REFLECT
 	else:
 		result = HIT
@@ -321,7 +381,7 @@ Likewise, a successful direct hit receives full rolled damage without an extra
 splash contribution. A track-targeting override or cheat bypasses the smaller-box,
 armor, and cover outcome but still requires the initial full-box/height gates.
 
-Source: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L166).
+Source: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L167).
 
 ## 6. Splash: `Area` and `Area2` are not a falloff curve
 
@@ -332,11 +392,11 @@ each target's direct-first burst handler. The ordinary unit splash fallback is:
 GenericUnitSplash(target, explosion):
 	if target.IsInSolidPlace() or abs(target.GetVisZ() - explosion.z) >= 64:
 		return false
-	if target.IsSavedByCover():
+	if target.IsSavedByCover(explosion):
 		return false
 
 	combatRect = target.GetUnitRect()
-	if armorMode != BOTTOM:
+	if armorMode != BOTTOM and not CracksAABB(shell, target):
 		combatRect.Compress(target.GetRemissiveCoeff())
 	if not combatRect.IntersectsCircle(explosion.xy, effectiveArea):
 		return false
@@ -350,7 +410,7 @@ GenericUnitSplash(target, explosion):
 ```
 
 Here the code uses `fZDiff < 2 * SConsts::TILE_SIZE`, hence strict `< 64`, unlike
-the ordinary direct hit's `<= 64`. Cover is rolled before the circle/armor checks.
+the ordinary direct hit's `<= 64`. Cover protection is checked before the circle/armor checks.
 Intersection uses distance to the rectangle, not simply distance to unit center.
 `Area2` selects candidates but is not the radius used by this generic unit test.
 
@@ -369,7 +429,7 @@ particular check. Use the loaded profile/mod values when reasoning about a match
 to AI coordinates with a factor of `32` by the stats helpers.
 
 Sources: [Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L809),
-[AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L279),
+[AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L283),
 [AIConsts.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIConsts.cpp#L492),
 [Current consts.cfg](../Versions/Current/Profiles/consts.cfg#L128),
 [Multiplayer consts.cfg](../Versions/Multiplayer/profiles/consts.cfg#L114),
@@ -451,7 +511,7 @@ state ignore `TakeDamage`. Immortality and first-shot cheats further alter HP or
 death behavior. These exceptions are why an `EHT_HIT` notification alone is not a
 guarantee of a particular HP loss.
 
-Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1193),
+Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1198),
 [Technics.cpp](../Versions/Temporary/Engine/Sources/AILogic/Technics.cpp#L619),
 [Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1230).
 
@@ -462,6 +522,8 @@ Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1
 | `AABBHalfSize`, `AABBCenter` | Full oriented footprint, then the basis for the combat footprint. Also used in some special height/collision tests. |
 | `SmallAABBCoeff` and its modifier | Scales both combat-footprint dimensions. Not a separate probability roll. |
 | `Cover` modifier | Random rejection gate; lower effective values protect more. Standing-infantry splash fallback can bypass a save. |
+| `AABBStrengthMin/Max`, `AABBCrackBase/Random` | Compare unit strength against shell crack power; success bypasses combat-footprint compression. |
+| `CoverStrengthMin/Max`, `CoverCrackBase/Random` | Independent comparison; success bypasses the cover rejection roll. |
 | Mechanical `armors[]` / HP-object `defences[]` | Random integer armor for the selected side. Infantry override armor to zero. |
 | `Piercing`, `PiercingRandom`, weapon-piercing modifier | Direct-hit threshold against armor, with equality passing. No damage scaling from surplus piercing. |
 | `Dispersion` and weapon-dispersion modifier | Distance-scaled scatter before ordinary impact resolution, with trajectory-dependent ellipse ratio. |
@@ -474,9 +536,12 @@ Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1
 
 The `CCumulativeExpl` and `CBurstExpl` target lists are sorted by descending unique
 ID and deduplicated before processing. Random draws use simulation `NRandom`.
-Preserving short-circuit behavior matters: direct armor and piercing are rolled
-before the small-box outcome, cover only after penetration, and damage only when
-the damage branch is entered. Generic splash instead rolls cover before armor.
+Preserving short-circuit behavior matters: direct armor is rolled first, then AABB
+cracking is checked when compression would apply, then piercing is rolled. Cover
+cracking/cover are checked only after a combat-box hit and penetration; damage is
+rolled only when the damage branch is entered. Generic splash checks cover
+cracking/cover before AABB cracking, circle intersection, and armor. With default
+crack/strength values, these new checks consume no RNG and retain the old sequence.
 
 `CCumulativeExpl` excludes its shooter and stops processing further infantry once
 one infantry full-rectangle hit has been processed, even if it reflected or missed
@@ -490,6 +555,9 @@ inside stormable objects have their own entry paths. This document explains the
 shared ordinary projectile/explosion resolver and its important overrides; it
 does not claim every call to `TakeDamage` passes through penetration and cover.
 
-Validation was static: call sites, overrides, helper implementations, and shipped
-configuration were checked. No game build, runtime balance test, or replay was
-run for this documentation-only investigation.
+The original investigation used static source/configuration tracing. The crack
+implementation additionally has regression coverage in
+[HitProtection.cpp](../Versions/Temporary/Engine/Sources/AILogic/test/HitProtection.cpp)
+for defaults, fractional thresholds, equality, seeded random rolls, legacy binary
+fields, and the actual direct-hit and splash resolvers. This is not a balance test
+of particular units or ammunition.

@@ -55199,6 +55199,146 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>AABBStrengthMin</Name>
+					<ChunkID>36</ChunkID>
+					<Description>minimum strength resisting a shell&apos;s AABB crack power</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>36</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>1</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>AABBStrengthMax</Name>
+					<ChunkID>37</ChunkID>
+					<Description>maximum strength resisting a shell&apos;s AABB crack power</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>37</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>1</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>CoverStrengthMin</Name>
+					<ChunkID>38</ChunkID>
+					<Description>minimum strength resisting a shell&apos;s cover crack power</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>38</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>1</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>CoverStrengthMax</Name>
+					<ChunkID>39</ChunkID>
+					<Description>maximum strength resisting a shell&apos;s cover crack power</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>39</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>1</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>-1</TypeID>
 		</Item>
@@ -63098,6 +63238,66 @@
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>AABBCrackBase</Name>
+					<ChunkID>32</ChunkID>
+					<Description>base power to bypass a unit&apos;s reduced combat AABB</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>AABBCrackRandom</Name>
+					<ChunkID>33</ChunkID>
+					<Description>symmetric random variation of AABB crack power</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>CoverCrackBase</Name>
+					<ChunkID>34</ChunkID>
+					<Description>base power to bypass a unit&apos;s cover roll</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cc010000</Type>
+					<Name>CoverCrackRandom</Name>
+					<ChunkID>35</ChunkID>
+					<Description>symmetric random variation of cover crack power</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>02000000</Type>
+						<Data>0</Data>
 					</DefaultValue>
 					<ComplexDefaultValue>
 						<Type>00000000</Type>

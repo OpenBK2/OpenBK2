@@ -102,7 +102,8 @@ private:
 	const SAINotifyHitInfo::EHitType ProcessExactHit( const SRect &combatRect,
 	                                                  const CVec2 &explCoord,
 	                                                  const int nRandPiercing,
-	                                                  const int nRandArmor ) const;
+	                                                  const int nRandArmor,
+	                                                  const class CExplosion *pExpl ) const;
 	// sends to general request according to units's current state; quite slow.
 	void UpdateUnitsRequestsForResupply();
 	const NDb::SAmphibianStats *GetAmphibianStats() const;
@@ -368,7 +369,7 @@ public:
 
 	// вероятность, с которой нанесётся damage при попадании
 	virtual const float GetCover() const;
-	virtual bool IsSavedByCover() const;
+	virtual bool IsSavedByCover( const class CExplosion *pExpl = nullptr ) const;
 
 	class CTurret *GetTurret( const int nTurret ) const override
 	{
