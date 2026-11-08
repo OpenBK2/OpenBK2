@@ -151,6 +151,7 @@ void CSoldier::WarFogChanged()
 
 void CSoldier::SetInBuilding( CBuilding *pBuilding )
 {
+	UpdateFormationStatsForInsideType( EOIO_BUILDING );
 	pObjInside = pBuilding;
 	SetMasterOfStreetsBonus( EOIO_BUILDING );
 	eInsideType = EOIO_BUILDING;
@@ -174,6 +175,7 @@ void CSoldier::SetInEntrenchment( CEntrenchment *pEntrenchment )
 {
 	Stop();
 
+	UpdateFormationStatsForInsideType( EOIO_ENTRENCHMENT );
 	pObjInside = pEntrenchment;
 	SetMasterOfStreetsBonus( EOIO_ENTRENCHMENT );
 	eInsideType = EOIO_ENTRENCHMENT;
@@ -194,6 +196,7 @@ void CSoldier::SetInEntrenchment( CEntrenchment *pEntrenchment )
 
 void CSoldier::SetInTransport( class CMilitaryCar *pUnit )
 {
+	UpdateFormationStatsForInsideType( EOIO_TRANSPORT );
 	pObjInside = pUnit;
 	SetMasterOfStreetsBonus( EOIO_TRANSPORT );
 	eInsideType = EOIO_TRANSPORT;
@@ -220,6 +223,8 @@ void CSoldier::SetInTransport( class CMilitaryCar *pUnit )
 
 void CSoldier::SetFree()
 {
+	// Do this before the visibility updates temporarily overwrite eInsideType.
+	UpdateFormationStatsForInsideType( EOIO_NONE );
 	SetVisionAngle( SConsts::STANDART_VIS_ANGLE );
 	//SetSightMultiplier( 1 );
 	SetAngles( 0, 65535 );
@@ -284,6 +289,38 @@ void CSoldier::SetFree()
 	WarFogChanged();
 
 	pFormation->SetGeometryPropertiesToSoldier( this, false );
+}
+
+bool CSoldier::UsesFormationStatsModifier( EObjectInsideOf eType ) const
+{
+	if ( eType != EOIO_BUILDING && eType != EOIO_ENTRENCHMENT )
+	{
+		return true;
+	}
+	const IAILogic *pAI = Singleton<IAILogic>();
+	const NDb::SAIGameConsts *pConsts = pAI ? pAI->GetAIConsts() : nullptr;
+	return !pConsts || pConsts->bInfantryFormationModifiersApplyInTrenches;
+}
+
+void CSoldier::ApplyFormationStatsModifier( const NDb::SUnitStatsModifier *pModifier, bool bForward )
+{
+	if ( UsesFormationStatsModifier( eInsideType ) )
+	{
+		ApplyStatsModifier( pModifier, bForward );
+	}
+}
+
+void CSoldier::UpdateFormationStatsForInsideType( EObjectInsideOf eNewInsideType )
+{
+	const bool bWasApplied = UsesFormationStatsModifier( eInsideType );
+	const bool bApply = UsesFormationStatsModifier( eNewInsideType );
+	if ( bWasApplied != bApply && pFormation )
+	{
+		// Use each soldier's actual occupancy, so partly entered squads remain correct.
+		// On exit, restore the current layout, including changes made while sheltered.
+		const auto &geometry = pFormation->GetStats()->formations[pFormation->GetCurrentGeometry()];
+		ApplyStatsModifier( geometry.pStatsModifiers, bApply );
+	}
 }
 
 void CSoldier::SetMasterOfStreetsBonus( EObjectInsideOf eNewInsideType )

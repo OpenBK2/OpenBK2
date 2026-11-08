@@ -742,6 +742,34 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>cb010000</Type>
+					<Name>InfantryFormationModifiersApplyInTrenches</Name>
+					<ChunkID>18</ChunkID>
+					<Description>Apply infantry formation stat modifiers in trenches and buildings; false restores them only after leaving.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>true</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>285691072</TypeID>
 		</Item>
@@ -768,7 +796,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cb010000</Type>
+					<Type>cc010000</Type>
 					<Name>reinforcePoints</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -810,7 +838,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Radius</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -824,7 +852,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Importance</Name>
 					<ChunkID>6</ChunkID>
 					<Description>point importance</Description>
@@ -839,7 +867,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefenceDirection</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -879,7 +907,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cd010000</Type>
+					<Type>ce010000</Type>
 					<Name>mobileScriptIDs</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -893,7 +921,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>ce010000</Type>
+					<Type>cf010000</Type>
 					<Name>parcels</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -1042,7 +1070,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Volume</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -1069,7 +1097,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SolidPart</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -1150,7 +1178,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>7</ChunkID>
 					<Description>typeRename = &quot;GUID&quot;; numBytes = 16; editorControl = &quot;guid&quot;]</Description>
@@ -1292,12 +1320,12 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d0010000</Type>
+					<Type>d1010000</Type>
 					<Name>unitLinkIDs</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
 					<Constraints>
-						<Item>d1010000</Item>
+						<Item>d2010000</Item>
 					</Constraints>
 					<Attributes />
 					<DefaultValue>
@@ -1336,7 +1364,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>FromExplosion</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -1350,7 +1378,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Number</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -2251,7 +2279,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsAbility</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -2265,7 +2293,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Autocast</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -2279,7 +2307,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Passive</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -2425,7 +2453,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>PressEffect</Name>
 					<ChunkID>14</ChunkID>
 					<Description />
@@ -2507,7 +2535,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>NoButton</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -2521,7 +2549,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsAbility</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -2535,7 +2563,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Autocast</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -2549,7 +2577,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Passive</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -2726,7 +2754,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>PressEffect</Name>
 					<ChunkID>15</ChunkID>
 					<Description />
@@ -3017,7 +3045,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Whitening</Name>
 					<ChunkID>7</ChunkID>
 					<Description>brightness whitening</Description>
@@ -3032,7 +3060,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Pitch</Name>
 					<ChunkID>8</ChunkID>
 					<Description>vertical deviation angle</Description>
@@ -3046,7 +3074,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Yaw</Name>
 					<ChunkID>9</ChunkID>
 					<Description>horizontal deviation angle</Description>
@@ -3060,7 +3088,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ShadowPitch</Name>
 					<ChunkID>10</ChunkID>
 					<Description>vertical deviation angle for shadow casting (if = 100, then take it from sun)</Description>
@@ -3075,7 +3103,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ShadowYaw</Name>
 					<ChunkID>11</ChunkID>
 					<Description>horizontal deviation angle for shadow casting (if = 100, then take it from sun)</Description>
@@ -3192,7 +3220,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FogStartDistance</Name>
 					<ChunkID>15</ChunkID>
 					<Description />
@@ -3207,7 +3235,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FogDistance</Name>
 					<ChunkID>16</ChunkID>
 					<Description />
@@ -3235,7 +3263,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VapourHeight</Name>
 					<ChunkID>17</ChunkID>
 					<Description />
@@ -3262,7 +3290,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VapourDensity</Name>
 					<ChunkID>18</ChunkID>
 					<Description />
@@ -3290,7 +3318,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VapourNoiseParam</Name>
 					<ChunkID>19</ChunkID>
 					<Description />
@@ -3317,7 +3345,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VapourSpeed</Name>
 					<ChunkID>20</ChunkID>
 					<Description />
@@ -3344,7 +3372,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VapourSwitchTime</Name>
 					<ChunkID>21</ChunkID>
 					<Description />
@@ -3453,7 +3481,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>InGameUse</Name>
 					<ChunkID>24</ChunkID>
 					<Description />
@@ -3556,7 +3584,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VapourStartHeight</Name>
 					<ChunkID>27</ChunkID>
 					<Description />
@@ -3583,7 +3611,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>BlurStrength</Name>
 					<ChunkID>28</ChunkID>
 					<Description />
@@ -3651,7 +3679,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxShadowHeight</Name>
 					<ChunkID>30</ChunkID>
 					<Description>height cap for shadow casting</Description>
@@ -3722,7 +3750,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CloudDir</Name>
 					<ChunkID>35</ChunkID>
 					<Description />
@@ -3737,7 +3765,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CloudSpeed</Name>
 					<ChunkID>36</ChunkID>
 					<Description />
@@ -3766,7 +3794,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SunFlarePitch</Name>
 					<ChunkID>38</ChunkID>
 					<Description />
@@ -3780,7 +3808,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SunFlareYaw</Name>
 					<ChunkID>39</ChunkID>
 					<Description />
@@ -3794,7 +3822,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ShadowsMaxDetailLength</Name>
 					<ChunkID>40</ChunkID>
 					<Description />
@@ -3911,7 +3939,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>WaterZOffset</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -3926,7 +3954,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>WaterOffsetBlendTiles</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -3955,7 +3983,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PrepareToWaterTime</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -3970,7 +3998,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PrepareToLandTime</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -4125,7 +4153,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>RemoveCorpseInWater</Name>
 					<ChunkID>17</ChunkID>
 					<Description />
@@ -4347,7 +4375,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Looped</Name>
 					<ChunkID>6</ChunkID>
 					<Description>Is this animation looped?</Description>
@@ -4511,7 +4539,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MoveSpeed</Name>
 					<ChunkID>10</ChunkID>
 					<Description>movement speed (for movement animations) to calculate animation coeff</Description>
@@ -4941,7 +4969,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -5485,7 +5513,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FlareSize</Name>
 					<ChunkID>6</ChunkID>
 					<Description>effect size; 0 - empty effect</Description>
@@ -5514,7 +5542,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PointLightSize</Name>
 					<ChunkID>8</ChunkID>
 					<Description>effect size; 0 - empty effect</Description>
@@ -5528,7 +5556,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ConeLength</Name>
 					<ChunkID>9</ChunkID>
 					<Description>light cone length (scale from base model)</Description>
@@ -5542,7 +5570,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ConeSize</Name>
 					<ChunkID>10</ChunkID>
 					<Description>light cone size (width); 0 - empty cone</Description>
@@ -5604,7 +5632,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>OnAtDay</Name>
 					<ChunkID>13</ChunkID>
 					<Description>do we need this effect at day time</Description>
@@ -5619,7 +5647,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>OnAtNight</Name>
 					<ChunkID>14</ChunkID>
 					<Description>do we need this effect at night time</Description>
@@ -5946,7 +5974,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>RandomStartFrame</Name>
 					<ChunkID>8</ChunkID>
 					<Description>start from random frame?</Description>
@@ -6410,7 +6438,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Radius</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -6424,7 +6452,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsRound</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -6485,7 +6513,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Height</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -6615,7 +6643,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SightMultiplier</Name>
 					<ChunkID>13</ChunkID>
 					<Description />
@@ -6931,7 +6959,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SightMultiplier</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -6988,7 +7016,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>VisibilitySrink</Name>
 					<ChunkID>14</ChunkID>
 					<Description>Alexander Vinnikov&apos;s method of visibility - use reduced passability for visibility</Description>
@@ -7017,7 +7045,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DamageCoeff</Name>
 					<ChunkID>16</ChunkID>
 					<Description />
@@ -7317,7 +7345,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>WaitVisual</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -7331,7 +7359,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ReverseCommands</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -7633,7 +7661,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FOV</Name>
 					<ChunkID>5</ChunkID>
 					<Description>Field of View</Description>
@@ -7687,7 +7715,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Yaw</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -7701,7 +7729,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Pitch</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -7715,7 +7743,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Dist</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -7729,7 +7757,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UseAnchorOnly</Name>
 					<ChunkID>6</ChunkID>
 					<Description>use anchor only, or full camera placement on the start?</Description>
@@ -8759,7 +8787,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UseMapReinforcements</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -9007,7 +9035,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MainStrikeAngle</Name>
 					<ChunkID>17</ChunkID>
 					<Description>(degrees). main strike direction (for front line)</Description>
@@ -9021,7 +9049,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MainStrikePower</Name>
 					<ChunkID>18</ChunkID>
 					<Description>main strike power (for front line)</Description>
@@ -9179,7 +9207,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ApplyToEnemy</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -9912,7 +9940,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultWidth</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -10188,7 +10216,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ExpReinfDistributionCoeff</Name>
 					<ChunkID>16</ChunkID>
 					<Description>experience part to distribute among other reinforcements in case of level cap</Description>
@@ -10202,7 +10230,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ExpCommanderDistributionCoeff</Name>
 					<ChunkID>17</ChunkID>
 					<Description>commander experience part to distribute among other reinforcements in case of level cap</Description>
@@ -10216,7 +10244,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ExpCommanderUnitPenaltyCoeff</Name>
 					<ChunkID>18</ChunkID>
 					<Description>unit experience for commander penalty pool</Description>
@@ -10230,7 +10258,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ExpCommanderPenaltyCoeff</Name>
 					<ChunkID>19</ChunkID>
 					<Description>commander exp part to compensate penalty pool</Description>
@@ -10447,7 +10475,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Looped</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -10582,7 +10610,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Weight</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Composition with more weight will be chosen more often</Description>
@@ -10640,7 +10668,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>BorderRand</Name>
 					<ChunkID>2</ChunkID>
 					<Description>random in upper part</Description>
@@ -10655,7 +10683,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Depth</Name>
 					<ChunkID>3</ChunkID>
 					<Description>normal parallel deepening</Description>
@@ -10670,7 +10698,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DepthRand</Name>
 					<ChunkID>4</ChunkID>
 					<Description>deepening dispersion</Description>
@@ -10685,7 +10713,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RandX</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -10700,7 +10728,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RandY</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -10715,7 +10743,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>HasPeak</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -10758,7 +10786,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>LeftSided</Name>
 					<ChunkID>10</ChunkID>
 					<Description>left-side precipice</Description>
@@ -10773,7 +10801,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RidgeTexGeomScale</Name>
 					<ChunkID>11</ChunkID>
 					<Description>ridge texture scale coeff</Description>
@@ -10788,7 +10816,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultWidth</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -10816,7 +10844,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultHeight</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -11149,7 +11177,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Attached</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -11175,7 +11203,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Attached</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -11449,7 +11477,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Radius</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -11509,7 +11537,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ExplosionHeight</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -11552,7 +11580,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsDefault</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -11632,7 +11660,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FocalDist</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -11647,7 +11675,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FocusRange</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -11972,7 +12000,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>EnemyReinfCallsCoeff</Name>
 					<ChunkID>5</ChunkID>
 					<Description>enemy reinforcements multiplier</Description>
@@ -11987,7 +12015,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>EnemyReinfRecycleCoeff</Name>
 					<ChunkID>6</ChunkID>
 					<Description>enemy reinforcement recycle time multiplier</Description>
@@ -12014,7 +12042,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Min</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -12048,7 +12076,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Max</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -12141,7 +12169,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MinDist</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -12155,7 +12183,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxDist</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -12169,7 +12197,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MinZDis</Name>
 					<ChunkID>5</ChunkID>
 					<Description>minimal z for height fog</Description>
@@ -12184,7 +12212,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxZDis</Name>
 					<ChunkID>6</ChunkID>
 					<Description>maximal z for height fog</Description>
@@ -12225,7 +12253,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Min</Name>
 					<ChunkID>2</ChunkID>
 					<Description>with respect to plane&apos;s turn radius</Description>
@@ -12239,7 +12267,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Max</Name>
 					<ChunkID>3</ChunkID>
 					<Description>with respect to plane&apos;s turn radius</Description>
@@ -12705,7 +12733,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>float_input</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -12739,7 +12767,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>float_slider</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -12773,7 +12801,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>float_combo</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -12807,7 +12835,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>bool_combo</Name>
 					<ChunkID>12</ChunkID>
 					<Description />
@@ -12834,7 +12862,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>bool_checkbox</Name>
 					<ChunkID>13</ChunkID>
 					<Description />
@@ -12861,7 +12889,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>bool_switcher</Name>
 					<ChunkID>14</ChunkID>
 					<Description />
@@ -13522,7 +13550,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>GUID</Name>
 					<ChunkID>40</ChunkID>
 					<Description>[numBytes = 16; editorControl = &quot;guid&quot;]</Description>
@@ -13727,7 +13755,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>WindAffected</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -13742,7 +13770,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>WindPower</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -13757,7 +13785,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Duration</Name>
 					<ChunkID>7</ChunkID>
 					<Description>(seconds) effect duration. (H5 specific, manual enter!).</Description>
@@ -14119,7 +14147,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ForwardTowed</Name>
 					<ChunkID>2</ChunkID>
 					<Description>Tow artillery facing forward, using a front LTowingPoint authored in the model</Description>
@@ -14134,7 +14162,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VerticalOffsetAngleRad</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Radians added to ballistic launch elevation; speed adjusts to reach the target, positive raises the arc</Description>
@@ -14163,7 +14191,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>AggressiveAttacker</Name>
 					<ChunkID>5</ChunkID>
 					<Description>Tanks and non-AA SPGs automatically fire at enemies visible to their side within weapon range, without chasing</Description>
@@ -14193,7 +14221,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>BlockLooseAirAttacks</Name>
 					<ChunkID>7</ChunkID>
 					<Description>Autonomous aircraft attacks fire from the current position; explicit attack orders may still pursue</Description>
@@ -14233,7 +14261,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FinalVolume</Name>
 					<ChunkID>2</ChunkID>
 					<Description>[0-100]This volume will be set when fade in is finished</Description>
@@ -14263,7 +14291,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Pause</Name>
 					<ChunkID>4</ChunkID>
 					<Description>When true, it is pause fade. If Final Volume == 0, then fade will pause stream after reducing volume to 0. If final volume is not 0, then this fade will unpause stream.</Description>
@@ -14482,7 +14510,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FenceHeight</Name>
 					<ChunkID>9</ChunkID>
 					<Description>fence hight (AI points), used to calculate visibility</Description>
@@ -14626,7 +14654,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Height</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -14654,7 +14682,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PositiveRatio</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -14753,7 +14781,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Width</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -14781,7 +14809,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Ratio</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -14958,7 +14986,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Width</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -15308,7 +15336,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -15365,7 +15393,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Italic</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -15380,7 +15408,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Antialiased</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -16005,7 +16033,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>WaitVisual</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -16020,7 +16048,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Forward</Name>
 					<ChunkID>6</ChunkID>
 					<Description>if true, then Reaction will lur in forward direction, else - in backward</Description>
@@ -16588,7 +16616,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>3</ChunkID>
 					<Description>typeRename = &quot;GUID&quot;; numBytes = 16; editorControl = &quot;guid&quot;]</Description>
@@ -17107,7 +17135,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MinHeight</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -17122,7 +17150,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxHeight</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -17149,7 +17177,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Min</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -17163,7 +17191,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Max</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -17189,7 +17217,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MovmentAngleDownRadians</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -17204,7 +17232,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MovementAngleDownSpeedRPS</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -17219,7 +17247,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SideRotatingAngleRad</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -17234,7 +17262,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SideRotatingAngleRPS</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -17249,7 +17277,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StandingDeviationRadius</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -17264,7 +17292,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StandingDeviationSpeed</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -17279,7 +17307,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SpiralRadius</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -17294,7 +17322,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SpiralSteps</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -17309,7 +17337,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SpiralDownAcceleration</Name>
 					<ChunkID>10</ChunkID>
 					<Description>downward death-spiral acceleration in world units per second squared</Description>
@@ -17324,7 +17352,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SpiralDownRandCoeff</Name>
 					<ChunkID>17</ChunkID>
 					<Description>independent random variation applied to spiral radius, steps, and downward acceleration</Description>
@@ -17352,7 +17380,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DeathSelfPointRotationSpeedRad</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -17367,7 +17395,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DeathSpiralDownwardsAngleRad</Name>
 					<ChunkID>14</ChunkID>
 					<Description>visual nose-down angle during the death spiral</Description>
@@ -17395,7 +17423,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StandingFuelDrainModifier</Name>
 					<ChunkID>12</ChunkID>
 					<Description />
@@ -17410,7 +17438,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxAttackAngleDownRadians</Name>
 					<ChunkID>13</ChunkID>
 					<Description>maximum visual nose-down angle while attacking</Description>
@@ -17577,7 +17605,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Custom</Name>
 					<ChunkID>2</ChunkID>
 					<Description>use individual params for this object</Description>
@@ -17591,7 +17619,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Raising</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -17605,7 +17633,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HPBarLen</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -17700,7 +17728,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>CanAttackUp</Name>
 					<ChunkID>3</ChunkID>
 					<Description>can attack at stand position</Description>
@@ -17714,7 +17742,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>CanAttackDown</Name>
 					<ChunkID>4</ChunkID>
 					<Description>can attack in lie position</Description>
@@ -17728,7 +17756,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RunSpeed</Name>
 					<ChunkID>5</ChunkID>
 					<Description>run speed</Description>
@@ -17742,7 +17770,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CrawlSpeed</Name>
 					<ChunkID>6</ChunkID>
 					<Description>crawl speed</Description>
@@ -17783,7 +17811,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Armor</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -17924,7 +17952,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Period1</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -17938,7 +17966,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Period2</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -17952,7 +17980,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Amp1</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -17966,7 +17994,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Amp2</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -17980,7 +18008,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Phaze1</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -17994,7 +18022,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Phaze2</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -18147,7 +18175,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsLake</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Is this a lake or island?</Description>
@@ -18177,7 +18205,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultWidth</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -18346,7 +18374,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FlareAppearTime</Name>
 					<ChunkID>4</ChunkID>
 					<Description>flare appear/disappear time</Description>
@@ -18426,7 +18454,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Scale</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -18441,7 +18469,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Speed</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -18456,7 +18484,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Offset</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -18470,7 +18498,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>EndCycle</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -18671,7 +18699,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsAbility</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -18685,7 +18713,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Autocast</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -18699,7 +18727,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Passive</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -18845,7 +18873,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>PressEffect</Name>
 					<ChunkID>15</ChunkID>
 					<Description />
@@ -18900,7 +18928,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MultParam</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -18915,7 +18943,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AddParam</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -19129,7 +19157,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FlyingHeight</Name>
 					<ChunkID>3</ChunkID>
 					<Description>(ai points) prefered flying height</Description>
@@ -19144,7 +19172,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxSpeed</Name>
 					<ChunkID>4</ChunkID>
 					<Description>(ai points/second) maximum flying speed</Description>
@@ -19159,7 +19187,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxAcceleration</Name>
 					<ChunkID>5</ChunkID>
 					<Description>(ai points/sec^2) maximum acceleration</Description>
@@ -19174,7 +19202,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxTilt</Name>
 					<ChunkID>6</ChunkID>
 					<Description>(radians) maximum tilting angle (in flight direction, speed proportional)</Description>
@@ -19189,7 +19217,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RotationSpeed</Name>
 					<ChunkID>7</ChunkID>
 					<Description>(radian/sec) hull rotation speed </Description>
@@ -19204,7 +19232,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FullSpinTime</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -20093,7 +20121,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ShowTime</Name>
 					<ChunkID>3</ChunkID>
 					<Description>(seconds) max show time</Description>
@@ -21574,7 +21602,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HP</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -21779,7 +21807,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RecycleTimeCoefficient</Name>
 					<ChunkID>9</ChunkID>
 					<Description>Recycle time coefficient for this player</Description>
@@ -22087,7 +22115,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SpecFactor</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -22169,7 +22197,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MetalMirror</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -22183,7 +22211,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DielMirror</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -22224,7 +22252,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>CastShadow</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -22239,7 +22267,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ReceiveShadow</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -22303,7 +22331,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FloatParam</Name>
 					<ChunkID>14</ChunkID>
 					<Description />
@@ -22344,7 +22372,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DetailScale</Name>
 					<ChunkID>16</ChunkID>
 					<Description />
@@ -22359,7 +22387,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ProjectOnTerrain</Name>
 					<ChunkID>17</ChunkID>
 					<Description />
@@ -22404,7 +22432,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Is2Sided</Name>
 					<ChunkID>20</ChunkID>
 					<Description />
@@ -22449,7 +22477,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>AffectedByFog</Name>
 					<ChunkID>23</ChunkID>
 					<Description />
@@ -22464,7 +22492,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>AddPlaced</Name>
 					<ChunkID>24</ChunkID>
 					<Description />
@@ -22479,7 +22507,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IgnoreZBuffer</Name>
 					<ChunkID>25</ChunkID>
 					<Description />
@@ -22494,7 +22522,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>BackFaceCastShadow</Name>
 					<ChunkID>26</ChunkID>
 					<Description />
@@ -22628,7 +22656,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TowingForce</Name>
 					<ChunkID>6</ChunkID>
 					<Description>(kg) towing force to tow artillery</Description>
@@ -22670,7 +22698,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TurnRadius</Name>
 					<ChunkID>9</ChunkID>
 					<Description>(meter) rotate radius</Description>
@@ -23246,7 +23274,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>LeavesTracks</Name>
 					<ChunkID>35</ChunkID>
 					<Description>do we need to leave tracks</Description>
@@ -23260,7 +23288,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TrackWidth</Name>
 					<ChunkID>36</ChunkID>
 					<Description>(% AABB) track width</Description>
@@ -23275,7 +23303,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TrackOffset</Name>
 					<ChunkID>37</ChunkID>
 					<Description>(% AABB) width indent</Description>
@@ -23290,7 +23318,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TrackStart</Name>
 					<ChunkID>38</ChunkID>
 					<Description>(% AABB) start indent</Description>
@@ -23305,7 +23333,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TrackEnd</Name>
 					<ChunkID>39</ChunkID>
 					<Description>(% AABB) finish indent</Description>
@@ -23320,7 +23348,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TrackIntensity</Name>
 					<ChunkID>40</ChunkID>
 					<Description>track intensity</Description>
@@ -23350,7 +23378,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TrackFrequency</Name>
 					<ChunkID>42</ChunkID>
 					<Description>track place frequency</Description>
@@ -23435,7 +23463,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxHeight</Name>
 					<ChunkID>48</ChunkID>
 					<Description>(airplanes) (meter) flying height</Description>
@@ -23449,7 +23477,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DivingAngle</Name>
 					<ChunkID>49</ChunkID>
 					<Description>(airplanes) diveing angle</Description>
@@ -23463,7 +23491,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ClimbAngle</Name>
 					<ChunkID>50</ChunkID>
 					<Description>(airplanes) climb angle (after dive)</Description>
@@ -23477,7 +23505,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TiltAngle</Name>
 					<ChunkID>51</ChunkID>
 					<Description>(airplanes)</Description>
@@ -23491,7 +23519,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TiltRatio</Name>
 					<ChunkID>52</ChunkID>
 					<Description>(airplanes) don&apos;t use it</Description>
@@ -23505,7 +23533,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TiltAcceleration</Name>
 					<ChunkID>53</ChunkID>
 					<Description>(airplanes) (degree/sec^2) bank acceleration</Description>
@@ -23520,7 +23548,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TiltSpeed</Name>
 					<ChunkID>54</ChunkID>
 					<Description>(airplanes) (degree/sec) max bank speed</Description>
@@ -23563,7 +23591,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ReinforcementPrice</Name>
 					<ChunkID>57</ChunkID>
 					<Description>Price (army points) </Description>
@@ -23578,7 +23606,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ReinforcementWeight</Name>
 					<ChunkID>57</ChunkID>
 					<Description>Weight coefficient for price calculation in reinforcement</Description>
@@ -23613,7 +23641,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Fuel</Name>
 					<ChunkID>58</ChunkID>
 					<Description>fuel amount in liters. (for planes)</Description>
@@ -23724,7 +23752,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>DestructableCorpse</Name>
 					<ChunkID>64</ChunkID>
 					<Description>can corpse be squished</Description>
@@ -24109,7 +24137,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Parameter</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -24541,7 +24569,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Weight</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -24584,7 +24612,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>RangeDetonator</Name>
 					<ChunkID>7</ChunkID>
 					<Description>If mine is triggered simply by proximity</Description>
@@ -24737,7 +24765,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ShowAllBuildingsPassability</Name>
 					<ChunkID>4</ChunkID>
 					<Description>draw all passability rect and locked tiles only</Description>
@@ -24764,7 +24792,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ShowTerrainShades</Name>
 					<ChunkID>5</ChunkID>
 					<Description>draw terrain shade</Description>
@@ -24937,7 +24965,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ScaleNoise</Name>
 					<ChunkID>4</ChunkID>
 					<Description>do we need to scale noise?</Description>
@@ -25391,7 +25419,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PotentialIncomplete</Name>
 					<ChunkID>9</ChunkID>
 					<Description>INCOMPLETE mission value (for front line calculation)</Description>
@@ -25406,7 +25434,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PotentialComplete</Name>
 					<ChunkID>10</ChunkID>
 					<Description>COMPLETE mission value (for front line calculation)</Description>
@@ -25477,7 +25505,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ShowPotentialComplete</Name>
 					<ChunkID>15</ChunkID>
 					<Description>(editor only). consider this mission as complete (for front line).</Description>
@@ -25492,7 +25520,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MainStrikeAngle</Name>
 					<ChunkID>15</ChunkID>
 					<Description>(degree). main strike direction (for front line)</Description>
@@ -25526,7 +25554,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MainStrikePower</Name>
 					<ChunkID>15</ChunkID>
 					<Description>main strike power (for front line)</Description>
@@ -25823,7 +25851,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsPrimary</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -25879,7 +25907,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsSecret</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -26002,7 +26030,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StrayModeTime</Name>
 					<ChunkID>3</ChunkID>
 					<Description>seconds before a missile explodes after losing its target</Description>
@@ -26017,7 +26045,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TurnRateRad</Name>
 					<ChunkID>4</ChunkID>
 					<Description>maximum missile turn rate, in radians per second</Description>
@@ -26032,7 +26060,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>AimsForTop</Name>
 					<ChunkID>5</ChunkID>
 					<Description>aim the top-attack missile above the target instead of at its center</Description>
@@ -26047,7 +26075,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TopTargetingHeight</Name>
 					<ChunkID>6</ChunkID>
 					<Description>visual height offset above the target top for top-attack missiles</Description>
@@ -26062,7 +26090,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ProximityRadius</Name>
 					<ChunkID>7</ChunkID>
 					<Description>SAM proximity-fuze radius in range units; zero disables the fuze</Description>
@@ -26165,7 +26193,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>WindPower</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -26261,7 +26289,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Scale</Name>
 					<ChunkID>6</ChunkID>
 					<Description>scale coeff</Description>
@@ -26276,7 +26304,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Offset</Name>
 					<ChunkID>7</ChunkID>
 					<Description>(seconds) delay before play</Description>
@@ -26291,7 +26319,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CycleLength</Name>
 					<ChunkID>8</ChunkID>
 					<Description>(seconds) one cycle length (0 -- own animation legth)</Description>
@@ -26361,7 +26389,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Value</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -26723,7 +26751,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>SpawnStartingUnits</Name>
 					<ChunkID>11</ChunkID>
 					<Description>Spawn the nation/tech-level starting army in multiplayer. Does not affect map-placed or scripted units.</Description>
@@ -26758,7 +26786,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>AddReinfsWithTimer</Name>
 					<ChunkID>12</ChunkID>
 					<Description>Grant extra reinforcement calls over time in multiplayer. Script grants and call cooldowns remain available.</Description>
@@ -27623,7 +27651,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Time</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -27637,7 +27665,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Size</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -27651,7 +27679,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RotationSpeed</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -27665,7 +27693,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DuplicateDelay</Name>
 					<ChunkID>10</ChunkID>
 					<Description>(msec)time to accumulate the same notifications</Description>
@@ -27871,7 +27899,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ShowByCamera</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -27885,7 +27913,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AutoRemoveTime</Name>
 					<ChunkID>8</ChunkID>
 					<Description>(seconds)</Description>
@@ -27913,7 +27941,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>NoDupArea</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -27927,7 +27955,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>NoDupTime</Name>
 					<ChunkID>11</ChunkID>
 					<Description>(seconds)</Description>
@@ -28259,7 +28287,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>HideForPerformance</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Object can be hidden to increase performance</Description>
@@ -28590,7 +28618,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>PerParticleFog</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -28605,7 +28633,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -28751,7 +28779,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Scale</Name>
 					<ChunkID>7</ChunkID>
 					<Description>scale coeff</Description>
@@ -28766,7 +28794,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Speed</Name>
 					<ChunkID>8</ChunkID>
 					<Description>play speed coeff</Description>
@@ -28781,7 +28809,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Offset</Name>
 					<ChunkID>9</ChunkID>
 					<Description>(seconds) delay before play</Description>
@@ -28795,7 +28823,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>EndCycle</Name>
 					<ChunkID>10</ChunkID>
 					<Description>(seconds) one cycle length (0 = do not cycle)</Description>
@@ -28865,7 +28893,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsCrown</Name>
 					<ChunkID>14</ChunkID>
 					<Description />
@@ -28921,7 +28949,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>DoesCastShadow</Name>
 					<ChunkID>16</ChunkID>
 					<Description />
@@ -28976,7 +29004,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>LeaveParticlesWhereStarted</Name>
 					<ChunkID>18</ChunkID>
 					<Description>Do we need particles be attached to it&apos;s source or leaved at birth place?</Description>
@@ -29622,7 +29650,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Storage</Name>
 					<ChunkID>4</ChunkID>
 					<Description>Is this building a storage</Description>
@@ -29777,7 +29805,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>SetPoint</Name>
 					<ChunkID>4</ChunkID>
 					<Description>when true allows to move reinforcement point to NewPointOnEnable</Description>
@@ -30036,7 +30064,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -30051,7 +30079,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -30290,7 +30318,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Whitening</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -30305,7 +30333,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Pitch</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -30438,7 +30466,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SmokyExhaustEffectInterval</Name>
 					<ChunkID>5</ChunkID>
 					<Description>(meters) interval to place smoky effects</Description>
@@ -30560,7 +30588,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -30575,7 +30603,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -30590,7 +30618,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>z</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -30605,7 +30633,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>w</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -30631,7 +30659,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Experience</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -30750,7 +30778,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>x1</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -30765,7 +30793,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>y1</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -30780,7 +30808,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>x2</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -30795,7 +30823,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>y2</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -31003,7 +31031,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Direction</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -31394,7 +31422,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsAmmunition</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -31780,7 +31808,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsDefault</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -31795,7 +31823,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>___delete_from_here_to_the_end</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -31933,7 +31961,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsAerial</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -31968,7 +31996,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsSea</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -32003,7 +32031,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsGround</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -32038,7 +32066,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Radius</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -32543,7 +32571,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StreamSpeed</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -32558,7 +32586,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>BorderRand</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -32573,7 +32601,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Depth</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -32588,7 +32616,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DepthRand</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -32603,7 +32631,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RandX</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -32618,7 +32646,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RandY</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -32633,7 +32661,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RidgeTexGeomScale</Name>
 					<ChunkID>11</ChunkID>
 					<Description>ridge texture scale coeff</Description>
@@ -32664,7 +32692,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>HasPeak</Name>
 					<ChunkID>13</ChunkID>
 					<Description />
@@ -32679,7 +32707,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultWidth</Name>
 					<ChunkID>14</ChunkID>
 					<Description />
@@ -32694,7 +32722,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultOpacity</Name>
 					<ChunkID>15</ChunkID>
 					<Description />
@@ -32797,7 +32825,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultWidth</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -32825,7 +32853,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DefaultOpacity</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -33252,7 +33280,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>R</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -33335,7 +33363,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Yaw</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -33349,7 +33377,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Pitch</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -33363,7 +33391,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FOV</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -33995,7 +34023,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>MSRFormat</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -34044,7 +34072,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -34159,7 +34187,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DamageHP</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -34418,7 +34446,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AngleStartRad</Name>
 					<ChunkID>2</ChunkID>
 					<Description>Start angle in radians relative to the platform facing; positive follows the unit rotation direction</Description>
@@ -34433,7 +34461,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AngleEndRad</Name>
 					<ChunkID>3</ChunkID>
 					<Description>End angle in radians; intervals wrap across zero, equal endpoints disable the sight</Description>
@@ -34448,7 +34476,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SightRange</Name>
 					<ChunkID>4</ChunkID>
 					<Description>Extra sight range in the same units as Sight; normal sight modifiers and AIConsts WarFog MaxRadius apply</Description>
@@ -34488,7 +34516,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Min</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -34515,7 +34543,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Max</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -34794,7 +34822,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ReinforcementPrice</Name>
 					<ChunkID>11</ChunkID>
 					<Description>Price (army points)</Description>
@@ -34809,7 +34837,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ReinforcementWeight</Name>
 					<ChunkID>11</ChunkID>
 					<Description>Weight coefficient for price calculation in reinforcement</Description>
@@ -34844,7 +34872,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>EntrenchCover</Name>
 					<ChunkID>12</ChunkID>
 					<Description>Cover in entrenchment</Description>
@@ -35051,7 +35079,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Distance</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -35079,7 +35107,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Fade</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -35093,7 +35121,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Scale</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -35293,7 +35321,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>WrapTexture</Name>
 					<ChunkID>3</ChunkID>
 					<Description>special flag for &quot;chapter-map-terrain&quot;</Description>
@@ -35389,7 +35417,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ScaleCoeff</Name>
 					<ChunkID>6</ChunkID>
 					<Description>scale coeff</Description>
@@ -35521,7 +35549,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Disabled</Name>
 					<ChunkID>4</ChunkID>
 					<Description>is this nation disabled in this tech level?</Description>
@@ -35630,7 +35658,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Passability</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -35728,7 +35756,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>CanEntrench</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -35816,7 +35844,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>UsedTexSizeX</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Relative size on the texture to use with this spot (X)</Description>
@@ -35831,7 +35859,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>UsedTexSizeY</Name>
 					<ChunkID>4</ChunkID>
 					<Description>Relative size on the texture to use with this spot (Y)</Description>
@@ -35846,7 +35874,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ScaleCoeff</Name>
 					<ChunkID>5</ChunkID>
 					<Description>scale coeff</Description>
@@ -36431,7 +36459,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MappingSize</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -36460,7 +36488,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Gain</Name>
 					<ChunkID>12</ChunkID>
 					<Description />
@@ -36515,7 +36543,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>InstantLoad</Name>
 					<ChunkID>14</ChunkID>
 					<Description />
@@ -36529,7 +36557,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsDXT</Name>
 					<ChunkID>15</ChunkID>
 					<Description />
@@ -36556,7 +36584,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>FlipY</Name>
 					<ChunkID>16</ChunkID>
 					<Description>Do we need flip texture vertically? (mostly for particles)</Description>
@@ -36571,7 +36599,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>StandardExport</Name>
 					<ChunkID>16</ChunkID>
 					<Description />
@@ -36606,7 +36634,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UseS3TC</Name>
 					<ChunkID>16</ChunkID>
 					<Description>Use optimized S3TC or DirectX compressor</Description>
@@ -36731,7 +36759,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HorisontalToVerticalRatio</Name>
 					<ChunkID>7</ChunkID>
 					<Description>multi line tooltip window will be formatted with this ratio</Description>
@@ -36906,7 +36934,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Whitening</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -36921,7 +36949,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Pitch</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -36935,7 +36963,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Yaw</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -37441,7 +37469,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Second</Name>
 					<ChunkID>3</ChunkID>
 					<Description>This parameter does not work in shared part!</Description>
@@ -37507,7 +37535,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Second</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -37573,7 +37601,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Second</Name>
 					<ChunkID>3</ChunkID>
 					<Description>This parameter does not work in shared part!</Description>
@@ -37625,7 +37653,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>First</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -37639,7 +37667,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Second</Name>
 					<ChunkID>3</ChunkID>
 					<Description>This parameter does not work in shared part!</Description>
@@ -37705,7 +37733,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Second</Name>
 					<ChunkID>3</ChunkID>
 					<Description>This parameter does not work in shared part!</Description>
@@ -37771,7 +37799,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Second</Name>
 					<ChunkID>3</ChunkID>
 					<Description>This parameter does not work in shared part!</Description>
@@ -37837,7 +37865,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MoveTime</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -37879,7 +37907,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MoveTimeBounce</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -37907,7 +37935,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Border</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -37921,7 +37949,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxMoveTime</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -38083,7 +38111,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>WaitTime</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -38581,7 +38609,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>HelpNoMultiplayer</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -38696,7 +38724,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Reversable</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -39848,7 +39876,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Parameter</Name>
 					<ChunkID>10</ChunkID>
 					<Description>numeric parameter (have unique meaning for each ability)</Description>
@@ -39890,7 +39918,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>StopCurrentAction</Name>
 					<ChunkID>11</ChunkID>
 					<Description>do we need to stop current action to start this ability?</Description>
@@ -41080,7 +41108,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Disturbance</Name>
 					<ChunkID>2</ChunkID>
 					<Description>Layer mesh disturbance (for rivers)</Description>
@@ -41188,7 +41216,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StreamSpeed</Name>
 					<ChunkID>7</ChunkID>
 					<Description>stream speed (for rivers only)</Description>
@@ -41255,7 +41283,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Width</Name>
 					<ChunkID>4</ChunkID>
 					<Description>Width at this point</Description>
@@ -41269,7 +41297,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Opacity</Name>
 					<ChunkID>5</ChunkID>
 					<Description>Opacity at this point (for key-points)</Description>
@@ -41317,7 +41345,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>KeyPoint</Name>
 					<ChunkID>6</ChunkID>
 					<Description>Is this a key-point ?</Description>
@@ -41331,7 +41359,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Radius</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -41345,7 +41373,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Reserved</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -41398,7 +41426,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -41413,7 +41441,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -41466,7 +41494,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -41481,7 +41509,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -41496,7 +41524,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>z</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -41549,7 +41577,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -41564,7 +41592,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -41579,7 +41607,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>z</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -41594,7 +41622,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>w</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -41654,7 +41682,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Lat</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -41668,7 +41696,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Long</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -41708,7 +41736,7 @@
 			</NestedTypes>
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ForceAnimated</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -42272,7 +42300,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UseHeights</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -42286,7 +42314,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TanEpsilon</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -42300,7 +42328,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>UnitHeight</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -42399,7 +42427,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DepthNoiseCoeff</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -42428,7 +42456,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UseWaves</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -42443,7 +42471,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HorDeformMinRadius</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -42458,7 +42486,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HorDeformMaxRadius</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -42473,7 +42501,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HorDeformRadiusSpeed</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -42488,7 +42516,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HorDeformRotationSpeedMin</Name>
 					<ChunkID>12</ChunkID>
 					<Description />
@@ -42503,7 +42531,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HorDeformRotationSpeedVariation</Name>
 					<ChunkID>13</ChunkID>
 					<Description />
@@ -42644,7 +42672,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Dispersion</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -42658,7 +42686,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AimingTime</Name>
 					<ChunkID>5</ChunkID>
 					<Description>aiming time</Description>
@@ -42686,7 +42714,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ForcePlayAllBurstEffects</Name>
 					<ChunkID>15</ChunkID>
 					<Description>play the weapon fire effect for every shot in a burst, regardless of owner unit type</Description>
@@ -42714,7 +42742,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RangeMax</Name>
 					<ChunkID>7</ChunkID>
 					<Description>max range</Description>
@@ -42728,7 +42756,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RangeMin</Name>
 					<ChunkID>8</ChunkID>
 					<Description>min range</Description>
@@ -42756,7 +42784,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RevealRadius</Name>
 					<ChunkID>10</ChunkID>
 					<Description>(meter) counter-fire detection radius</Description>
@@ -42770,7 +42798,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DeltaAngle</Name>
 					<ChunkID>11</ChunkID>
 					<Description>(degrees) delta (half) angle to add to fire sector</Description>
@@ -43035,7 +43063,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>WeatherPeriod</Name>
 					<ChunkID>4</ChunkID>
 					<Description>(seconds) weather change period</Description>
@@ -43049,7 +43077,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>WeatherPeriodRandom</Name>
 					<ChunkID>5</ChunkID>
 					<Description>(seconds) weather change period random</Description>
@@ -43132,7 +43160,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PartSize</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -43146,7 +43174,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FallHeight</Name>
 					<ChunkID>6</ChunkID>
 					<Description>drop height</Description>
@@ -43160,7 +43188,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Speed</Name>
 					<ChunkID>7</ChunkID>
 					<Description>drop speed</Description>
@@ -43174,7 +43202,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TrajectoryParameter</Name>
 					<ChunkID>8</ChunkID>
 					<Description>trajectory calculation parameter (have different means for different types)</Description>
@@ -43203,7 +43231,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>WindAffected</Name>
 					<ChunkID>10</ChunkID>
 					<Description>affected by wind?</Description>
@@ -43246,7 +43274,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>LightningsPerMinute</Name>
 					<ChunkID>13</ChunkID>
 					<Description>average number of lightnings in minute</Description>
@@ -43261,7 +43289,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>LightningsRandom</Name>
 					<ChunkID>14</ChunkID>
 					<Description>average number of lightnings in minute random</Description>
@@ -43690,7 +43718,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>AutoDelete</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -43867,7 +43895,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>TextScroll</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -43895,7 +43923,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Password</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -44140,7 +44168,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Transparent</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -44286,7 +44314,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>RandomStartFrame</Name>
 					<ChunkID>8</ChunkID>
 					<Description>start with random frame?</Description>
@@ -44462,7 +44490,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxHP</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -44760,7 +44788,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>AutoChangeState</Name>
 					<ChunkID>4</ChunkID>
 					<Description>if true then this button works like switch button</Description>
@@ -44966,7 +44994,7 @@
 			</NestedTypes>
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UseDefBuilder</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -45151,7 +45179,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Rotable</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -45260,7 +45288,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Solid</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -45275,7 +45303,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PieceSize</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -45462,7 +45490,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>MaintainAspectRatio</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -45602,7 +45630,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Progress</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -45683,7 +45711,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StepSize</Name>
 					<ChunkID>5</ChunkID>
 					<Description>progress bar visual step or 0</Description>
@@ -45971,7 +45999,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Speed</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -46218,7 +46246,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UseDefBuilder</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -46386,7 +46414,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Horisontal</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -46414,7 +46442,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MinLeverSize</Name>
 					<ChunkID>4</ChunkID>
 					<Description>minimal lever size, to ensure lever is always visible and not reduce to size 0</Description>
@@ -46429,7 +46457,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxLeverSize</Name>
 					<ChunkID>5</ChunkID>
 					<Description>maximum lever size. if 0, then allow resize up to all scrollbar size</Description>
@@ -46687,7 +46715,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ResizeOnTextSet</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Text View have constant width and recalculate it&apos;s height resized accoring to text set. If false, window has constant size.</Description>
@@ -46911,7 +46939,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Experience</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -47232,8 +47260,13 @@
 			</Field>
 		</Item>
 		<Item>
-			<__ClassTypeID>270082827</__ClassTypeID>
+			<__ClassTypeID>270082818</__ClassTypeID>
 			<__ServerPtr>cb010000</__ServerPtr>
+			<Type>TYPE_TYPE_BOOL</Type>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082827</__ClassTypeID>
+			<__ServerPtr>cc010000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
 				<Type>ff000000</Type>
@@ -47252,12 +47285,12 @@
 		</Item>
 		<Item>
 			<__ClassTypeID>270082817</__ClassTypeID>
-			<__ServerPtr>cc010000</__ServerPtr>
+			<__ServerPtr>cd010000</__ServerPtr>
 			<Type>TYPE_TYPE_FLOAT</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>cd010000</__ServerPtr>
+			<__ServerPtr>ce010000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
 				<Type>c6010000</Type>
@@ -47276,7 +47309,7 @@
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>ce010000</__ServerPtr>
+			<__ServerPtr>cf010000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
 				<Type>03000000</Type>
@@ -47295,12 +47328,12 @@
 		</Item>
 		<Item>
 			<__ClassTypeID>270082821</__ClassTypeID>
-			<__ServerPtr>cf010000</__ServerPtr>
+			<__ServerPtr>d0010000</__ServerPtr>
 			<Type>TYPE_TYPE_GUID</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>d0010000</__ServerPtr>
+			<__ServerPtr>d1010000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
 				<Type>c6010000</Type>
@@ -47319,14 +47352,9 @@
 		</Item>
 		<Item>
 			<__ClassTypeID>270062596</__ClassTypeID>
-			<__ServerPtr>d1010000</__ServerPtr>
+			<__ServerPtr>d2010000</__ServerPtr>
 			<MinElements>1</MinElements>
 			<MaxElements>-1</MaxElements>
-		</Item>
-		<Item>
-			<__ClassTypeID>270082818</__ClassTypeID>
-			<__ServerPtr>d2010000</__ServerPtr>
-			<Type>TYPE_TYPE_BOOL</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082826</__ClassTypeID>
@@ -47712,7 +47740,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>HumanPlayer</Name>
 					<ChunkID>6</ChunkID>
 					<Description>If true, then bonus is given to human player, otherwise to his enemy.</Description>
@@ -47918,7 +47946,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -48163,7 +48191,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Burn</Name>
 					<ChunkID>3</ChunkID>
 					<Description>this building burns then 50% hp reached</Description>
@@ -48219,7 +48247,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>LeaveCorpse</Name>
 					<ChunkID>7</ChunkID>
 					<Description>does this object leaves corpse?</Description>
@@ -48234,7 +48262,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>DestructableCorpse</Name>
 					<ChunkID>8</ChunkID>
 					<Description>can this corpse be squished by units with TRACK passability</Description>
@@ -48336,7 +48364,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UsePassabilityForVisibility</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -48526,7 +48554,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Width</Name>
 					<ChunkID>5</ChunkID>
 					<Description>span width</Description>
@@ -48540,7 +48568,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Length</Name>
 					<ChunkID>6</ChunkID>
 					<Description>span length</Description>
@@ -48659,7 +48687,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Direction</Name>
 					<ChunkID>3</ChunkID>
 					<Description>(radian) direction</Description>
@@ -48673,7 +48701,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VerticalAngle</Name>
 					<ChunkID>4</ChunkID>
 					<Description>(radian) angle from horizontal plane in the vertical plane, which crosses &apos;fDirection&apos;</Description>
@@ -48753,7 +48781,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Direction</Name>
 					<ChunkID>3</ChunkID>
 					<Description>(radian) direction</Description>
@@ -48767,7 +48795,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VerticalAngle</Name>
 					<ChunkID>4</ChunkID>
 					<Description>(radian) angle from horizontal plane in the vertical plane, which crosses &apos;fDirection&apos;</Description>
@@ -49102,7 +49130,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>HasPassability</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -49211,7 +49239,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UsePassabilityForVisibility</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -49377,7 +49405,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>CanFall</Name>
 					<ChunkID>14</ChunkID>
 					<Description />
@@ -49488,7 +49516,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FallCycles</Name>
 					<ChunkID>18</ChunkID>
 					<Description />
@@ -49584,7 +49612,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Stormable</Name>
 					<ChunkID>3</ChunkID>
 					<Description>is this entrance stormable?</Description>
@@ -49740,7 +49768,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Direction</Name>
 					<ChunkID>7</ChunkID>
 					<Description>(degree) fire/sight direction</Description>
@@ -49767,7 +49795,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Angle</Name>
 					<ChunkID>8</ChunkID>
 					<Description>(degree) fire/sight angle</Description>
@@ -49782,7 +49810,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Coverage</Name>
 					<ChunkID>9</ChunkID>
 					<Description>coverage for the unit in this slot [0..1]</Description>
@@ -49811,7 +49839,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RotationSpeed</Name>
 					<ChunkID>11</ChunkID>
 					<Description>(seconds for full rotate) vertical rotation speed</Description>
@@ -49881,7 +49909,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SightMultiplier</Name>
 					<ChunkID>15</ChunkID>
 					<Description>sight multiplier</Description>
@@ -49921,7 +49949,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Direction</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -49935,7 +49963,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VerticalAngle</Name>
 					<ChunkID>4</ChunkID>
 					<Description>(radian) angle from horizontal plane in the vertical plane, which crosses &apos;fDirection&apos;</Description>
@@ -49963,7 +49991,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Coverage</Name>
 					<ChunkID>6</ChunkID>
 					<Description>coverage for the unit in this slot [0..1]</Description>
@@ -50016,7 +50044,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Direction</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -50030,7 +50058,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VerticalAngle</Name>
 					<ChunkID>4</ChunkID>
 					<Description>(radian) angle from horizontal plane in the vertical plane, which crosses &apos;fDirection&apos;</Description>
@@ -50194,7 +50222,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Min</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -50208,7 +50236,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Max</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -50222,7 +50250,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Ave</Name>
 					<ChunkID>4</ChunkID>
 					<Description>Central value to reach</Description>
@@ -50236,7 +50264,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AutoSpeed</Name>
 					<ChunkID>5</ChunkID>
 					<Description>Automatic speed for returning</Description>
@@ -50250,7 +50278,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ManualSpeed</Name>
 					<ChunkID>6</ChunkID>
 					<Description>Speed for manual changing</Description>
@@ -50264,7 +50292,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Cyclic</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -50761,7 +50789,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Raising</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -50775,7 +50803,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HPBarLen</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -50828,7 +50856,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Raising</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -50842,7 +50870,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HPBarLen</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -50895,7 +50923,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Raising</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -50909,7 +50937,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HPBarLen</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -50948,7 +50976,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HPBarLen</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -51409,7 +51437,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MinDist</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -51424,7 +51452,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxDist</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -51439,7 +51467,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Probability</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -51740,7 +51768,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Width</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -52358,7 +52386,7 @@
 			</NestedTypes>
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MaxHP</Name>
 					<ChunkID>2</ChunkID>
 					<Description>(HP) max object health</Description>
@@ -52400,7 +52428,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RepairCost</Name>
 					<ChunkID>4</ChunkID>
 					<Description>1 HP repair change</Description>
@@ -52561,7 +52589,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SelectionScale</Name>
 					<ChunkID>11</ChunkID>
 					<Description>Scale factor for selection picture</Description>
@@ -52678,7 +52706,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>NeedSurfacePoints</Name>
 					<ChunkID>14</ChunkID>
 					<Description>Do we need surface points to be generated?</Description>
@@ -52814,7 +52842,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Coverage</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -53207,7 +53235,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>UsePassabilityForVisibility</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -54741,7 +54769,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Sight</Name>
 					<ChunkID>11</ChunkID>
 					<Description>(meter) sight range</Description>
@@ -54756,7 +54784,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SightPower</Name>
 					<ChunkID>12</ChunkID>
 					<Description>(meter) sight power</Description>
@@ -54771,7 +54799,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Speed</Name>
 					<ChunkID>13</ChunkID>
 					<Description>(km/h) speed on the road</Description>
@@ -54785,7 +54813,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ReverseSpeedModifier</Name>
 					<ChunkID>35</ChunkID>
 					<Description>Should the unit use different speed in reverse?</Description>
@@ -54813,7 +54841,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RotateSpeed</Name>
 					<ChunkID>14</ChunkID>
 					<Description>(degree/sec) rotation speed</Description>
@@ -54827,7 +54855,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Passability</Name>
 					<ChunkID>15</ChunkID>
 					<Description>passability</Description>
@@ -54855,7 +54883,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Camouflage</Name>
 					<ChunkID>17</ChunkID>
 					<Description>(meter %) camouflage - coeff for enemy&apos;s sight power</Description>
@@ -54937,7 +54965,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Weight</Name>
 					<ChunkID>21</ChunkID>
 					<Description>(kg) mass (for towing)</Description>
@@ -54951,7 +54979,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Price</Name>
 					<ChunkID>22</ChunkID>
 					<Description>AI price coeff (AI price multiplier from consts)</Description>
@@ -55115,7 +55143,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SmallAABBCoeff</Name>
 					<ChunkID>29</ChunkID>
 					<Description>AABB coeff for AI hit calculation</Description>
@@ -55143,7 +55171,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>UninstallTransport</Name>
 					<ChunkID>31</ChunkID>
 					<Description>(sec) install/uninstall time to transport</Description>
@@ -55157,7 +55185,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>UninstallRotate</Name>
 					<ChunkID>32</ChunkID>
 					<Description>(sec) install/uninstall time to rotate</Description>
@@ -55185,7 +55213,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ExpPrice</Name>
 					<ChunkID>34</ChunkID>
 					<Description>exp to receive, then kill this unit</Description>
@@ -55200,7 +55228,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AABBStrengthMin</Name>
 					<ChunkID>36</ChunkID>
 					<Description>minimum strength resisting a shell&apos;s AABB crack power</Description>
@@ -55235,7 +55263,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AABBStrengthMax</Name>
 					<ChunkID>37</ChunkID>
 					<Description>maximum strength resisting a shell&apos;s AABB crack power</Description>
@@ -55270,7 +55298,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CoverStrengthMin</Name>
 					<ChunkID>38</ChunkID>
 					<Description>minimum strength resisting a shell&apos;s cover crack power</Description>
@@ -55305,7 +55333,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CoverStrengthMax</Name>
 					<ChunkID>39</ChunkID>
 					<Description>maximum strength resisting a shell&apos;s cover crack power</Description>
@@ -55667,7 +55695,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StartScaleSpeed</Name>
 					<ChunkID>5</ChunkID>
 					<Description>angular velocity to scale impeller blades (1.0 - impeller blades are ready)</Description>
@@ -55715,7 +55743,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HideStaticSpeed</Name>
 					<ChunkID>6</ChunkID>
 					<Description>angular velocity to hide impeller blades static model </Description>
@@ -56108,7 +56136,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DirAngle</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -56730,7 +56758,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>HasCoast</Name>
 					<ChunkID>15</ChunkID>
 					<Description />
@@ -56799,7 +56827,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cf010000</Type>
+					<Type>d0010000</Type>
 					<Name>uid</Name>
 					<ChunkID>18</ChunkID>
 					<Description />
@@ -57266,7 +57294,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Intention</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -57367,7 +57395,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RecycleTime</Name>
 					<ChunkID>4</ChunkID>
 					<Description>Recycle time for Super Weapon for this mission and player in secs</Description>
@@ -57382,7 +57410,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FlyTime</Name>
 					<ChunkID>5</ChunkID>
 					<Description>Interval between shoot effect and sheel appearence in secs</Description>
@@ -57660,7 +57688,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Recoil</Name>
 					<ChunkID>4</ChunkID>
 					<Description>do we have racoil then firing from this gun?</Description>
@@ -57674,7 +57702,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RecoilLength</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -57729,7 +57757,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RecoilShakeAngle</Name>
 					<ChunkID>8</ChunkID>
 					<Description>(radian) recoil shake angle</Description>
@@ -57809,7 +57837,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Min</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -57823,7 +57851,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Max</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -57848,7 +57876,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RecoilShakeAngle</Name>
 					<ChunkID>2</ChunkID>
 					<Description>(radian) recoil shake angle</Description>
@@ -57862,7 +57890,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>HorizontalRotationSpeed</Name>
 					<ChunkID>3</ChunkID>
 					<Description>(seconds for full rotate)</Description>
@@ -57876,7 +57904,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VerticalRotationSpeed</Name>
 					<ChunkID>4</ChunkID>
 					<Description>(seconds for full rotate) vertical rotation speed</Description>
@@ -58101,7 +58129,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Min</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -58116,7 +58144,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Max</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -58316,7 +58344,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Interval</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -58370,7 +58398,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Distance</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -58384,7 +58412,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Pitch</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -58398,7 +58426,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Yaw</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -58412,7 +58440,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Fov</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -59991,7 +60019,7 @@
 			<__ServerPtr>55030000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>cc010000</Type>
+				<Type>cd010000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -60528,7 +60556,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsTangentIn</Name>
 					<ChunkID>2</ChunkID>
 					<Description>is the key direction Flat / Tangent</Description>
@@ -60543,7 +60571,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsTangentOut</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -60572,7 +60600,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>StartTime</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -60824,7 +60852,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SpeedBonus</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -60839,7 +60867,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DispersionBonus</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -60854,7 +60882,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FireRateBonus</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -60869,7 +60897,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RelaxTimeBonus</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -60884,7 +60912,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CoverBonus</Name>
 					<ChunkID>11</ChunkID>
 					<Description />
@@ -60899,7 +60927,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>VisibleBonus</Name>
 					<ChunkID>12</ChunkID>
 					<Description />
@@ -61051,7 +61079,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Width</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -61991,7 +62019,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AddBonus</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -62006,7 +62034,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>MultBonus</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -62129,7 +62157,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CenterOpacity</Name>
 					<ChunkID>2</ChunkID>
 					<Description>inner part opacity</Description>
@@ -62178,7 +62206,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TilingStep</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Texture step for tiling</Description>
@@ -62448,7 +62476,7 @@
 			<__ServerPtr>aa030000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>cc010000</Type>
+				<Type>cd010000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -62583,7 +62611,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Amplitude</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -62598,7 +62626,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Period</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -62613,7 +62641,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PeriodVariation</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -62628,7 +62656,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>InvPeriod</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -62655,7 +62683,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DeepWaveNumber</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -62670,7 +62698,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>PhaseOffset</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -62797,7 +62825,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DamagePower</Name>
 					<ChunkID>5</ChunkID>
 					<Description>damage</Description>
@@ -62827,7 +62855,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Area</Name>
 					<ChunkID>7</ChunkID>
 					<Description>(meter) main damage radius</Description>
@@ -62841,7 +62869,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Area2</Name>
 					<ChunkID>8</ChunkID>
 					<Description>(meter) secondary damage radius</Description>
@@ -62855,7 +62883,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Speed</Name>
 					<ChunkID>9</ChunkID>
 					<Description>(meter/sec) projectile speed</Description>
@@ -62870,7 +62898,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TraceSpeedCoeff</Name>
 					<ChunkID>10</ChunkID>
 					<Description>trasser speed (coeff to projectile speed)</Description>
@@ -62904,7 +62932,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TraceProbability</Name>
 					<ChunkID>11</ChunkID>
 					<Description>trasser probability</Description>
@@ -62938,7 +62966,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TraceLength</Name>
 					<ChunkID>12</ChunkID>
 					<Description>trasser length</Description>
@@ -62952,7 +62980,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>TraceWidth</Name>
 					<ChunkID>13</ChunkID>
 					<Description>trasser width</Description>
@@ -62980,7 +63008,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DetonationPower</Name>
 					<ChunkID>15</ChunkID>
 					<Description>camera quake in projectile explosion</Description>
@@ -63021,7 +63049,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>BrokeTrackProbability</Name>
 					<ChunkID>17</ChunkID>
 					<Description>(percents) brake track probability</Description>
@@ -63188,7 +63216,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>FireRate</Name>
 					<ChunkID>28</ChunkID>
 					<Description>(bullets/minute) fire rate</Description>
@@ -63202,7 +63230,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>RelaxTime</Name>
 					<ChunkID>29</ChunkID>
 					<Description>(seconds) relax time </Description>
@@ -63244,7 +63272,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AABBCrackBase</Name>
 					<ChunkID>32</ChunkID>
 					<Description>base power to bypass a unit&apos;s reduced combat AABB</Description>
@@ -63259,7 +63287,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>AABBCrackRandom</Name>
 					<ChunkID>33</ChunkID>
 					<Description>symmetric random variation of AABB crack power</Description>
@@ -63274,7 +63302,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CoverCrackBase</Name>
 					<ChunkID>34</ChunkID>
 					<Description>base power to bypass a unit&apos;s cover roll</Description>
@@ -63289,7 +63317,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>CoverCrackRandom</Name>
 					<ChunkID>35</ChunkID>
 					<Description>symmetric random variation of cover crack power</Description>
@@ -63471,7 +63499,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SoundLength</Name>
 					<ChunkID>3</ChunkID>
 					<Description>sound length before fade-in</Description>
@@ -63809,7 +63837,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Visible</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -63866,7 +63894,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Enabled</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -64004,7 +64032,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IgnoreDblClick</Name>
 					<ChunkID>8</ChunkID>
 					<Description>treat double click as ordinary mouse clicks</Description>
@@ -64570,7 +64598,7 @@
 			<__ServerPtr>da030000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>cc010000</Type>
+				<Type>cd010000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -64872,7 +64900,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DamageHP</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -65048,7 +65076,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>NeedDebris</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -65137,7 +65165,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>NeedDebris</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -65389,7 +65417,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>ShootEffectInvert</Name>
 					<ChunkID>6</ChunkID>
 					<Description>do we need to invert effect direction? (for bazooka and other roket weapon)</Description>
@@ -65418,7 +65446,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>IsPrimary</Name>
 					<ChunkID>8</ChunkID>
 					<Description>primary or secondary gun (for ammo representation in UI)</Description>
@@ -65446,7 +65474,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Direction</Name>
 					<ChunkID>10</ChunkID>
 					<Description />
@@ -65473,7 +65501,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>ReloadCost</Name>
 					<ChunkID>11</ChunkID>
 					<Description>reload cost (in RU) to reload ONE shell of any type for this gun</Description>
@@ -65488,7 +65516,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>TargetAAOnly</Name>
 					<ChunkID>12</ChunkID>
 					<Description>independent mounted AA gun. must me mounted to ground unit turret</Description>
@@ -65558,7 +65586,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Scale</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -65646,7 +65674,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SamplingStep</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -65672,7 +65700,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SamplingStep</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -65698,7 +65726,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SamplingStep</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -65724,7 +65752,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>SamplingStep</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -65750,7 +65778,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>d2010000</Type>
+					<Type>cb010000</Type>
 					<Name>Crap</Name>
 					<ChunkID>2</ChunkID>
 					<Description>check-in heal</Description>
@@ -65836,7 +65864,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Silhouette</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -65861,7 +65889,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>DamageHP</Name>
 					<ChunkID>2</ChunkID>
 					<Description>damaged HP to turn this model on</Description>
@@ -67055,7 +67083,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Dir</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -67833,7 +67861,7 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>cc010000</Type>
+					<Type>cd010000</Type>
 					<Name>Width</Name>
 					<ChunkID>6</ChunkID>
 					<Description />

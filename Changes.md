@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Added `AIGameConsts.InfantryFormationModifiersApplyInTrenches` (default `true`). Set it to `false` to suspend infantry formation stat modifiers while each soldier is inside a trench or building, and restore the current formation's modifiers on exit. Shelter and ability bonuses are retained.
+
 - Units now expose AABB and cover strength ranges, and shells expose separate crack power and random variation for each. Successful cracks bypass combat-box compression or cover rejection for direct hits and splash, while armor checks still apply. Defaults preserve existing hit behavior. See `docs/hit-processing.md` for the formulas and authoring details.
 
 - COOP mission objectives now retain their state and map positions, restoring objective arrows in the 3D scene and on the minimap. Completed, failed or removed objectives update the markers normally; objective presentation is saved separately from multiplayer simulation checksums. Existing mission data and arrow artwork are reused.

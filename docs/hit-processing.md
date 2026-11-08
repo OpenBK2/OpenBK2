@@ -40,7 +40,7 @@ Paths below are relative to `Versions/Temporary/Engine/Sources`.
 | Enumerate targets | [AILogic/Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L623), `CCumulativeExpl::Explode` and `CBurstExpl::Explode` |
 | Direct unit hit, cover, armor, splash | [AILogic/AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L167), `ProcessExactHit`, `ProcessCumulativeExpl`, `ProcessAreaDamage`, `ProcessBurstExpl` |
 | Compare shell crack power with unit protection strength | [AILogic/HitProtection.cpp](../Versions/Temporary/Engine/Sources/AILogic/HitProtection.cpp), `NHitProtection::CracksAABB` and `CracksCover` |
-| Infantry splash exception | [AILogic/Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1329), `CSoldier::ProcessAreaDamage` |
+| Infantry splash exception | [AILogic/Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1366), `CSoldier::ProcessAreaDamage` |
 | Static objects and buildings | [AILogic/StaticObject.cpp](../Versions/Temporary/Engine/Sources/AILogic/StaticObject.cpp#L213), `CExistingObject::ProcessCumulativeExpl` |
 | Subtract unit HP | [AILogic/AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1198), `CAIUnit::TakeDamage` |
 
@@ -245,6 +245,17 @@ modifiers at firing time. Later modifier changes do not change those saved
 bonuses. Rolls themselves happen while resolving each target; there is no one
 shared damage or penetration roll for all victims of an explosion. Target cover,
 combat-box coefficient, and durability are read at resolution time.
+
+Infantry formation `StatsModifiers` normally remain active inside trenches and
+buildings. `SAIGameConsts.InfantryFormationModifiersApplyInTrenches` in
+[DBAIConsts.cll](../Versions/Temporary/Engine/Sources/AILogic/DBAIConsts.cll)
+defaults to `true`, retaining that behavior. Setting it to `false` removes only
+the formation modifier when each soldier enters either shelter. Formation changes
+while inside do not apply modifiers; leaving restores the current formation's
+modifier. This applies to all fields in that modifier, including cover, combat-box
+coefficient, weapon stats, speed and sight. Shelter, experience and ability
+modifiers still apply. Open-ground and transport behavior is unchanged. Older XML
+and binary constants records that omit the option keep the default `true`.
 
 Armor sources are type-specific:
 
@@ -459,7 +470,7 @@ override falls through and returns `false`. It does not apply damage twice. The
 normal burst caller ignores that return value anyway; it only uses the return
 from the preceding direct-hit attempt.
 
-Source: [Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1329).
+Source: [Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1366).
 
 ### Static objects and buildings
 
@@ -513,7 +524,7 @@ guarantee of a particular HP loss.
 
 Sources: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L1198),
 [Technics.cpp](../Versions/Temporary/Engine/Sources/AILogic/Technics.cpp#L619),
-[Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1230).
+[Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L1267).
 
 ## Property reference
 

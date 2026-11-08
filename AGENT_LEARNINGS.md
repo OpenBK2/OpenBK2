@@ -562,3 +562,15 @@ context. Read `git diff` of every touched file before building.
   `ReverseSpeedModifier` field's pinned chunk 35. Inspect every pinned ID in the
   containing schema type before allocating new chunks; the strength fields use
   36 through 39. Always regenerate and check the schema before building consumers.
+
+## Infantry formation modifiers in shelters
+
+- Formation occupancy can change before all its soldiers enter or leave. Gate
+  formation stat modifiers using each `CSoldier`'s occupancy, and guard both the
+  removal and addition during `CFormation::ChangeGeometry`.
+- `CSoldier::SetFree` temporarily overwrites `eInsideType` during visibility
+  updates. Compare the old and new modifier eligibility before those writes,
+  then restore the current geometry's modifier rather than the entry geometry.
+- The generated schema's local type indices can shift throughout `types.xml`
+  after one new field. Verify regeneration and schema consistency instead of
+  manually trimming these generated changes.

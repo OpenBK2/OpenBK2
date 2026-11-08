@@ -174,7 +174,7 @@ void CFormation::AddSoldier( class CSoldier *pUnit )
 	UpdateStats( pUnit, Size() - 1 );
 
 	const NDb::SUnitStatsModifier *pFormerMod = pStats->formations[GetCurrentGeometry()].pStatsModifiers;
-	pUnit->ApplyStatsModifier( pFormerMod, true );
+	pUnit->ApplyFormationStatsModifier( pFormerMod, true );
 }
 
 void CFormation::UpdateStats( class CSoldier *pUnit, const int nPos )
@@ -895,7 +895,7 @@ void CFormation::DeleteSoldier( class CSoldier *pUnit )
 				soldiers.erase( it );
 				SetAlive( Size() != 0 || VirtualUnitsSize() != 0 );
 				const NDb::SUnitStatsModifier *pFormerMod = pStats->formations[GetCurrentGeometry()].pStatsModifiers;
-				pUnit->ApplyStatsModifier( pFormerMod, true );
+				pUnit->ApplyFormationStatsModifier( pFormerMod, true );
 				break;
 			}
 		}
@@ -1245,7 +1245,7 @@ void CFormation::ChangeGeometry( const int nGeometry )
 		const NDb::SUnitStatsModifier *pFormerMod = pStats->formations[GetCurrentGeometry()].pStatsModifiers;
 		for ( int i = 0; i < Size(); ++i )
 		{
-			( *this )[i]->ApplyStatsModifier( pFormerMod, false );
+			( *this )[i]->ApplyFormationStatsModifier( pFormerMod, false );
 		}
 	}
 	pGroupSmoothPath->ChangeGeometry( nGeometry );
@@ -1260,7 +1260,7 @@ void CFormation::ChangeGeometry( const int nGeometry )
 		const NDb::SUnitStatsModifier *pFormerMod = pStats->formations[GetCurrentGeometry()].pStatsModifiers;
 		for ( int i = 0; i < Size(); ++i )
 		{
-			( *this )[i]->ApplyStatsModifier( pFormerMod, true );
+			( *this )[i]->ApplyFormationStatsModifier( pFormerMod, true );
 		}
 	}
 }

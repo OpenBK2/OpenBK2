@@ -407,6 +407,7 @@ void SAIGameConsts::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "FlamethrowerDeathExplotion", (uint8_t*)&pFlamethrowerDeathExplotion - pThis, sizeof(pFlamethrowerDeathExplotion), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "GroundCrashPlaneSize", (uint8_t*)&nGroundCrashPlaneSize - pThis, sizeof(nGroundCrashPlaneSize), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( "TypedTemplates", &typedTemplates, pThis );
+	NMetaInfo::ReportMetaInfo( "InfantryFormationModifiersApplyInTrenches", (uint8_t*)&bInfantryFormationModifiersApplyInTrenches - pThis, sizeof(bInfantryFormationModifiersApplyInTrenches), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -429,6 +430,7 @@ int SAIGameConsts::operator&( IXmlSaver &saver )
 	saver.Add( "FlamethrowerDeathExplotion", &pFlamethrowerDeathExplotion );
 	saver.Add( "GroundCrashPlaneSize", &nGroundCrashPlaneSize );
 	saver.Add( "TypedTemplates", &typedTemplates );
+	saver.Add( "InfantryFormationModifiersApplyInTrenches", &bInfantryFormationModifiersApplyInTrenches );
 
 	return 0;
 }
@@ -451,6 +453,10 @@ int SAIGameConsts::operator&( IBinSaver &saver )
 	saver.Add( 15, &pFlamethrowerDeathExplotion );
 	saver.Add( 16, &nGroundCrashPlaneSize );
 	saver.Add( 17, &typedTemplates );
+	if ( !saver.IsReading() || saver.HasChunk( 18 ) )
+	{
+		saver.Add( 18, &bInfantryFormationModifiersApplyInTrenches );
+	}
 
 	return 0;
 }
@@ -463,7 +469,7 @@ uint32_t SAIGameConsts::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates;
+	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

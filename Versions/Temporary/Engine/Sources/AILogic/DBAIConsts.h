@@ -235,11 +235,13 @@ namespace NDb
 		CDBPtr< SWeaponRPGStats > pFlamethrowerDeathExplotion;
 		int nGroundCrashPlaneSize;
 		std::vector< STypedDeployTemplate > typedTemplates;
+		bool bInfantryFormationModifiersApplyInTrenches;
 
 		SAIGameConsts() :
 			__dwCheckSum( 0 ),
 			nRemoveParachuteTime( 0 ),
-			nGroundCrashPlaneSize( 100 )
+			nGroundCrashPlaneSize( 100 ),
+			bInfantryFormationModifiersApplyInTrenches( true )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }
