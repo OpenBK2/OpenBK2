@@ -4,6 +4,8 @@
 #include "Mine.h"
 #include "StaticObjectSlotInfo.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 class CUnitGuns;
@@ -60,6 +62,9 @@ class CSoldier : public CAIUnit
 	std::pair<int, int> numLandMines;
 
 	bool bBeingHealed = {};
+
+	bool UsesFormationStatsModifier( EObjectInsideOf eType ) const;
+	void UpdateFormationStatsForInsideType( EObjectInsideOf eNewInsideType );
 
 public:
 	ZEND int operator&( IBinSaver &f ) override
@@ -171,6 +176,8 @@ public:
 	void SetInTransport( class CMilitaryCar *pUnit );
 	void SetFree();
 	void SetMasterOfStreetsBonus( EObjectInsideOf eNewInsideType );
+	// Formation changes must not add or remove an inactive modifier while sheltered.
+	AILOGIC_EXPORT void ApplyFormationStatsModifier( const NDb::SUnitStatsModifier *pModifier, bool bForward );
 
 	bool IsInSolidPlace() const override;
 	bool IsInFirePlace() const override;
