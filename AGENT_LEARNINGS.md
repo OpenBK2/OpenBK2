@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- glTF procedural recoil is expressed in bone-local units and inherits the
+  authored hierarchy's scale, matching Granny's post-multiply convention.
+  The installed 3_7_inch_AAG Idle.glb has Basis scale 0.0767018, so a recoil
+  length of 1.2 yields only 0.0920422 model-space displacement. Verify both
+  bone positions and composite-transformed mesh vertices before attributing
+  barely visible movement to a missing mutator or mesh binding. Keep asset
+  scale normalization separate from changes to the shared mutator contract.
+
 - Bunker mounted-gun collections use the building slot as their common-gun
   index, leaving empty entries before it. Each slot still owns only one ammo
   pool shared by all shell types. Report the first actual gun's pool once per
