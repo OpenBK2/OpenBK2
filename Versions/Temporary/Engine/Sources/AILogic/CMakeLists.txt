@@ -120,6 +120,7 @@ set(SOURCES
     GroupMover.cpp
     Guns.cpp
     GunsSerialize.cpp
+    HitProtection.cpp
     HitsStore.cpp
     InBuildingStates.cpp
     InEntrenchmentStates.cpp
