@@ -3,6 +3,8 @@
 #include "CommonUnit.h"
 #include "Stats_B2_M1/RPGStats.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 class CArtillery;
@@ -223,7 +225,7 @@ public:
 	           const uint16_t dir,
 	           ICollisionsCollector *pCollisionsCollector );
 	// передвигает центр формации в её центр масс и инициализирует geomInfo
-	void ChangeGeometry( const int nGeometry );
+	AILOGIC_EXPORT void ChangeGeometry( const int nGeometry );
 	const int GetGeometriesCount() const;
 	const int GetCurrentGeometry() const;
 

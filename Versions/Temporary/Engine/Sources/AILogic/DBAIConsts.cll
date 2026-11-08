@@ -113,5 +113,8 @@ class SAIGameConsts
 	int _GroundCrashPlaneSize = 100;
 	// reinforcement deploy templates
 	STypedDeployTemplate _TypedTemplates[];
+	// Apply infantry formation stat modifiers in trenches and buildings; false restores them only after leaving.
+	[preserveDefault]
+	bool _InfantryFormationModifiersApplyInTrenches = true;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

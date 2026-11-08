@@ -1,3 +1,13 @@
+# Check default compatibility and per-soldier formation modifiers in shelters.
+add_unit_test(InfantryFormationModifiers AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(InfantryFormationModifiers_test PRIVATE
+    FORMATION_MODIFIERS_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(InfantryFormationModifiers_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(InfantryFormationModifiers_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
+
 # Exercise crack thresholds, legacy RNG/defaults, and the real direct/splash resolvers.
 add_unit_test(HitProtection AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
 target_compile_definitions(HitProtection_test PRIVATE
