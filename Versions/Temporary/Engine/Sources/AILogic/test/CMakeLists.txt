@@ -1,3 +1,14 @@
+# Cover mounted ammo reporting and weapons retained by occupants of destroyed buildings.
+add_unit_test(BuildingWeapons AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(BuildingWeapons_test PRIVATE
+    BUILDING_WEAPONS_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(BuildingWeapons_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(BuildingWeapons_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET BuildingWeapons_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:AILogic>)
+endif()
+
 # Exercise data-backed AI settings, legacy fallback and save/load source selection.
 add_unit_test(AIPropertyConsts AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
 target_compile_definitions(AIPropertyConsts_test PRIVATE

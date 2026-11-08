@@ -2258,19 +2258,17 @@ void CBuilding::GetRPGStats( struct SAINotifyRPGStats *pStats )
 {
 	CGivenPassabilityStObject::GetRPGStats( pStats );
 	pStats->nSupply = 0;
-	for ( int n = 0; n < turrets.size(); ++n )
+	for ( int n = 0; n < guns.size(); ++n )
 	{
-		if ( turrets[n] && guns[n] )
+		if ( guns[n] && guns[n]->GetNTotalGuns() > 0 )
 		{
-			for ( int i = 0; i < guns[n]->GetNCommonGuns(); ++i )
-			{
-				const SBaseGunRPGStats &pGunStats = guns[n]->GetCommonGunStats( n );
-				SAINotifyRPGStats::SWeaponAmmo ammo;
-				ammo.pStats = pGunStats.pWeapon;
-				ammo.nAmmo = guns[n]->GetNAmmo( n );
-				pStats->ammo.push_back( ammo );
-			}
-			return;
+			// Each slot has one weapon and one ammo pool shared by its shell types.
+			// Its common-gun index is the slot number, so GetNCommonGuns includes holes.
+			const CBasicGun *pGun = guns[n]->GetGun( 0 );
+			SAINotifyRPGStats::SWeaponAmmo ammo;
+			ammo.pStats = pGun->GetWeapon();
+			ammo.nAmmo = pGun->GetNAmmo();
+			pStats->ammo.push_back( ammo );
 		}
 	}
 }
