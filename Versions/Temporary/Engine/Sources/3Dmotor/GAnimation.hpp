@@ -6,6 +6,8 @@
 
 #include "3Dmotor_export.h"
 
+#include <vector>
+
 namespace NDb
 {
 struct SSkeleton;
@@ -118,4 +120,14 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 };
 
 _3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator( const SSkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
+
+// Retract opposite the muzzle's local +Z firing axis by a world-space distance at firing time.
+// Store the offset in the recoil bone's frame so it continues to follow turret aiming.
+_3DMOTOR_EXPORT bool SetBoneRecoil( ISkeletonAnimator *pAnimator,
+                                    const char *pszBoneName,
+                                    const SHMatrix &mShootPoint,
+                                    const STime &tStart,
+                                    float fLength,
+                                    STime tRecoilDuration,
+                                    STime tTotalDuration );
 } // namespace NAnimation

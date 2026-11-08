@@ -1,13 +1,17 @@
 
 # AGENT LEARNINGS
 
-- glTF procedural recoil is expressed in bone-local units and inherits the
-  authored hierarchy's scale, matching Granny's post-multiply convention.
-  The installed 3_7_inch_AAG Idle.glb has Basis scale 0.0767018, so a recoil
-  length of 1.2 yields only 0.0920422 model-space displacement. Verify both
-  bone positions and composite-transformed mesh vertices before attributing
-  barely visible movement to a missing mutator or mesh binding. Keep asset
-  scale normalization separate from changes to the shared mutator contract.
+- Generic bone mutators use bone-local units, including hierarchy scale.
+  The old 3_7_inch_AAG recoil of 1.2 moved only 0.0920422 because Basis has
+  scale 0.0767018. SetBoneRecoil now normalizes the muzzle's world-space -Z
+  direction and converts the requested world distance into the recoil bone's
+  frame. Its mesh Y can differ from the barrel axis. Verify both bone and
+  composite-transformed vertex movement. Normalize the body-shake axis too:
+  the muzzle locator's scale previously amplified its configured angle.
+- SHMatrix::HomogeneousInverse returns false even after computing a valid
+  inverse. Use Invert when checking invertibility. fastgltf quaternion
+  constructors are explicit and need floating-point literals for every
+  component; integer zeros cause narrowing errors in their variadic template.
 
 - Bunker mounted-gun collections use the building slot as their common-gun
   index, leaving empty entries before it. Each slot still owns only one ammo
@@ -623,3 +627,14 @@ context. Read `git diff` of every touched file before building.
   handshake separately compares protocol identifiers.
 - Protocol version zero is an explicit value. An unset version uses `-1` with
   `preserveDefault`, so an older binary resource does not turn fallback into zero.
+
+## Tank entrenchment firing investigation
+
+- Tank pits apply their `InnerUnitBonus`; neutral aim/reload multipliers preserve
+  existing modifiers. The longer firing cycle comes from another path:
+  `CanMove() == false` selects `ESAS_SIMPLE_FIRING`, which calls `FireNow()`
+  without clearing the attack state's `bAim`. Mobile paths use `FireToEnemy()`,
+  which clears it. With `bAim` true, `CBasicGun::Aiming` requires reload time
+  plus the weapon's unmodified aim time after the previous shot, as well as
+  its separate modified aim-time check. Other simple-firing users share this
+  behavior. This was established by source inspection, not an in-game test.
