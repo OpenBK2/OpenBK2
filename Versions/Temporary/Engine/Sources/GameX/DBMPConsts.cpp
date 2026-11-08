@@ -281,6 +281,9 @@ void SMultiplayerConsts::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "ReinfCounterRecycle", &vReinfCounterRecycle, pThis );
 	NMetaInfo::ReportMetaInfo( "TimeUserMPPause", (uint8_t*)&nTimeUserMPPause - pThis, sizeof(nTimeUserMPPause), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "TimeUserMPLag", (uint8_t*)&nTimeUserMPLag - pThis, sizeof(nTimeUserMPLag), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "NivalNetIP", (uint8_t*)&szNivalNetIP - pThis, sizeof(szNivalNetIP), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "NivalNetPort", (uint8_t*)&nNivalNetPort - pThis, sizeof(nNivalNetPort), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "NetGameVersion", (uint8_t*)&nNetGameVersion - pThis, sizeof(nNetGameVersion), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -296,6 +299,9 @@ int SMultiplayerConsts::operator&( IXmlSaver &saver )
 	saver.Add( "ReinfCounterRecycle", &vReinfCounterRecycle );
 	saver.Add( "TimeUserMPPause", &nTimeUserMPPause );
 	saver.Add( "TimeUserMPLag", &nTimeUserMPLag );
+	saver.Add( "NivalNetIP", &szNivalNetIP );
+	saver.Add( "NivalNetPort", &nNivalNetPort );
+	saver.Add( "NetGameVersion", &nNetGameVersion );
 
 	return 0;
 }
@@ -311,6 +317,12 @@ int SMultiplayerConsts::operator&( IBinSaver &saver )
 	saver.Add( 8, &vReinfCounterRecycle );
 	saver.Add( 9, &nTimeUserMPPause );
 	saver.Add( 10, &nTimeUserMPLag );
+	saver.Add( 11, &szNivalNetIP );
+	saver.Add( 12, &nNivalNetPort );
+	if ( !saver.IsReading() || saver.HasChunk( 13 ) )
+	{
+		saver.Add( 13, &nNetGameVersion );
+	}
 
 	return 0;
 }

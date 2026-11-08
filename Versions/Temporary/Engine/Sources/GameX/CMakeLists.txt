@@ -89,6 +89,7 @@ set(SOURCES
     MPLANTest.cpp
     MPLobbyData.cpp
     MPManager.cpp
+    MPConnectionSettings.cpp
     MPManagerMode.cpp
     MPManagerModeClients.cpp
     MPManagerModeGameControl.cpp

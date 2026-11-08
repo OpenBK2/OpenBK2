@@ -590,3 +590,16 @@ context. Read `git diff` of every touched file before building.
 - Mistake: a generated resource cannot live on the stack or in `unique_ptr`
   because `OBJECT_BASIC_METHODS` makes its destructor protected. Use `CObj` or
   the database factory for test fixtures, even when the resource is exported.
+
+## Multiplayer connection data
+
+- The active online path creates `CServerClient` in `MPManagerModeNivalNet`;
+  LAN creates its driver both in the constructor and in `StartNewLANDriver`.
+  Route both LAN sites through the same protocol resolver. The older
+  `Main/MultiplayerInternal` factory has no callers in the current source tree.
+- Connection fields belong to the game client's `MultiplayerConsts`; the
+  standalone account/lobby server has no game database and keeps `server.xml`.
+  Transport metadata can stay out of gameplay checksums because the network
+  handshake separately compares protocol identifiers.
+- Protocol version zero is an explicit value. An unset version uses `-1` with
+  `preserveDefault`, so an older binary resource does not turn fallback into zero.

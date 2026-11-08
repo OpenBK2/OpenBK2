@@ -159,12 +159,17 @@ namespace NDb
 		CVec2 vReinfCounterRecycle;
 		int nTimeUserMPPause;
 		int nTimeUserMPLag;
+		std::string szNivalNetIP;
+		int nNivalNetPort;
+		int nNetGameVersion;
 
 		SMultiplayerConsts() :
 			__dwCheckSum( 0 ),
 			vReinfCounterRecycle( VNULL2 ),
 			nTimeUserMPPause( 120 ),
-			nTimeUserMPLag( 60 )
+			nTimeUserMPLag( 60 ),
+			nNivalNetPort( 0 ),
+			nNetGameVersion( -1 )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

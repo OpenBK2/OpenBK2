@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Merge these fields into your existing MultiplayerConsts resource. -->
+<MultiplayerConsts>
+	<NivalNetIP>server.nival.net</NivalNetIP>
+	<NivalNetPort>4200</NivalNetPort>
+	<NetGameVersion>3</NetGameVersion>
+</MultiplayerConsts>

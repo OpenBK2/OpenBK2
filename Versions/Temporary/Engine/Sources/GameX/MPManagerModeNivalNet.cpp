@@ -11,6 +11,7 @@
 #include "Main/MainLoop.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
+#include "MPConnectionSettings.h"
 #include "MPManagerModeNivalNet.hpp"
 #include "MPPacketTraceLog.h"
 #include "MPTransceiver.h"
@@ -31,9 +32,6 @@
 #include "GameX_export.h"
 
 #include <fmt/format.h>
-
-const char *NIVAL_NET_IP = "localhost";
-const int NIVAL_NET_PORT = 4200;
 
 #define HEARTBEAT_PERIOD 5000
 #define GAMES_REFRESH_PERIOD 5000
@@ -434,9 +432,9 @@ void CMPManagerModeNivalNet::KickPlayerFromSlot( const int nSlot )
 void CMPManagerModeNivalNet::CreateServerClient()
 {
 	pClient = 0;
-	std::string szNivalNetIP = NStr::ToMBCS( NGlobal::GetVar( "NivalNetIP", NIVAL_NET_IP ) );
-	int nNivalNetPort = NGlobal::GetVar( "NivalNetPort", NIVAL_NET_PORT );
-	pClient = new CServerClient( szNivalNetIP.c_str(), NGlobal::GetVar( "NetGameVersion", 1 ), nNivalNetPort, 30 );
+	// Use the active mod's connection data on login and reconnect, with legacy fallback.
+	const NGameX::SMPConnectionSettings settings = NGameX::GetMPConnectionSettings( NGameX::GetMPConsts() );
+	pClient = new CServerClient( settings.szServerAddress.c_str(), settings.nGameVersion, settings.nServerPort, 30 );
 	CNet::SetTimeOut( 20.0f );
 }
 
