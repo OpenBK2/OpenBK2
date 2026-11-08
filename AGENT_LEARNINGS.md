@@ -1,6 +1,13 @@
 
 # AGENT LEARNINGS
 
+- Bunker mounted-gun collections use the building slot as their common-gun
+  index, leaving empty entries before it. Each slot still owns only one ammo
+  pool shared by all shell types. Report the first actual gun's pool once per
+  slot, including later armed slots; iterating GetNCommonGuns repeats ammo.
+  Mounted weapons are owned by soldiers, who may survive building destruction
+  during evacuation. Check the mount before advancing any firing phase.
+
 - Mistake (2026-11-07): printing a full CI log flooded and truncated the tool output.
   Search large log attachments for errors and failed targets first, then read only
   the relevant context. Check file size before attempting a complete log read.

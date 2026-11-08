@@ -794,6 +794,16 @@ void CBasicGun::SetOwner( CAIUnit *_pOwner )
 
 void CBasicGun::Segment()
 {
+	// The operator can survive while evacuating a destroyed building. Cancel even
+	// an already queued burst, including one restored from a save, before firing.
+	CBuilding *pBuilding = GetMountBuilding();
+	if ( pBuilding && !IsValidObj( pBuilding ) )
+	{
+		SetAlive( false );
+		ToRestState();
+		return;
+	}
+
 	SetAlive( GetOwner()->IsAlive() );
 	NI_ASSERT( !pOwner || nOwnerParty == pOwner->GetParty(), "Wrong owner party" );
 

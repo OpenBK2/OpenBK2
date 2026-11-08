@@ -3,6 +3,8 @@
 #include "LinkObject.h"
 #include "Stats_B2_M1/RPGStats.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -281,7 +283,7 @@ public:
 	virtual void StartPointBurst( const CVec3 &target, bool bReAim );
 	virtual void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true );
 	virtual void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim );
-	void Segment();
+	AILOGIC_EXPORT void Segment();
 	void SetAntiAviationTarget( class CAIUnit *pTarget );
 
 	bool IsWaitForReload() const
