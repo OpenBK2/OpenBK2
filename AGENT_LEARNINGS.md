@@ -597,6 +597,11 @@ context. Read `git diff` of every touched file before building.
 - Mistake: a generated resource cannot live on the stack or in `unique_ptr`
   because `OBJECT_BASIC_METHODS` makes its destructor protected. Use `CObj` or
   the database factory for test fixtures, even when the resource is exported.
+- Mistake: the AI properties test depended on an example outside Sources, but
+  its directory was missing from CI's sparse checkout. Local full-checkout tests
+  hid the omission. Add required fixtures to every unit-test job's checkout
+  (Linux GCC, Linux clang, and Windows), and verify selection with Git's
+  `sparse-checkout check-rules` rather than skipping the test when data is absent.
 
 ## Multiplayer connection data
 

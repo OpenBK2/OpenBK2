@@ -32,6 +32,7 @@ jobs:
       # Tags and Citations supply the heading styles and advice text used by
       # TextVerticalAlignment's clipping regression tests.
       # GLB_format_usage is the example glTF units GltfBounds_test loads (4 MB).
+      # AIPropertyConsts_test loads the authored AI properties example as a required fixture.
       # UnitTransferUI reads the example pak plus these stock UI descriptor/texture directories.
       # SceneB2 embeds scripts/iconrender/icon_overrides.txt during configuration.
       - uses: actions/checkout@v6
@@ -56,6 +57,7 @@ jobs:
             Versions/Current/Data/UI/Game/Mission/Objectives
             Versions/Current/Data/UI/Game/Mission/Panels/RightPanel
             OBK2_Examples/GLB_format_usage
+            OBK2_Examples/AIPropertyConsts
             OBK2_Examples/UnitTransferImpl
             OBK2_Examples/MessageParts
 
