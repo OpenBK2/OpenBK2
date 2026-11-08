@@ -749,13 +749,13 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot,
 		}
 		else if ( gun.bRecoil )
 		{
-			std::vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutator;
-			mutator.push_back( NAnimation::ISkeletonAnimator::SDesiredBoneMove(
-					gun.nrecoilTime, QNULL, CVec3( 0, -gun.fRecoilLength, 0 ) ) );
-			mutator.push_back(
-					NAnimation::ISkeletonAnimator::SDesiredBoneMove( gun.nRecoilShakeTime - gun.nrecoilTime, QNULL, VNULL3 ) );
-
-			pAnimator->SetBoneMutator( gun.szRecoilPoint.c_str(), currTime, mutator );
+			NAnimation::SetBoneRecoil( pAnimator,
+			                           gun.szRecoilPoint.c_str(),
+			                           mShootPoint,
+			                           currTime,
+			                           gun.fRecoilLength,
+			                           gun.nrecoilTime,
+			                           gun.nRecoilShakeTime );
 
 			CVec3 vRot;
 			SHMatrix mBasisInv, mBasis, mLocalShoot;
@@ -764,13 +764,17 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot,
 			Multiply( &mLocalShoot, mBasisInv, mShootPoint );
 			mLocalShoot.RotateVector( &vRot, V3_AXIS_X );
 
-			CQuat qRecoil( gun.fRecoilShakeAngle, vRot );
-			std::vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutatorBasis;
-			mutatorBasis.push_back(
-					NAnimation::ISkeletonAnimator::SDesiredBoneMove( (float)( gun.nRecoilShakeTime ) * 0.1, qRecoil ) );
-			mutatorBasis.push_back(
-					NAnimation::ISkeletonAnimator::SDesiredBoneMove( (float)( gun.nRecoilShakeTime ) * 0.9, QNULL ) );
-			pAnimator->SetBoneMutator( 0, currTime, mutatorBasis ); // 0 as const char *
+			// Locator scale must not amplify the configured body-shake angle.
+			if ( Normalize( &vRot ) )
+			{
+				CQuat qRecoil( gun.fRecoilShakeAngle, vRot );
+				std::vector<NAnimation::ISkeletonAnimator::SDesiredBoneMove> mutatorBasis;
+				mutatorBasis.push_back(
+						NAnimation::ISkeletonAnimator::SDesiredBoneMove( (float)( gun.nRecoilShakeTime ) * 0.1, qRecoil ) );
+				mutatorBasis.push_back(
+						NAnimation::ISkeletonAnimator::SDesiredBoneMove( (float)( gun.nRecoilShakeTime ) * 0.9, QNULL ) );
+				pAnimator->SetBoneMutator( 0, currTime, mutatorBasis );
+			}
 
 			if ( pComplexEffect != 0 && IsVisible() )
 			{
