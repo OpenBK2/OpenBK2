@@ -532,3 +532,19 @@ context. Read `git diff` of every touched file before building.
   the registered object factory and retain the objects with `CObj`; anchor the
   DLLs that register their types. Pass raw pointers to `CDBPtr` constructors
   when emplacing them in a vector, since conversion from `CObj` is not implicit.
+
+## Hit processing investigation
+
+- The authoritative ordinary unit resolver is `CAIUnit::ProcessExactHit`, not
+  the duplicate in `CExplosion`. `ProcessCumulativeExpl` returning true means
+  the full rectangle/height gate passed, even if the combat rectangle missed or
+  armor/cover rejected damage. That return suppresses burst splash fallback.
+- Splash uses a fixed armor threshold, not shell piercing. Check profile
+  overrides before quoting C++ defaults: the checked-in Current/Multiplayer
+  profiles set the threshold to 300 and damage coefficient to 0.3.
+- Standing, free infantry can receive outer-radius splash after the generic
+  cover save, without another cover or armor test. `Cover` itself is the damage
+  pass probability. The full source map is in `docs/hit-processing.md`.
+- Mistake: repeated guessed filenames and shell wildcard path operands during
+  this investigation despite existing guidance. Discover exact filenames with
+  `rg --files`, use `rg -g` for patterns, and read UTF-8 explicitly in PowerShell.
