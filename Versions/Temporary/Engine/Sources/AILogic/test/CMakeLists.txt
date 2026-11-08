@@ -1,3 +1,14 @@
+# Exercise data-backed AI settings, legacy fallback and save/load source selection.
+add_unit_test(AIPropertyConsts AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(AIPropertyConsts_test PRIVATE
+    AI_PROPERTIES_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml"
+    AI_PROPERTIES_EXAMPLE_FILE="${CMAKE_SOURCE_DIR}/OBK2_Examples/AIPropertyConsts/Data/Consts/AIPropertyConsts.xdb")
+set_tests_properties(AIPropertyConsts_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(AIPropertyConsts_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
+
 # Check default compatibility and per-soldier formation modifiers in shelters.
 add_unit_test(InfantryFormationModifiers AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
 target_compile_definitions(InfantryFormationModifiers_test PRIVATE
