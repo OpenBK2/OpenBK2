@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- `MultiplayerConsts` can now set `NivalNetIP`, `NivalNetPort`, and `NetGameVersion`. Database values take precedence over profile settings, while omitted fields preserve the legacy fallback. The protocol version applies to online and LAN multiplayer. See `OBK2_Examples/MultiplayerConnectionSettings` for the fields and server setup requirements.
+
 - Added optional `AIGameConsts.AIPropertyConsts` game data for all configurable values handled by `AIConsts.cpp`, including plane heights and reveal tables. A linked resource takes precedence over local settings and contributes to multiplayer data checksums; missing links preserve the legacy behavior. The example in `OBK2_Examples/AIPropertyConsts` uses the supplied installed profile, and `scripts/convert_ai_consts.py` converts other profiles.
 
 - Added `AIGameConsts.InfantryFormationModifiersApplyInTrenches` (default `true`). Set it to `false` to suspend infantry formation stat modifiers while each soldier is inside a trench or building, and restore the current formation's modifiers on exit. Shelter and ability bonuses are retained.

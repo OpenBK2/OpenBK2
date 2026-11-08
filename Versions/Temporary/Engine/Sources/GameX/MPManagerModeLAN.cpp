@@ -6,6 +6,7 @@
 #include "InterfaceState.h"
 #include "Misc/StrProc.h"
 #include "Misc/Time64.h"
+#include "MPConnectionSettings.h"
 #include "MPLANTest.h"
 #include "MPManagerModeLAN.hpp"
 #include "MPPacketTraceLog.h"
@@ -84,7 +85,9 @@ CMPManagerModeLAN::CMPManagerModeLAN()
 	, eCurrentState( EGS_NOT_IN_GAME )
 	, bDriverFailureReported( false )
 {
-	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC, &szDriverError );
+	// LAN uses the same protocol version as the online client, but its own discovery port.
+	pLANClient = CLANClient::Create(
+			NGameX::GetMPGameVersion( NGameX::GetMPConsts() ), LAN_PORT, LAN_TIMEOUT_SEC, &szDriverError );
 	if ( !pLANClient )
 	{
 		// The error is not reported from here. This runs inside the LAN button's
@@ -442,7 +445,8 @@ void CMPManagerModeLAN::StartNewLANDriver()
 {
 	pLANClient = 0;
 	pClient = 0;
-	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC, &szDriverError );
+	pLANClient = CLANClient::Create(
+			NGameX::GetMPGameVersion( NGameX::GetMPConsts() ), LAN_PORT, LAN_TIMEOUT_SEC, &szDriverError );
 	pClient = pLANClient;
 	// A new driver is a new chance to fail, and a failure of this one is reported anew.
 	bDriverFailureReported = false;
