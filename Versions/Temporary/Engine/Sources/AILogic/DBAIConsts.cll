@@ -86,6 +86,355 @@ struct SReinfRecycleTime
 	int _Time;
 };
 
+// Reveal behavior keyed by the same unit-type names as AI.RevealInfo (for example soldier or arm_light).
+struct SAIPropertyRevealInfo
+{
+	string _UnitType;
+	float _Query = 0.0;
+	float _MovingOff = 0.0;
+	float _Distance = 0.0;
+	int _Time = 0;
+};
+
+[typeID = 0x7F020031; export]
+class SAIPropertyConsts
+{
+	// Legacy setting: plane_min_height; same authored units.
+	float _PlaneMinHeight = 300.0;
+	// Legacy setting: plane_max_height; same authored units.
+	float _PlaneMaxHeight = 1500.0;
+	// Legacy setting: AI.Infantry.TimeOfLyingUnderFire; same authored units.
+	int _InfantryTimeOfLyingUnderFire = 2000;
+	// Legacy setting: AI.Infantry.LyingSoldierCover; same authored units.
+	float _InfantryLyingSoldierCover = 0.7;
+	// Legacy setting: AI.Infantry.RadiusOfFormation; same authored units.
+	int _InfantryRadiusOfFormation = 320;
+	// Legacy setting: AI.Infantry.LyingSpeedFactor; same authored units.
+	float _InfantryLyingSpeedFactor = 0.5;
+	// Legacy setting: AI.Infantry.SpyGlassRadius; same authored units.
+	float _InfantrySpyGlassRadius = 1920.0;
+	// Legacy setting: AI.Engineers.MineVisRadius; same authored units.
+	int _EngineersMineVisRadius = 96;
+	// Legacy setting: AI.Engineers.MineClearRadius; same authored units.
+	int _EngineersMineClearRadius = 224;
+	// Legacy setting: AI.Engineers.EngineerMineCheckPeriod; same authored units.
+	int _EngineersEngineerMineCheckPeriod = 0;
+	// Legacy setting: AI.Engineers.TimeQuant; same authored units.
+	int _EngineersTimeQuant = 160;
+	// Legacy setting: AI.Engineers.RuPerQuant; same authored units.
+	float _EngineersRuPerQuant = 10.0;
+	// Legacy setting: AI.Engineers.EngineerRuCarryWeight; same authored units.
+	float _EngineersEngineerRuCarryWeight = 3000.0;
+	// Legacy setting: AI.Aviation.PlaneGuardStateRadius; same authored units.
+	float _AviationPlaneGuardStateRadius = 3000.0;
+	// Legacy setting: AI.Aviation.FuelDecreaseEconomy; same authored units.
+	float _AviationFuelDecreaseEconomy = 0.5;
+	// Legacy setting: AI.Aviation.FuelDecrease; same authored units.
+	float _AviationFuelDecrease = 2.0;
+	// Legacy setting: AI.Buildings.CureSpeedInBuilding; same authored units.
+	float _BuildingsCureSpeedInBuilding = 0.001;
+	// Legacy setting: AI.Buildings.TimeOfBuildingAlarm; same authored units.
+	int _BuildingsTimeOfBuildingAlarm = 8000;
+	// Legacy setting: AI.Buildings.CampingTime; same authored units.
+	int _BuildingsCampingTime = 2000;
+	// Legacy setting: AI.Buildings.InsideObjWeaponFactor; same authored units.
+	float _BuildingsInsideObjWeaponFactor = 0.5;
+	// Legacy setting: AI.Buildings.InsideObjCombatPeriod; same authored units.
+	int _BuildingsInsideObjCombatPeriod = 800;
+	// Legacy setting: AI.Artillery.ThresholdInstallTime; same authored units.
+	int _ArtilleryThresholdInstallTime = 2000;
+	// Legacy setting: AI.Artillery.ShootsToRange; same authored units.
+	int _ArtilleryShootsToRange = 4;
+	// Legacy setting: AI.Artillery.RangedDispersionRadiusBonus; same authored units.
+	float _ArtilleryRangedDispersionRadiusBonus = 0.5;
+	// Legacy setting: AI.Artillery.RangedAreaRadius; same authored units.
+	float _ArtilleryRangedAreaRadius = 160.0;
+	// Legacy setting: AI.Artillery.MaxAntiArtilleryRadius; same authored units.
+	float _ArtilleryMaxAntiArtilleryRadius = 320.0;
+	// Legacy setting: AI.Artillery.MinAntiArtilleryRadius; same authored units.
+	float _ArtilleryMinAntiArtilleryRadius = 32.0;
+	// Legacy setting: AI.Artillery.ShotsToMinimizeLocationRadius; same authored units.
+	int _ArtilleryShotsToMinimizeLocationRadius = 5;
+	// Legacy setting: AI.Artillery.RevealCirclePeriod; same authored units.
+	int _ArtilleryRevealCirclePeriod = 2000;
+	// Legacy setting: AI.Artillery.RadiusToStartAntiartilleryFire; same authored units.
+	float _ArtilleryRadiusToStartAntiartilleryFire = 320.0;
+	// Legacy setting: AI.Artillery.RelocationRadius; same authored units.
+	float _ArtilleryRelocationRadius = 160.0;
+	// Legacy setting: AI.Artillery.AudibilityTime; same authored units.
+	int _ArtilleryAudibilityTime = 20000;
+	// Legacy setting: AI.Artillery.CheckFreePeriod; same authored units.
+	float _ArtilleryCheckFreePeriod = 20000.0;
+	// Legacy setting: AI.Formation.CheckFreeArtPeriod; same authored units.
+	float _FormationCheckFreeArtPeriod = 30000.0;
+	// Legacy setting: AI.Paratroopers.ParatrooperFallSpeed; same authored units.
+	float _ParatroopersParatrooperFallSpeed = 0.05;
+	// Legacy setting: AI.Paratroopers.ParadropSpred; same authored units.
+	int _ParatroopersParadropSpred = 4;
+	// Legacy setting: AI.Paratroopers.PlaneParadropInterval; same authored units.
+	float _ParatroopersPlaneParadropInterval = 50.0;
+	// Legacy setting: AI.Paratroopers.PlaneParadropIntervalPerpMin; same authored units.
+	float _ParatroopersPlaneParadropIntervalPerpMin = 50.0;
+	// Legacy setting: AI.Paratroopers.PlaneParadropIntervalPerpMax; same authored units.
+	float _ParatroopersPlaneParadropIntervalPerpMax = 50.0;
+	// Legacy setting: AI.Paratroopers.ParatrooperGroundScanPeriod; same authored units.
+	int _ParatroopersParatrooperGroundScanPeriod = 200;
+	// Legacy setting: AI.TransportAndResupply.ResupplyRadius; same authored units.
+	int _TransportAndResupplyResupplyRadius = 1000;
+	// Legacy setting: AI.Morale.ResupplyRadius; same authored units.
+	int _MoraleResupplyRadius = 300;
+	// Legacy setting: AI.TransportAndResupply.TransportRuCapacity; same authored units.
+	float _TransportAndResupplyTransportRuCapacity = 10000.0;
+	// Legacy setting: AI.TransportAndResupply.TransportLoadRuDistance; same authored units.
+	float _TransportAndResupplyTransportLoadRuDistance = 100.0;
+	// Legacy setting: AI.TransportAndResupply.LandDistance; same authored units.
+	float _TransportAndResupplyLandDistance = 44.8;
+	// Legacy setting: AI.Common.NumToScanInSegm; same authored units.
+	int _CommonNumToScanInSegm = 50;
+	// Legacy setting: AI.Common.BehUpdateDuration; same authored units.
+	int _CommonBehUpdateDuration = 2000;
+	// Legacy setting: AI.Common.SoldierBehUpdateDuration; same authored units.
+	int _CommonSoldierBehUpdateDuration = 3000;
+	// Legacy setting: AI.Common.AABehUpdateDuration; same authored units.
+	int _CommonAABehUpdateDuration = 200;
+	// Legacy setting: AI.Common.DeadSeeTime; same authored units.
+	int _CommonDeadSeeTime = 2000;
+	// Legacy setting: AI.Common.TimeToReturnGun; same authored units.
+	int _CommonTimeToReturnGun = 5000;
+	// Legacy setting: AI.Common.TimeBeforeCamouflage; same authored units.
+	int _CommonTimeBeforeCamouflage = 2000;
+	// Legacy setting: AI.Common.RadiusOfHitNotify; same authored units.
+	int _CommonRadiusOfHitNotify = 160;
+	// Legacy setting: AI.Common.TimeOfHitNotify; same authored units.
+	int _CommonTimeOfHitNotify = 1000;
+	// Legacy setting: AI.Common.CallForHelpRadius; same authored units.
+	int _CommonCallForHelpRadius = 640;
+	// Legacy setting: AI.Common.AICallForHelpRadius; same authored units.
+	int _CommonAICallForHelpRadius = 640;
+	// Legacy setting: AI.Common.TimeToDisappear; same authored units.
+	int _CommonTimeToDisappear = 0;
+	// Legacy setting: AI.Common.GuardStateRadius; same authored units.
+	float _CommonGuardStateRadius = 320.0;
+	// Legacy setting: AI.Common.GoodAttackProbability; same authored units.
+	float _CommonGoodAttackProbability = 0.6;
+	// Legacy setting: AI.Common.AreaDamageCoeff; same authored units.
+	float _CommonAreaDamageCoeff = 0.2;
+	// Legacy setting: AI.Common.TankTrackHitPoints; same authored units.
+	float _CommonTankTrackHitPoints = 0.0;
+	// Legacy setting: AI.Common.TrajectoryLineRatio; same authored units.
+	float _CommonTrajectoryLineRatio = 0.6;
+	// Legacy setting: AI.Common.TrajectoryBombG; same authored units.
+	float _CommonTrajectoryBombG = 0.001;
+	// Legacy setting: AI.Aviation.HeavyFormationDistance; same authored units.
+	float _AviationHeavyFormationDistance = 2.0;
+	// Legacy setting: AI.Aviation.LightFormationDistance; same authored units.
+	float _AviationLightFormationDistance = 1.2;
+	// Legacy setting: AI.Aviation.StartRandom; same authored units.
+	float _AviationStartRandom = 0.0;
+	// Legacy setting: AI.Infantry.SniperCamouflageDecreasePerShoot; same authored units.
+	float _InfantrySniperCamouflageDecreasePerShoot = 0.1;
+	// Legacy setting: AI.Infantry.SniperCamouflageIncrease; same authored units.
+	float _InfantrySniperCamouflageIncrease = 0.0004;
+	// Legacy setting: AI.Common.AmbushBeginAttackCriteria; same authored units.
+	float _CommonAmbushBeginAttackCriteria = 0.5;
+	// Legacy setting: AI.Artillery.ArtilleryRevealCoefficient; same authored units.
+	float _ArtilleryArtilleryRevealCoefficient = 200.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.LineMin; same authored units.
+	float _ArtilleryDispersionRatioLineMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.LineMax; same authored units.
+	float _ArtilleryDispersionRatioLineMax = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.HowitserMin; same authored units.
+	float _ArtilleryDispersionRatioHowitserMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.HowitserMax; same authored units.
+	float _ArtilleryDispersionRatioHowitserMax = 2.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.BombMin; same authored units.
+	float _ArtilleryDispersionRatioBombMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.BombMax; same authored units.
+	float _ArtilleryDispersionRatioBombMax = 3.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.CannonMin; same authored units.
+	float _ArtilleryDispersionRatioCannonMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.CannonMax; same authored units.
+	float _ArtilleryDispersionRatioCannonMax = 4.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.RocketMin; same authored units.
+	float _ArtilleryDispersionRatioRocketMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.RocketMax; same authored units.
+	float _ArtilleryDispersionRatioRocketMax = 4.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.GrenadeMin; same authored units.
+	float _ArtilleryDispersionRatioGrenadeMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.GrenadeMax; same authored units.
+	float _ArtilleryDispersionRatioGrenadeMax = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.TorpedoMin; same authored units.
+	float _ArtilleryDispersionRatioTorpedoMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.TorpedoMax; same authored units.
+	float _ArtilleryDispersionRatioTorpedoMax = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.AARocketMin; same authored units.
+	float _ArtilleryDispersionRatioAARocketMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.AARocketMax; same authored units.
+	float _ArtilleryDispersionRatioAARocketMax = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.FlameMin; same authored units.
+	float _ArtilleryDispersionRatioFlameMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.FlameMax; same authored units.
+	float _ArtilleryDispersionRatioFlameMax = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.ATGMLineMin; same authored units.
+	float _ArtilleryDispersionRatioATGMLineMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.ATGMLineMax; same authored units.
+	float _ArtilleryDispersionRatioATGMLineMax = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.ATGMTopAttackMin; same authored units.
+	float _ArtilleryDispersionRatioATGMTopAttackMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.ATGMTopAttackMax; same authored units.
+	float _ArtilleryDispersionRatioATGMTopAttackMax = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.SAMMin; same authored units.
+	float _ArtilleryDispersionRatioSAMMin = 1.0;
+	// Legacy setting: AI.Artillery.DispersionRatio.SAMMax; same authored units.
+	float _ArtilleryDispersionRatioSAMMax = 1.0;
+	// Legacy setting: AI.Common.CoeffForRandomDelay; same authored units.
+	float _CommonCoeffForRandomDelay = 1.21;
+	// Legacy setting: AI.Common.HeightForVisRadiusInc; same authored units.
+	float _CommonHeightForVisRadiusInc = 1.0;
+	// Legacy setting: AI.Buildings.BurningSpeed; same authored units.
+	float _BuildingsBurningSpeed = 0.002;
+	// Legacy setting: AI.Follow.StopRadius; same authored units.
+	float _FollowStopRadius = 288.0;
+	// Legacy setting: AI.Follow.EqualizeSpeedRadius; same authored units.
+	float _FollowEqualizeSpeedRadius = 384.0;
+	// Legacy setting: AI.Follow.GoRadius; same authored units.
+	float _FollowGoRadius = 352.0;
+	// Legacy setting: AI.Follow.WaitRadius; same authored units.
+	float _FollowWaitRadius = 768.0;
+	// Legacy setting: AI.Common.FatalityProbability; same authored units.
+	float _CommonFatalityProbability = 0.1;
+	// Legacy setting: AI.Common.DamageForMassiveDamageFatality; same authored units.
+	float _CommonDamageForMassiveDamageFatality = 0.7;
+	// Legacy setting: AI.Common.MassiveDamageFatalityProbability; same authored units.
+	float _CommonMassiveDamageFatalityProbability = 0.8;
+	// Legacy setting: AI.Aviation.PlanesBombHeight; same authored units.
+	float _AviationPlanesBombHeight = 0.0;
+	// Legacy setting: AI.Infantry.StandLieRandomDelay; same authored units.
+	float _InfantryStandLieRandomDelay = 500.0;
+	// Legacy setting: AI.TransportAndResupply.ResupplyOffset; same authored units.
+	float _TransportAndResupplyResupplyOffset = 100.0;
+	// Legacy setting: AI.TransportAndResupply.ResupplyBalanceCoeff; same authored units.
+	float _TransportAndResupplyResupplyBalanceCoeff = 500.0;
+	// Legacy setting: AI.Infantry.SquadMemberLeaveInterval; same authored units.
+	int _InfantrySquadMemberLeaveInterval = 200;
+	// Legacy setting: AI.TransportAndResupply.SoldierRUPrice; same authored units.
+	float _TransportAndResupplySoldierRUPrice = 50.0;
+	// Legacy setting: AI.Common.HpPercentageToWaitMedic; same authored units.
+	float _CommonHpPercentageToWaitMedic = 0.2;
+	// Legacy setting: AI.CombatSituation.Damage; same authored units.
+	float _CombatSituationDamage = 100.0;
+	// Legacy setting: AI.CombatSituation.TimeDamage; same authored units.
+	int _CombatSituationTimeDamage = 1000;
+	// Legacy setting: AI.CombatSituation.MovingEnemyMechNumber; same authored units.
+	int _CombatSituationMovingEnemyMechNumber = 3;
+	// Legacy setting: AI.CombatSituation.MovingEnemyInfantryNumber; same authored units.
+	int _CombatSituationMovingEnemyInfantryNumber = 20;
+	// Legacy setting: AI.TransportAndResupply.MainStorageHealingSpeed; same authored units.
+	float _TransportAndResupplyMainStorageHealingSpeed = 10.0;
+	// Legacy setting: AI.TransportAndResupply.ResupplyMaxPathLenght; same authored units.
+	int _TransportAndResupplyResupplyMaxPathLenght = 30;
+	// Legacy setting: AI.TransportAndResupply.TakeStorageOwnershipRadius; same authored units.
+	float _TransportAndResupplyTakeStorageOwnershipRadius = 100.0;
+	// Legacy setting: AI.Common.TankPitCover; same authored units.
+	float _CommonTankPitCover = 0.5;
+	// Legacy setting: AI.Common.FenceSegmentRuPrice; same authored units.
+	float _CommonFenceSegmentRuPrice = 100.0;
+	// Legacy setting: AI.Common.TrenchSegmentRuPrice; same authored units.
+	float _CommonTrenchSegmentRuPrice = 100.0;
+	// Legacy setting: AI.Engineers.MineAPersRuPrice; same authored units.
+	float _EngineersMineAPersRuPrice = 1000.0;
+	// Legacy setting: AI.Engineers.MineATankRuPrice; same authored units.
+	float _EngineersMineATankRuPrice = 2000.0;
+	// Legacy setting: AI.Engineers.AntitankRuPrice; same authored units.
+	float _EngineersAntitankRuPrice = 100.0;
+	// Legacy setting: AI.Engineers.ComplexObstacleAntitankPeriod; same authored units.
+	int _EngineersComplexObstacleAntitankPeriod = 2;
+	// Legacy setting: AI.TransportAndResupply.MedicalTruckHealRadius; same authored units.
+	int _TransportAndResupplyMedicalTruckHealRadius = 1000;
+	// Legacy setting: AI.TransportAndResupply.MedicalTruckHealPerUpdateDuration; same authored units.
+	float _TransportAndResupplyMedicalTruckHealPerUpdateDuration = 0.5;
+	// Legacy setting: AI.Common.UnitEntrenchTime; same authored units.
+	int _CommonUnitEntrenchTime = 10000;
+	// Legacy setting: AI.Flags.Radius; same authored units.
+	float _FlagsRadius = 320.0;
+	// Legacy setting: AI.Flags.PointsSpeed; same authored units.
+	float _FlagsPointsSpeed = 10.0;
+	// Legacy setting: AI.Flags.PlayerPointsSpeed; same authored units.
+	float _FlagsPlayerPointsSpeed = 10.0;
+	// Legacy setting: AI.Flags.PointsToReinforcement; same authored units.
+	float _FlagsPointsToReinforcement = 30.0;
+	// Legacy setting: AI.Flags.TimeToCapture; same authored units.
+	float _FlagsTimeToCapture = 5000.0;
+	// Legacy setting: AI.Common.ArmorForAreaDamage; same authored units.
+	int _CommonArmorForAreaDamage = 10;
+	// Legacy setting: AI.Buildings.DefaultFireplaceCoverage; same authored units.
+	float _BuildingsDefaultFireplaceCoverage = 0.5;
+	// Legacy setting: AI.Aviation.DiveBeforeExplodeTime; same authored units.
+	int _AviationDiveBeforeExplodeTime = 5000;
+	// Legacy setting: AI.Aviation.DiveAfterExplodeTime; same authored units.
+	int _AviationDiveAfterExplodeTime = 150;
+	// Legacy setting: AI.Weather.Time; same authored units.
+	int _WeatherTime = 10000;
+	// Legacy setting: AI.Weather.TimeRandom; same authored units.
+	int _WeatherTimeRandom = 20000;
+	// Legacy setting: AI.Weather.Period; same authored units.
+	int _WeatherPeriod = 30000;
+	// Legacy setting: AI.Weather.PeriodRandom; same authored units.
+	int _WeatherPeriodRandom = 30000;
+	// Legacy setting: AI.Weather.FireRangeCoefficient; same authored units.
+	float _WeatherFireRangeCoefficient = 0.5;
+	// Legacy setting: AI.Weather.TimeToFadeOff; same authored units.
+	int _WeatherTimeToFadeOff = 5;
+	// Legacy setting: AI.AntiAviationArtillery.AimIterations; same authored units.
+	int _AntiAviationArtilleryAimIterations = 3;
+	// Legacy setting: AI.Morale.CoeffToLowMoraleWithoutOfficer; same authored units.
+	float _MoraleCoeffToLowMoraleWithoutOfficer = 2.0;
+	// Legacy setting: AI.Infantry.MaxDistanceToThrowGrenade; same authored units.
+	float _InfantryMaxDistanceToThrowGrenade = 320.0;
+	// Legacy setting: AI.Morale.DispersionCoeff; same authored units.
+	float _MoraleDispersionCoeff = 1.0;
+	// Legacy setting: AI.Morale.RelaxCoeff; same authored units.
+	float _MoraleRelaxCoeff = 1.0;
+	// Legacy setting: AI.Morale.AimingCoeff; same authored units.
+	float _MoraleAimingCoeff = 1.0;
+	// Legacy setting: AI.TargetResolution.Gunplane.DistanceToCenter; same authored units.
+	float _TargetResolutionGunplaneDistanceToCenter = 10.0;
+	// Legacy setting: AI.TargetResolution.Gunplane.AlphaAttack1; same authored units.
+	float _TargetResolutionGunplaneAlphaAttack1 = 1.0;
+	// Legacy setting: AI.TargetResolution.Gunplane.AlphaAttack2; same authored units.
+	float _TargetResolutionGunplaneAlphaAttack2 = 0.3;
+	// Legacy setting: AI.TargetResolution.Gunplane.AlphaGo; same authored units.
+	float _TargetResolutionGunplaneAlphaGo = 0.005;
+	// Legacy setting: AI.TargetResolution.Gunplane.AlphaKill; same authored units.
+	float _TargetResolutionGunplaneAlphaKill = 1.0;
+	// Legacy setting: AI.TargetResolution.Gunplane.AlphaPrice; same authored units.
+	float _TargetResolutionGunplaneAlphaPrice = 1.0;
+	// Legacy setting: AI.TargetResolution.Gunplane.LimitTime; same authored units.
+	float _TargetResolutionGunplaneLimitTime = 1000.0;
+	// Legacy setting: AI.Common.MaxFireRangeToShootByLine; same authored units.
+	float _CommonMaxFireRangeToShootByLine = 1536.0;
+	// Legacy setting: AI.Buildings.HPPercentToEscapeFromBuilding; same authored units.
+	float _BuildingsHPPercentToEscapeFromBuilding = 0.1;
+	// Legacy setting: AI.Infantry.SpyGlassAngle; same authored units.
+	float _InfantrySpyGlassAngle = 45.0;
+	// Legacy setting: AI.Common.MinRotateAngle; same authored units.
+	float _CommonMinRotateAngle = 0.0;
+	// Legacy setting: AI.Aviation.FighterPatrolTime; same authored units.
+	int _AviationFighterPatrolTime = 0;
+	// Legacy setting: AI.Infantry.FullHealthTime; same authored units.
+	int _InfantryFullHealthTime = 2000;
+	// Legacy setting: AI.Engineers.RepairCostAdjust; same authored units.
+	float _EngineersRepairCostAdjust = 50.0;
+	// Legacy setting: AI.Common.TimeToAllowKillCrushedObj; same authored units.
+	int _CommonTimeToAllowKillCrushedObj = 20000;
+	// Legacy setting: AI.Flags.StorageCaptureTime; same authored units.
+	int _FlagsStorageCaptureTime = 5000;
+	// Legacy setting: use_round_units; same authored units.
+	bool _UseRoundUnits = false;
+	// Omitted unit types have zero reveal probabilities, distance and time; duplicate types use the last entry.
+	SAIPropertyRevealInfo _RevealInfo[];
+};
+
 [typeID = 0x11074CC0]
 class SAIGameConsts
 {
@@ -116,5 +465,7 @@ class SAIGameConsts
 	// Apply infantry formation stat modifiers in trenches and buildings; false restores them only after leaving.
 	[preserveDefault]
 	bool _InfantryFormationModifiersApplyInTrenches = true;
+	// Optional simulation properties; absent or unresolved resources retain the legacy settings.
+	SAIPropertyConsts *_AIPropertyConsts;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

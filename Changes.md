@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Added optional `AIGameConsts.AIPropertyConsts` game data for all configurable values handled by `AIConsts.cpp`, including plane heights and reveal tables. A linked resource takes precedence over local settings and contributes to multiplayer data checksums; missing links preserve the legacy behavior. The example in `OBK2_Examples/AIPropertyConsts` uses the supplied installed profile, and `scripts/convert_ai_consts.py` converts other profiles.
+
 - Added `AIGameConsts.InfantryFormationModifiersApplyInTrenches` (default `true`). Set it to `false` to suspend infantry formation stat modifiers while each soldier is inside a trench or building, and restore the current formation's modifiers on exit. Shelter and ability bonuses are retained.
 
 - Units now expose AABB and cover strength ranges, and shells expose separate crack power and random variation for each. Successful cracks bypass combat-box compression or cover rejection for direct hits and splash, while armor checks still apply. Defaults preserve existing hit behavior. See `docs/hit-processing.md` for the formulas and authoring details.

@@ -120,11 +120,7 @@ private:
 
 int CGlobalSerializer::operator&( IBinSaver &saver )
 {
-	if ( saver.IsReading() )
-	{
-		SConsts::Load();
-	}
-
+	// CAILogic restores its data-backed constants before deserializing these globals.
 	saver.Add( 4, &theGroupLogic );
 	saver.Add( 5, &units );
 	saver.Add( 6, &updater );

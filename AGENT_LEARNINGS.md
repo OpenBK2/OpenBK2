@@ -574,3 +574,19 @@ context. Read `git diff` of every touched file before building.
 - The generated schema's local type indices can shift throughout `types.xml`
   after one new field. Verify regeneration and schema consistency instead of
   manually trimming these generated changes.
+
+## AI properties in game data
+
+- Console registration defaults can differ from actual C++ initializers.
+  `RegisterVar` does not invoke the handler during registration. Use actual
+  runtime defaults when migrating omitted profile values into database data.
+- Keep legacy settings separately when a database resource supplies effective
+  values, so later profile/console writes cannot change deterministic simulation.
+  Restore the source before global objects deserialize, using the existing
+  `AIGameConsts` reference and unchanged save chunk IDs.
+- `RPGStatsAutomagic` iterators use unordered maps, and the legacy reveal loop
+  skips the last entry. New reveal loading uses only alias lookup and stored
+  vector order; returning to legacy restores its previous table before reloading.
+- Mistake: a generated resource cannot live on the stack or in `unique_ptr`
+  because `OBJECT_BASIC_METHODS` makes its destructor protected. Use `CObj` or
+  the database factory for test fixtures, even when the resource is exported.

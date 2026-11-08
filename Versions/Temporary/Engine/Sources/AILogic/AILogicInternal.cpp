@@ -1215,7 +1215,7 @@ void CAILogic::Init( ICheckSumLog *_pCheckSumLog,
 	pScenarioTracker = _pScenarioTracker;
 
 	CExistingObject::Init();
-	SConsts::Load();
+	SConsts::Load( pConsts ? pConsts->pAIPropertyConsts.GetPtr() : nullptr );
 	SConsts::InitPriorities( pConsts->unitTypesPriorities );
 
 	Singleton<CCommonPathFinder>()->Init();
