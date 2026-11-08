@@ -28,6 +28,10 @@ These markers create or update `*_animb2.xdb` resources and link them to the Ske
 
 Export Geometry and AIGeometry after changing the model or `RootMesh`, and save the resulting XDB records before using them in the game. Export writes Geometry's `Center`/`Size` and AIGeometry's `AABBCenter`/`AABBHalfSize`. The game and editor load these stored bounds, just as for GR2; they no longer calculate missing or zero bounds from the model at load time. Re-export older glTF resources that relied on that calculation (exporting the parent with references updates both resources). This keeps AI hull bounds identical across clients.
 
+## Gun recoil
+
+Mechanical gun `RecoilLength` is a world-space distance at firing time, independent of the model's or locator's scale. The `RecoilPoint` part retracts opposite the `ShootPoint` locator's local +Z firing axis in engine coordinates (glTF local +Y), then returns over the configured recoil/shake timing. The recoil mesh's own local Y does not need to align with the barrel. The stored displacement follows the bone hierarchy as the gun aims. `RecoilShakeAngle` still controls the separate body rotation; locator scale does not amplify that angle.
+
 ## Turret limits
 
 For `MechUnitRPGStats`, put these numeric custom properties directly on the `Turret`, `Turret01`, etc. object and include custom properties when exporting GLB/GLTF:

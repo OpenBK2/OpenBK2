@@ -9,6 +9,8 @@
 #include "System/BinaryResources.h"
 #include "vendor/granny/include/granny.h"
 
+#include <algorithm>
+
 #include <fmt/format.h>
 
 namespace NAnimation
@@ -1191,6 +1193,37 @@ bool CSkeletonAnimator::DoesWantToUpdate( const STime &t ) const
 		}
 	}
 	return false;
+}
+
+bool SetBoneRecoil( ISkeletonAnimator *pAnimator,
+                    const char *pszBoneName,
+                    const SHMatrix &mShootPoint,
+                    const STime &tStart,
+                    float fLength,
+                    STime tRecoilDuration,
+                    STime tTotalDuration )
+{
+	SHMatrix mBone, mInverseBone;
+	if ( !pAnimator || !pAnimator->GetBonePosition( pszBoneName, &mBone ) || !Invert( &mInverseBone, mBone ) )
+	{
+		return false;
+	}
+
+	// Muzzle locators fire along +Z, which need not match the recoil mesh's local Y.
+	// Normalize before changing frames: neither model nor locator scale sets the distance.
+	CVec3 vDirection;
+	mShootPoint.RotateVector( &vDirection, -V3_AXIS_Z );
+	if ( !Normalize( &vDirection ) )
+	{
+		return false;
+	}
+	CVec3 vLocalRecoil;
+	mInverseBone.RotateVector( &vLocalRecoil, vDirection * fLength );
+	std::vector<ISkeletonAnimator::SDesiredBoneMove> mutation;
+	mutation.emplace_back( tRecoilDuration, QNULL, vLocalRecoil );
+	mutation.emplace_back( (std::max)( tTotalDuration, tRecoilDuration ) - tRecoilDuration, QNULL, VNULL3 );
+	pAnimator->SetBoneMutator( pszBoneName, tStart, mutation );
+	return true;
 }
 
 ISkeletonAnimator *CreateSkeletonAnimator( const SSkeletonHandle &modelH, CFuncBase<STime> *_pTime )

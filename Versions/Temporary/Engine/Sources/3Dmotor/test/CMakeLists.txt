@@ -160,3 +160,11 @@ if(WIN32)
     set_property(TARGET GltfMirror_test APPEND PROPERTY
         LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
 endif()
+
+# Recoil uses the muzzle direction and a world-space distance for every model scale.
+add_unit_test(Recoil 3Dmotor 3DLib System Misc gr2 fastgltf::fastgltf)
+target_compile_definitions(Recoil_test PRIVATE NOMINMAX)
+if(WIN32)
+    set_property(TARGET Recoil_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
+endif()
