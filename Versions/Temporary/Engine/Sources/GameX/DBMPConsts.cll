@@ -109,5 +109,16 @@ class SMultiplayerConsts
 	int _TimeUserMPPause = 120;
 	// (seconds) other delays time limit (sum with previous)
 	int _TimeUserMPLag = 60;
+	/* Connection metadata is excluded from gameplay checksums. The network
+	   handshake checks the effective protocol version separately. */
+	// Online server hostname or IPv4 address; empty uses the legacy NivalNetIP setting.
+	[no_checksum]
+	string _NivalNetIP;
+	// Online server UDP port; 0 uses the legacy NivalNetPort setting.
+	[no_checksum]
+	int _NivalNetPort = 0;
+	// Protocol version for online and LAN connections; -1 uses the legacy NetGameVersion setting.
+	[no_checksum; preserveDefault]
+	int _NetGameVersion = -1;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

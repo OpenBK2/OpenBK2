@@ -67,8 +67,22 @@ for this example. The game client can register accounts after startup.
 
 ## Connecting game clients
 
-Set these variables in each game's `Profiles/game.cfg`, replacing existing
-values where present:
+The game client can configure these values in its existing `MultiplayerConsts`
+resource, referenced by `GameConsts.Multiplayer`:
+
+```xml
+<NivalNetIP>127.0.0.1</NivalNetIP>
+<NivalNetPort>4200</NivalNetPort>
+<NetGameVersion>3</NetGameVersion>
+```
+
+Merge the fields into the existing record and keep its other contents. See the
+[connection settings example](../MultiplayerConnectionSettings/README.md) for
+the field defaults, schema requirements, and LAN behavior. This changes the
+game client's connection settings; the server still reads `server.xml`.
+
+For fields left unset in game data, the client continues to use these variables
+in `Profiles/game.cfg`, replacing existing values where present:
 
 ```text
 setvar NivalNetIP = 127.0.0.1
@@ -78,7 +92,8 @@ setvar NetGameVersion = 3
 
 Use the server's reachable IPv4 address instead of `127.0.0.1` for players on
 other machines. Enter the game's Nival.NET multiplayer mode. The server XML's
-`Port` and `NetVersion` must match `NivalNetPort` and `NetGameVersion` respectively.
+`Port` and `NetVersion` must match the effective `NivalNetPort` and `NetGameVersion`
+respectively. Authored database fields take precedence over the profile.
 Version 3 matches the repository's current `Profiles/game.cfg`; changing this
 identifier alone does not make incompatible game builds or mods compatible.
 
