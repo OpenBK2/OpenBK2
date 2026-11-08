@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AILogicInternal.h"
+#include "DBAIConsts.h"
 #include "GlobalObjects.h"
 #include "Misc/Progress.h"
 #include "Reinforcement.h"
@@ -11,6 +12,13 @@ extern NTimer::STime curTime;
 
 int CAILogic::operator&( IBinSaver &saver )
 {
+	if ( saver.IsReading() )
+	{
+		// Restore the source before global objects load and consult simulation constants.
+		// Chunk IDs and the write order stay compatible with existing saves.
+		saver.Add( 20, &pConsts );
+		SConsts::Load( pConsts ? pConsts->pAIPropertyConsts.GetPtr() : nullptr );
+	}
 	NGlobalObjects::Serialize( 1, saver );
 
 	CStaticMembers staticMembers;
@@ -32,7 +40,10 @@ int CAILogic::operator&( IBinSaver &saver )
 		saver.Add( 18, &bNetGameStarted );
 	}
 	saver.Add( 19, &reservePositions );
-	saver.Add( 20, &pConsts );
+	if ( !saver.IsReading() )
+	{
+		saver.Add( 20, &pConsts );
+	}
 	// Kept out of the checksum, like the bookkeeping above and the map below.
 	// pCheckSumLog is the commands history, so hashing it made the checksum of
 	// the simulation depend on the thing recording the simulation: a run that

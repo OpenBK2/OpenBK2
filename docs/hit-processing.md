@@ -1,9 +1,15 @@
 # Hit processing, armor, cover, and damage
 
 Originally investigated on 2026-11-08 at commit `0c6712bcf`, and updated for the
-AABB/cover strength and shell-crack implementation. This describes the current
-implementation, including its exceptions. Values from a running mod/profile can
-differ from both the C++ defaults and the profiles checked into this repository.
+AABB/cover strength, shell-crack, and data-backed AI property implementations.
+This describes the current implementation, including its exceptions. Values
+from a running mod/profile can differ from the defaults and checked-in profiles.
+
+When `AIGameConsts.AIPropertyConsts` resolves to a resource, its properties supply
+the configurable `AIConsts.cpp` values, including formation dispersion, lying
+cover, and splash constants. Local profile or console changes cannot override
+them. Without that resource, the original profile/settings behavior applies.
+See the [AI property example and migration notes](../OBK2_Examples/AIPropertyConsts/README.md).
 
 ## Main result
 
@@ -114,7 +120,7 @@ Sources: [Guns.cpp](../Versions/Temporary/Engine/Sources/AILogic/Guns.cpp#L84)
 (`GetDispByRadius`, `GetDispRatio`, `Fire`),
 [Randomize.h](../Versions/Temporary/Engine/Sources/AILogic/Randomize.h#L22),
 [Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L380),
-[AIConsts.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIConsts.cpp#L537),
+[AIConsts.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIConsts.cpp),
 [modifier implementation](../Versions/Temporary/Engine/Sources/Stats_B2_M1/include_UnitStatsModifier_ParameterModifier.h).
 
 ## 2. AABB size and coefficient are two geometric gates
@@ -425,23 +431,26 @@ the ordinary direct hit's `<= 64`. Cover protection is checked before the circle
 Intersection uses distance to the rectangle, not simply distance to unit center.
 `Area2` selects candidates but is not the radius used by this generic unit test.
 
-The constants are configurable:
+The constants are configurable. A linked `AIPropertyConsts` uses the resource
+fields below; otherwise the legacy settings apply:
 
-| Setting | C++ default | Checked-in Current and Multiplayer profiles |
-|---|---:|---:|
-| `AI.Common.AreaDamageCoeff` | `0.2` | `0.3` |
-| `AI.Common.ArmorForAreaDamage` | `10` | `300` |
+| Legacy setting | Resource field | C++/schema default | Checked-in Current and Multiplayer profiles |
+|---|---|---:|---:|
+| `AI.Common.AreaDamageCoeff` | `CommonAreaDamageCoeff` | `0.2` | `0.3` |
+| `AI.Common.ArmorForAreaDamage` | `CommonArmorForAreaDamage` | `10` | `300` |
 
 For those profiles, eligible splash deals `30%` of a fresh modified damage roll
 if the selected armor roll is `<= 300`. Shell piercing is irrelevant to this
-particular check. Use the loaded profile/mod values when reasoning about a match.
+particular check. The supplied AI property example also uses these values. Use
+the active resource's values, or the loaded profile values in legacy mode, when
+reasoning about a match.
 
 `Area`, `Area2`, dispersion, and weapon range are converted from authored meters
 to AI coordinates with a factor of `32` by the stats helpers.
 
 Sources: [Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L809),
 [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L283),
-[AIConsts.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIConsts.cpp#L492),
+[AIConsts.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIConsts.cpp),
 [Current consts.cfg](../Versions/Current/Profiles/consts.cfg#L128),
 [Multiplayer consts.cfg](../Versions/Multiplayer/profiles/consts.cfg#L114),
 [weapon conversion](../Versions/Temporary/Engine/Sources/Stats_B2_M1/include_WeaponRPGStats.h),

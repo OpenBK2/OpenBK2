@@ -12,6 +12,7 @@ namespace NDb
 {
 enum EDesignUnitType : int;
 struct SUnitTypePriority;
+struct SAIPropertyConsts;
 } // namespace NDb
 
 struct SConsts : public SAIConsts
@@ -455,7 +456,9 @@ public:
 	static NTimer::STime INFANTRY_FULL_HEAL_TIME;
 	static NTimer::STime STORAGE_CAPTURE_TIME;
 	//
-	static void Load();
+	AILOGIC_EXPORT static void Load( const NDb::SAIPropertyConsts *pProperties = nullptr );
+	AILOGIC_EXPORT static bool UsesPropertyConsts();
+	AILOGIC_EXPORT static void GetEffectivePropertyConsts( NDb::SAIPropertyConsts *pProperties );
 	//
 	static det_map<NDb::EDesignUnitType, int, SEnumHash> PRIORITIES;
 

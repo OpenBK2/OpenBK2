@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AIInternalConsts.h"
 #include "Manuver.h"
 #include "PlanePathFraction.h"
 
@@ -12,7 +13,8 @@ struct SPlanesConsts
 
 	static float GetMinHeight()
 	{
-		if ( MIN_HEIGHT_TEMP == 0.0f )
+		// A local debug override must not supersede the mission's database properties.
+		if ( SConsts::UsesPropertyConsts() || MIN_HEIGHT_TEMP == 0.0f )
 		{
 			return MIN_HEIGHT;
 		}
