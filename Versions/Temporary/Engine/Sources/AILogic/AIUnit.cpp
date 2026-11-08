@@ -40,6 +40,7 @@
 #include "GlobalWarFog.h"
 #include "Graveyard.h"
 #include "GroupLogic.h"
+#include "HitProtection.h"
 #include "NewUpdater.h"
 #include "port/wordpack.h"
 #include "Probability.h"
@@ -166,13 +167,14 @@ void CAIUnit::SendNTotalKilledUnits( const int nPlayerOfShoot,
 const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRect,
                                                            const CVec2 &explCoord,
                                                            const int nRandPiercing,
-                                                           const int nRandArmor ) const
+                                                           const int nRandArmor,
+                                                           const CExplosion *pExpl ) const
 {
 	// попали по комбат системе
 	if ( combatRect.IsPointInside( explCoord ) )
 	{
 		// пробили
-		if ( nRandPiercing >= nRandArmor && !IsSavedByCover() )
+		if ( nRandPiercing >= nRandArmor && !IsSavedByCover( pExpl ) )
 		{
 			return SAINotifyHitInfo::EHT_HIT;
 		}
@@ -228,13 +230,15 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 			const int nRandArmor = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect );
 			// если бьёт снизу, or with ignore AABBCoef ability on, то не сжимать
 			CAIUnit *pWhoFired = pExpl->GetWhoFire();
-			if ( nArmorDir != 1 && ( IsValidObj( pWhoFired ) && !pWhoFired->IsIgnoreAABBCoeff() ) )
+			// A successful crack keeps the full footprint, but still requires penetration and cover checks.
+			if ( nArmorDir != 1 && ( IsValidObj( pWhoFired ) && !pWhoFired->IsIgnoreAABBCoeff() ) &&
+			     !NHitProtection::CracksAABB( pExpl->GetShellStats(), *GetStats() ) )
 			{
 				unitRect.Compress( GetRemissiveCoeff() );
 			}
 
 			const SAINotifyHitInfo::EHitType eHitType =
-					ProcessExactHit( unitRect, vExplCoord, pExpl->GetRandomPiercing(), nRandArmor );
+					ProcessExactHit( unitRect, vExplCoord, pExpl->GetRandomPiercing(), nRandArmor, pExpl );
 
 			if ( pExpl->GetWhoFire() )
 			{
@@ -299,12 +303,13 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl,
 	{
 		bPreconditionsPassed = true;
 		bCoverCalled = true;
-		bSavedByCover = IsSavedByCover();
+		bSavedByCover = IsSavedByCover( pExpl );
 
 		if ( !bSavedByCover )
 		{
 			SRect unitRect = GetUnitRect();
-			if ( nArmorDir != 1 )
+			// Splash uses the same crack test; its radius and armor threshold remain unchanged.
+			if ( nArmorDir != 1 && !NHitProtection::CracksAABB( pExpl->GetShellStats(), *GetStats() ) )
 			{
 				unitRect.Compress( GetRemissiveCoeff() );
 			}
@@ -2910,8 +2915,13 @@ const float CAIUnit::GetCover() const
 	return GetStatsModifier()->cover.Get( 1.0f );
 }
 
-bool CAIUnit::IsSavedByCover() const
+bool CAIUnit::IsSavedByCover( const CExplosion *pExpl ) const
 {
+	// A cracked cover cannot reject this hit. Calls without a shell retain their original behavior.
+	if ( pExpl && NHitProtection::CracksCover( pExpl->GetShellStats(), *GetStats() ) )
+	{
+		return false;
+	}
 	RecordRandomCall();
 	return NRandom::Random( 0.0f, 1.0f ) >= GetCover();
 }

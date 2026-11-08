@@ -589,6 +589,14 @@ class SWeaponRPGStats : public SCommonRPGStats
 		SProjectile *_visProjectile;
 		// optional guided missile parameters
 		SMissleParams *_MissleParams;
+		// base power to bypass a unit's reduced combat AABB
+		float _AABBCrackBase = 0.0;
+		// symmetric random variation of AABB crack power
+		float _AABBCrackRandom = 0.0;
+		// base power to bypass a unit's cover roll
+		float _CoverCrackBase = 0.0;
+		// symmetric random variation of cover crack power
+		float _CoverCrackRandom = 0.0;
 
 		#include "include_WeaponRPGStats_Shell.h"
 	};
@@ -1350,6 +1358,18 @@ class SUnitBaseRPGStats : public SHPObjectRPGStats
 	SArmorPattern *_ArmorPattern;
 	// exp to receive, then kill this unit
 	float _ExpPrice = 1;
+	// minimum strength resisting a shell's AABB crack power
+	[chunkID = 36; preserveDefault]
+	float _AABBStrengthMin = 1.0;
+	// maximum strength resisting a shell's AABB crack power
+	[chunkID = 37; preserveDefault]
+	float _AABBStrengthMax = 1.0;
+	// minimum strength resisting a shell's cover crack power
+	[chunkID = 38; preserveDefault]
+	float _CoverStrengthMin = 1.0;
+	// maximum strength resisting a shell's cover crack power
+	[chunkID = 39; preserveDefault]
+	float _CoverStrengthMax = 1.0;
 
 	#include "include_UnitBaseRPGStats.h"
 };

@@ -1618,6 +1618,10 @@ void SWeaponRPGStats::SShell::ReportMetaInfo( const std::string &szAddName, uint
 	NMetaInfo::ReportMetaInfo( szAddName + "RelaxTime", (uint8_t*)&fRelaxTime - pThis, sizeof(fRelaxTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "visProjectile", (uint8_t*)&pvisProjectile - pThis, sizeof(pvisProjectile), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "MissleParams", (uint8_t*)&pMissleParams - pThis, sizeof(pMissleParams), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "AABBCrackBase", (uint8_t*)&fAABBCrackBase - pThis, sizeof(fAABBCrackBase), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AABBCrackRandom", (uint8_t*)&fAABBCrackRandom - pThis, sizeof(fAABBCrackRandom), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "CoverCrackBase", (uint8_t*)&fCoverCrackBase - pThis, sizeof(fCoverCrackBase), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "CoverCrackRandom", (uint8_t*)&fCoverCrackRandom - pThis, sizeof(fCoverCrackRandom), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
@@ -1652,6 +1656,10 @@ int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
 	saver.Add( "RelaxTime", &fRelaxTime );
 	saver.Add( "visProjectile", &pvisProjectile );
 	saver.Add( "MissleParams", &pMissleParams );
+	saver.Add( "AABBCrackBase", &fAABBCrackBase );
+	saver.Add( "AABBCrackRandom", &fAABBCrackRandom );
+	saver.Add( "CoverCrackBase", &fCoverCrackBase );
+	saver.Add( "CoverCrackRandom", &fCoverCrackRandom );
 
 	return 0;
 }
@@ -1688,6 +1696,10 @@ int SWeaponRPGStats::SShell::operator&( IBinSaver &saver )
 	saver.Add( 29, &fRelaxTime );
 	saver.Add( 30, &pvisProjectile );
 	saver.Add( 31, &pMissleParams );
+	saver.Add( 32, &fAABBCrackBase );
+	saver.Add( 33, &fAABBCrackRandom );
+	saver.Add( 34, &fCoverCrackBase );
+	saver.Add( 35, &fCoverCrackRandom );
 
 	return 0;
 }
@@ -1700,7 +1712,7 @@ uint32_t SWeaponRPGStats::SShell::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << eDamageType << nPiercing << nDamageRandom << fDamagePower << nPiercingRandom << fArea << fArea2 << fSpeed << fTraceSpeedCoeff << fTraceProbability << fTraceLength << fTraceWidth << etrajectory << fBrokeTrackProbability << szFireSound << fFireRate << fRelaxTime << pMissleParams;
+	checkSum << eDamageType << nPiercing << nDamageRandom << fDamagePower << nPiercingRandom << fArea << fArea2 << fSpeed << fTraceSpeedCoeff << fTraceProbability << fTraceLength << fTraceWidth << etrajectory << fBrokeTrackProbability << szFireSound << fFireRate << fRelaxTime << pMissleParams << fAABBCrackBase << fAABBCrackRandom << fCoverCrackBase << fCoverCrackRandom;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -4359,6 +4371,10 @@ void SUnitBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "UninstallRotate", (uint8_t*)&fUninstallRotate - pThis, sizeof(fUninstallRotate), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "ArmorPattern", (uint8_t*)&pArmorPattern - pThis, sizeof(pArmorPattern), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "ExpPrice", (uint8_t*)&fExpPrice - pThis, sizeof(fExpPrice), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "AABBStrengthMin", (uint8_t*)&fAABBStrengthMin - pThis, sizeof(fAABBStrengthMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "AABBStrengthMax", (uint8_t*)&fAABBStrengthMax - pThis, sizeof(fAABBStrengthMax), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "CoverStrengthMin", (uint8_t*)&fCoverStrengthMin - pThis, sizeof(fCoverStrengthMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "CoverStrengthMax", (uint8_t*)&fCoverStrengthMax - pThis, sizeof(fCoverStrengthMax), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
@@ -4398,6 +4414,10 @@ int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "UninstallRotate", &fUninstallRotate );
 	saver.Add( "ArmorPattern", &pArmorPattern );
 	saver.Add( "ExpPrice", &fExpPrice );
+	saver.Add( "AABBStrengthMin", &fAABBStrengthMin );
+	saver.Add( "AABBStrengthMax", &fAABBStrengthMax );
+	saver.Add( "CoverStrengthMin", &fCoverStrengthMin );
+	saver.Add( "CoverStrengthMax", &fCoverStrengthMax );
 
 	return 0;
 }
@@ -4439,6 +4459,22 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 32, &fUninstallRotate );
 	saver.Add( 33, &pArmorPattern );
 	saver.Add( 34, &fExpPrice );
+	if ( !saver.IsReading() || saver.HasChunk( 36 ) )
+	{
+		saver.Add( 36, &fAABBStrengthMin );
+	}
+	if ( !saver.IsReading() || saver.HasChunk( 37 ) )
+	{
+		saver.Add( 37, &fAABBStrengthMax );
+	}
+	if ( !saver.IsReading() || saver.HasChunk( 38 ) )
+	{
+		saver.Add( 38, &fCoverStrengthMin );
+	}
+	if ( !saver.IsReading() || saver.HasChunk( 39 ) )
+	{
+		saver.Add( 39, &fCoverStrengthMax );
+	}
 
 	return 0;
 }
@@ -4451,7 +4487,7 @@ uint32_t SUnitBaseRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fReverseSpeedModifier << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice;
+	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fReverseSpeedModifier << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice << fAABBStrengthMin << fAABBStrengthMax << fCoverStrengthMin << fCoverStrengthMax;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

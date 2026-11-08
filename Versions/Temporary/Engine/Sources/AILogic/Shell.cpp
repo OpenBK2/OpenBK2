@@ -490,7 +490,7 @@ const SAINotifyHitInfo::EHitType CExplosion::ProcessExactHit( CAIUnit *pTarget,
 	if ( combatRect.IsPointInside( CVec2( explCoord.x, explCoord.y ) ) )
 	{
 		// пробили
-		if ( nRandPiercing >= nRandArmor && !pTarget->IsSavedByCover() )
+		if ( nRandPiercing >= nRandArmor && !pTarget->IsSavedByCover( this ) )
 		{
 			return SAINotifyHitInfo::EHT_HIT;
 		}

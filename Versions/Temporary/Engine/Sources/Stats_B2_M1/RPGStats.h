@@ -804,6 +804,10 @@ namespace NDb
 			float fRelaxTime;
 			CDBPtr< SProjectile > pvisProjectile;
 			CDBPtr< SMissleParams > pMissleParams;
+			float fAABBCrackBase;
+			float fAABBCrackRandom;
+			float fCoverCrackBase;
+			float fCoverCrackRandom;
 
 			#include "include_WeaponRPGStats_Shell.h"
 
@@ -825,7 +829,11 @@ namespace NDb
 				etrajectory( TRAJECTORY_LINE ),
 				fBrokeTrackProbability( 0.0f ),
 				fFireRate( 0.0f ),
-				fRelaxTime( 0.0f )
+				fRelaxTime( 0.0f ),
+				fAABBCrackBase( 0.0000f ),
+				fAABBCrackRandom( 0.0000f ),
+				fCoverCrackBase( 0.0000f ),
+				fCoverCrackRandom( 0.0000f )
 			{ }
 			//
 			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
@@ -2090,6 +2098,10 @@ namespace NDb
 		float fUninstallRotate;
 		CDBPtr< SArmorPattern > pArmorPattern;
 		float fExpPrice;
+		float fAABBStrengthMin;
+		float fAABBStrengthMax;
+		float fCoverStrengthMin;
+		float fCoverStrengthMax;
 
 		#include "include_UnitBaseRPGStats.h"
 
@@ -2117,7 +2129,11 @@ namespace NDb
 			fSmallAABBCoeff( 0.0f ),
 			fUninstallTransport( 0.0f ),
 			fUninstallRotate( 0.0f ),
-			fExpPrice( 1 )
+			fExpPrice( 1 ),
+			fAABBStrengthMin( 1.0000f ),
+			fAABBStrengthMax( 1.0000f ),
+			fCoverStrengthMin( 1.0000f ),
+			fCoverStrengthMax( 1.0000f )
 		{ }
 		//
 		void ReportMetaInfo() const;

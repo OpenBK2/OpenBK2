@@ -548,3 +548,17 @@ context. Read `git diff` of every touched file before building.
 - Mistake: repeated guessed filenames and shell wildcard path operands during
   this investigation despite existing guidance. Discover exact filenames with
   `rg --files`, use `rg -g` for patterns, and read UTF-8 explicitly in PowerShell.
+
+## Hit protection strength and crack power
+
+- `RandomCheck(float, float)` returns an integer in this engine. Fractional
+  combat stats need `NRandom::Random(float, float)` with `RecordRandomCall()`;
+  sequence separate draws explicitly for deterministic simulation.
+- New default-off probability checks must avoid RNG draws when their result is
+  certain, so existing data keeps its previous hit decisions and random stream.
+- Nonzero schema defaults need `[preserveDefault]` when old binary records omit
+  the new fields; otherwise the binary reader can replace them with zero.
+- Mistake: appending fields without explicit IDs collided with the earlier
+  `ReverseSpeedModifier` field's pinned chunk 35. Inspect every pinned ID in the
+  containing schema type before allocating new chunks; the strength fields use
+  36 through 39. Always regenerate and check the schema before building consumers.
