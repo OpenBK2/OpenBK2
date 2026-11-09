@@ -5,10 +5,12 @@
 #include "Stats_B2_M1/AnimationType.h"
 #include "Stats_B2_M1/RPGStats.h"
 #include "TransferredUnitExperience.h"
+#include "UnitStatsModifiers.h"
 
 #include "AILogic_export.h"
 
 #include <cstdint>
+#include <string>
 
 class CAntiArtillery;
 class CAIUnitInfoForGeneral;
@@ -88,7 +90,7 @@ protected:
 	CObjectBase *pObjInside = {};
 
 private:
-	CPtr<NDb::SUnitStatsModifier> pStatsModifiers;
+	CUnitStatsModifiers statsModifiers;
 
 	CPtr<CExecutorUnitBonus> pShootInMovementExecutor;
 	bool bIgnoreAABBCoeff = {};
@@ -409,12 +411,27 @@ public:
 		return fCamoflage < 1.0f;
 	}
 
-	//Camouflage needs to be removed, probably. Is made obsolete by the following method:
-	void ApplyStatsModifier( const NDb::SUnitStatsModifier *pModifier, const bool bForward );
+	// Each source has one active modifier; setting it again replaces that source's contribution.
+	void SetStatsModifier( const std::string &szSource, const NDb::SUnitStatsModifier *pModifier )
+	{
+		statsModifiers.Set( szSource, pModifier );
+	}
+
+	void RemoveStatsModifier( const std::string &szSource )
+	{
+		statsModifiers.Remove( szSource );
+	}
+
+	const NDb::SUnitStatsModifier *FindStatsModifier( const std::string &szSource ) const
+	{
+		return statsModifiers.Find( szSource );
+	}
+
+	AILOGIC_EXPORT void SetAbilityStatsModifier( NDb::EUnitSpecialAbility eAbility, bool bActive );
 
 	const NDb::SUnitStatsModifier *GetStatsModifier() const
 	{
-		return pStatsModifiers;
+		return statsModifiers.GetCombined();
 	}
 
 	bool IsInWater() const;

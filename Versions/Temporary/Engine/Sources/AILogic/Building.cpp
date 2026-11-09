@@ -828,7 +828,7 @@ void CBuilding::AddSoldier( CSoldier *pUnit )
 	bEscaped = false;
 
 	pUnit->SetToSolidPlace();
-	pUnit->ApplyStatsModifier( pStats->pSoldierStatsModifier, true );
+	pUnit->SetStatsModifier( NStatsModifierSource::Building, pStats->pSoldierStatsModifier );
 
 	const float fHP = pUnit->GetHitPoints();
 	if ( fire.Size() < fire.GetReserved() )
@@ -993,7 +993,7 @@ void CBuilding::DelSoldier( CSoldier *pUnit, const bool bFillEmptyFireplace )
 			NI_ASSERT( false, "Wrong slot info of unit" );
 	}
 
-	pUnit->ApplyStatsModifier( pStats->pSoldierStatsModifier, false );
+	pUnit->RemoveStatsModifier( NStatsModifierSource::Building );
 
 	if ( fire.Size() == 0 && medical.Size() == 0 && rest.Size() == 0 )
 	{

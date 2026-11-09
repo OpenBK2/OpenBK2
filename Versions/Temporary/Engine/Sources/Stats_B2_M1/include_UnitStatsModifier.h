@@ -1,20 +1,20 @@
-void Apply( const SUnitStatsModifier &mod, const bool bForward )
+void Combine( const SUnitStatsModifier &mod )
 {
-	weaponPiercing.Apply( mod.weaponPiercing, bForward );
-	weaponArea.Apply( mod.weaponArea, bForward );
-	weaponTrackDamageProb.Apply( mod.weaponTrackDamageProb, bForward );
-	weaponRelaxTime.Apply( mod.weaponRelaxTime, bForward );
-	camouflage.Apply( mod.camouflage, bForward );
-	weaponDispersion.Apply( mod.weaponDispersion, bForward );
-	weaponDamage.Apply( mod.weaponDamage, bForward );
-	speed.Apply( mod.speed, bForward );
-	weaponArea2.Apply( mod.weaponArea2, bForward );
-	weaponAimTime.Apply( mod.weaponAimTime, bForward );
-	weaponShellSpeed.Apply( mod.weaponShellSpeed, bForward );
-	rotateSpeed.Apply( mod.rotateSpeed, bForward );
-	sightRange.Apply( mod.sightRange, bForward );
-	durability.Apply( mod.durability, bForward );
-	smallAABBCoeff.Apply( mod.smallAABBCoeff, bForward );
-	sightPower.Apply( mod.sightPower, bForward );
-	cover.Apply( mod.cover, bForward );
+	weaponPiercing.Combine( mod.weaponPiercing );
+	weaponArea.Combine( mod.weaponArea );
+	weaponTrackDamageProb.Combine( mod.weaponTrackDamageProb );
+	weaponRelaxTime.Combine( mod.weaponRelaxTime );
+	camouflage.Combine( mod.camouflage );
+	weaponDispersion.Combine( mod.weaponDispersion );
+	weaponDamage.Combine( mod.weaponDamage );
+	speed.Combine( mod.speed );
+	weaponArea2.Combine( mod.weaponArea2 );
+	weaponAimTime.Combine( mod.weaponAimTime );
+	weaponShellSpeed.Combine( mod.weaponShellSpeed );
+	rotateSpeed.Combine( mod.rotateSpeed );
+	sightRange.Combine( mod.sightRange );
+	durability.Combine( mod.durability );
+	smallAABBCoeff.Combine( mod.smallAABBCoeff );
+	sightPower.Combine( mod.sightPower );
+	cover.Combine( mod.cover );
 }

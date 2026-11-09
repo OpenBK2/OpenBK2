@@ -174,7 +174,7 @@ public:
 	void SetInBuilding( class CBuilding *pBuilding );
 	void SetInEntrenchment( class CEntrenchment *pEntrenchment );
 	void SetInTransport( class CMilitaryCar *pUnit );
-	void SetFree();
+	AILOGIC_EXPORT void SetFree();
 	void SetMasterOfStreetsBonus( EObjectInsideOf eNewInsideType );
 	// Formation changes must not add or remove an inactive modifier while sheltered.
 	AILOGIC_EXPORT void ApplyFormationStatsModifier( const NDb::SUnitStatsModifier *pModifier, bool bForward );

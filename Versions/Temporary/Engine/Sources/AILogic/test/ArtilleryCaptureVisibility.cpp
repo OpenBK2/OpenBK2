@@ -139,7 +139,7 @@ protected:
 		guns = MakeObject<CUnitGuns>( 0x1108D4C7 );
 		artillery->nUniqueID = 101;
 		soldier->nUniqueID = 102;
-		modifier = new NDb::SUnitStatsModifier;
+		modifier = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
 		objects.push_back( modifier.GetPtr() );
 		external.emplace_back( 1000, modifier );
 		auto *artilleryStats = MakeRecord<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
@@ -168,6 +168,8 @@ protected:
 
 	void SetVisibilitySnapshot( bool bGunVisible, bool bCrewVisible, bool bAlreadyOwned = false )
 	{
+		CUnitStatsModifiers modifiers;
+		modifiers.Set( "test.fixture", modifier );
 		// The gun has already been processed by visibility. Its new crew has a different cached value.
 		uint8_t owner = crew->GetPlayer();
 		uint8_t gunOwner = bAlreadyOwned ? owner : theDipl.GetNeutralPlayer();
@@ -182,7 +184,7 @@ protected:
 									saver.Add( 44, &disappearing );
 									saver.Add( 46, &lastSeen );
 									saver.Add( 51, &gunVisibility );
-									saver.Add( 58, &modifier );
+									saver.Add( 58, &modifiers );
 								} };
 		LoadFields( artillery,
 		            [&]( IBinSaver &saver )

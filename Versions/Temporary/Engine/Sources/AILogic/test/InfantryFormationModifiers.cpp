@@ -4,6 +4,7 @@
 #include "../B2AI.h"
 #include "../DBAIConsts.h"
 #include "../Diplomacy.h"
+#include "../Entrenchment.h"
 #include "../Formation.h"
 #include "../Soldier.h"
 #include "../Technics.h"
@@ -156,28 +157,40 @@ protected:
 		logic = nullptr;
 	}
 
-	CSoldier *AddSoldier( int insideType )
+	CSoldier *AddSoldier( int insideType, CObjectBase *shelter = nullptr )
 	{
 		auto *soldier = dynamic_cast<CSoldier *>( NObjectFactory::MakeObject( AI_INFANTRY ) );
 		EXPECT_NE( soldier, nullptr );
 		Keep( soldier );
 		soldiers.push_back( soldier );
-		CObj<NDb::SUnitStatsModifier> modifier = new NDb::SUnitStatsModifier;
+		CObj<NDb::SUnitStatsModifier> modifier = Record<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
 		// These represent independent terrain, shelter or ability modifiers and must survive.
 		modifier->cover.fMultBonus = 0.75f;
 		modifier->speed.fMultBonus = 2;
 		Keep( modifier );
+		CUnitStatsModifiers modifiers;
+		modifiers.Set( "test.fixture", modifier );
 		uint8_t player = 2;
 		CDBPtr<NDb::SInfantryRPGStats> statsPointer = infantry;
 		CPtr<CFormation> formationPointer = formation.GetPtr();
+		CPtr<CObjectBase> shelterPointer = shelter;
+		bool alwaysVisible = true;
+		std::vector<int> visibility( 3, true );
+		std::vector<int> disappearing( 3, false );
+		std::vector<NTimer::STime> lastSeen( 3, 1 );
 		SFields ai{ [&]( IBinSaver &saver )
 		            {
 									saver.Add( 6, &player );
-									saver.Add( 58, &modifier );
+									saver.Add( 43, &alwaysVisible );
+									saver.Add( 44, &disappearing );
+									saver.Add( 46, &lastSeen );
+									saver.Add( 51, &visibility );
+									saver.Add( 58, &modifiers );
 								} };
 		SFields fields{ [&]( IBinSaver &saver )
 		                {
 											saver.Add( 1, &ai );
+											saver.Add( 2, &shelterPointer );
 											saver.Add( 3, &insideType );
 											saver.Add( 4, &statsPointer );
 											saver.Add( 18, &formationPointer );
@@ -263,5 +276,27 @@ TEST_F( InfantryFormationModifiers, LegacyBinaryDefaultsAndConfiguredValuesSurvi
 	LoadFields( constants, [&]( IBinSaver &saver ) { saver.Add( 18, &enabled ); } );
 	EXPECT_TRUE( constants->bInfantryFormationModifiersApplyInTrenches );
 	EXPECT_EQ( constants->CalcCheckSum(), legacyChecksum );
+}
+
+TEST_F( InfantryFormationModifiers, LeavingShelterRemovesMasterOfStreetsAndTrenchOnly )
+{
+	auto *trench = dynamic_cast<CEntrenchment *>( NObjectFactory::MakeObject( 0x1108D497 ) );
+	ASSERT_NE( trench, nullptr );
+	Keep( trench );
+	CSoldier *soldier = AddSoldier( 3, trench );
+	auto *bonus = Record<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
+	bonus->speed.fMultBonus = 0;
+	const std::string master = NStatsModifierSource::Ability( NDb::ABILITY_MASTER_OF_STREETS );
+	soldier->SetStatsModifier( master, bonus );
+	soldier->SetStatsModifier( NStatsModifierSource::Trench, bonus );
+	EXPECT_EQ( soldier->GetStatsModifier()->speed.Get( 1 ), 0 );
+	// Exercise the real exit, which temporarily changes occupancy for visibility updates.
+	soldier->SetFree();
+	EXPECT_TRUE( soldier->IsFree() );
+	EXPECT_EQ( soldier->FindStatsModifier( master ), nullptr );
+	EXPECT_EQ( soldier->FindStatsModifier( NStatsModifierSource::Trench ), nullptr );
+	CheckModifier( soldier, 0.375f, 6 );
+	soldier->SetFree();
+	CheckModifier( soldier, 0.375f, 6 );
 }
 } // namespace
