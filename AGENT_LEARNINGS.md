@@ -1,6 +1,13 @@
 
 # AGENT LEARNINGS
 
+- Visible-terrain distance uses cell boundaries in AI coordinates, not fog-cell
+  centers. Normal fog cells span 64 coordinates, but single-player script reveals
+  can expose individual 32-coordinate tiles. Keep the observing party explicit,
+  preserve the unit-visible shortcut, and ignore camouflage detection coverage.
+- Windows test preludes can expose the `max` macro even when the library uses
+  `NOMINMAX`. Parenthesize `(std::numeric_limits<T>::max)()` in those tests.
+
 - Per-unit camouflage detection uses `SpyDiscoveryRange` in meters, while the
   global limit uses visibility tiles. Both CAIUnit and CSoldier supply fog info.
   Keep the applied close radius separate from a pending override, including
