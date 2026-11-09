@@ -904,6 +904,18 @@ void CAITransportUnit::SetTowedArtillery( CArtillery *_pTowedArtillery )
 	updater.AddUpdate( 0, ACTION_NOTIFY_STATE_CHANGED, this, GetUnitState() );
 }
 
+void CAITransportUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
+{
+	CMilitaryCar::GetShootAreas( pShootAreas, pnAreas );
+	if ( IsValidObj( pTowedArtillery ) )
+	{
+		// Alt+R queries the selected truck; append its unselectable gun's areas at the gun's own position.
+		int nTowedAreas = 0;
+		pTowedArtillery->GetShootAreas( pShootAreas, &nTowedAreas );
+		*pnAreas += nTowedAreas;
+	}
+}
+
 const int CAITransportUnit::GetUnitState() const
 {
 	if ( pTowedArtillery )
