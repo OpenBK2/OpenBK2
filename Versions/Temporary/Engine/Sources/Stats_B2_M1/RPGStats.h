@@ -2102,6 +2102,7 @@ namespace NDb
 		float fAABBStrengthMax;
 		float fCoverStrengthMin;
 		float fCoverStrengthMax;
+		float fSpyDiscoveryRange;
 
 		#include "include_UnitBaseRPGStats.h"
 
@@ -2133,7 +2134,8 @@ namespace NDb
 			fAABBStrengthMin( 1.0000f ),
 			fAABBStrengthMax( 1.0000f ),
 			fCoverStrengthMin( 1.0000f ),
-			fCoverStrengthMax( 1.0000f )
+			fCoverStrengthMax( 1.0000f ),
+			fSpyDiscoveryRange( -1.0000f )
 		{ }
 		//
 		void ReportMetaInfo() const;

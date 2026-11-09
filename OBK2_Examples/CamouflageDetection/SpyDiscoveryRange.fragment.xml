@@ -1,0 +1,3 @@
+<!-- Merge into a MechUnitRPGStats or InfantryRPGStats resource, alongside Sight. -->
+<!-- Meters; positive values override the global limit, always capped by current sight. -->
+<SpyDiscoveryRange>24.0</SpyDiscoveryRange>

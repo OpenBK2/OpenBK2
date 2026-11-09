@@ -2253,6 +2253,7 @@ bool CAIUnit::BlocksLooseAirAttacks() const
 
 void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 {
+	pInfo->fSpyDiscoveryRange = GetStats()->fSpyDiscoveryRange;
 	pInfo->vPos.x = GetCenterTile().x / AI_TILES_IN_VIS_TILE;
 	pInfo->vPos.y = GetCenterTile().y / AI_TILES_IN_VIS_TILE;
 	pInfo->bPlane = GetStats()->IsAviation() || IsInSolidPlace();

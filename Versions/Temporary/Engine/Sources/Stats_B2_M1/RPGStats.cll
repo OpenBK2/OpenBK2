@@ -1370,6 +1370,9 @@ class SUnitBaseRPGStats : public SHPObjectRPGStats
 	// maximum strength resisting a shell's cover crack power
 	[chunkID = 39; preserveDefault]
 	float _CoverStrengthMax = 1.0;
+	// (meter) camouflage detection range override; values <= 0 use AI.WarFog.CamouflageOpenRadius, always capped by sight
+	[chunkID = 40; preserveDefault]
+	float _SpyDiscoveryRange = -1.0;
 
 	#include "include_UnitBaseRPGStats.h"
 };
