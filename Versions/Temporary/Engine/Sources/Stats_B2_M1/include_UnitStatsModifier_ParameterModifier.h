@@ -1,19 +1,9 @@
-//SParameterModifier() : fMultBonus( 1.0f ), fAddBonus( 0.0f ), nZeroCount( 0 ) {  }
-void Apply( const SParameterModifier &param, const bool bForward )
+void Combine( const SParameterModifier &param )
 {
-	if ( bForward )
-	{
-		fMultBonus *= param.fMultBonus;
-		fAddBonus += param.fAddBonus;
-		nZeroCount += param.nZeroCount;
-	}
-	else
-	{
-		fMultBonus /= param.fMultBonus;
-		fAddBonus -= param.fAddBonus;
-		nZeroCount -= param.nZeroCount;
-		NI_ASSERT( nZeroCount >= 0, "applied backward effects more than forward" );
-	}
+	// Rebuild from active sources instead of trying to invert floating-point arithmetic.
+	fMultBonus *= param.fMultBonus;
+	fAddBonus += param.fAddBonus;
+	nZeroCount += param.nZeroCount;
 }
 
 float Get( const float fInitialValue ) const

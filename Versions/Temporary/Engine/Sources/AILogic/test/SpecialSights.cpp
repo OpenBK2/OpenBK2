@@ -47,7 +47,7 @@ class SpecialSights : public testing::Test
 	CObj<CAIUnit> unit;
 	CObj<CTurret> turret;
 	CDBPtr<NDb::SMechUnitRPGStats> statsPointer;
-	CPtr<NDb::SUnitStatsModifier> modifierPointer;
+	CUnitStatsModifiers modifiers;
 	int previousDetectionRadius = 8;
 	CMemoryStream updaterState;
 
@@ -132,8 +132,8 @@ protected:
 		turret = dynamic_cast<CTurret *>( NObjectFactory::MakeObject( 0x1108D4B3 ) );
 		ASSERT_NE( unit, nullptr );
 		ASSERT_NE( turret, nullptr );
-		modifier = new NDb::SUnitStatsModifier;
-		modifierPointer = modifier;
+		modifier = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
+		modifiers.Set( "test.fixture", modifier );
 		external.emplace_back( 1, modifier );
 		external.emplace_back( 2, turret );
 		stats = MakeRecord<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
@@ -184,7 +184,7 @@ protected:
 		SFields ai{ [&]( IBinSaver &saver )
 		            {
 									saver.Add( 1, &common );
-									saver.Add( 58, &modifierPointer );
+									saver.Add( 58, &modifiers );
 								} };
 		SFields mechanical{ [&]( IBinSaver &saver )
 		                    {
@@ -231,6 +231,8 @@ protected:
 
 	SWarFogUnitInfo Info() const
 	{
+		// Fixture edits are applied through the same cache rebuild as gameplay changes.
+		unit->SetStatsModifier( "test.fixture", modifier );
 		SWarFogUnitInfo info;
 		unit->GetFogInfo( &info );
 		return info;

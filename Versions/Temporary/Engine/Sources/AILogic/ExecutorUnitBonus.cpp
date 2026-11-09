@@ -113,10 +113,10 @@ float CExecutorUnitBonus::OnAbilityOff()
 
 void CExecutorUnitBonus::SwitchingOffEnd()
 {
-	if ( pModifier && bBonusApplied )
+	if ( bBonusApplied )
 	{
 		//Turn bonus off
-		pUnit->ApplyStatsModifier( pModifier, false );
+		pUnit->RemoveStatsModifier( NStatsModifierSource::Ability( GetAbility() ) );
 		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "Ability stats bonus OFF" );
 		bBonusApplied = false;
 		if ( eStatus != EUS_UNDEFINED )
@@ -133,7 +133,7 @@ void CExecutorUnitBonus::SwitchOnEnd()
 	if ( pModifier && !bBonusApplied )
 	{
 		//Turn bonus on
-		pUnit->ApplyStatsModifier( pModifier, true );
+		pUnit->SetStatsModifier( NStatsModifierSource::Ability( GetAbility() ), pModifier );
 		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "Ability stats bonus ON" );
 		bBonusApplied = true;
 		if ( eStatus != EUS_UNDEFINED )

@@ -53,7 +53,7 @@ int CAIUnit::operator&( IBinSaver &saver )
 	saver.Add( 55, &eReinforcementType );
 	saver.Add( 56, &bRestInside );
 	SerializeOwner( 57, &pObjInside, &saver );
-	saver.Add( 58, &pStatsModifiers );
+	saver.Add( 58, &statsModifiers );
 	saver.Add( 59, &fCamoflage );
 	saver.Add( 60, &pShootInMovementExecutor );
 	saver.Add( 61, &dwForbiddenGuns );

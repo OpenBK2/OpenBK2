@@ -80,6 +80,11 @@ protected:
 		return 0;
 	}
 
+	virtual bool UsesArtilleryGun() const
+	{
+		return false;
+	}
+
 	static void SetUpTestSuite()
 	{
 		ASSERT_EQ( CastToObjectBaseImpl<CTank>( nullptr, static_cast<void *>( nullptr ) ), nullptr );
@@ -168,7 +173,8 @@ protected:
 		bool idle = true;
 		float hp = 100;
 		CPtr<CAICommand> current = command;
-		CPtr<NDb::SUnitStatsModifier> modifierPointer = modifier.GetPtr();
+		CUnitStatsModifiers modifiers;
+		modifiers.Set( "test.fixture", modifier );
 		std::vector<int> visibility{ visible ? 1 : 0, 1, 0 };
 		CPtr<CUnitGuns> unitGuns = unit == owner ? guns : emptyGuns;
 		SFields path{ [&]( IBinSaver &saver )
@@ -196,7 +202,7 @@ protected:
 									saver.Add( 6, &player );
 									saver.Add( 15, &hp );
 									saver.Add( 51, &visibility );
-									saver.Add( 58, &modifierPointer );
+									saver.Add( 58, &modifiers );
 									saver.Add( 71, &cachedTargets );
 									saver.Add( 73, &cacheDuration );
 								} };
@@ -265,7 +271,7 @@ protected:
 		units.Init();
 		theDipl.SetNPlayers( 2 );
 		theDipl.SetParty( 1, 1 );
-		modifier = new NDb::SUnitStatsModifier;
+		modifier = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
 		external.emplace_back( 1000, modifier );
 		owner = MakeObject<CAIUnit>( GetOwnerType() );
 		enemy = MakeObject<CAIUnit>( AI_TANK );
@@ -333,7 +339,7 @@ protected:
 														 saver.Add( 7, &count );
 													 } };
 		// This is a regular vehicle gun; artillery-only selection has separate range restrictions.
-		int artilleryGun = -1;
+		int artilleryGun = UsesArtilleryGun() ? 0 : -1;
 		LoadFields( guns,
 		            [&]( IBinSaver &saver )
 		            {
@@ -797,5 +803,73 @@ class BlockLooseAirAttacksArtillery : public BlockLooseAirAttacks
 TEST_F( BlockLooseAirAttacksArtillery, ZeroSetupArtilleryFactoryPreservesStationaryAttack )
 {
 	ExpectRangeLossEndsAttack();
+}
+
+class ZeroingInModifiers : public AggressiveAttacker
+{
+	int GetOwnerType() const override
+	{
+		return AI_ARTILLERY;
+	}
+
+	bool UsesArtilleryGun() const override
+	{
+		return true;
+	}
+
+protected:
+	CPtr<IUnitState> StartZeroingIn( const CVec2 &point )
+	{
+		// Give Stop() a real path, while reusing the gun/range fixture above.
+		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
+		auto *bonus = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
+		bonus->weaponDamage.fMultBonus = 2;
+		bonus->weaponRelaxTime.fMultBonus = 0;
+		bonus->cover.fAddBonus = 0.25f;
+		auto *ability = MakeRecord<NDb::SUnitSpecialAblityDesc>( "UnitSpecialAblityDesc" );
+		ability->eName = NDb::ABILITY_ZEROING_IN;
+		ability->pStatsBonus = bonus;
+		ability->fParameter = 50;
+		auto *actions = const_cast<NDb::SUnitActions *>( owner->GetStats()->GetActions() );
+		actions->specialAbilities = { ability };
+		CPtr<CAICommand> command = MakeObject<CAICommand>( 0x1108D44D );
+		command->ToUnitCmd().nCmdType = ACTION_COMMAND_RANGE_AREA;
+		command->ToUnitCmd().vPos = point;
+		CPtr<IUnitState> state = owner->GetStatesFactory()->ProduceState( owner, command );
+		owner->SetCurState( state );
+		return state;
+	}
+};
+
+TEST_F( ZeroingInModifiers, AppliesConfiguredBonusAndRemovesItOnInterruptionAfterSaveLoad )
+{
+	auto *other = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
+	other->weaponDamage.fMultBonus = 3;
+	owner->SetStatsModifier( "test.other", other );
+	CPtr<IUnitState> state = StartZeroingIn( CVec2( 80, 180 ) );
+	ASSERT_TRUE( state );
+	EXPECT_EQ( owner->GetStatsModifier()->weaponDamage.Get( 10 ), 60 );
+	EXPECT_EQ( owner->GetStatsModifier()->weaponRelaxTime.Get( 10 ), 0 );
+	EXPECT_EQ( owner->GetStatsModifier()->cover.Get( 1 ), 1.25f );
+	RoundTrip( state );
+	RoundTrip( owner );
+	// Loading the unit reconstructs its owned state; cancel the newly loaded instance.
+	state = owner->GetState();
+	ASSERT_TRUE( IsValid( state ) );
+	EXPECT_EQ( owner->GetStatsModifier()->weaponDamage.Get( 10 ), 60 );
+	EXPECT_EQ( state->TryInterruptState( nullptr ), TSIR_YES_IMMIDIATELY );
+	EXPECT_EQ( owner->FindStatsModifier( NStatsModifierSource::Ability( NDb::ABILITY_ZEROING_IN ) ), nullptr );
+	EXPECT_EQ( owner->GetStatsModifier()->weaponDamage.Get( 10 ), 30 );
+	EXPECT_EQ( owner->GetStatsModifier()->weaponRelaxTime.Get( 10 ), 10 );
+	EXPECT_EQ( owner->GetStatsModifier()->cover.Get( 1 ), 1 );
+}
+
+TEST_F( ZeroingInModifiers, RejectedOutOfRangeCommandDoesNotApplyBonus )
+{
+	CPtr<IUnitState> state = StartZeroingIn( CVec2( 80, 2000 ) );
+	ASSERT_TRUE( state );
+	EXPECT_EQ( owner->FindStatsModifier( NStatsModifierSource::Ability( NDb::ABILITY_ZEROING_IN ) ), nullptr );
+	EXPECT_EQ( owner->GetStatsModifier()->weaponDamage.Get( 10 ), 10 );
+	EXPECT_EQ( state->TryInterruptState( nullptr ), TSIR_YES_IMMIDIATELY );
 }
 } // namespace

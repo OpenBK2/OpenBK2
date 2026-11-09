@@ -1148,18 +1148,25 @@ CArtilleryRangeAreaState::CArtilleryRangeAreaState( CAIUnit *_pUnit, const CVec2
 			theFeedBackSystem.AddFeedbackAndForget( pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_NO_AMMO, -1 );
 		}
 
+		bFinish = true;
 		pUnit->SetCommandFinished();
 	}
 
 	if ( bNeedTurn && !pUnit->CheckTurn( 1.0f, point - pUnit->GetCenterPlain(), false, false ) )
 	{
 		pUnit->SendAcknowledgement( ACK_NEGATIVE, true );
+		bFinish = true;
 		pUnit->SetCommandFinished();
 	}
 
 	// Determine search circle radius
 	const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_ZEROING_IN );
 	fSearchRadius = pSA ? pSA->fParameter : SConsts::RANGED_AREA_RADIUS;
+	if ( !bFinish )
+	{
+		// The configured bonus lasts for the ranging state, including its subsequent aimed shots.
+		pUnit->SetAbilityStatsModifier( NDb::ABILITY_ZEROING_IN, true );
+	}
 }
 
 void CArtilleryRangeAreaState::CheckArea()
@@ -1316,6 +1323,7 @@ void CArtilleryRangeAreaState::Segment()
 
 void CArtilleryRangeAreaState::FinishCommand()
 {
+	pUnit->SetAbilityStatsModifier( NDb::ABILITY_ZEROING_IN, false );
 	if ( IsValid( pGun ) )
 	{
 		pGun->StopFire();

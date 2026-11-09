@@ -516,7 +516,8 @@ void CHelicopterAttackUnitState::ApplyAirModifier( const bool bApply )
 		return;
 	}
 
-	pHelicopter->ApplyStatsModifier( pStats->pGAPAirAttackModifier, bApply );
+	pHelicopter->SetStatsModifier( NStatsModifierSource::AirAttack,
+	                               bApply ? pStats->pGAPAirAttackModifier.GetPtr() : nullptr );
 	bAirModifierApplied = bApply;
 }
 

@@ -65,7 +65,6 @@ void CStatistics::UnitKilled( const int nPlayer,
 	const int nOldLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eKillerType );
 	const int nOldLeaderLevel = pScenarioTracker->GetLeaderLevel( nPlayer, eKillerType );
 
-	const NDb::SUnitStatsModifier *pOldLeaderBonus = pScenarioTracker->GetLeaderModifier( nPlayer, eKillerType );
 	IAIScenarioTracker::SKillInfo info;
 	info.nPlayer = nPlayer;
 	// NDb::EDBUnitRPGType eUnitType;
@@ -94,7 +93,7 @@ void CStatistics::UnitKilled( const int nPlayer,
 			}
 		}
 		// Level up
-		CDBPtr<NDb::SUnitStatsModifier> pOldBonus, pNewBonus;
+		CDBPtr<NDb::SUnitStatsModifier> pNewBonus;
 		const int nNewLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eKillerType );
 		const int nNewLeaderLevel = pScenarioTracker->GetLeaderLevel( nPlayer, eKillerType );
 		const int nOldAbilityLevel = ( nOldLeaderLevel < 0 ) ? 0 : (std::min)( nOldLevel, nOldLeaderLevel );
@@ -110,13 +109,7 @@ void CStatistics::UnitKilled( const int nPlayer,
 
 			if ( pLevels->eDBType == eKillerType )
 			{
-				int nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nOldLevel );
-				if ( nXPLevel >= 0 )
-				{
-					pOldBonus = pLevels->levels[nXPLevel].pStatsBonus;
-				}
-
-				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nNewLevel );
+				const int nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nNewLevel );
 				if ( nXPLevel >= 0 )
 				{
 					pNewBonus = pLevels->levels[nXPLevel].pStatsBonus;
@@ -130,22 +123,14 @@ void CStatistics::UnitKilled( const int nPlayer,
 					{
 						if ( nOldLevel != nNewLevel ) // Only if the own level changed. Don't bother if only leader's level changed
 						{
-							if ( pOldBonus )
-							{
-								pUnit->ApplyStatsModifier( pOldBonus, false );
-							}
-							if ( pNewBonus )
-							{
-								pUnit->ApplyStatsModifier( pNewBonus, true );
-							}
+							pUnit->SetStatsModifier( NStatsModifierSource::Experience, pNewBonus );
 						}
 						if ( nOldLeaderLevel !=
 						     nNewLeaderLevel ) // Only if the leader's level changed. Don't bother if only own level changed
 						{
 							const NDb::SUnitStatsModifier *pNewLeaderBonus =
 									pScenarioTracker->GetLeaderModifier( nPlayer, eKillerType );
-							pUnit->ApplyStatsModifier( pOldLeaderBonus, false );
-							pUnit->ApplyStatsModifier( pNewLeaderBonus, true );
+							pUnit->SetStatsModifier( NStatsModifierSource::Leader, pNewLeaderBonus );
 						}
 						pUnit->InitSpecialAbilities( nOldAbilityLevel + 1 );
 						updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, pUnit, -1 );

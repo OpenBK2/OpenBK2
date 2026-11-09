@@ -760,13 +760,13 @@ void CUnits::UpdateUnitVis4Enemy( CAIUnit *pUnit )
 	}
 }
 
-void CUnits::ApplyModifierToAll( const NDb::SUnitStatsModifier *pBonus, const bool bForward )
+void CUnits::SetModifierToAll( const std::string &szSource, const NDb::SUnitStatsModifier *pBonus )
 {
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
 
-		pUnit->ApplyStatsModifier( pBonus, bForward );
+		pUnit->SetStatsModifier( szSource, pBonus );
 		pUnit->WarFogChanged();
 	}
 }

@@ -130,7 +130,7 @@ protected:
 		theWarFog.Init( 128, 128, 32, 2.0f );
 		theDipl.SetNPlayers( 2 );
 		theDipl.SetParty( 1, 1 );
-		modifier = new NDb::SUnitStatsModifier;
+		modifier = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
 		external.emplace_back( 1000, modifier );
 		guns = MakeObject<CUnitGuns>( 0x1108D4C7 );
 		turret = MakeObject<CTurret>( 0x1108D4B3 );
@@ -165,7 +165,8 @@ protected:
 		unit = MakeObject<CAIUnit>( factory );
 		stats->etype = type;
 		CDBPtr<NDb::SMechUnitRPGStats> statsPointer = stats;
-		CPtr<NDb::SUnitStatsModifier> modifierPointer = modifier.GetPtr();
+		CUnitStatsModifiers modifiers;
+		modifiers.Set( "test.fixture", modifier );
 		std::vector<CObj<CTurret>> turrets{ turret.GetPtr() };
 		uint8_t player = 1;
 		float hp = 100;
@@ -174,7 +175,7 @@ protected:
 		            {
 									saver.Add( 6, &player );
 									saver.Add( 15, &hp );
-									saver.Add( 58, &modifierPointer );
+									saver.Add( 58, &modifiers );
 									saver.Add( 69, &profile );
 								} };
 		SFields mechanical{ [&]( IBinSaver &saver )

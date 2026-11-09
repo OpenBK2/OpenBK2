@@ -214,6 +214,7 @@ set(SOURCES
     UnitsSegments.cpp
     UnitsSerialize.cpp
     UnitStates.cpp
+    UnitStatsModifiers.cpp
     UnitTorpedo.cpp
     UnitTransfer.cpp
     UpdatableObject.cpp

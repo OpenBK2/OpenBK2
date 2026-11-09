@@ -321,7 +321,7 @@ void CMilitaryCar::AddPassenger( CSoldier *pUnit )
 
 	pass.push_back( pUnit );
 	updater.AddUpdate( 0, ACTION_NOTIFY_ENTRANCE_STATE, pUnit, -1 );
-	pUnit->ApplyStatsModifier( pStats->pInnerUnitBonus, true );
+	pUnit->SetStatsModifier( NStatsModifierSource::Transport, pStats->pInnerUnitBonus );
 }
 
 void CMilitaryCar::PrepareToDelete()
@@ -448,7 +448,7 @@ void CMilitaryCar::DelPassenger( const int n )
 	CheckRange( pass, n );
 	std::list<CPtr<CSoldier>>::iterator pos = pass.begin();
 	advance( pos, n );
-	( *pos )->ApplyStatsModifier( pStats->pInnerUnitBonus, false );
+	( *pos )->RemoveStatsModifier( NStatsModifierSource::Transport );
 	pass.erase( pos );
 	//
 	if ( pass.empty() )
@@ -464,7 +464,7 @@ void CMilitaryCar::DelPassenger( CSoldier *pSoldier )
 {
 	NI_ASSERT( find( pass.begin(), pass.end(), pSoldier ) != pass.end(), "Intransport soldier not found" );
 	pass.remove( pSoldier );
-	pSoldier->ApplyStatsModifier( pStats->pInnerUnitBonus, false );
+	pSoldier->RemoveStatsModifier( NStatsModifierSource::Transport );
 
 	//
 	if ( pass.empty() )

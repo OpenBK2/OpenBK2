@@ -131,7 +131,7 @@ protected:
 		weapon->shells[0].nPiercingRandom = 0;
 		weapon->shells[0].fDamagePower = 10;
 		weapon->shells[0].nDamageRandom = 0;
-		modifier = new NDb::SUnitStatsModifier;
+		modifier = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
 		// Avoid the inclusive RNG upper endpoint in tests unrelated to cover rejection.
 		modifier->cover.fMultBonus = 2;
 		unit = dynamic_cast<CAIUnit *>( NObjectFactory::MakeObject( AI_TANK ) );
@@ -172,7 +172,8 @@ protected:
 		float hp = 100;
 		NTimer::STime acknowledged = 1;
 		CDBPtr<NDb::SMechUnitRPGStats> statsPointer = stats;
-		CPtr<NDb::SUnitStatsModifier> modifierPointer = modifier.GetPtr();
+		CUnitStatsModifiers modifiers;
+		modifiers.Set( "test.fixture", modifier );
 		SFields path{ [&]( IBinSaver &saver )
 		              {
 										saver.Add( 3, &direction );
@@ -186,7 +187,7 @@ protected:
 									saver.Add( 1, &common );
 									saver.Add( 6, &player );
 									saver.Add( 15, &hp );
-									saver.Add( 58, &modifierPointer );
+									saver.Add( 58, &modifiers );
 									saver.Add( 68, &acknowledged );
 								} };
 		SFields mechanical{ [&]( IBinSaver &saver )
@@ -306,6 +307,7 @@ TEST_F( HitProtection, DirectAABBCrackKeepsFullFootprintButStillRequiresArmorPen
 TEST_F( HitProtection, DirectCoverCrackBypassesEvenCertainCover )
 {
 	modifier->cover.fMultBonus = 0;
+	unit->SetStatsModifier( "test.fixture", modifier );
 	EXPECT_TRUE( unit->ProcessCumulativeExpl( explosion, 0, false ) );
 	EXPECT_FLOAT_EQ( unit->GetHitPoints(), 100 );
 	weapon->shells[0].fCoverCrackBase = 1;
@@ -318,6 +320,7 @@ TEST_F( HitProtection, SplashUsesBothCracksAndRetainsItsOwnArmorAndRadiusGates )
 {
 	SetImpact( CVec3( 89, 80, 0 ) );
 	modifier->cover.fMultBonus = 0;
+	unit->SetStatsModifier( "test.fixture", modifier );
 	EXPECT_FALSE( unit->ProcessAreaDamage( explosion, 0, 10, 2 ) );
 	weapon->shells[0].fCoverCrackBase = 1;
 	EXPECT_FALSE( unit->ProcessAreaDamage( explosion, 0, 10, 2 ) );

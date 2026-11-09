@@ -615,15 +615,7 @@ CMechUnitSupportFireState::CMechUnitSupportFireState( CAIUnit *_pUnit, CAIUnit *
 		// Determine search circle radius
 		fSearchRadius = pFriend->GetSightRadius();
 
-		// Apply bonus
-		const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_SUPPORT_FIRE );
-		if ( pSA )
-		{
-			if ( pSA->pStatsBonus )
-			{
-				pUnit->ApplyStatsModifier( pSA->pStatsBonus, true );
-			}
-		}
+		pUnit->SetAbilityStatsModifier( NDb::ABILITY_SUPPORT_FIRE, true );
 	}
 }
 
@@ -784,15 +776,8 @@ void CMechUnitSupportFireState::FinishCommand()
 	pGun->UnlockCurAngle();
 	pUnit->SetCommandFinished();
 
-	// Remove bonus
-	const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_SUPPORT_FIRE );
-	if ( pSA )
-	{
-		if ( pSA->pStatsBonus )
-		{
-			pUnit->ApplyStatsModifier( pSA->pStatsBonus, false );
-		}
-	}
+	// Removing an absent source is harmless if starting support fire failed.
+	pUnit->SetAbilityStatsModifier( NDb::ABILITY_SUPPORT_FIRE, false );
 }
 
 ETryStateInterruptResult CMechUnitSupportFireState::TryInterruptState( class CAICommand *pCommand )

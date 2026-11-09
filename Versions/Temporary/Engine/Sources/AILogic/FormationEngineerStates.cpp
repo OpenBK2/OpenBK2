@@ -1919,7 +1919,7 @@ CFormationGunCrewState::CFormationGunCrewState( class CFormation *_pUnit, CArtil
 	for ( int i = 0; i < nSize; ++i )
 	{
 		( *pUnit )[i]->AllowLieDown( false );
-		( *pUnit )[i]->ApplyStatsModifier( pStats->pInnerUnitBonus, true );
+		( *pUnit )[i]->SetStatsModifier( NStatsModifierSource::GunCrew, pStats->pInnerUnitBonus );
 	}
 	b360DegreesRotate = pStats->GetPlatform( pArtillery->GetUniqueId(), 1 ).constraint.wMax >= 65535;
 	ClearState();
@@ -2741,7 +2741,7 @@ void CFormationGunCrewState::Interrupt()
 	for ( int i = 0; i < nSize; ++i )
 	{
 		CSoldier *pSold = ( *pUnit )[i];
-		( *pUnit )[i]->ApplyStatsModifier( pStats->pInnerUnitBonus, false );
+		( *pUnit )[i]->RemoveStatsModifier( NStatsModifierSource::GunCrew );
 		pSold->SetFree();
 		pSold->AllowLieDown( true );
 		pSold->RestoreSmoothPath();

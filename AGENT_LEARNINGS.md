@@ -670,8 +670,8 @@ context. Read `git diff` of every touched file before building.
 
 ## Unit stat modifier audit
 
-- Modifiers retain only aggregate sums/products/zero counts, not their sources.
-  Removal subtracts/divides; ZeroCount is separate from a zero MultBonus.
+- Before the source registry, modifiers retained only sums/products/zero counts.
+  Removal subtracted/divided; ZeroCount is separate from a zero MultBonus.
   All 17 fields are accumulated, but SightPower and WeaponTrackDamageProb have
   no gameplay readers. Track Targeting uses separate hardcoded behavior.
 - Source inspection found normal trench entry applies InnerUnitBonus in both
@@ -679,10 +679,26 @@ context. Read `git diff` of every touched file before building.
   Normal exit removes both copies. Master of Streets has a different bug:
   SetFree clears eInsideType before its bonus-removal check, so a configured
   bonus remains and can stack on reentry; the inspected stock descriptor is empty.
-- Zeroing In and advanced camouflage use custom behavior without applying
-  their StatsBonus. Do not infer modifier support from an ability's DB fields.
+- The original Zeroing In and advanced camouflage used custom behavior without
+  applying their StatsBonus. Do not infer modifier support from an ability's DB fields.
   AdvCamo's zero MultBonus is referenced by an obsolete descriptor, so its
   presence alone does not establish a live divide-by-zero bug.
-- ApplyStatsModifier does not refresh fog or cached camouflage. Check callers
+- Setting a modifier does not refresh fog or cached camouflage. Check callers
   and derived getters: aircraft and infantry spyglass bypass ordinary sight
   modifiers, while mechanical special sights explicitly apply them.
+- User clarification: AntiAviationModifier is intentionally scoped to firing;
+  preserve that behavior. SightRange corrections are deferred for this work.
+  Master of Streets and Counter-Fire must remove their bonuses on exit, and
+  Zeroing In must apply its configured StatsBonus.
+- User correction: det_map already has deterministic insertion order. Do not
+  sort its keys when rebuilding modifiers; preserve the map's order on save/load.
+- CUnitStatsModifiers now owns named CDBPtr sources and derives a cached aggregate.
+  Remove by source key, never by inverse arithmetic; replacing a key must not stack.
+  The new save format deliberately has no compatibility with old saves/replays.
+- Trench occupancy owns its modifier in CSoldier, not also in CEntrenchment's
+  seat management. Master of Streets and CounterFire remove their sources on exit;
+  Zeroing In applies its configured bonus for its active state and removes it on finish.
+- Modifier fixtures must register their resources with the DB: CDBPtr serializes
+  resource IDs, so unnamed runtime resources cannot round-trip as active sources.
+- Save/load tests must reacquire a unit's owned state after loading the unit.
+  Loading replaces that state; a retained CPtr to the previous state is invalid.

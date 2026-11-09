@@ -393,7 +393,7 @@ void CAIUnit::Init( const CVec2 &center,
 	RecordRandomCall();
 	//nAbilityLevel = -1;
 	bTrampled = false;
-	pStatsModifiers = new NDb::SUnitStatsModifier;
+	statsModifiers.Clear();
 	bAmphibianWaterModifierApplied = false;
 	bIgnoreAABBCoeff = false;
 	fCamoflage = 1.0f;
@@ -589,7 +589,8 @@ void CAIUnit::UpdateAmphibianWaterModifier()
 		return;
 	}
 
-	ApplyStatsModifier( pAmphibianStats->pWaterStatsModifier, bNeedModifier );
+	SetStatsModifier( NStatsModifierSource::Water,
+	                  bNeedModifier ? pAmphibianStats->pWaterStatsModifier.GetPtr() : nullptr );
 	bAmphibianWaterModifierApplied = bNeedModifier;
 
 	// Water modifiers can change speed, so immediately keep movement caps coherent.
@@ -1180,14 +1181,11 @@ const float CAIUnit::GetSightRadius() const
 	return GetStatsModifier()->sightRange.Get( GetStats()->fSight ) * SConsts::TILE_SIZE;
 }
 
-void CAIUnit::ApplyStatsModifier( const NDb::SUnitStatsModifier *pModifier, const bool bForward )
+void CAIUnit::SetAbilityStatsModifier( NDb::EUnitSpecialAbility eAbility, bool bActive )
 {
-	if ( pModifier )
-	{
-		pStatsModifiers->Apply( *pModifier, bForward );
-		//NI_ASSERT( CAIUnit::GetSightRadius() / ( 2 * SConsts::TILE_SIZE ) <= theWarFog.GetMaxRadius(),
-		//	StrFmt( "DESIGNERS BUG: Invalid sight radius for unit %s after appling modificator %s", NDb::GetResName( GetStats() ), NDb::GetResName( pModifier ) ) );
-	}
+	// Removal depends only on the source, even if its ability descriptor is no longer available.
+	const NDb::SUnitSpecialAblityDesc *pDesc = bActive ? GetUnitAbilityDesc( eAbility ) : nullptr;
+	SetStatsModifier( NStatsModifierSource::Ability( eAbility ), pDesc ? pDesc->pStatsBonus.GetPtr() : nullptr );
 }
 
 const float CAIUnit::GetCamouflage() const
@@ -1460,10 +1458,9 @@ void CAIUnit::UpdateTransferredExperience()
 	{
 		if ( pLevels && pLevels->eDBType == GetReinforcementType() && !pLevels->levels.empty() )
 		{
-			// Remove this unit's actual old bonus, which may differ from its owner's old level.
-			ApplyStatsModifier( pLevels->levels[(std::min<int>)( nOldLevel, pLevels->levels.size() - 1 )].pStatsBonus,
-			                    false );
-			ApplyStatsModifier( pLevels->levels[(std::min<int>)( nNewLevel, pLevels->levels.size() - 1 )].pStatsBonus, true );
+			// Replace the unit's experience source, including a retained bonus from its previous owner.
+			SetStatsModifier( NStatsModifierSource::Experience,
+			                  pLevels->levels[(std::min<int>)( nNewLevel, pLevels->levels.size() - 1 )].pStatsBonus );
 			break;
 		}
 	}
@@ -2657,7 +2654,8 @@ void CAIUnit::SetInTankPit( CExistingObject *_pTankPit )
 	pTankPit = _pTankPit;
 	bVirtualTankPit = false;
 	bIsInTankPit = true;
-	ApplyStatsModifier( checked_cast<const NDb::SMechUnitRPGStats *>( pTankPit->GetStats() )->pInnerUnitBonus, true );
+	SetStatsModifier( NStatsModifierSource::TankPit,
+	                  checked_cast<const NDb::SMechUnitRPGStats *>( pTankPit->GetStats() )->pInnerUnitBonus );
 
 	if ( IsInTankPit() )
 	{
@@ -2687,9 +2685,10 @@ void CAIUnit::UpdateTankPitVisibility( const bool bVisibilityChanged, const bool
 
 void CAIUnit::SetOffTankPit()
 {
+	// The source can be removed even if the pit has already been destroyed.
+	RemoveStatsModifier( NStatsModifierSource::TankPit );
 	if ( IsValidObj( pTankPit ) )
 	{
-		ApplyStatsModifier( checked_cast<const NDb::SMechUnitRPGStats *>( pTankPit->GetStats() )->pInnerUnitBonus, false );
 		theStatObjs.DeleteInternalObjectInfo( pTankPit );
 	}
 	pTankPit = 0;
@@ -3413,11 +3412,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		break;
 		case NDb::ABILITY_EXACT_BOMBING:
 		{ // It is just a stat bonus
-			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_EXACT_BOMBING );
-			if ( pSA )
-			{
-				ApplyStatsModifier( pSA->pStatsBonus, true );
-			}
+			SetAbilityStatsModifier( NDb::ABILITY_EXACT_BOMBING, true );
 		}
 		break;
 		case NDb::ABILITY_SPY_MODE:
@@ -3435,11 +3430,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		break;
 		case NDb::ABILITY_SKY_GUARD:
 		{ // It is just a stat bonus
-			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_SKY_GUARD );
-			if ( pSA )
-			{
-				ApplyStatsModifier( pSA->pStatsBonus, true );
-			}
+			SetAbilityStatsModifier( NDb::ABILITY_SKY_GUARD, true );
 		}
 		break;
 		case NDb::ABILITY_MASTER_PILOT:
@@ -3450,11 +3441,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		break;
 		case NDb::ABILITY_SURVIVAL:
 		{ // It is just a stat bonus
-			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_SURVIVAL );
-			if ( pSA )
-			{
-				ApplyStatsModifier( pSA->pStatsBonus, true );
-			}
+			SetAbilityStatsModifier( NDb::ABILITY_SURVIVAL, true );
 		}
 		break;
 		case NDb::ABILITY_TANK_HUNTER:
@@ -3530,11 +3517,7 @@ void CAIUnit::SetHoldSector()
 		UnsetFollowState();
 		SetBehaviourMoving( SBehaviour::EMHoldPos );
 
-		const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_HOLD_SECTOR );
-		if ( pSA && pSA->pStatsBonus )
-		{
-			ApplyStatsModifier( pSA->pStatsBonus, true );
-		}
+		SetAbilityStatsModifier( NDb::ABILITY_HOLD_SECTOR, true );
 
 		CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 		pUpdate->info.nAbilityType = NDb::ABILITY_HOLD_SECTOR;
@@ -3566,11 +3549,7 @@ void CAIUnit::ResetHoldSector()
 		SetVisionAngle( 32768 );
 		WarFogChanged();
 		SetBehaviourMoving( SBehaviour::EMRoaming );
-		const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_HOLD_SECTOR );
-		if ( pSA && pSA->pStatsBonus )
-		{
-			ApplyStatsModifier( pSA->pStatsBonus, false );
-		}
+		SetAbilityStatsModifier( NDb::ABILITY_HOLD_SECTOR, false );
 
 		CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 		pUpdate->info.nAbilityType = NDb::ABILITY_HOLD_SECTOR;
@@ -3589,14 +3568,11 @@ void CAIUnit::SetTrackTargeting( bool bOn )
 	{
 		return;
 	}
-	const NDb::SUnitSpecialAblityDesc *pDesc = GetUnitAbilityDesc( NDb::ABILITY_TRACK_TARGETING );
-	if ( pDesc )
+	// Turning an ability off must also work if its descriptor is no longer available.
+	if ( !bOn || GetUnitAbilityDesc( NDb::ABILITY_TRACK_TARGETING ) )
 	{
 		bTargetingTrack = bOn;
-		if ( pDesc->pStatsBonus )
-		{
-			ApplyStatsModifier( pDesc->pStatsBonus, bOn );
-		}
+		SetAbilityStatsModifier( NDb::ABILITY_TRACK_TARGETING, bOn );
 
 		updater.AddUpdate(
 				CreateStatusUpdate( EUS_TRACK_TARGET, bTargetingTrack, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
@@ -3607,15 +3583,11 @@ void CAIUnit::SetIgnoreAABBCoeff( const bool bIgnore )
 {
 	if ( bIgnoreAABBCoeff != bIgnore )
 	{
-		// Apply stat bonus
-		const NDb::SUnitSpecialAblityDesc *pDesc = GetUnitAbilityDesc( NDb::ABILITY_EXACT_SHOT );
-		if ( pDesc )
+		// Removal only needs the source key, including after losing access to the ability.
+		if ( !bIgnore || GetUnitAbilityDesc( NDb::ABILITY_EXACT_SHOT ) )
 		{
 			bIgnoreAABBCoeff = bIgnore;
-			if ( pDesc->pStatsBonus )
-			{
-				ApplyStatsModifier( pDesc->pStatsBonus, bIgnore );
-			}
+			SetAbilityStatsModifier( NDb::ABILITY_EXACT_SHOT, bIgnore );
 
 			updater.AddUpdate(
 					CreateStatusUpdate( EUS_TRACK_TARGET, bIgnoreAABBCoeff, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
@@ -3816,8 +3788,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 	// Change level stats bonus to the new type
 	if ( eReinforcementType != eType )
 	{
-		bool bOldRemoved = false;
-		bool bNewApplied = false;
+		RemoveStatsModifier( NStatsModifierSource::Experience );
 		const NDb::SAIGameConsts *pConsts = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetAIConsts();
 
 		for ( int i = 0; i < pConsts->common.expLevels.size(); ++i )
@@ -3828,21 +3799,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 				continue;
 			}
 
-			if ( pLevels->eDBType == eReinforcementType && !bOldRemoved )
-			{
-				int nXPLevel = GetXPLevel() - 1;
-				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
-				if ( nXPLevel < 0 )
-				{
-					continue;
-				}
-				if ( pLevels->levels[nXPLevel].pStatsBonus )
-				{
-					ApplyStatsModifier( pLevels->levels[nXPLevel].pStatsBonus, false );
-					bOldRemoved = true;
-				}
-			}
-			else if ( pLevels->eDBType == eType && !bNewApplied )
+			if ( pLevels->eDBType == eType )
 			{
 				int nXPLevel = transferredExperience.GetLevel( GetScenarioTracker()->GetReinforcementXPLevel( player, eType ) );
 				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
@@ -3852,8 +3809,8 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 				}
 				if ( pLevels->levels[nXPLevel].pStatsBonus )
 				{
-					ApplyStatsModifier( pLevels->levels[nXPLevel].pStatsBonus, true );
-					bNewApplied = true;
+					SetStatsModifier( NStatsModifierSource::Experience, pLevels->levels[nXPLevel].pStatsBonus );
+					break;
 				}
 			}
 		}

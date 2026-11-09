@@ -1670,7 +1670,8 @@ void CPlanePatrolState::CEnemyContainer::SetUnitEnemy( CAIUnit *pNewEnemy )
 		const CDBPtr<NDb::SMechUnitRPGStats> pStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( pOwner->GetStats() );
 		if ( pStats && pStats->pGAPAirAttackModifier )
 		{
-			pOwner->ApplyStatsModifier( pStats->pGAPAirAttackModifier, bNeedModif );
+			pOwner->SetStatsModifier( NStatsModifierSource::AirAttack,
+			                          bNeedModif ? pStats->pGAPAirAttackModifier.GetPtr() : nullptr );
 		}
 		bModifApplied = bNeedModif;
 		//DebugTrace( "%s to unit %d due %d", bModifApplied ? "Modificators applied" : "Modificatiors cleared", pOwner->GetUniqueID(), pNewEnemy ? pNewEnemy->GetUniqueID() : 0 );

@@ -304,17 +304,18 @@ protected:
 		stats->fSpeed = 10;
 		stats->armors.resize( NDb::RPG_BOTTOM + 1 );
 		CDBPtr<NDb::SMechUnitRPGStats> statsPointer = stats;
-		CObj<NDb::SUnitStatsModifier> modifier = new NDb::SUnitStatsModifier;
+		CObj<NDb::SUnitStatsModifier> modifier = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
 		objects.push_back( modifier.GetPtr() );
 		external.emplace_back( int( external.size() + 1 ), modifier );
-		CPtr<NDb::SUnitStatsModifier> modifierPointer = modifier.GetPtr();
+		CUnitStatsModifiers modifiers;
+		modifiers.Set( "test.fixture", modifier );
 		uint8_t player = 0;
 		float hitPoints = 100;
 		SFields ai{ [&]( IBinSaver &saver )
 		            {
 									saver.Add( 6, &player );
 									saver.Add( 15, &hitPoints );
-									saver.Add( 58, &modifierPointer );
+									saver.Add( 58, &modifiers );
 								} };
 		SFields mech{ [&]( IBinSaver &saver )
 		              {

@@ -181,7 +181,7 @@ void CSoldier::SetInEntrenchment( CEntrenchment *pEntrenchment )
 	eInsideType = EOIO_ENTRENCHMENT;
 
 	// Add bonus
-	ApplyStatsModifier( pEntrenchment->GetUnitBonus(), true );
+	SetStatsModifier( NStatsModifierSource::Trench, pEntrenchment->GetUnitBonus() );
 
 	//	SetVisionAngle( 0 );
 	SAIEntranceUpdate *pUpdate = new SAIEntranceUpdate;
@@ -223,6 +223,8 @@ void CSoldier::SetInTransport( class CMilitaryCar *pUnit )
 
 void CSoldier::SetFree()
 {
+	// Preserve the old occupancy while removing the ability's shelter bonus.
+	SetMasterOfStreetsBonus( EOIO_NONE );
 	// Do this before the visibility updates temporarily overwrite eInsideType.
 	UpdateFormationStatsForInsideType( EOIO_NONE );
 	SetVisionAngle( SConsts::STANDART_VIS_ANGLE );
@@ -257,12 +259,7 @@ void CSoldier::SetFree()
 			case EOIO_ENTRENCHMENT:
 			{
 				pUpdate->info.nTargetUniqueID = GetEntrenchment()->GetUniqueId();
-				// Remove bonus
-				CEntrenchment *pEntrenchment = dynamic_cast<CEntrenchment *>( pObjInside );
-				if ( pEntrenchment )
-				{
-					ApplyStatsModifier( pEntrenchment->GetUnitBonus(), false );
-				}
+				RemoveStatsModifier( NStatsModifierSource::Trench );
 			}
 			break;
 			case EOIO_TRANSPORT:
@@ -281,8 +278,6 @@ void CSoldier::SetFree()
 		UpdateVisibilityForced();
 		SetSelectable( GetPlayer() == theDipl.GetMyNumber(), true );
 	}
-
-	SetMasterOfStreetsBonus( EOIO_NONE );
 
 	eInsideType = EOIO_NONE;
 	slotInfo.nSlot = -1;
@@ -306,7 +301,7 @@ void CSoldier::ApplyFormationStatsModifier( const NDb::SUnitStatsModifier *pModi
 {
 	if ( UsesFormationStatsModifier( eInsideType ) )
 	{
-		ApplyStatsModifier( pModifier, bForward );
+		SetStatsModifier( NStatsModifierSource::Formation, bForward ? pModifier : nullptr );
 	}
 }
 
@@ -319,27 +314,19 @@ void CSoldier::UpdateFormationStatsForInsideType( EObjectInsideOf eNewInsideType
 		// Use each soldier's actual occupancy, so partly entered squads remain correct.
 		// On exit, restore the current layout, including changes made while sheltered.
 		const auto &geometry = pFormation->GetStats()->formations[pFormation->GetCurrentGeometry()];
-		ApplyStatsModifier( geometry.pStatsModifiers, bApply );
+		SetStatsModifier( NStatsModifierSource::Formation, bApply ? geometry.pStatsModifiers.GetPtr() : nullptr );
 	}
 }
 
 void CSoldier::SetMasterOfStreetsBonus( EObjectInsideOf eNewInsideType )
 {
-	if ( const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_MASTER_OF_STREETS ) )
+	if ( eNewInsideType == EOIO_NONE )
 	{
-		if ( !pSA->pStatsBonus )
-		{
-			return;
-		}
-
-		if ( eInsideType == EOIO_NONE && eNewInsideType != EOIO_NONE )
-		{
-			ApplyStatsModifier( pSA->pStatsBonus, true );
-		}
-		else if ( eInsideType != EOIO_NONE && eNewInsideType == EOIO_NONE )
-		{
-			ApplyStatsModifier( pSA->pStatsBonus, false );
-		}
+		SetAbilityStatsModifier( NDb::ABILITY_MASTER_OF_STREETS, false );
+	}
+	else if ( eInsideType == EOIO_NONE )
+	{
+		SetAbilityStatsModifier( NDb::ABILITY_MASTER_OF_STREETS, true );
 	}
 }
 

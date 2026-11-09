@@ -51,36 +51,6 @@ extern CUnitCreation theUnitCreation;
 extern CGlobalWarFog theWarFog;
 extern NAI::CTimeCounter timeCounter;
 
-namespace
-{
-class CScopedStatsModifier
-{
-	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	CAIUnit *pUnit = {};
-	const NDb::SUnitStatsModifier *pModifier = {};
-
-public:
-	CScopedStatsModifier( CAIUnit *_pUnit, const NDb::SUnitStatsModifier *_pModifier )
-		: pUnit( _pUnit )
-		, pModifier( _pModifier )
-	{
-		// AA modifier affects only values read while the shot objects are being created.
-		if ( pUnit && pModifier )
-		{
-			pUnit->ApplyStatsModifier( pModifier, true );
-		}
-	}
-
-	~CScopedStatsModifier()
-	{
-		if ( pUnit && pModifier )
-		{
-			pUnit->ApplyStatsModifier( pModifier, false );
-		}
-	}
-};
-} // namespace
-
 float GetDispByRadius( const float fDispRadius, const float fRangeMax, const float fDist )
 {
 	return fDispRadius / fRangeMax * fDist;
@@ -1740,7 +1710,9 @@ IBallisticTraj *CBasicGun::CreateTraj( const CVec3 &vTarget ) const
 
 void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEffect )
 {
-	CScopedStatsModifier antiAviationModifier( pOwner, GetAntiAviationModifier() );
+	// The AA bonus intentionally affects only values read while creating this shot.
+	CScopedUnitStatsModifier antiAviationModifier(
+			pOwner, NStatsModifierSource::AntiAviation, GetAntiAviationModifier() );
 
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "gunfire_markers", 0 ) )

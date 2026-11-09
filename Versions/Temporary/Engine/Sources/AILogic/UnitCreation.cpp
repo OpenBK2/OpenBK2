@@ -584,13 +584,13 @@ int CUnitCreation::AddNewUnit( const int nUniqueID,
 	// Apply nighttime modifier at night
 	if ( pCurrentMap->eDayTime == NDb::DAY_NIGHT )
 	{
-		pUnit->ApplyStatsModifier( pConsts->common.pNightStatModifier, true );
+		pUnit->SetStatsModifier( NStatsModifierSource::Night, pConsts->common.pNightStatModifier );
 	}
 
 	// Apply weather modifier, if weather is active
 	if ( theWeather.IsActive() )
 	{
-		pUnit->ApplyStatsModifier( pConsts->common.pBadWeatherStatModifier, true );
+		pUnit->SetStatsModifier( NStatsModifierSource::Weather, pConsts->common.pBadWeatherStatModifier );
 	}
 
 	if ( GetScenarioTracker() )
@@ -617,27 +617,28 @@ int CUnitCreation::AddNewUnit( const int nUniqueID,
 
 			if ( pLevels->levels[nXPLevel].pStatsBonus )
 			{
-				pUnit->ApplyStatsModifier( pLevels->levels[nXPLevel].pStatsBonus, true );
+				pUnit->SetStatsModifier( NStatsModifierSource::Experience, pLevels->levels[nXPLevel].pStatsBonus );
 				break;
 			}
 		}
 
 		// Apply leader XP level modifier
-		pUnit->ApplyStatsModifier( pScenarioTracker->GetLeaderModifier( player, pUnit->GetReinforcementType() ), true );
+		pUnit->SetStatsModifier( NStatsModifierSource::Leader,
+		                         pScenarioTracker->GetLeaderModifier( player, pUnit->GetReinforcementType() ) );
 
 		// Apply difficulty modifier
 		switch ( theDipl.GetNParty( player ) )
 		{
 			case 0:
-				pUnit->ApplyStatsModifier( pScenarioTracker->GetPlayerDifficultyModifier(), true );
-				pUnit->ApplyStatsModifier( pScenarioTracker->GetPlayerChapterModifier( eType ), true );
+				pUnit->SetStatsModifier( NStatsModifierSource::Difficulty, pScenarioTracker->GetPlayerDifficultyModifier() );
+				pUnit->SetStatsModifier( NStatsModifierSource::Chapter, pScenarioTracker->GetPlayerChapterModifier( eType ) );
 				break;
 			case 1:
-				pUnit->ApplyStatsModifier( pScenarioTracker->GetEnemyDifficultyModifier(), true );
+				pUnit->SetStatsModifier( NStatsModifierSource::Difficulty, pScenarioTracker->GetEnemyDifficultyModifier() );
 				break;
 		}
 	}
-	pUnit->ApplyStatsModifier( theBalanceTest.GetModifier( player ), true );
+	pUnit->SetStatsModifier( NStatsModifierSource::BalanceTest, theBalanceTest.GetModifier( player ) );
 	CAIUnit::CheckCmdsSize( pUnit->GetUniqueId() );
 
 	if ( bSendToWorld )
@@ -1020,5 +1021,6 @@ void CUnitCreation::ApplyWeatherModifier( const bool bForward )
 		}
 	}
 
-	units.ApplyModifierToAll( pConsts->common.pBadWeatherStatModifier, bForward );
+	units.SetModifierToAll( NStatsModifierSource::Weather,
+	                        bForward ? pConsts->common.pBadWeatherStatModifier.GetPtr() : nullptr );
 }

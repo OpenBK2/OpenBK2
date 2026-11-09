@@ -7,6 +7,7 @@
 #include "AILogic_export.h"
 
 #include <cstdint>
+#include <string>
 
 class CAIUnit;
 class CAviation;
@@ -161,7 +162,7 @@ public:
 		return ( bigCell.x >= 0 && bigCell.y >= 0 && bigCell.x < nBigCellsSizeX && bigCell.y < nBigCellsSizeY );
 	}
 
-	void ApplyModifierToAll( const NDb::SUnitStatsModifier *pBonus, const bool bForward );
+	void SetModifierToAll( const std::string &szSource, const NDb::SUnitStatsModifier *pBonus );
 
 	// for debug
 	void CheckCorrectness( const SVector &tile );
