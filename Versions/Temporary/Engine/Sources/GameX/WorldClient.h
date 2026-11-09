@@ -4,6 +4,7 @@
 #include "MouseTranslator.h"
 #include "Selector.h"
 #include "Sound/TerrainSounds.h"
+#include "Stats_B2_M1/AITypes.h"
 
 #include <cstdint>
 
@@ -123,6 +124,11 @@ private:
 
 	bool bAreasShown;
 	bool bRangesShown;
+	// Local held-key state and geometry cache; neither participates in saves or simulation.
+	bool bDetectionAreasShown = false;
+	SShootAreas detectionAreas;
+	void UpdateDetectionAreas();
+	void HideDetectionAreas();
 
 	SMapCommandAck mapCommandAck;
 	SMapCommandAck mapCommandAckDir;
@@ -205,6 +211,8 @@ private:
 
 	void MsgAreasUp( const SGameMessage &msg );
 	void MsgAreasDown( const SGameMessage &msg );
+	void MsgDetectionAreasUp( const SGameMessage &msg );
+	void MsgDetectionAreasDown( const SGameMessage &msg );
 	void MsgRangesUp( const SGameMessage &msg );
 	void MsgRangesDown( const SGameMessage &msg );
 
@@ -555,12 +563,20 @@ public:
 
 	const bool IsAreasShown() const
 	{
-		return bAreasShown;
+		return bAreasShown || bDetectionAreasShown;
 	}
 
 	void GetAreas( SShootAreas *pAreas )
 	{
-		pSelector->GetAreas( pAreas );
+		pAreas->areas.clear();
+		if ( bAreasShown )
+		{
+			pSelector->GetAreas( pAreas );
+		}
+		if ( bDetectionAreasShown )
+		{
+			pAreas->areas.insert( pAreas->areas.end(), detectionAreas.areas.begin(), detectionAreas.areas.end() );
+		}
 	}
 
 	void UpdateIcons();

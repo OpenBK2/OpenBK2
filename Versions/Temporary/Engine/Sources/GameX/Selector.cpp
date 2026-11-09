@@ -1024,6 +1024,32 @@ void CSelector::GetAreas( SShootAreas *pAreas )
 	}
 }
 
+void CSelector::GetDetectionAreas( SShootAreas *pAreas )
+{
+	pAreas->areas.clear();
+	for ( const auto &pSelected : objList )
+	{
+		if ( !IsValid( pSelected ) || !pSelected->IsAlive() || !pSelected->IsFriend() )
+		{
+			continue;
+		}
+		if ( CMOBuilding *pBuilding = dynamic_cast<CMOBuilding *>( pSelected.GetPtr() ) )
+		{
+			// Garrisoned soldiers supply the building's sight, just as they supply its weapon overlays.
+			std::vector<CMOSelectable *> passengers;
+			pBuilding->GetPassangers( &passengers );
+			for ( CMOSelectable *pPassenger : passengers )
+			{
+				Singleton<IAILogic>()->GetDetectionAreas( pPassenger->GetID(), pAreas );
+			}
+		}
+		else
+		{
+			Singleton<IAILogic>()->GetDetectionAreas( pSelected->GetID(), pAreas );
+		}
+	}
+}
+
 int CSelector::GetSelection( std::vector<CMOSelectable *> *pBuffer ) const
 {
 	int nResult = 0;

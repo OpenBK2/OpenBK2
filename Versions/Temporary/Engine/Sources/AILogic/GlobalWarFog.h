@@ -397,6 +397,8 @@ public:
 	void DeleteUnit( const int nID );
 	void UpdateUnit( const int nID, const SWarFogUnitInfo &unitInfo );
 	void ChangeParty( const int nID, const SWarFogUnitInfo &updateInfo, const int nNewParty );
+	// Read-only distance limit in AI coordinates; terrain and sight sectors still restrict detection.
+	float GetDetectionRadius( const int nID ) const;
 
 	void SynchronizeHeights( const SVector &vUpLeftTile, const SVector &vBottomRightTile );
 

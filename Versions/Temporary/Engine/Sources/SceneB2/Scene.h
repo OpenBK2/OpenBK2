@@ -360,7 +360,8 @@ struct IScene : public CObjectBase
 	                           float fMinRadius,
 	                           float fMaxRadius,
 	                           const CVec3 &vColor,
-	                           const CVec2 &vCenter ) = 0;
+	                           const CVec2 &vCenter,
+	                           ESceneMarkerType eMarkerType = ESMT_SHOOT_AREA ) = 0;
 	virtual void AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, const CVec3 &vColor ) = 0;
 	virtual void ClearMarkers( ESceneMarkerType eType, int nID ) = 0;
 

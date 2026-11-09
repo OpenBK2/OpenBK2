@@ -168,6 +168,7 @@ public:
 
 	void ShowAreas( const std::vector<int> &units, enum EActionNotify &eType, bool bShow ) override;
 	void GetShootAreas( int nUnitID, SShootAreas *pAreas ) override;
+	void GetDetectionAreas( int nUnitID, SShootAreas *pAreas ) override;
 
 	const bool GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits ) override;
 	bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime ) override;

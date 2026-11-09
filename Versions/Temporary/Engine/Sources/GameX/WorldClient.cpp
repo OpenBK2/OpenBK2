@@ -34,6 +34,7 @@
 
 #include "GameX_export.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 
@@ -460,6 +461,8 @@ void CWorldClient::InitPrivate()
 	//
 	AddObserver( "show_areas_down", &CWorldClient::MsgAreasDown );
 	AddObserver( "show_areas_up", &CWorldClient::MsgAreasUp );
+	AddObserver( "show_detection_areas_down", &CWorldClient::MsgDetectionAreasDown );
+	AddObserver( "show_detection_areas_up", &CWorldClient::MsgDetectionAreasUp );
 	AddObserver( "show_ranges_down", &CWorldClient::MsgRangesDown );
 	AddObserver( "show_ranges_up", &CWorldClient::MsgRangesUp );
 	AddObserver( "show_xray_down", MsgXRay, 1 );
@@ -661,6 +664,7 @@ void CWorldClient::Update()
 	mapCommandAck.Update();
 	mapCommandAckDir.Update();
 	pSelector->Segment();
+	UpdateDetectionAreas();
 
 	UpdateXRayUnits( nDeltaTime );
 }
@@ -799,6 +803,10 @@ void CWorldClient::AfterLoad( const NDb::SMapInfo *pMapInfo )
 void CWorldClient::OnGetFocus( bool bFocus )
 {
 	pMouseTranslator->OnGetFocus( bFocus );
+	if ( !bFocus )
+	{
+		HideDetectionAreas();
+	}
 	//	if ( bFocus )
 	//		RegisterObservers();
 	//	else
@@ -2151,6 +2159,57 @@ void CWorldClient::MsgRangesUp( const SGameMessage &msg )
 	bRangesShown = false;
 }
 
+void CWorldClient::MsgDetectionAreasDown( const SGameMessage &msg )
+{
+	bDetectionAreasShown = true;
+	UpdateDetectionAreas();
+}
+
+void CWorldClient::MsgDetectionAreasUp( const SGameMessage &msg )
+{
+	HideDetectionAreas();
+}
+
+void CWorldClient::HideDetectionAreas()
+{
+	bDetectionAreasShown = false;
+	detectionAreas.areas.clear();
+	Scene()->ClearMarkers( ESMT_DETECTION_AREA, -1 );
+}
+
+void CWorldClient::UpdateDetectionAreas()
+{
+	if ( !bDetectionAreasShown )
+	{
+		return;
+	}
+	SShootAreas currentAreas;
+	pSelector->GetDetectionAreas( &currentAreas );
+	if ( currentAreas.areas.size() == detectionAreas.areas.size() &&
+	     std::equal( currentAreas.areas.begin(),
+	                 currentAreas.areas.end(),
+	                 detectionAreas.areas.begin(),
+	                 []( const SShootArea &a, const SShootArea &b ) { return !( a != b ); } ) )
+	{
+		return;
+	}
+
+	// Keep detection markers separate so Alt+R and Alt+E can be held or released independently.
+	Scene()->ClearMarkers( ESMT_DETECTION_AREA, -1 );
+	detectionAreas.areas.swap( currentAreas.areas );
+	for ( const SShootArea &area : detectionAreas.areas )
+	{
+		Scene()->AddShootArea( 0,
+		                       0.0f,
+		                       0.0f,
+		                       0.0f,
+		                       area.fMaxR,
+		                       CVec3( 0.0f, 1.0f, 1.0f ),
+		                       CVec2( area.vCenter3D.x, area.vCenter3D.y ),
+		                       ESMT_DETECTION_AREA );
+	}
+}
+
 void CWorldClient::MsgRangesDown( const SGameMessage &msg )
 {
 	pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, false );
@@ -3027,6 +3086,11 @@ int CWorldClient::operator&( IBinSaver &saver )
 	// Append new groups so the established IDs of existing save fields stay unchanged.
 	saver.Add( 36, &sgStratBombers );
 	saver.Add( 37, &sgHelicopters );
+	if ( saver.IsReading() )
+	{
+		bDetectionAreasShown = false;
+		detectionAreas.areas.clear();
+	}
 
 	return 0;
 }

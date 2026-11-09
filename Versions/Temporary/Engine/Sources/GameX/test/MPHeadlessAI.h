@@ -134,6 +134,9 @@ public:
 
 	void GetShootAreas( int, SShootAreas * ) override {}
 
+	// Headless transport tests have no detection overlays to collect.
+	void GetDetectionAreas( int, SShootAreas * ) override {}
+
 	const int WAR_FOG_FULL_UPDATE() const override
 	{
 		return 0;

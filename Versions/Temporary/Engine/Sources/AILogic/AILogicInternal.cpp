@@ -1812,6 +1812,38 @@ void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
 	}
 }
 
+void CAILogic::GetDetectionAreas( int nUnitID, SShootAreas *pAreas )
+{
+	CLinkObject *pObject = CLinkObject::GetObjectByUniqueId( nUnitID );
+	if ( !pObject || !pObject->IsRefValid() )
+	{
+		return;
+	}
+	if ( CFormation *pFormation = dynamic_cast<CFormation *>( pObject ) )
+	{
+		// A selected squad has one fog observer per living soldier.
+		for ( int i = 0; i < pFormation->Size(); ++i )
+		{
+			if ( IsValidObj( ( *pFormation )[i] ) )
+			{
+				GetDetectionAreas( ( *pFormation )[i]->GetUniqueId(), pAreas );
+			}
+		}
+	}
+	else if ( CAIUnit *pUnit = dynamic_cast<CAIUnit *>( pObject ) )
+	{
+		const float fRadius = theWarFog.GetDetectionRadius( nUnitID );
+		if ( pUnit->IsAlive() && fRadius > 0.0f )
+		{
+			SShootArea area;
+			area.eType = SShootArea::ESAT_DETECTION;
+			area.vCenter3D = CVec3( pUnit->GetCenterPlain(), 0.0f );
+			area.fMaxR = fRadius;
+			pAreas->areas.push_back( area );
+		}
+	}
+}
+
 void CAILogic::RequestBuildPreview( const EActionCommand eBuildCommand,
                                     const CVec2 &vStart,
                                     const CVec2 &vEnd,
