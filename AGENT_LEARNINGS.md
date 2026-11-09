@@ -667,3 +667,22 @@ context. Read `git diff` of every touched file before building.
   plus the weapon's unmodified aim time after the previous shot, as well as
   its separate modified aim-time check. Other simple-firing users share this
   behavior. This was established by source inspection, not an in-game test.
+
+## Unit stat modifier audit
+
+- Modifiers retain only aggregate sums/products/zero counts, not their sources.
+  Removal subtracts/divides; ZeroCount is separate from a zero MultBonus.
+  All 17 fields are accumulated, but SightPower and WeaponTrackDamageProb have
+  no gameplay readers. Track Targeting uses separate hardcoded behavior.
+- Source inspection found normal trench entry applies InnerUnitBonus in both
+  CSoldier::SetInEntrenchment and CEntrenchment::AddSoldier via AddInsider.
+  Normal exit removes both copies. Master of Streets has a different bug:
+  SetFree clears eInsideType before its bonus-removal check, so a configured
+  bonus remains and can stack on reentry; the inspected stock descriptor is empty.
+- Zeroing In and advanced camouflage use custom behavior without applying
+  their StatsBonus. Do not infer modifier support from an ability's DB fields.
+  AdvCamo's zero MultBonus is referenced by an obsolete descriptor, so its
+  presence alone does not establish a live divide-by-zero bug.
+- ApplyStatsModifier does not refresh fog or cached camouflage. Check callers
+  and derived getters: aircraft and infantry spyglass bypass ordinary sight
+  modifiers, while mechanical special sights explicitly apply them.
