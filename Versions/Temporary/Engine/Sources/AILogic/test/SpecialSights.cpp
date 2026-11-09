@@ -3,6 +3,7 @@
 #include "../AIClassesID.h"
 #include "../B2AI.h"
 #include "../GlobalWarFog.h"
+#include "../NewUpdater.h"
 #include "../Technics.h"
 #include "../Turret.h"
 #include "Common_RTS_AI/AIMap.h"
@@ -16,6 +17,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 #include <functional>
 #include <limits>
 #include <string>
@@ -47,6 +49,7 @@ class SpecialSights : public testing::Test
 	CDBPtr<NDb::SMechUnitRPGStats> statsPointer;
 	CPtr<NDb::SUnitStatsModifier> modifierPointer;
 	int previousDetectionRadius = 8;
+	CMemoryStream updaterState;
 
 protected:
 	NDb::SMechUnitRPGStats *stats = nullptr;
@@ -63,10 +66,17 @@ protected:
 		directory = std::filesystem::temp_directory_path() / ( "obk2-special-sights-" + std::to_string( stamp ) );
 		ASSERT_TRUE( std::filesystem::create_directory( directory ) );
 		std::filesystem::copy_file( SPECIAL_SIGHTS_TYPES_FILE, directory / "types.xml" );
+		std::ofstream( directory / "legacy-mech.xdb" ) << "<MechUnitRPGStats/>";
+		std::ofstream( directory / "legacy-infantry.xdb" ) << "<InfantryRPGStats/>";
+		std::ofstream( directory / "detector.xdb" )
+				<< "<InfantryRPGStats><SpyDiscoveryRange>24</SpyDiscoveryRange></InfantryRPGStats>";
 		const std::string path = directory.generic_string() + "/";
 		NVFS::SetMainVFS( NVFS::CreateWinVFS( path ) );
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( path ) );
 		ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), NDb::DATABASE_MODE_EDITOR ) );
+		ASSERT_TRUE( NDb::RegisterResourceFile( "legacy-mech.xdb" ) );
+		ASSERT_TRUE( NDb::RegisterResourceFile( "legacy-infantry.xdb" ) );
+		ASSERT_TRUE( NDb::RegisterResourceFile( "detector.xdb" ) );
 	}
 
 	static void TearDownTestSuite()
@@ -96,6 +106,22 @@ protected:
 
 	void SetUp() override
 	{
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &updaterState, SAVER_MODE_WRITE );
+			saver->Add( 1, &updater );
+		}
+		// A headless fog observer has no local presentation grid, including after a party transfer.
+		CMemoryStream observerStream;
+		int neutralParty = 2;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &observerStream, SAVER_MODE_WRITE );
+			saver->Add( 10, &neutralParty );
+		}
+		observerStream.Seek( 0 );
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &observerStream, SAVER_MODE_READ );
+			updater.operator&( *saver );
+		}
 		previousDetectionRadius = NGlobal::GetVar( "AI.WarFog.CamouflageOpenRadius", 8 );
 		NGlobal::SetVar( "AI.WarFog.CamouflageOpenRadius", 8 );
 		NSingleton::RegisterSingleton( new CCommonPathFinder(), CCommonPathFinder::tidTypeID );
@@ -131,13 +157,18 @@ protected:
 		CLinkObject::Clear();
 		unit = nullptr;
 		turret = nullptr;
+		updaterState.Seek( 0 );
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &updaterState, SAVER_MODE_READ );
+			saver->Add( 1, &updater );
+		}
 		SetAIMap( nullptr );
 		NSingleton::UnRegisterSingleton( CCommonPathFinder::tidTypeID );
 	}
 
-	void PlaceUnit( uint16_t facing = 0 )
+	void PlaceUnit( uint16_t facing = 0, NDb::SInfantryRPGStats *infantryStats = nullptr )
 	{
-		// Populate the real tank through its save format without starting unrelated AI state machines.
+		// Populate real units through their save format without starting unrelated AI state machines.
 		SAIAngle direction( facing );
 		SVector tile( center.x * AI_TILES_IN_VIS_TILE, center.y * AI_TILES_IN_VIS_TILE );
 		CVec3 position( tile.x * SConsts::TILE_SIZE, tile.y * SConsts::TILE_SIZE, 0 );
@@ -161,16 +192,31 @@ protected:
 													saver.Add( 2, &statsPointer );
 													saver.Add( 4, &turrets );
 												} };
-		SFields tank{ [&]( IBinSaver &saver ) { saver.Add( 1, &mechanical ); } };
+		CDBPtr<NDb::SInfantryRPGStats> infantryPointer = infantryStats;
+		float ownSight = -1.0f;
+		uint16_t maxAngle = 65535;
+		SFields soldier{ [&]( IBinSaver &saver )
+		                 {
+											 saver.Add( 1, &ai );
+											 saver.Add( 4, &infantryPointer );
+											 saver.Add( 9, &maxAngle );
+											 saver.Add( 10, &ownSight );
+										 } };
+		SFields fields{ [&]( IBinSaver &saver ) { saver.Add( 1, infantryStats ? &soldier : &mechanical ); } };
+		if ( infantryStats )
+		{
+			unit = dynamic_cast<CAIUnit *>( NObjectFactory::MakeObject( AI_INFANTRY ) );
+			ASSERT_NE( unit, nullptr );
+		}
 		CMemoryStream stream;
 		{
 			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, external );
-			saver->Add( 1, &tank );
+			saver->Add( 1, &fields );
 		}
 		stream.Seek( 0 );
 		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, external );
 		loader->AddPolymorphicBase( 1, unit );
-		ASSERT_EQ( unit->GetStats(), stats );
+		ASSERT_EQ( unit->GetStats(), infantryStats ? static_cast<NDb::SUnitBaseRPGStats *>( infantryStats ) : stats );
 	}
 
 	void AddSight( float start = -0.3f, float end = 0.3f, float range = 24.0f, const char *platform = "" )
@@ -385,6 +431,15 @@ TEST_F( SpecialSights, DetectionOverlayUsesTheRealObserverAndCyanCircle )
 	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 6 ), party, true ) );
 	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 9 ), party, true ) );
 
+	stats->fSpyDiscoveryRange = 100.0f;
+	Refresh();
+	areas.areas.clear();
+	logic->GetDetectionAreas( unitID, &areas );
+	ASSERT_EQ( areas.areas.size(), 1u );
+	EXPECT_FLOAT_EQ( areas.areas.front().fMaxR, 12.0f * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 10 ), party, true ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 16384, 10 ), party, true ) );
+
 	theWarFog.DeleteUnit( unitID );
 	areas.areas.clear();
 	logic->GetDetectionAreas( unitID, &areas );
@@ -414,6 +469,141 @@ TEST_F( SpecialSights, DetectionRadiusFollowsConfigurationSightChangesAndFogCap 
 	modifier->sightRange.nZeroCount = 0;
 	AddUnit();
 	EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ), 5.0f * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+}
+
+TEST_F( SpecialSights, SpyDetectionOverrideUsesMetersFallbackAndSightCap )
+{
+	stats->fSight = 28.0f;
+	AddUnit();
+
+	// Changing only the override must refresh a stationary observer and remove its old close counters.
+	struct SCase
+	{
+		float range;
+		int expectedTiles;
+	};
+
+	for ( const SCase &test : { SCase{ 24.0f, 12 },
+	                            SCase{ 6.0f, 3 },
+	                            SCase{ 0.0f, 8 },
+	                            SCase{ -5.0f, 8 },
+	                            SCase{ 7.9f, 3 },
+	                            SCase{ ( std::numeric_limits<float>::max )(), 14 } } )
+	{
+		SCOPED_TRACE( test.range );
+		stats->fSpyDiscoveryRange = test.range;
+		Refresh();
+		EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ),
+		                 float( test.expectedTiles * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE ) );
+		EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, test.expectedTiles - 1 ), party, true ) );
+		EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, test.expectedTiles + 1 ), party, true ) );
+	}
+	modifier->sightRange.fMultBonus = 0.5f;
+	Refresh();
+	EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ), 14.0f * AI_TILE_SIZE );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 10 ), party, true ) );
+	modifier->sightRange.nZeroCount = 1;
+	Refresh();
+	EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ), 0.0f );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 2 ), party, true ) );
+}
+
+TEST_F( SpecialSights, InfantryUsesItsOwnSpyDetectionStat )
+{
+	NDb::SInfantryRPGStats *infantry = MakeRecord<NDb::SInfantryRPGStats>( "InfantryRPGStats" );
+	ASSERT_NE( infantry, nullptr );
+	infantry->fSight = 28.0f;
+	infantry->fSpyDiscoveryRange = 24.0f;
+	PlaceUnit( 0, infantry );
+	EXPECT_FLOAT_EQ( Info().fSpyDiscoveryRange, 24.0f );
+	AddUnit();
+	EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ), 24.0f * AI_TILE_SIZE );
+	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 10 ), party, true ) );
+	infantry->fSpyDiscoveryRange = 6.0f;
+	Refresh();
+	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 2 ), party, true ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 10 ), party, true ) );
+}
+
+TEST_F( SpecialSights, PendingDetectionChangeSurvivesSaveTransferAndRemoval )
+{
+	stats->fSight = 28.0f;
+	stats->fSpyDiscoveryRange = 24.0f;
+	AddUnit();
+	stats->fSpyDiscoveryRange = 6.0f;
+	theWarFog.UpdateUnit( unitID, Info() );
+	// Save before Segment: old coverage and the newly requested radius differ.
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->Add( 1, &theWarFog );
+	}
+	theWarFog.Clear();
+	stream.Seek( 0 );
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		saver->Add( 1, &theWarFog );
+	}
+	theWarFog.Segment();
+	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 2 ), party, true ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 10 ), party, true ) );
+	theWarFog.ChangeParty( unitID, Info(), 0 );
+	theWarFog.Segment();
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 2 ), party, true ) );
+	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 2 ), 0, true ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 10 ), 0, true ) );
+	theWarFog.DeleteUnit( unitID );
+	theWarFog.Segment();
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 2 ), 0, true ) );
+}
+
+TEST_F( SpecialSights, SpyDetectionDataDefaultsRoundTripAndChecksum )
+{
+	const CDBPtr<NDb::SMechUnitRPGStats> legacyMech = NDb::Get<NDb::SMechUnitRPGStats>( CDBID( "legacy-mech.xdb" ) );
+	const CDBPtr<NDb::SInfantryRPGStats> legacyInfantry =
+			NDb::Get<NDb::SInfantryRPGStats>( CDBID( "legacy-infantry.xdb" ) );
+	const CDBPtr<NDb::SInfantryRPGStats> detector = NDb::Get<NDb::SInfantryRPGStats>( CDBID( "detector.xdb" ) );
+	ASSERT_NE( legacyMech, nullptr );
+	ASSERT_NE( legacyInfantry, nullptr );
+	ASSERT_NE( detector, nullptr );
+	EXPECT_FLOAT_EQ( legacyMech->fSpyDiscoveryRange, -1.0f );
+	EXPECT_FLOAT_EQ( legacyInfantry->fSpyDiscoveryRange, -1.0f );
+	EXPECT_FLOAT_EQ( detector->fSpyDiscoveryRange, 24.0f );
+	EXPECT_FLOAT_EQ( stats->fSpyDiscoveryRange, -1.0f );
+	NDb::CResource *resource = stats;
+	const auto checksum = resource->CalcCheckSum();
+	stats->fSpyDiscoveryRange = 24.0f;
+	EXPECT_NE( resource->CalcCheckSum(), checksum );
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->AddPolymorphicBase( 1, stats );
+	}
+	NDb::SMechUnitRPGStats *loaded = MakeRecord<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
+	ASSERT_NE( loaded, nullptr );
+	stream.Seek( 0 );
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		saver->AddPolymorphicBase( 1, loaded );
+	}
+	EXPECT_FLOAT_EQ( loaded->fSpyDiscoveryRange, 24.0f );
+
+	// Legacy binary records must retain the negative default when chunk 40 is absent.
+	CMemoryStream legacyStream;
+	SFields empty{ []( IBinSaver & ) {} };
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &legacyStream, SAVER_MODE_WRITE );
+		saver->Add( 1, &empty );
+	}
+	NDb::SMechUnitRPGStats *legacyLoaded = MakeRecord<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
+	ASSERT_NE( legacyLoaded, nullptr );
+	SFields base{ [&]( IBinSaver &saver ) { legacyLoaded->NDb::SUnitBaseRPGStats::operator&( saver ); } };
+	legacyStream.Seek( 0 );
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &legacyStream, SAVER_MODE_READ );
+		saver->Add( 1, &base );
+	}
+	EXPECT_FLOAT_EQ( legacyLoaded->fSpyDiscoveryRange, -1.0f );
 }
 
 TEST_F( SpecialSights, AircraftSectorDoesNotRevealAnEntireCircle )
@@ -545,6 +735,7 @@ TEST_F( SpecialSights, LegacyFogRecordWithoutSectorsLoadsAsOriginalCircle )
 		saver->Add( 1, &oldFormat );
 	}
 	SWarFogUnitInfo loaded;
+	loaded.fSpyDiscoveryRange = 24.0f;
 	stream.Seek( 0 );
 	{
 		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
@@ -552,6 +743,7 @@ TEST_F( SpecialSights, LegacyFogRecordWithoutSectorsLoadsAsOriginalCircle )
 	}
 	EXPECT_EQ( loaded.nRadius, original.nRadius );
 	EXPECT_TRUE( loaded.specialSights.empty() );
+	EXPECT_FLOAT_EQ( loaded.fSpyDiscoveryRange, -1.0f );
 	theWarFog.AddUnit( unitID, loaded, party );
 	theWarFog.Segment();
 	EXPECT_TRUE( Visible( 32768, 2 ) );

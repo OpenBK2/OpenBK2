@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Unit stats can set `SpyDiscoveryRange` in meters to override the global camouflage detection radius. Positive values apply within the unit's current sight; the default `-1` and zero retain the global setting. The Alt+E circles follow the effective range. An example is in `OBK2_Examples/CamouflageDetection`.
+
 - Hold Alt+E to show selected friendly units' camouflage detection distance in cyan on the map and minimap. The circles use the current fog-of-war detection limit and work alongside Alt+R weapon ranges. Existing-profile bindings and details are in `OBK2_Examples/CamouflageDetection`.
 
 - Alt+R now also shows the weapon ranges of towed guns when their trucks are selected, on both the map and minimap. Armed trucks retain their own range overlays.

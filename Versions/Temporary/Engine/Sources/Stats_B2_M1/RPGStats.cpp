@@ -4375,6 +4375,7 @@ void SUnitBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "AABBStrengthMax", (uint8_t*)&fAABBStrengthMax - pThis, sizeof(fAABBStrengthMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "CoverStrengthMin", (uint8_t*)&fCoverStrengthMin - pThis, sizeof(fCoverStrengthMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "CoverStrengthMax", (uint8_t*)&fCoverStrengthMax - pThis, sizeof(fCoverStrengthMax), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpyDiscoveryRange", (uint8_t*)&fSpyDiscoveryRange - pThis, sizeof(fSpyDiscoveryRange), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
@@ -4418,6 +4419,7 @@ int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "AABBStrengthMax", &fAABBStrengthMax );
 	saver.Add( "CoverStrengthMin", &fCoverStrengthMin );
 	saver.Add( "CoverStrengthMax", &fCoverStrengthMax );
+	saver.Add( "SpyDiscoveryRange", &fSpyDiscoveryRange );
 
 	return 0;
 }
@@ -4475,6 +4477,10 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 	{
 		saver.Add( 39, &fCoverStrengthMax );
 	}
+	if ( !saver.IsReading() || saver.HasChunk( 40 ) )
+	{
+		saver.Add( 40, &fSpyDiscoveryRange );
+	}
 
 	return 0;
 }
@@ -4487,7 +4493,7 @@ uint32_t SUnitBaseRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fReverseSpeedModifier << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice << fAABBStrengthMin << fAABBStrengthMax << fCoverStrengthMin << fCoverStrengthMax;
+	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fReverseSpeedModifier << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice << fAABBStrengthMin << fAABBStrengthMax << fCoverStrengthMin << fCoverStrengthMax << fSpyDiscoveryRange;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

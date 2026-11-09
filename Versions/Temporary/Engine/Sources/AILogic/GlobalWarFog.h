@@ -118,6 +118,7 @@ struct SWarFogUnitInfo
 	int nRadius = {};
 	bool bPlane = {};
 	std::vector<SWarFogSight> specialSights;
+	float fSpyDiscoveryRange = -1.0f; // meters; nonpositive values use the global detection limit
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -126,6 +127,14 @@ struct SWarFogUnitInfo
 		f.Add( 4, &nRadius );
 		f.Add( 5, &bPlane );
 		f.Add( 6, &specialSights );
+		if ( f.IsReading() && !f.HasChunk( 7 ) )
+		{
+			fSpyDiscoveryRange = -1.0f;
+		}
+		else
+		{
+			f.Add( 7, &fSpyDiscoveryRange );
+		}
 		return 0;
 	}
 
@@ -177,6 +186,7 @@ class AILOGIC_EXPORT CGlobalWarFog : public CAIObjectBase
 				{}; // warfog works only with two parties, so if updateFlag is UPD_CHANGE_PARTY new party is 1 - nParty ;-)
 		CArray1Bit visValues;
 		EUpdateWarFogUnitInfoFlag updateFlag = {};
+		int nOldCloseRadius = -1; // radius of the close-visibility counters currently in the fog
 
 		ZEND int operator&( IBinSaver &f )
 		{
@@ -186,6 +196,15 @@ class AILOGIC_EXPORT CGlobalWarFog : public CAIObjectBase
 			f.Add( 4, &nParty );
 			f.Add( 5, &visValues );
 			f.Add( 6, &updateFlag );
+			if ( f.IsReading() && !f.HasChunk( 7 ) )
+			{
+				// Old saves used the global limit for every observer.
+				nOldCloseRadius = -1;
+			}
+			else
+			{
+				f.Add( 7, &nOldCloseRadius );
+			}
 			return 0;
 		}
 
