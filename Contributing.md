@@ -427,6 +427,13 @@ CI runs the same target after the build and fails when it changes anything, so a
 
 the schema only makes the field exist. it takes effect once `.xdb` records set it, and new buttons or abilities also need UI records. [OBK2_Examples](OBK2_Examples) holds the data-side counterparts of recent features. read those, and [OBK2_Examples/StratBomberSelectionButtonImpl/note.txt](OBK2_Examples/StratBomberSelectionButtonImpl/note.txt) in particular, before adding a similar feature. player-visible changes go in [Changes.md](Changes.md).
 
+# simulation visibility queries
+
+[`CGlobalWarFog::GetNormalizedDistanceToVisibleTerrain`](docs/visible-terrain-distance.md)
+returns a unit's or position's normalized distance to a specified side's visible
+terrain. The guide covers AI coordinate units, camouflage, script reveals,
+simulation timing and how the distance limit bounds query cost.
+
 # unit tests and benchmarks
 
 tests and benchmarks are `EXCLUDE_FROM_ALL`, so a normal build never touches them.

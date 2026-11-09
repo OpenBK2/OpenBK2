@@ -3,6 +3,7 @@
 #include "Cheats.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "CommonUnit.h"
 #include "Diplomacy.h"
 #include "GlobalWarFog.h"
 #include "Graveyard.h"
@@ -19,6 +20,7 @@
 
 #include "AILogic_export.h"
 
+#include <cmath>
 #include <cstdint>
 
 static const int MAX_UPDATE_AT_SEGMENT = 100;
@@ -619,6 +621,86 @@ bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool b
 	{
 		return warFog[nParty][tile.y / AI_TILES_IN_VIS_TILE][tile.x / AI_TILES_IN_VIS_TILE].nVisible != 0;
 	}
+}
+
+float CGlobalWarFog::GetNormalizedDistanceToVisibleTerrain( const CVec2 &vPosition,
+                                                            const int nParty,
+                                                            const float fDistanceLimit ) const
+{
+	if ( !IsValidParty( nParty ) || !std::isfinite( fDistanceLimit ) || fDistanceLimit <= 0.0f ||
+	     !std::isfinite( vPosition.x ) || !std::isfinite( vPosition.y ) || nParty >= warFog.size() || GetSizeX() <= 0 ||
+	     GetSizeY() <= 0 )
+	{
+		return 1.0f;
+	}
+
+	// Script reveals can cover just one AI tile inside a normal two-by-two fog cell.
+	// Reuse IsTileVisible so the existing single-player reveal and fog-off rules stay consistent.
+	const int nTileStep = !theDipl.IsNetGame() && !scriptAreas.empty() ? 1 : AI_TILES_IN_VIS_TILE;
+	const int nTileSize = nTileStep * AI_TILE_SIZE;
+	const int nWidth = GetSizeX() * AI_TILES_IN_VIS_TILE / nTileStep;
+	const int nHeight = GetSizeY() * AI_TILES_IN_VIS_TILE / nTileStep;
+	const double fX = vPosition.x;
+	const double fY = vPosition.y;
+	if ( fX >= 0 && fY >= 0 && fX < double( nWidth ) * nTileSize && fY < double( nHeight ) * nTileSize &&
+	     IsTileVisible( SVector( int( fX / AI_TILE_SIZE ), int( fY / AI_TILE_SIZE ) ), nParty ) )
+	{
+		return 0.0f;
+	}
+
+	// Clip in double before converting to tile indices, including for very large limits/outside positions.
+	// Include cells touching the lower boundary, even if a tiny limit rounds away from the position.
+	const double fMinX = (std::max)( 0.0, std::ceil( ( fX - fDistanceLimit ) / nTileSize ) - 1.0 );
+	const double fMinY = (std::max)( 0.0, std::ceil( ( fY - fDistanceLimit ) / nTileSize ) - 1.0 );
+	const double fMaxX = (std::min)( double( nWidth - 1 ), std::floor( ( fX + fDistanceLimit ) / nTileSize ) );
+	const double fMaxY = (std::min)( double( nHeight - 1 ), std::floor( ( fY + fDistanceLimit ) / nTileSize ) );
+	if ( fMinX > fMaxX || fMinY > fMaxY )
+	{
+		return 1.0f;
+	}
+
+	double fBestDistanceSquared = double( fDistanceLimit ) * fDistanceLimit;
+	for ( int y = int( fMinY ); y <= int( fMaxY ); ++y )
+	{
+		const double fDY = fY - std::clamp( fY, double( y ) * nTileSize, double( y + 1 ) * nTileSize );
+		const double fDYSquared = fDY * fDY;
+		if ( fDYSquared >= fBestDistanceSquared )
+		{
+			continue;
+		}
+		for ( int x = int( fMinX ); x <= int( fMaxX ); ++x )
+		{
+			const double fDX = fX - std::clamp( fX, double( x ) * nTileSize, double( x + 1 ) * nTileSize );
+			const double fDistanceSquared = fDX * fDX + fDYSquared;
+			if ( fDistanceSquared < fBestDistanceSquared && IsTileVisible( SVector( x * nTileStep, y * nTileStep ), nParty ) )
+			{
+				fBestDistanceSquared = fDistanceSquared;
+				if ( fBestDistanceSquared == 0.0 )
+				{
+					return 0.0f;
+				}
+			}
+		}
+	}
+
+	// Compare squared distances throughout the scan; only the final result needs a square root.
+	return float( (std::min)( 1.0, std::sqrt( fBestDistanceSquared ) / fDistanceLimit ) );
+}
+
+float CGlobalWarFog::GetNormalizedDistanceToVisibleTerrain( const CCommonUnit &unit,
+                                                            const int nParty,
+                                                            const float fDistanceLimit ) const
+{
+	// Validate before indexing the unit's per-party visibility, even for the visible-unit shortcut.
+	if ( !IsValidParty( nParty ) || !std::isfinite( fDistanceLimit ) || fDistanceLimit <= 0.0f )
+	{
+		return 1.0f;
+	}
+	if ( unit.IsVisible( uint8_t( nParty ) ) )
+	{
+		return 0.0f;
+	}
+	return GetNormalizedDistanceToVisibleTerrain( unit.GetCenterPlain(), nParty, fDistanceLimit );
 }
 
 void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &scriptArea, bool bOpen )
