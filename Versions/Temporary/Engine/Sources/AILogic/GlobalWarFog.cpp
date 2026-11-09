@@ -28,10 +28,12 @@ static const int HEIGHT_MULTIPLYER = 100;
 
 static int CAMOUFLAGE_RADIUS = 8;
 
-static int GetCloseVisibilityRadius( const int nSightRadius )
+static int GetCloseVisibilityRadius( const int nSightRadius, const float fSpyDiscoveryRange )
 {
-	// Keep the overlay and fog counters on the same detection-distance calculation.
-	return (std::max)( 0, (std::min)( nSightRadius, CAMOUFLAGE_RADIUS ) );
+	// Unit stats use meters; fog uses two-meter tiles. Clamp before converting large float overrides to int.
+	const float fLimit =
+			fSpyDiscoveryRange > 0.0f ? fSpyDiscoveryRange / AI_TILES_IN_VIS_TILE : float( CAMOUFLAGE_RADIUS );
+	return int( (std::max)( 0.0f, (std::min)( float( nSightRadius ), fLimit ) ) );
 }
 
 extern CEventUpdater updater;
@@ -321,7 +323,8 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 	if ( pos != units.end() && pos->second.updateFlag != UPD_DELETE_UNIT )
 	{
 		if ( pos->second.nRadius != updateInfo.nRadius || pos->second.sector != updateInfo.sector ||
-		     pos->second.specialSights != updateInfo.specialSights )
+		     pos->second.specialSights != updateInfo.specialSights ||
+		     pos->second.fSpyDiscoveryRange != updateInfo.fSpyDiscoveryRange )
 		{
 			if ( pos->second.updateFlag == UPD_UPDATED )
 			{
@@ -331,6 +334,7 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 			pos->second.nRadius = (std::min)( updateInfo.nRadius, GetMaxRadius() );
 			pos->second.sector = updateInfo.sector;
 			pos->second.specialSights = updateInfo.specialSights;
+			pos->second.fSpyDiscoveryRange = updateInfo.fSpyDiscoveryRange;
 			for ( SWarFogSight &sight : pos->second.specialSights )
 			{
 				sight.nRadius = Clamp( sight.nRadius, 0, GetMaxRadius() );
@@ -429,7 +433,8 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 	CPtr<CWarFogVisibility> pVisibility = CreateWarFogVisibility( this, unitInfo );
 
 	const int nRadius = unitInfo.GetMaxSightRadius();
-	const int nClsLength = lengths[GetCloseVisibilityRadius( nRadius )];
+	const int nCloseRadius = GetCloseVisibilityRadius( nRadius, unitInfo.fSpyDiscoveryRange );
+	const int nClsLength = lengths[nCloseRadius];
 	for ( int i = 0; i < nClsLength; ++i )
 	{
 		const SVector vTile = unitInfo.vPos + GetSpiralPoint( i ).vOffset;
@@ -468,6 +473,7 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 		}
 	}
 
+	unitInfo.nOldCloseRadius = nCloseRadius;
 	unitInfo.Update();
 }
 
@@ -475,7 +481,10 @@ void CGlobalWarFog::RemoveVisibleTiles( const int nID, SWarForFullUnitInfo &unit
 {
 	TWarFog &thisPartyWarFog = warFog[unitInfo.nParty];
 
-	const int nClsOldLength = GetSpiralLength( GetCloseVisibilityRadius( unitInfo.nOldRadius ) );
+	// Remove the previously applied radius, even if the unit's override has just changed.
+	const int nCloseRadius =
+			unitInfo.nOldCloseRadius >= 0 ? unitInfo.nOldCloseRadius : GetCloseVisibilityRadius( unitInfo.nOldRadius, -1.0f );
+	const int nClsOldLength = GetSpiralLength( nCloseRadius );
 	for ( int i = 0; i < nClsOldLength; ++i )
 	{
 		if ( unitInfo.visValues.GetData( i ) )
@@ -512,7 +521,8 @@ float CGlobalWarFog::GetDetectionRadius( const int nID ) const
 		return 0.0f;
 	}
 	// Registered sight includes modifiers and special sights, and excludes embarked observers.
-	return float( GetCloseVisibilityRadius( it->second.GetMaxSightRadius() ) * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+	return float( GetCloseVisibilityRadius( it->second.GetMaxSightRadius(), it->second.fSpyDiscoveryRange ) *
+	              AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
 }
 
 void CGlobalWarFog::Segment()

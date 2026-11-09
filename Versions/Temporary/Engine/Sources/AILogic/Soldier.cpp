@@ -986,6 +986,7 @@ void CSoldier::Die( const bool fromExplosion, const float fDamage )
 
 void CSoldier::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 {
+	pInfo->fSpyDiscoveryRange = GetStats()->fSpyDiscoveryRange;
 	pInfo->specialSights.clear();
 	if ( !IsInSolidPlace() )
 	{

@@ -1,6 +1,19 @@
 
 # AGENT LEARNINGS
 
+- Per-unit camouflage detection uses `SpyDiscoveryRange` in meters, while the
+  global limit uses visibility tiles. Both CAIUnit and CSoldier supply fog info.
+  Keep the applied close radius separate from a pending override, including
+  in saves, so updating or removing an observer subtracts its actual counters.
+  Nonzero schema defaults need `preserveDefault` to survive missing binary chunks.
+- Mistake: directly constructing `SMechUnitRPGStats` in a Windows test required
+  unexported virtual methods and dependent sound factories. Create these records
+  through the database factory and serialize through `AddPolymorphicBase`, as
+  existing database-backed fixtures do; ownership alone does not ensure exports.
+- Headless fog tests that transfer observers to party 0 can reach the updater's
+  uninitialized presentation grid. Save/restore the updater and give it a neutral
+  observer in the fixture; keep this test-only setup out of simulation code.
+
 - Camouflage detection uses `GlobalWarFog.cpp`'s `AI.WarFog.CamouflageOpenRadius`
   in visibility tiles, capped by each registered observer's maximum sight.
   A visibility tile is 64 AI coordinates. This setting is outside `AIConsts.cpp`
