@@ -998,6 +998,7 @@ void SAIGameConsts::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "TypedTemplates", &typedTemplates, pThis );
 	NMetaInfo::ReportMetaInfo( "InfantryFormationModifiersApplyInTrenches", (uint8_t*)&bInfantryFormationModifiersApplyInTrenches - pThis, sizeof(bInfantryFormationModifiersApplyInTrenches), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "AIPropertyConsts", (uint8_t*)&pAIPropertyConsts - pThis, sizeof(pAIPropertyConsts), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "DisableEntrenchmentReloadSlowdown", (uint8_t*)&bDisableEntrenchmentReloadSlowdown - pThis, sizeof(bDisableEntrenchmentReloadSlowdown), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1022,6 +1023,7 @@ int SAIGameConsts::operator&( IXmlSaver &saver )
 	saver.Add( "TypedTemplates", &typedTemplates );
 	saver.Add( "InfantryFormationModifiersApplyInTrenches", &bInfantryFormationModifiersApplyInTrenches );
 	saver.Add( "AIPropertyConsts", &pAIPropertyConsts );
+	saver.Add( "DisableEntrenchmentReloadSlowdown", &bDisableEntrenchmentReloadSlowdown );
 
 	return 0;
 }
@@ -1049,6 +1051,7 @@ int SAIGameConsts::operator&( IBinSaver &saver )
 		saver.Add( 18, &bInfantryFormationModifiersApplyInTrenches );
 	}
 	saver.Add( 19, &pAIPropertyConsts );
+	saver.Add( 20, &bDisableEntrenchmentReloadSlowdown );
 
 	return 0;
 }
@@ -1061,7 +1064,7 @@ uint32_t SAIGameConsts::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts;
+	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts << bDisableEntrenchmentReloadSlowdown;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

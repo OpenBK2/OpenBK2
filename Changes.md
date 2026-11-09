@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Added `AIGameConsts.DisableEntrenchmentReloadSlowdown` (default `false`). Set it to `true` to stop entrenched units from repeating their initial aiming delay after every shot at the same target. Normal aiming, turret movement and reload time still apply; omitted or false values retain legacy timing.
+
 - Unit stats can set `SpyDiscoveryRange` in meters to override the global camouflage detection radius. Positive values apply within the unit's current sight; the default `-1` and zero retain the global setting. The Alt+E circles follow the effective range. An example is in `OBK2_Examples/CamouflageDetection`.
 
 - Hold Alt+E to show selected friendly units' camouflage detection distance in cyan on the map and minimap. The circles use the current fog-of-war detection limit and work alongside Alt+R weapon ranges. Existing-profile bindings and details are in `OBK2_Examples/CamouflageDetection`.

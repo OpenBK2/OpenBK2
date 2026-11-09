@@ -467,5 +467,7 @@ class SAIGameConsts
 	bool _InfantryFormationModifiersApplyInTrenches = true;
 	// Optional simulation properties; absent or unresolved resources retain the legacy settings.
 	SAIPropertyConsts *_AIPropertyConsts;
+	// Entrenched units aim once per attack instead of adding aiming time to every reload; false keeps legacy timing.
+	bool _DisableEntrenchmentReloadSlowdown = false;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
