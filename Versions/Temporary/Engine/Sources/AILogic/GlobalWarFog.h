@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/BitData.h"
+#include "Misc/Geom.h"
 #include "UpdateUnitContainer.h"
 
 #include "AILogic_export.h"
@@ -8,6 +9,8 @@
 #include <algorithm>
 #include <cstdint>
 #include <vector>
+
+class CCommonUnit;
 
 namespace NDb
 {
@@ -440,6 +443,14 @@ public:
 
 	bool IsTileVisible( const SVector &tile, const int nParty ) const;
 	bool IsUnitVisible( const SVector &tile, const int nParty, bool bCamouflated ) const;
+
+	// Straight-line XY distance to visible terrain / fDistanceLimit, capped at 1; camouflage is ignored.
+	// Position and limit use AI coordinates (32 per gameplay meter). Parties are 0/1, not player slots.
+	// Measures to cell edges, including script-revealed AI tiles. No visible terrain within the limit returns 1.
+	// Invalid party, nonpositive/nonfinite limit or nonfinite position returns 1. Reads the current fog snapshot.
+	float GetNormalizedDistanceToVisibleTerrain( const CVec2 &vPosition, int nParty, float fDistanceLimit ) const;
+	// Also returns 0 for a unit already visible to nParty, even when its terrain is hidden.
+	float GetNormalizedDistanceToVisibleTerrain( const CCommonUnit &unit, int nParty, float fDistanceLimit ) const;
 
 	void ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &scriptArea, bool bOpen );
 
