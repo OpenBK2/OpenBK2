@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Hold Alt+E to show selected friendly units' camouflage detection distance in cyan on the map and minimap. The circles use the current fog-of-war detection limit and work alongside Alt+R weapon ranges. Existing-profile bindings and details are in `OBK2_Examples/CamouflageDetection`.
+
 - Alt+R now also shows the weapon ranges of towed guns when their trucks are selected, on both the map and minimap. Armed trucks retain their own range overlays.
 
 - `MultiplayerConsts` can now set `NivalNetIP`, `NivalNetPort`, and `NetGameVersion`. Database values take precedence over profile settings, while omitted fields preserve the legacy fallback. The protocol version applies to online and LAN multiplayer. See `OBK2_Examples/MultiplayerConnectionSettings` for the fields and server setup requirements.

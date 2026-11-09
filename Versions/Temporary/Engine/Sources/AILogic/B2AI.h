@@ -84,6 +84,7 @@ struct IAILogic : public ICommonB2M1AI
 
 	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eAction, bool bShow ) = 0;
 	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas ) = 0;
+	virtual void GetDetectionAreas( int nUnitID, SShootAreas *pAreas ) = 0;
 
 	virtual const int WAR_FOG_FULL_UPDATE() const = 0;
 	virtual const int VIS_POWER() const = 0;

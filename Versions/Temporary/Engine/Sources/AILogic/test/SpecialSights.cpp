@@ -1,6 +1,7 @@
 #include "../stdafx.h"
 
 #include "../AIClassesID.h"
+#include "../B2AI.h"
 #include "../GlobalWarFog.h"
 #include "../Technics.h"
 #include "../Turret.h"
@@ -9,6 +10,7 @@
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
+#include "System/GlobalVars.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
@@ -44,6 +46,7 @@ class SpecialSights : public testing::Test
 	CObj<CTurret> turret;
 	CDBPtr<NDb::SMechUnitRPGStats> statsPointer;
 	CPtr<NDb::SUnitStatsModifier> modifierPointer;
+	int previousDetectionRadius = 8;
 
 protected:
 	NDb::SMechUnitRPGStats *stats = nullptr;
@@ -93,6 +96,8 @@ protected:
 
 	void SetUp() override
 	{
+		previousDetectionRadius = NGlobal::GetVar( "AI.WarFog.CamouflageOpenRadius", 8 );
+		NGlobal::SetVar( "AI.WarFog.CamouflageOpenRadius", 8 );
 		NSingleton::RegisterSingleton( new CCommonPathFinder(), CCommonPathFinder::tidTypeID );
 		map = new CAIMap( 64, 64, 32, 2, 16 );
 		SetAIMap( map );
@@ -122,6 +127,8 @@ protected:
 	void TearDown() override
 	{
 		theWarFog.Clear();
+		NGlobal::SetVar( "AI.WarFog.CamouflageOpenRadius", previousDetectionRadius );
+		CLinkObject::Clear();
 		unit = nullptr;
 		turret = nullptr;
 		SetAIMap( nullptr );
@@ -181,6 +188,23 @@ protected:
 		SWarFogUnitInfo info;
 		unit->GetFogInfo( &info );
 		return info;
+	}
+
+	void RegisterSelectedUnit()
+	{
+		unit->nUniqueID = unitID;
+		unit->Mem2UniqueIdObjs();
+		// The fixture's partial save omits alive flags; restore them for the public overlay query.
+		CMemoryStream stream;
+		bool alive = true;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->Add( 2, &alive );
+			saver->Add( 3, &alive );
+		}
+		stream.Seek( 0 );
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		unit->CUpdatableObj::operator&( *loader );
 	}
 
 	void AddUnit()
@@ -330,6 +354,66 @@ TEST_F( SpecialSights, CappedRangeAndCamouflageUseExistingFogLimits )
 	EXPECT_FALSE( Visible( 0, 12 ) );
 	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 6 ), party, true ) );
 	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 9 ), party, true ) );
+}
+
+TEST_F( SpecialSights, DetectionOverlayUsesTheRealObserverAndCyanCircle )
+{
+	RegisterSelectedUnit();
+	CObj<IAILogic> logic = dynamic_cast<IAILogic *>( NObjectFactory::MakeObject( 0x1108D441 ) );
+	ASSERT_NE( logic, nullptr );
+	SShootAreas areas;
+	logic->GetDetectionAreas( unitID, &areas );
+	EXPECT_TRUE( areas.areas.empty() );
+
+	AddUnit();
+	logic->GetDetectionAreas( unitID, &areas );
+	ASSERT_EQ( areas.areas.size(), 1u );
+	const SShootArea &area = areas.areas.front();
+	EXPECT_FLOAT_EQ( area.fMaxR, 2.0f * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+	EXPECT_FLOAT_EQ( area.vCenter3D.x, center.x * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+	EXPECT_FLOAT_EQ( area.vCenter3D.y, center.y * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+	EXPECT_EQ( area.wStartAngle, area.wFinishAngle );
+	EXPECT_EQ( area.GetColor(), 0x0000ffffu );
+	EXPECT_EQ( area.GetMiniMapCircleColor(), 0xf0ff );
+
+	AddSight();
+	Refresh();
+	areas.areas.clear();
+	logic->GetDetectionAreas( unitID, &areas );
+	ASSERT_EQ( areas.areas.size(), 1u );
+	EXPECT_FLOAT_EQ( areas.areas.front().fMaxR, 8.0f * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 6 ), party, true ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 9 ), party, true ) );
+
+	theWarFog.DeleteUnit( unitID );
+	areas.areas.clear();
+	logic->GetDetectionAreas( unitID, &areas );
+	EXPECT_TRUE( areas.areas.empty() );
+	theWarFog.Segment();
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 6 ), party, true ) );
+}
+
+TEST_F( SpecialSights, DetectionRadiusFollowsConfigurationSightChangesAndFogCap )
+{
+	NGlobal::SetVar( "AI.WarFog.CamouflageOpenRadius", 3 );
+	AddSight();
+	AddUnit();
+	EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ), 3.0f * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
+	EXPECT_TRUE( theWarFog.IsUnitVisible( Point( 0, 2 ), party, true ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 4 ), party, true ) );
+
+	modifier->sightRange.nZeroCount = 1;
+	Refresh();
+	EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ), 0.0f );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( Point( 0, 2 ), party, true ) );
+
+	// Reconfigure only between worlds, as a mod's simulation settings are applied before a mission.
+	theWarFog.Clear();
+	theWarFog.Init( 64, 64, 10, 2.0f );
+	NGlobal::SetVar( "AI.WarFog.CamouflageOpenRadius", 20 );
+	modifier->sightRange.nZeroCount = 0;
+	AddUnit();
+	EXPECT_FLOAT_EQ( theWarFog.GetDetectionRadius( unitID ), 5.0f * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE );
 }
 
 TEST_F( SpecialSights, AircraftSectorDoesNotRevealAnEntireCircle )

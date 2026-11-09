@@ -1,6 +1,17 @@
 
 # AGENT LEARNINGS
 
+- Camouflage detection uses `GlobalWarFog.cpp`'s `AI.WarFog.CamouflageOpenRadius`
+  in visibility tiles, capped by each registered observer's maximum sight.
+  A visibility tile is 64 AI coordinates. This setting is outside `AIConsts.cpp`
+  and its `AIPropertyConsts` schema. Radius overlays are distance limits, since
+  terrain and sight sectors still filter individual tiles. New scene marker
+  kinds require resizing the serialized marker vector when older saves load.
+- Mistake: fog fixtures pass `CGlobalWarFog::Init` a maximum in AI tiles,
+  while its getters and registered sight use visibility tiles (half as many).
+  Convert explicitly; an accidentally tiny maximum can enter legacy tracer
+  paths that do not support one-tile rays and corrupt later tests.
+
 - Alt+R is `show_areas_down/up` (shooting areas); `show_ranges_down/up` is Alt+Z
   (artillery ranging). Both the 3D Alt+R overlay and minimap call the unit's
   virtual `GetShootAreas`, so a transport override can include its towed gun

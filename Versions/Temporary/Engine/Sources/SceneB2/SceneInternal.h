@@ -400,6 +400,9 @@ public:
 		{
 			timeStatLastShow = 0;
 			nStatNumFrames = 0;
+			// Older saves have fewer marker kinds. Held-key overlays are transient.
+			markers.resize( _ESMT_ENUM_COUNTER );
+			markers[ESMT_DETECTION_AREA].clear();
 
 			//{ CRAP - for compability with old saves
 			if ( screensData.empty() )
@@ -818,7 +821,8 @@ public:
 	                   float fMinRadius,
 	                   float fMaxRadius,
 	                   const CVec3 &vColor,
-	                   const CVec2 &vCenter ) override;
+	                   const CVec2 &vCenter,
+	                   ESceneMarkerType eMarkerType = ESMT_SHOOT_AREA ) override;
 
 	void AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &vColor ) override;
 	void ClearKeyPointAreas() override;

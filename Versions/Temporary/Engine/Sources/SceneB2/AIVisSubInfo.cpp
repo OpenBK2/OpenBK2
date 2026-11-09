@@ -49,7 +49,8 @@ void CScene::AddShootArea( int nID,
                            float fMinRadius,
                            float fMaxRadius,
                            const CVec3 &vColor,
-                           const CVec2 &vCenter )
+                           const CVec2 &vCenter,
+                           ESceneMarkerType eMarkerType )
 {
 	CVec2 vCenterVis = vCenter;
 	AI2Vis( &vCenterVis );
@@ -62,7 +63,7 @@ void CScene::AddShootArea( int nID,
 	SFBTransform transform;
 	transform.forward.Set( CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
 	transform.backward.Set( -CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
-	data[eScene]->markers[ESMT_SHOOT_AREA][nID].push_back(
+	data[eScene]->markers[eMarkerType][nID].push_back(
 			data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
 }
 
