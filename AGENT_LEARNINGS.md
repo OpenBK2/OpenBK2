@@ -667,6 +667,16 @@ context. Read `git diff` of every touched file before building.
   plus the weapon's unmodified aim time after the previous shot, as well as
   its separate modified aim-time check. Other simple-firing users share this
   behavior. This was established by source inspection, not an in-game test.
+- `SAIGameConsts.DisableEntrenchmentReloadSlowdown` now opts tank-pit occupants
+  into `FireToEnemy()` for simple firing. The default is false. Regression
+  tests exercise the actual gun gates: first aim remains, repeats keep their
+  reload but omit the extra aim, including after save/load.
+- Mistake: the timing fixture assumed angle 16384 faced positive Y and omitted
+  the unit animation helper. Use `GetDirectionByVector` for engine directions
+  and initialize `IAnimUnit` before real firing emits animation updates.
+- Mistake: saving the bare AI to inspect its clock replaced the global AI map
+  with its own null map pointer. Preserve the fixture map around serialization,
+  and restore the original simulation clock so later tests remain independent.
 
 ## Unit stat modifier audit
 

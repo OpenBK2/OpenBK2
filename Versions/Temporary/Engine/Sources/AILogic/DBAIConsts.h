@@ -620,12 +620,14 @@ namespace NDb
 		std::vector< STypedDeployTemplate > typedTemplates;
 		bool bInfantryFormationModifiersApplyInTrenches;
 		CDBPtr< SAIPropertyConsts > pAIPropertyConsts;
+		bool bDisableEntrenchmentReloadSlowdown;
 
 		SAIGameConsts() :
 			__dwCheckSum( 0 ),
 			nRemoveParachuteTime( 0 ),
 			nGroundCrashPlaneSize( 100 ),
-			bInfantryFormationModifiersApplyInTrenches( true )
+			bInfantryFormationModifiersApplyInTrenches( true ),
+			bDisableEntrenchmentReloadSlowdown( false )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

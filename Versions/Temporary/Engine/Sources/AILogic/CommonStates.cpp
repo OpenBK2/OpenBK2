@@ -2,10 +2,12 @@
 
 #include "AckManager.h"
 #include "Artillery.h"
+#include "B2AI.h"
 #include "Building.h"
 #include "Commands.h"
 #include "Common_RTS_AI/PathFinder.h"
 #include "CommonStates.h"
+#include "DBAIConsts.h"
 #include "Diplomacy.h"
 #include "Entrenchment.h"
 #include "ExecutorContainer.h"
@@ -869,7 +871,17 @@ void CMechAttackUnitState::Segment()
 						}
 						else
 						{
-							FireNow();
+							const IAILogic *pAI = Singleton<IAILogic>();
+							const NDb::SAIGameConsts *pConsts = pAI ? pAI->GetAIConsts() : nullptr;
+							// Keep the first aim, then reuse the mobile attack's repeat-fire timing in a tank pit.
+							if ( pUnit->IsInTankPit() && pConsts && pConsts->bDisableEntrenchmentReloadSlowdown )
+							{
+								FireToEnemy();
+							}
+							else
+							{
+								FireNow();
+							}
 						}
 
 						break;

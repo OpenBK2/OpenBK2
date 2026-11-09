@@ -1,10 +1,12 @@
 #include "../stdafx.h"
 
 #include "../AIClassesID.h"
+#include "../AnimUnit.h"
 #include "../Artillery.h"
 #include "../Aviation.h"
 #include "../B2AI.h"
 #include "../Commands.h"
+#include "../DBAIConsts.h"
 #include "../Diplomacy.h"
 #include "../GroupLogic.h"
 #include "../Guns.h"
@@ -25,6 +27,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 #include <functional>
 #include <list>
 #include <string>
@@ -67,6 +70,7 @@ protected:
 	CPtr<CBasicGun> gun;
 	CPtr<SCommonGunInfo> ammo;
 	CPtr<IShootEstimator> estimator;
+	CPtr<IAnimUnit> ownerAnimation;
 	std::list<CPtr<CAIUnit>> cachedTargets;
 	NTimer::STime cacheDuration = 10000;
 
@@ -92,10 +96,16 @@ protected:
 		directory = std::filesystem::temp_directory_path() / ( "obk2-aggressive-attacker-" + std::to_string( stamp ) );
 		ASSERT_TRUE( std::filesystem::create_directory( directory ) );
 		std::filesystem::copy_file( AGGRESSIVE_ATTACKER_TYPES_FILE, directory / "types.xml" );
+		std::ofstream( directory / "legacy-constants.xdb" ) << "<AIGameConsts/>";
+		std::ofstream( directory / "entrenchment-constants.xdb" )
+				<< "<AIGameConsts><DisableEntrenchmentReloadSlowdown>true</DisableEntrenchmentReloadSlowdown>"
+					 "</AIGameConsts>";
 		const std::string path = directory.generic_string() + "/";
 		NVFS::SetMainVFS( NVFS::CreateWinVFS( path ) );
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( path ) );
 		ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), NDb::DATABASE_MODE_EDITOR ) );
+		ASSERT_TRUE( NDb::RegisterResourceFile( "legacy-constants.xdb" ) );
+		ASSERT_TRUE( NDb::RegisterResourceFile( "entrenchment-constants.xdb" ) );
 	}
 
 	static void TearDownTestSuite()
@@ -161,8 +171,25 @@ protected:
 		loader->AddPolymorphicBase( 1, object );
 	}
 
-	void
-	PlaceUnit( CAIUnit *unit, float distance = 0, bool visible = true, uint8_t player = 1, CAICommand *command = nullptr )
+	void InspectFields( CObjectBase *object, const std::function<void( IBinSaver & )> &visit )
+	{
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, external );
+			saver->AddPolymorphicBase( 1, object );
+		}
+		stream.Seek( 0 );
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, external );
+		SFields fields{ visit };
+		loader->Add( 1, &fields );
+	}
+
+	void PlaceUnit( CAIUnit *unit,
+	                float distance = 0,
+	                bool visible = true,
+	                uint8_t player = 1,
+	                CAICommand *command = nullptr,
+	                bool entrenched = false )
 	{
 		// Load real units without starting movement, graphics or mission scripts.
 		const bool aircraft = dynamic_cast<CAviation *>( unit ) != nullptr;
@@ -177,6 +204,7 @@ protected:
 		modifiers.Set( "test.fixture", modifier );
 		std::vector<int> visibility{ visible ? 1 : 0, 1, 0 };
 		CPtr<CUnitGuns> unitGuns = unit == owner ? guns : emptyGuns;
+		CPtr<IAnimUnit> animation = unit == owner ? ownerAnimation : nullptr;
 		SFields path{ [&]( IBinSaver &saver )
 		              {
 										saver.Add( 3, &direction );
@@ -201,10 +229,12 @@ protected:
 									saver.Add( 1, &common );
 									saver.Add( 6, &player );
 									saver.Add( 15, &hp );
+									saver.Add( 41, &animation );
 									saver.Add( 51, &visibility );
 									saver.Add( 58, &modifiers );
 									saver.Add( 71, &cachedTargets );
 									saver.Add( 73, &cacheDuration );
+									saver.Add( 74, &entrenched );
 								} };
 		SFields mechanical{ [&]( IBinSaver &saver )
 		                    {
@@ -380,7 +410,7 @@ protected:
 		EXPECT_EQ( estimator->GetBestGun(), target ? gun.GetPtr() : nullptr );
 	}
 
-	IUnitState *StartAutomaticAttack( bool stationary = true )
+	IUnitState *StartAutomaticAttack( bool stationary = true, bool entrenched = false )
 	{
 		CPtr<CAICommand> command = MakeObject<CAICommand>( 0x1108D44D );
 		command->ToUnitCmd().nCmdType = ACTION_COMMAND_ATTACK_UNIT;
@@ -392,7 +422,7 @@ protected:
 		}
 		enemy->nUniqueID = 123;
 		enemy->Mem2UniqueIdObjs();
-		PlaceUnit( owner, 0, true, 0, command );
+		PlaceUnit( owner, 0, true, 0, command, entrenched );
 		IUnitState *attack = owner->GetStatesFactory()->ProduceState( owner, command );
 		EXPECT_NE( attack, nullptr );
 		if ( attack )
@@ -468,6 +498,186 @@ protected:
 };
 
 std::filesystem::path AggressiveAttacker::directory;
+
+class EntrenchmentReload : public AggressiveAttacker
+{
+	NTimer::STime originalTime = 0;
+
+protected:
+	NDb::SAIGameConsts *constants = nullptr;
+
+	void SetTime( NTimer::STime time )
+	{
+		// Restore the real simulation clock and settings without advancing the whole world.
+		CDBPtr<NDb::SAIGameConsts> pointer = constants;
+		CAIMap *aiMap = GetAIMap();
+		LoadFields( Singleton<IAILogic>(),
+		            [&]( IBinSaver &saver )
+		            {
+									saver.Add( 20, &pointer );
+									saver.Add( 25, &time );
+								} );
+		SetAIMap( aiMap );
+	}
+
+	void SetUp() override
+	{
+		AggressiveAttacker::SetUp();
+		// Serializing the bare AI also installs its map pointer; retain this fixture's map.
+		CAIMap *aiMap = GetAIMap();
+		InspectFields( Singleton<IAILogic>(), [&]( IBinSaver &saver ) { saver.Add( 25, &originalTime ); } );
+		SetAIMap( aiMap );
+		constants = MakeRecord<NDb::SAIGameConsts>( "AIGameConsts" );
+		ASSERT_NE( constants, nullptr );
+		EXPECT_FALSE( constants->bDisableEntrenchmentReloadSlowdown );
+		SetTime( 10000 );
+	}
+
+	void TearDown() override
+	{
+		SetTime( originalTime );
+		AggressiveAttacker::TearDown();
+	}
+
+	IUnitState *StartAttack( bool entrenched = true )
+	{
+		ownerAnimation = MakeObject<IAnimUnit>( AI_ANIM_UNIT_MECH );
+		ownerAnimation->Init( owner );
+		IUnitState *attack = StartAutomaticAttack( true, entrenched );
+		// FireNow stops the real path. Aim along the fixture's gun direction and
+		// leave time before the animation action point so no projectile world is needed.
+		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
+		auto *unitStats =
+				const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+		unitStats->platforms[0].guns[0].wDirection =
+				GetDirectionByVector( enemy->GetCenterPlain() - owner->GetCenterPlain() );
+		unitStats->animdescs.resize( NDb::__ANIMATION_TYPE_COUNTER );
+		for ( auto &animation : unitStats->animdescs )
+		{
+			animation.anims.resize( 1 );
+			animation.anims[0].nAction = 1000;
+			animation.anims[0].nLength = 2000;
+		}
+		weapon->nAimingTime = 2000;
+		weapon->shells[0].nRelaxTime = 5000;
+		// Initialize the gun's actual saved random factors to isolate the timing policy.
+		float factor = 1;
+		int rest = 4;
+		int type = IGunsFactory::VIS_CML_BALLIST_GUN;
+		CDBPtr<NDb::SWeaponRPGStats> weaponPointer = weapon;
+		SFields stats{ [&]( IBinSaver &saver ) { saver.Add( 2, &weaponPointer ); } };
+		SFields basic{ [&]( IBinSaver &saver )
+		               {
+										 saver.Add( 1, &stats );
+										 saver.Add( 3, &rest );
+										 saver.Add( 7, &type );
+										 saver.Add( 10, &factor );
+										 saver.Add( 11, &factor );
+										 saver.Add( 13, &owner );
+										 saver.Add( 15, &ammo );
+									 } };
+		LoadFields( gun, [&]( IBinSaver &saver ) { saver.Add( 1, &basic ); } );
+		gun->CanShoot();
+		attack->Segment();
+		ExpectStationaryFiring( attack );
+		attack->Segment();
+		return attack;
+	}
+
+	void ExpectGun( int expectedPhase, bool expectedAim )
+	{
+		int phase = -1;
+		bool aim = !expectedAim;
+		SFields basic{ [&]( IBinSaver &saver )
+		               {
+										 saver.Add( 3, &phase );
+										 saver.Add( 21, &aim );
+									 } };
+		InspectFields( gun, [&]( IBinSaver &saver ) { saver.Add( 1, &basic ); } );
+		EXPECT_EQ( phase, expectedPhase );
+		EXPECT_EQ( aim, expectedAim );
+	}
+
+	void ExpectRepeatTiming( bool fixed, bool entrenched = true, bool save = false )
+	{
+		IUnitState *attack = StartAttack( entrenched );
+		ASSERT_NE( attack, nullptr );
+		ExpectGun( 1, true ); // Every new attack still aims its first shot.
+		SetTime( 11999 );
+		gun->Segment();
+		ExpectGun( 1, true );
+		SetTime( 12000 );
+		gun->Segment();
+		ExpectGun( 2, true ); // The shot is ready, waiting for its animation action point.
+		gun->StopFire();
+		ammo->lastShoot = 12000;
+		if ( save )
+		{
+			RoundTrip( attack );
+			RoundTrip( gun );
+		}
+		attack->Segment();
+		ExpectGun( 1, !fixed );
+		SetTime( 16999 );
+		gun->Segment();
+		ExpectGun( 1, !fixed ); // The five-second reload is never skipped.
+		SetTime( 17000 );
+		gun->Segment();
+		ExpectGun( fixed ? 2 : 1, !fixed );
+		if ( !fixed )
+		{
+			SetTime( 19000 );
+			gun->Segment();
+			ExpectGun( 2, true ); // Legacy repeats pay the extra two-second aiming delay.
+		}
+	}
+};
+
+TEST_F( EntrenchmentReload, DefaultRetainsLegacyTiming )
+{
+	ExpectRepeatTiming( false );
+}
+
+TEST_F( EntrenchmentReload, DatabaseDefaultEnabledValueAndChecksumSurviveSaveLoad )
+{
+	const auto *legacy = NDb::Get<NDb::SAIGameConsts>( CDBID( "legacy-constants.xdb" ) );
+	const auto *enabled = NDb::Get<NDb::SAIGameConsts>( CDBID( "entrenchment-constants.xdb" ) );
+	ASSERT_NE( legacy, nullptr );
+	ASSERT_NE( enabled, nullptr );
+	EXPECT_FALSE( legacy->bDisableEntrenchmentReloadSlowdown );
+	EXPECT_TRUE( enabled->bDisableEntrenchmentReloadSlowdown );
+	// Old binary records omit chunk 20. Loading also invalidates the cached resource checksum.
+	LoadFields( constants, []( IBinSaver & ) {} );
+	EXPECT_FALSE( constants->bDisableEntrenchmentReloadSlowdown );
+	const uint32_t legacyChecksum = constants->CalcCheckSum();
+	bool disableSlowdown = true;
+	LoadFields( constants, [&]( IBinSaver &saver ) { saver.Add( 20, &disableSlowdown ); } );
+	EXPECT_NE( constants->CalcCheckSum(), legacyChecksum );
+	RoundTrip( constants );
+	EXPECT_TRUE( constants->bDisableEntrenchmentReloadSlowdown );
+	LoadFields( constants, []( IBinSaver & ) {} );
+	EXPECT_FALSE( constants->bDisableEntrenchmentReloadSlowdown );
+	EXPECT_EQ( constants->CalcCheckSum(), legacyChecksum );
+}
+
+TEST_F( EntrenchmentReload, EnabledRemovesOnlyRepeatAimDelayAfterSaveLoad )
+{
+	constants->bDisableEntrenchmentReloadSlowdown = true;
+	ExpectRepeatTiming( true, true, true );
+}
+
+TEST_F( EntrenchmentReload, EnabledDoesNotChangeUnentrenchedStationaryFire )
+{
+	constants->bDisableEntrenchmentReloadSlowdown = true;
+	ExpectRepeatTiming( false, false );
+}
+
+TEST_F( EntrenchmentReload, MissingConstantsRetainLegacyTiming )
+{
+	constants = nullptr;
+	SetTime( 10000 );
+	ExpectRepeatTiming( false );
+}
 
 TEST_F( AggressiveAttacker, DefaultsAndSupportedClasses )
 {
