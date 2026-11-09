@@ -786,6 +786,21 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>cd010000</Type>
+					<Name>DisableEntrenchmentReloadSlowdown</Name>
+					<ChunkID>20</ChunkID>
+					<Description>Entrenched units aim once per attack instead of adding aiming time to every reload; false keeps legacy timing.</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>false</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>285691072</TypeID>
 		</Item>
