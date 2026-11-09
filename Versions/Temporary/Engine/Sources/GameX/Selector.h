@@ -368,6 +368,7 @@ public:
 
 	void SetShowAreas( EActionNotify eType, bool bOn );
 	void GetAreas( SShootAreas *pAreas );
+	void GetDetectionAreas( SShootAreas *pAreas );
 
 	void SelectSameSlots( const int nSlot );
 	void SelectSameType( int nSlot );

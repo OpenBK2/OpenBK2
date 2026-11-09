@@ -228,6 +228,8 @@ public:
 
 	void GetShootAreas( int, SShootAreas * ) override {}
 
+	void GetDetectionAreas( int, SShootAreas * ) override {}
+
 	const int WAR_FOG_FULL_UPDATE() const override
 	{
 		return 0;
