@@ -397,7 +397,6 @@ void CEntrenchment::AddSoldier( CSoldier *pUnit )
 #ifndef _FINALRELEASE
 	const int nID = pUnit->GetUniqueId();
 #endif
-	pUnit->ApplyStatsModifier( pStats->pInnerUnitBonus, true );
 	if ( nBusyFireplaces == 0 )
 	{
 		nextSegmTime = curTime + SConsts::AI_SEGMENT_DURATION - 1;
@@ -460,7 +459,6 @@ void CEntrenchment::AddSoldierToFirePlace( CSoldier *pUnit, const int nFirePlace
 	CVec3 vNewCenter = GetHeights()->Get3DPoint( fireplaces[nFirePlace].center );
 	vNewCenter.z -= z;
 	pUnit->MoveToEntrenchFireplace( vNewCenter, fireplaces[nFirePlace].nFrameIndex );
-	pUnit->ApplyStatsModifier( pStats->pInnerUnitBonus, true );
 	insiders.push_front( SInsiderInfo( pUnit, nFirePlace ) );
 	CRotatingFireplacesObject::AddUnit( pUnit, nFirePlace );
 }
@@ -524,7 +522,6 @@ void CEntrenchment::DelSoldier( CSoldier *pUnit, const bool bFillEmptyFireplace 
 		}
 
 		CRotatingFireplacesObject::DeleteUnit( pUnit );
-		pUnit->ApplyStatsModifier( pStats->pInnerUnitBonus, false );
 		pUnit->SetNSlot( -1 );
 	}
 }

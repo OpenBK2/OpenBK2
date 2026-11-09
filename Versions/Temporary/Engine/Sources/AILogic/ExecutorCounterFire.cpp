@@ -70,11 +70,9 @@ void CExecutorCounterFire::ApplyBonus( const bool bForward )
 		return;
 	}
 
-	const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_ANTIATRILLERY_FIRE );
-
-	if ( pSA && pSA->pStatsBonus && bForward != bBonusApplied )
+	if ( bForward != bBonusApplied )
 	{
-		pUnit->ApplyStatsModifier( pSA->pStatsBonus, bForward );
+		pUnit->SetAbilityStatsModifier( NDb::ABILITY_ANTIATRILLERY_FIRE, bForward );
 		bBonusApplied = bForward;
 	}
 }
@@ -90,6 +88,7 @@ int CExecutorCounterFire::Segment()
 	const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_ANTIATRILLERY_FIRE );
 	if ( !pSA )
 	{
+		ApplyBonus( false );
 		return -1;
 	}
 	CSegment marker;
@@ -240,6 +239,7 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 	{
 		case EID_ABILITY_SET_TARGET:
 		{
+			ApplyBonus( false );
 			const CExecutorEventSpecialAbilitySetTarget *pEvSetTarget =
 					static_cast<const CExecutorEventSpecialAbilitySetTarget *>( pEv );
 			NI_ASSERT( pEvSetTarget, "Wrong event passed to executor (SetTarget expected)" );
@@ -258,6 +258,7 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 			return true;
 		case EID_ABILITY_ACTIVATE_AUTOCAST:
 		{
+			ApplyBonus( false );
 			vSearchCenter = CVec2( pUnit->GetCenter().x, pUnit->GetCenter().y );
 			fSearchRadius = pUnit->GetFirstArtilleryGun()->GetFireRangeMax();
 
@@ -266,8 +267,11 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 			UpdateState();
 		}
 			return true;
+		case EID_ABILITY_DEACTIVATE:
 		case EID_ABILITY_DEACTIVATE_AUTOCAST:
 		{
+			// Leaving the active state must remove its bonus before Segment loses that state.
+			ApplyBonus( false );
 			state.bAutocast = false;
 			state.eState = EASS_READY_TO_ON;
 			UpdateState();
@@ -275,6 +279,7 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 			return true;
 		case EID_ABILITY_ENABLE:
 		{
+			ApplyBonus( false );
 			state.eState = EASS_READY_TO_ON;
 			state.bAutocast = false;
 			UpdateState();
@@ -282,6 +287,7 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 			return true;
 		case EID_ABILITY_DISABLE:
 		{
+			ApplyBonus( false );
 			state.eState = EASS_DISABLE;
 			state.bAutocast = false;
 			UpdateState();
@@ -305,6 +311,9 @@ void CExecutorCounterFire::RegisterOnEvents( IExecutorContainer *pContainer )
 	pContainer->RegisterOnEvent( this, par );
 
 	par.eEventID = EID_ABILITY_DEACTIVATE_AUTOCAST;
+	pContainer->RegisterOnEvent( this, par );
+
+	par.eEventID = EID_ABILITY_DEACTIVATE;
 	pContainer->RegisterOnEvent( this, par );
 
 	par.eEventID = EID_ABILITY_ENABLE;

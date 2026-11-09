@@ -111,6 +111,16 @@ endif()
 
 add_unit_test(ReinforcementSelection)
 
+# Source replacement, zero multipliers, save/load and scoped ability cleanup.
+add_unit_test(UnitStatsModifiers AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(UnitStatsModifiers_test PRIVATE
+    UNIT_STATS_MODIFIERS_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(UnitStatsModifiers_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(UnitStatsModifiers_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
+
 # Exercise real timed reinforcement income and explicit grants in both multiplayer modes.
 add_unit_test(ReinforcementTimer AILogic Common_RTS_AI Stats_B2_M1 GameX libdb System Misc Main zlib gr2)
 target_compile_definitions(ReinforcementTimer_test PRIVATE
