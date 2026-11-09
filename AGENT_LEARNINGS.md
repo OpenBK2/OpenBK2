@@ -1,6 +1,11 @@
 
 # AGENT LEARNINGS
 
+- Alt+R is `show_areas_down/up` (shooting areas); `show_ranges_down/up` is Alt+Z
+  (artillery ranging). Both the 3D Alt+R overlay and minimap call the unit's
+  virtual `GetShootAreas`, so a transport override can include its towed gun
+  without changing selection or simulation state. Area centers are absolute.
+
 - Generic bone mutators use bone-local units, including hierarchy scale.
   The old 3_7_inch_AAG recoil of 1.2 moved only 0.0920422 because Basis has
   scale 0.0767018. SetBoneRecoil now normalizes the muzzle's world-space -Z

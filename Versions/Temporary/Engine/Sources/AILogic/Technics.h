@@ -2,6 +2,8 @@
 
 #include "AIUnit.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 class CExistingObject;
@@ -414,6 +416,7 @@ public:
 	}
 
 	void SetTowedArtillery( class CArtillery *pTowedArtillery );
+	AILOGIC_EXPORT void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const override;
 
 	IStatesFactory *GetStatesFactory() const override;
 	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;

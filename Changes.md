@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Alt+R now also shows the weapon ranges of towed guns when their trucks are selected, on both the map and minimap. Armed trucks retain their own range overlays.
+
 - `MultiplayerConsts` can now set `NivalNetIP`, `NivalNetPort`, and `NetGameVersion`. Database values take precedence over profile settings, while omitted fields preserve the legacy fallback. The protocol version applies to online and LAN multiplayer. See `OBK2_Examples/MultiplayerConnectionSettings` for the fields and server setup requirements.
 
 - Added optional `AIGameConsts.AIPropertyConsts` game data for all configurable values handled by `AIConsts.cpp`, including plane heights and reveal tables. A linked resource takes precedence over local settings and contributes to multiplayer data checksums; missing links preserve the legacy behavior. The example in `OBK2_Examples/AIPropertyConsts` uses the supplied installed profile, and `scripts/convert_ai_consts.py` converts other profiles.
