@@ -1228,10 +1228,10 @@ IClientUpdatableProcess *CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 		{
 			bMoved = true;
 			const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
-			pSoundScene->AddSound( pStats->pSoundMoveStart, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, 0, 2 );
+			PlayMovementSound( pStats->pSoundMoveStart, pSoundScene );
 			AttachSound( EAST_MOVEMENT, pStats->pSoundMoveCycle, true );
 			DetachSound( EAST_IDLE );
-			// Play exhaust only for visible units, sound is played always
+			// Exhaust requires visibility; movement audio uses the fog proximity gain.
 			if ( IsVisible() && !pStats->exhaustPoints.empty() && pStats->pEffectDiesel &&
 			     pStats->pEffectDiesel->GetSceneEffect() )
 			{
@@ -1254,7 +1254,7 @@ IClientUpdatableProcess *CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 		const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
 		if ( pStats->pSoundMoveStop )
 		{
-			pSoundScene->AddSound( pStats->pSoundMoveStop, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, 0, 2 );
+			PlayMovementSound( pStats->pSoundMoveStop, pSoundScene );
 		}
 		bMoved = false;
 		UpdateAmphibianJogging( false );

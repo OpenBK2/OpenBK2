@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- Unit placement updates are suspended in fog. Movement audio needs its own
+  client position at visibility refreshes; calling mechanical AIUpdatePlacement
+  just for sound can also update tracks and particles. Keep firing/impact effects
+  outside movement gain, and omit zero-gain engines from shared 2D mixes.
+- A new header method can precede an existing elaborated `struct` declaration.
+  Declare the referenced type at namespace scope before the first use; the later
+  declaration does not make earlier method signatures self-contained.
+
 - Visible-terrain distance uses cell boundaries in AI coordinates, not fog-cell
   centers. Normal fog cells span 64 coordinates, but single-player script reveals
   can expose individual 32-coordinate tiles. Keep the observing party explicit,

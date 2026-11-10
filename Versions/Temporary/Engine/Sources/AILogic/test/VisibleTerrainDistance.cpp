@@ -1,10 +1,12 @@
 #include "../stdafx.h"
 
 #include "../AIClassesID.h"
+#include "../DBAIConsts.h"
 #include "../Diplomacy.h"
 #include "../GlobalWarFog.h"
 #include "../NewUpdater.h"
 #include "../Technics.h"
+#include "../UnitSound.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/Vis2AI.h"
@@ -12,6 +14,7 @@
 #include <cmath>
 #include <functional>
 #include <limits>
+#include <utility>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -145,6 +148,12 @@ protected:
 		return unit;
 	}
 
+	CObj<NDb::SAIGameConsts> MakeSoundConstants()
+	{
+		EXPECT_EQ( CastToObjectBaseImpl<CTank>( nullptr, static_cast<void *>( nullptr ) ), nullptr );
+		return dynamic_cast<NDb::SAIGameConsts *>( NObjectFactory::MakeObject( NDb::SAIGameConsts::typeID ) );
+	}
+
 	NDb::SScriptArea RevealSingleTile()
 	{
 		NDb::SScriptArea area;
@@ -156,6 +165,82 @@ protected:
 		return area;
 	}
 };
+
+TEST_F( VisibleTerrainDistance, SoundDefaultsPreserveLegacyPlaybackAndOldBinaryRecords )
+{
+	auto constants = MakeSoundConstants();
+	ASSERT_NE( constants, nullptr );
+	EXPECT_FLOAT_EQ( constants->fFOWSoundDistance, -1.0f );
+	EXPECT_FLOAT_EQ( constants->fFOWSoundMinBasePercentage, 0.1f );
+	auto unit = MakeUnit( CVec2( 1500, 1500 ), false );
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 1, constants ), 1.0f );
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 1, nullptr ), 1.0f );
+
+	// Missing binary chunks must not replace the nonzero schema defaults with zero.
+	CMemoryStream stream;
+	SFields oldRecord{ []( IBinSaver & ) {} };
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->Add( 1, &oldRecord );
+	}
+	stream.Seek( 0 );
+	CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+	loader->AddPolymorphicBase( 1, constants );
+	EXPECT_FLOAT_EQ( constants->fFOWSoundDistance, -1.0f );
+	EXPECT_FLOAT_EQ( constants->fFOWSoundMinBasePercentage, 0.1f );
+}
+
+TEST_F( VisibleTerrainDistance, SoundUsesMetersAndHasAnExactSilentCutoff )
+{
+	AddObserver();
+	auto constants = MakeSoundConstants();
+	constants->fFOWSoundDistance = 2.0f;
+	for ( const auto &sample : std::vector<std::pair<float, float>>{
+					{ 0.0f, 1.0f }, { 16.0f, 0.775f }, { 32.0f, 0.55f }, { 64.0f, 0.0f }, { 96.0f, 0.0f } } )
+	{
+		auto unit = MakeUnit( CVec2( 12 * cellSize + sample.first, 10.5f * cellSize ), false );
+		EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 1, constants ), sample.second );
+	}
+	auto almostOutside = MakeUnit( CVec2( 12 * cellSize + 63.999f, 10.5f * cellSize ), false );
+	EXPECT_NEAR( GetUnitFOWSoundVolume( *almostOutside, 1, constants ), 0.1f, 0.00002f );
+	EXPECT_FALSE( almostOutside->IsVisible( 1 ) );
+}
+
+TEST_F( VisibleTerrainDistance, SoundHonorsVisibilityOverridesAndZeroDistance )
+{
+	AddObserver();
+	auto constants = MakeSoundConstants();
+	constants->fFOWSoundDistance = 2.0f;
+	auto camouflaged = MakeUnit( CVec2( 10.5f * cellSize, 10.5f * cellSize ), false );
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *camouflaged, 1, constants ), 1.0f );
+	auto visible = MakeUnit( CVec2( 1500, 1500 ), true );
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *visible, 1, constants ), 1.0f );
+	constants->fFOWSoundDistance = 0.0f;
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *visible, 1, constants ), 1.0f );
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *camouflaged, 1, constants ), 0.0f );
+}
+
+TEST_F( VisibleTerrainDistance, SoundFollowsFogChangesAndTheExplicitObserver )
+{
+	AddObserver();
+	auto constants = MakeSoundConstants();
+	constants->fFOWSoundDistance = 2.0f;
+	auto unit = MakeUnit( CVec2( 12 * cellSize + 32, 10.5f * cellSize ), false );
+	for ( int player : { 0, 1 } )
+	{
+		SetDiplomacy( true, player );
+		EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 1, constants ), 0.55f );
+		EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 0, constants ), 0.0f );
+		EXPECT_FALSE( unit->IsVisible( 1 ) );
+	}
+	theWarFog.DeleteUnit( 123 );
+	theWarFog.Segment();
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 1, constants ), 0.0f );
+	AddObserver();
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 1, constants ), 0.55f );
+	constants->fFOWSoundMinBasePercentage = 0.4f;
+	EXPECT_FLOAT_EQ( GetUnitFOWSoundVolume( *unit, 1, constants ), 0.7f );
+}
 
 TEST_F( VisibleTerrainDistance, EmptyAndClearedFogSaturate )
 {

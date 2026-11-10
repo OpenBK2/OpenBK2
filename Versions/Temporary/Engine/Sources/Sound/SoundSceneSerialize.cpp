@@ -102,6 +102,11 @@ int CSound::operator&( IBinSaver &saver )
 	saver.Add( 17, &eCombatType );
 	saver.Add( 18, &vSpeed );
 	saver.Add( 19, &timeLastPosUpdate );
+	// Old saves have no per-instance gain and keep their original volume.
+	if ( !saver.IsReading() || saver.HasChunk( 20 ) )
+	{
+		saver.Add( 20, &fVolume );
+	}
 	return 0;
 }
 

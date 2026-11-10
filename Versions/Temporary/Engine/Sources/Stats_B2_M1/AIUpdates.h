@@ -159,11 +159,17 @@ private:
 public:
 	ZDATA_( SAIPlacementUpdateBase )
 	bool bVisible = {};
+	// Negative retains legacy audio behavior, including updates loaded from older saves.
+	float fMovementSoundVolume = -1.0f;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIPlacementUpdateBase *)this );
 		f.Add( 2, &bVisible );
+		if ( !f.IsReading() || f.HasChunk( 3 ) )
+		{
+			f.Add( 3, &fMovementSoundVolume );
+		}
 		return 0;
 	}
 };
@@ -414,11 +420,16 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SNewUnitInfo info;
+	float fMovementSoundVolume = -1.0f;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
+		if ( !f.IsReading() || f.HasChunk( 3 ) )
+		{
+			f.Add( 3, &fMovementSoundVolume );
+		}
 		return 0;
 	}
 };

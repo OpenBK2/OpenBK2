@@ -33,3 +33,4 @@ target_link_libraries(Sound PRIVATE libdb MemoryLib Misc System zlib fmod fmt::f
 if(WIN32)
     target_link_libraries(Sound PRIVATE winapi)
 endif()
+add_subdirectory(test)

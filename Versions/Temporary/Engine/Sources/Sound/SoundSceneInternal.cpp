@@ -111,7 +111,8 @@ void CSoundScene2D::CSoundsCollector::operator()( int nRadius, const SIntThree &
 
 void CSoundScene2D::CSoundsCollector::operator()( CSound *sound, bool bHearable )
 {
-	if ( bHearable )
+	// Silent instances must not contribute to a shared engine mix or consume a playing sample.
+	if ( bHearable && sound->GetBaseVolume() > 0.0f )
 	{
 		CSoundSubstTable::iterator it = substTable.find( sound->GetDesc() );
 		if ( substTable.end() == it )
@@ -229,9 +230,14 @@ uint16_t CSoundScene2D::AddSound( const NDb::SComplexSoundDesc *pStats,
                                   const enum ESoundMixType eMixMode,
                                   const enum ESoundAddMode eAddMode,
                                   const unsigned int nTimeAfterStart,
-                                  int nVolumeType )
+                                  int nVolumeType,
+                                  float fVolume )
 {
 	if ( !pSFX->IsSFXEnabled() || 0 == pStats )
+	{
+		return 0;
+	}
+	if ( fVolume <= 0.0f && eAddMode == SAM_ADD_N_FORGET )
 	{
 		return 0;
 	}
@@ -274,6 +280,7 @@ uint16_t CSoundScene2D::AddSound( const NDb::SComplexSoundDesc *pStats,
 		                                pRandomSound->fMinDist * SSoundSceneConsts::SS_TILE_SIZE,
 		                                pRandomSound->fMaxDist * SSoundSceneConsts::SS_TILE_SIZE );
 		pSnd->SetBeginTime( GetCurTime() - nTimeAfterStart );
+		pSnd->SetVolume( fVolume );
 		if ( !bToCell )
 		{
 			interfaceSounds[pSnd->GetDesc()].push_back( pSnd );
@@ -532,6 +539,18 @@ void CSoundScene2D::SetSoundPos( const uint16_t wID, const CVec3 &vPos )
 		soundIDs[wID] = vNewCell;
 	}
 	pSound->SetPos( vPos );
+}
+
+void CSoundScene2D::SetSoundVolume( const uint16_t wID, const float fVolume )
+{
+	const auto it = soundIDs.find( wID );
+	if ( it != soundIDs.end() )
+	{
+		if ( CSound *pSound = GetSoundCell( it->second )->GetSound( wID ) )
+		{
+			pSound->SetVolume( fVolume );
+		}
+	}
 }
 
 bool CSoundScene2D::IsSoundFinished( const uint16_t wID ) const
@@ -809,7 +828,11 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 			const CVec3 v( sound.GetPos() - vListener );
 			const float fVol = sound.GetVolume( CSoundScene2D::GetCurTime(), fabs( v ) );
 			fMaxVolume += fVol;
-			vSoundCoord += v * fVol;
+			// Gain changes loudness, not the apparent location or the camera-distance attenuation.
+			if ( sound.GetBaseVolume() > 0.0f )
+			{
+				vSoundCoord += v * ( fVol / sound.GetBaseVolume() );
+			}
 
 			++nSounds;
 			bLooped |= sound.IsLooped(); // замена зациклена если хоть один звучок зациклен
@@ -972,9 +995,15 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
                                   const enum ESoundMixType eMixMode,
                                   const enum ESoundAddMode eAddMode,
                                   const unsigned int nTimeAfterStart,
-                                  int nVolumeType )
+                                  int nVolumeType,
+                                  float fVolume )
 {
 	if ( !pSFX->IsSFXEnabled() || 0 == pStats )
+	{
+		return 0;
+	}
+
+	if ( fVolume <= 0.0f && eAddMode == SAM_ADD_N_FORGET )
 	{
 		return 0;
 	}
@@ -1011,7 +1040,7 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
 		{
 			pSound->SetPan( 0.0f );
 			pSound->SetVolumeType( nVolumeType );
-			pSound->SetVolume( 1.0f );
+			pSound->SetVolume( fVolume );
 			if ( bNeedID )
 			{
 				wID = freeIDs.Get();
@@ -1043,6 +1072,7 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
 		pSound->SetVolumeType( nVolumeType );
 		pSound->SetMinMax( pRandomSound->fMinDist * SSoundSceneConsts::SS_TILE_SIZE,
 		                   pRandomSound->fMaxDist * SSoundSceneConsts::SS_TILE_SIZE );
+		pSound->SetVolume( fVolume );
 		if ( pSound )
 		{
 			if ( bNeedID )
@@ -1050,6 +1080,10 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
 				wID = freeIDs.Get();
 				movingSounds[wID].first = pSound;
 				movingSounds[wID].second = curTime;
+				if ( !bLooped )
+				{
+					nonLoopedMovingSounds.insert( wID );
+				}
 			}
 			else
 			{
@@ -1085,6 +1119,7 @@ void CSoundScene3D::RemoveSound( const uint16_t wID )
 		{
 			CPtr<ISound> pSound = pos->second.first;
 			movingSounds.erase( wID );
+			nonLoopedMovingSounds.erase( wID );
 			freeIDs.Return( wID );
 			pSFX->StopSample( pSound );
 			return;
@@ -1108,6 +1143,16 @@ void CSoundScene3D::SetSoundPos( const uint16_t wID, const class CVec3 &_vPos )
 		}
 		pSound->SetPos( _vPos );
 		pSFX->UpdateSample( pSound );
+	}
+}
+
+void CSoundScene3D::SetSoundVolume( const uint16_t wID, const float fVolume )
+{
+	const auto it = movingSounds.find( wID );
+	if ( it != movingSounds.end() )
+	{
+		it->second.first->SetVolume( fVolume );
+		pSFX->UpdateSample( it->second.first );
 	}
 }
 
@@ -1211,6 +1256,7 @@ void CSoundScene3D::ClearSounds()
 	}
 
 	movingSounds.clear();
+	nonLoopedMovingSounds.clear();
 	interfaceSounds.clear();
 	forgottenSounds.clear();
 	currentUnderUpdate = forgottenSounds.end();
@@ -1227,7 +1273,8 @@ void CSoundScene3D::LaunchAfterLoad()
 
 	for ( CMovingSounds::iterator it = movingSounds.begin(); it != movingSounds.end(); ++it )
 	{
-		LaunchSound( pSFX, it->second.first, curTime - it->second.second, true );
+		const bool bLooped = nonLoopedMovingSounds.find( it->first ) == nonLoopedMovingSounds.end();
+		LaunchSound( pSFX, it->second.first, curTime - it->second.second, bLooped );
 	}
 
 	for ( CInterfaceSounds::iterator it = interfaceSounds.begin(); it != interfaceSounds.end(); ++it )
@@ -1278,9 +1325,10 @@ uint16_t CSoundScene::AddSound( const NDb::SComplexSoundDesc *pStats,
                                 const enum ESoundMixType eMixMode,
                                 const enum ESoundAddMode eAddMode,
                                 const unsigned int nTimeAfterStart,
-                                int nVolumeType )
+                                int nVolumeType,
+                                float fVolume )
 {
-	return pScene->AddSound( pStats, vPos, eMixMode, eAddMode, nTimeAfterStart, nVolumeType );
+	return pScene->AddSound( pStats, vPos, eMixMode, eAddMode, nTimeAfterStart, nVolumeType, fVolume );
 }
 
 uint16_t CSoundScene::AddSound( const NDb::SComplexSoundDesc *pStats,
@@ -1288,13 +1336,14 @@ uint16_t CSoundScene::AddSound( const NDb::SComplexSoundDesc *pStats,
                                 const enum ESoundMixType eMixMode,
                                 const enum ESoundAddMode eAddMode,
                                 const unsigned int nTimeAfterStart,
-                                int nVolumeType )
+                                int nVolumeType,
+                                float fVolume )
 {
 	ASSERT( eAddMode == SAM_NEED_ID || eAddMode == SAM_LOOPED_NEED_ID );
 	CDGPtr<CFuncBase<CVec3>> pSoundPos = pPos;
 	pSoundPos.Refresh();
 	uint16_t wSoundID =
-			pScene->AddSound( pStats, pSoundPos->GetValue(), eMixMode, eAddMode, nTimeAfterStart, nVolumeType );
+			pScene->AddSound( pStats, pSoundPos->GetValue(), eMixMode, eAddMode, nTimeAfterStart, nVolumeType, fVolume );
 	dynamicSounds[wSoundID] = pPos;
 	return wSoundID;
 }
@@ -1311,6 +1360,11 @@ void CSoundScene::RemoveSound( const uint16_t wID )
 void CSoundScene::SetSoundPos( const uint16_t wID, const class CVec3 &vPos )
 {
 	pScene->SetSoundPos( wID, vPos );
+}
+
+void CSoundScene::SetSoundVolume( const uint16_t wID, const float fVolume )
+{
+	pScene->SetSoundVolume( wID, fVolume );
 }
 
 bool CSoundScene::IsSoundFinished( const uint16_t wID ) const

@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Added optional fog attenuation for unit movement, engine idle, and engine start/stop sounds. `AIGameConsts.FOWSoundDistance` sets the reach beyond visible terrain in gameplay meters; the default `-1` preserves legacy playback. `FOWSoundMinBasePercentage` (default `0.1`) sets the minimum audible gain before linear scaling to full volume. Audio refreshes with unit visibility, while firing, impacts, explosions and death sounds retain their existing behavior. See `OBK2_Examples/FOWSound`.
+
 - Added `AIGameConsts.DisableEntrenchmentReloadSlowdown` (default `false`). Set it to `true` to stop entrenched units from repeating their initial aiming delay after every shot at the same target. Normal aiming, turret movement and reload time still apply; omitted or false values retain legacy timing.
 
 - Unit stats can set `SpyDiscoveryRange` in meters to override the global camouflage detection radius. Positive values apply within the unit's current sight; the default `-1` and zero retain the global setting. The Alt+E circles follow the effective range. An example is in `OBK2_Examples/CamouflageDetection`.

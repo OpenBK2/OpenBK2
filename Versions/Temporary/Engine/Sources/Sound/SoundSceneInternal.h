@@ -10,6 +10,7 @@
 #include "TerrainSounds.h"
 
 #include <cstdint>
+#include <unordered_set>
 
 class CSoundCell;
 class CSound;
@@ -151,12 +152,14 @@ public:
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType ) override;
+	                   int nVolumeType,
+	                   float fVolume = 1.0f ) override;
 
 	//удаляет звук из сцены. ID становится инвалидным
 	void RemoveSound( const uint16_t wID ) override;
 	// задает новую позицию звуку.
 	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos ) override;
+	void SetSoundVolume( uint16_t wID, float fVolume ) override;
 	bool IsSoundFinished( const uint16_t wID ) const override;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) override;
 
@@ -193,6 +196,8 @@ class CSoundScene3D : public ISoundScene
 	CForgottenSounds forgottenSounds;
 	NTimer::STime timeLastPosUpdate;
 	bool bLaunchAfterLoad;
+	// Tracked start/stop samples must remain one-shot when the scene is restored.
+	std::unordered_set<int> nonLoopedMovingSounds;
 
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f ) override
@@ -205,6 +210,7 @@ class CSoundScene3D : public ISoundScene
 		f.Add( 7, &forgottenSounds );
 		f.Add( 8, &timeLastPosUpdate );
 		f.Add( 9, &bLaunchAfterLoad );
+		f.Add( 10, &nonLoopedMovingSounds );
 		OnSerialize( f );
 		return 0;
 	}
@@ -239,11 +245,13 @@ public:
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType ) override;
+	                   int nVolumeType,
+	                   float fVolume = 1.0f ) override;
 	// удаляет звук из сцены. ID становится инвалидным
 	void RemoveSound( const uint16_t wID ) override;
 	// задает новую позицию звуку.
 	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos ) override;
+	void SetSoundVolume( uint16_t wID, float fVolume ) override;
 	bool IsSoundFinished( const uint16_t wID ) const override;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) override;
 
@@ -290,19 +298,22 @@ public:
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType ) override;
+	                   int nVolumeType,
+	                   float fVolume = 1.0f ) override;
 
 	uint16_t AddSound( const NDb::SComplexSoundDesc *pStats,
 	                   CFuncBase<CVec3> *pPos, // AI pixels
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType ) override;
+	                   int nVolumeType,
+	                   float fVolume = 1.0f ) override;
 
 	//удаляет звук из сцены. ID становится инвалидным
 	void RemoveSound( const uint16_t wID ) override;
 	// задает новую позицию звуку.
 	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos ) override;
+	void SetSoundVolume( uint16_t wID, float fVolume ) override;
 	bool IsSoundFinished( const uint16_t wID ) const override;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) override;
 

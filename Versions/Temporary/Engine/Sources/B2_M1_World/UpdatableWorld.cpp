@@ -1119,10 +1119,18 @@ void CUpdatableWorld::UpdateChangeVisibility( const SAIBasicUpdate *_pUpdate )
 	{
 		const int nID = pUpdate->info.nObjUniqueID;
 		CMapObj *pMO = checked_cast<CMapObj *>( GetMapObj( nID ) );
-		if ( pMO && ( pMO->IsVisible() != pUpdate->bVisible ) )
+		if ( pMO )
 		{
-			pMO->AIUpdatePlacement( pUpdate->info, Scene(), SoundScene(), eSeason );
-			pMO->SetVisible( pUpdate->bVisible, eSeason, ( eDayTime == NDb::DAY_NIGHT ) );
+			const bool bVisibilityChanged = pMO->IsVisible() != pUpdate->bVisible;
+			if ( pUpdate->fMovementSoundVolume >= 0.0f )
+			{
+				pMO->UpdateMovementSound( pUpdate->info, pUpdate->fMovementSoundVolume );
+			}
+			if ( bVisibilityChanged )
+			{
+				pMO->AIUpdatePlacement( pUpdate->info, Scene(), SoundScene(), eSeason );
+				pMO->SetVisible( pUpdate->bVisible, eSeason, ( eDayTime == NDb::DAY_NIGHT ) );
+			}
 		}
 	}
 	else

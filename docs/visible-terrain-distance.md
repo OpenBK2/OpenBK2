@@ -95,6 +95,12 @@ large limits every tick may justify a shared distance field after profiling.
 
 ## Tests
 
+The movement-audio consumer is documented in
+[`OBK2_Examples/FOWSound`](../OBK2_Examples/FOWSound/README.md). Its authored limit
+is in meters and is converted to AI coordinates; the query itself still uses AI
+coordinates. Client visibility notifications refresh the audio gain without
+adding observer-dependent state to the simulation.
+
 `VisibleTerrainDistance_test` covers exact axial/diagonal distances, fractional
 positions, saturation, camouflage, unit visibility overrides, party isolation,
 multiplayer viewpoint independence, observer movement/transfer/removal, map

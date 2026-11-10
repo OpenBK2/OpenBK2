@@ -64,14 +64,16 @@ struct ISoundScene : public CObjectBase
 	                           const ESoundMixType eMixType,
 	                           const ESoundAddMode eAddMode,
 	                           const unsigned int nTimeAfterStart,
-	                           int nVolumeType ) = 0;
+	                           int nVolumeType,
+	                           float fVolume = 1.0f ) = 0;
 
 	virtual uint16_t AddSound( const struct NDb::SComplexSoundDesc *pStats,
 	                           CFuncBase<CVec3> *pPos, // AI pixels
 	                           const ESoundMixType eMixType,
 	                           const ESoundAddMode eAddMode,
 	                           const unsigned int nTimeAfterStart,
-	                           int nVolumeType )
+	                           int nVolumeType,
+	                           float fVolume = 1.0f )
 	{
 		return 0;
 	}
@@ -79,6 +81,8 @@ struct ISoundScene : public CObjectBase
 	virtual void RemoveSound( const uint16_t wID ) = 0;
 	// sound management (vPos in AI pixels)
 	virtual void SetSoundPos( const uint16_t wID, const CVec3 &vPos ) = 0;
+	// Per-instance gain, multiplied by the ordinary distance and master-volume attenuation.
+	virtual void SetSoundVolume( uint16_t wID, float fVolume ) = 0;
 	virtual bool IsSoundFinished( const uint16_t wID ) const = 0;
 	// map sounds (vPos in AI pixels)
 	virtual uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos ) = 0;
