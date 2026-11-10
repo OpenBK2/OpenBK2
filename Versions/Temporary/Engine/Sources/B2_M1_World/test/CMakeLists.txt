@@ -1,5 +1,6 @@
 # Real map-object audio ownership, with a recording sound scene and no renderer/audio device.
-add_unit_test(MovementSound B2_M1_World Sound Stats_B2_M1 System Misc zlib gr2)
+# Inline resource access in the fixture requires a direct libdb link on Linux.
+add_unit_test(MovementSound B2_M1_World Sound Stats_B2_M1 libdb System Misc zlib gr2)
 set_tests_properties(MovementSound_test PROPERTIES TIMEOUT 60)
 if(WIN32)
     set_tests_properties(MovementSound_test PROPERTIES
