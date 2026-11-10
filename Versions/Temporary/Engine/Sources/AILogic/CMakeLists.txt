@@ -209,6 +209,7 @@ set(SOURCES
     UnderConstructionObject.cpp
     UnitCreation.cpp
     UnitGuns.cpp
+    UnitSound.cpp
     Units.cpp
     UnitsIterators.cpp
     UnitsSegments.cpp

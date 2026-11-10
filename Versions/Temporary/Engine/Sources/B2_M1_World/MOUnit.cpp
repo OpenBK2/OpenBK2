@@ -71,6 +71,11 @@ bool CMOUnit::Create( const int nUniqueID,
                       bool bInEditor )
 {
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
+	// Set the gain before derived Create methods can attach idle or movement loops.
+	if ( pUpdate->fMovementSoundVolume >= 0.0f )
+	{
+		UpdateMovementSound( pUpdate->info, pUpdate->fMovementSoundVolume );
+	}
 	SetStats( checked_cast_ptr<const NDb::SUnitBaseRPGStats *>( pUpdate->info.pStats ) );
 	if ( GetStatsLocal()->GetActions() )
 	{

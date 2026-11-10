@@ -82,7 +82,7 @@ float CSound::GetVolume( const NTimer::STime time, const float fDist ) const
 		return 0.0f;
 	}
 
-	return ( 1.0f - fVolDim ) * ( 1.0f - fVolDist );
+	return fVolume * ( 1.0f - fVolDim ) * ( 1.0f - fVolDist );
 }
 
 void CSound::MarkToDim( const NTimer::STime time )

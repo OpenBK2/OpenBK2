@@ -1112,6 +1112,14 @@ void CAIUnit::CalcVisibility( const bool bIgnoreTime )
 				}
 			}
 		}
+		// Refresh client audio at the visibility cadence even when the unit remains hidden.
+		// Only the presentation transformer evaluates the observer-dependent sound gain.
+		const IAILogic *pLogic = Singleton<IAILogic>();
+		const NDb::SAIGameConsts *pConsts = pLogic ? pLogic->GetAIConsts() : nullptr;
+		if ( pConsts && std::isfinite( pConsts->fFOWSoundDistance ) && pConsts->fFOWSoundDistance >= 0.0f )
+		{
+			updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, this, IsVisibleByPlayer() );
+		}
 		creationTime = curTime;
 	}
 }

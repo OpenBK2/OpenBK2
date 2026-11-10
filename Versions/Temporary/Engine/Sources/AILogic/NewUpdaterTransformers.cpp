@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include "B2AI.h"
+#include "Cheats.h"
+#include "DBAIConsts.h"
 #include "Diplomacy.h"
 #include "Entrenchment.h"
 #include "Formation.h"
@@ -8,11 +11,30 @@
 #include "Soldier.h"
 #include "Stats_B2_M1/StatusUpdates.h"
 #include "Stats_B2_M1/SuperWeaponUpdates.h"
+#include "UnitSound.h"
 
 #include "AILogic_export.h"
 
+#include <cmath>
+
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
+extern SCheats theCheats;
+
+namespace
+{
+float GetMovementSoundVolume( CUpdatableObj *pObject )
+{
+	const CAIUnit *pUnit = dynamic_cast<const CAIUnit *>( pObject );
+	const IAILogic *pLogic = Singleton<IAILogic>();
+	const NDb::SAIGameConsts *pConsts = pLogic ? pLogic->GetAIConsts() : nullptr;
+	if ( !pUnit || !pConsts || !std::isfinite( pConsts->fFOWSoundDistance ) || pConsts->fFOWSoundDistance < 0.0f )
+	{
+		return -1.0f;
+	}
+	return GetUnitFOWSoundVolume( *pUnit, theCheats.GetNPartyForWarFog(), pConsts );
+}
+} // namespace
 
 //Update Transformers
 
@@ -57,6 +79,7 @@ SAIBasicUpdate *CEventUpdater::CUpdateData::CChangeVisibilityTransformer::Transf
 		pData->eUpdateType = pUpdate->eUpdateType;
 		pData->nUpdateTime = nReturnTime;
 		pData->bVisible = pUpdate->nParam;
+		pData->fMovementSoundVolume = GetMovementSoundVolume( pUpdate->pObj );
 		return pData;
 	}
 	return 0;
@@ -284,6 +307,7 @@ SAIBasicUpdate *CEventUpdater::CUpdateData::CNewUnitUpdateTransformer::Transform
 {
 	SAINewUnitUpdate *pData = new SAINewUnitUpdate;
 	pUpdate->pObj->GetNewUnitInfo( &( pData->info ) );
+	pData->fMovementSoundVolume = GetMovementSoundVolume( pUpdate->pObj );
 	pData->eUpdateType = pUpdate->eUpdateType;
 	pData->nUpdateTime = pUpdate->nUpdateTime;
 	return pData;
