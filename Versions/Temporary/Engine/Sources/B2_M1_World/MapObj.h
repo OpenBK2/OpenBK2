@@ -20,6 +20,7 @@
 #include <zconf.h>
 
 enum EUnitStatus : unsigned int;
+struct ISoundScene;
 
 const int ARMOR_FRONT = 0;
 const int ARMOR_SIDE_1 = 1;
@@ -256,6 +257,9 @@ class B2_M1_WORLD_EXPORT CMapObj : public IB2MapObj
 	bool bIsSilentlyDead = false;
 
 	std::vector<uint16_t> attachedSounds;
+	float fMovementSoundVolume = -1.0f;
+	CVec3 vMovementSoundPosition;
+	std::vector<uint16_t> movementTransitionSounds;
 	//
 	bool bHasMoveAnimation = false;
 	float fAnimationSpeed = 0.0f;
@@ -327,6 +331,17 @@ protected:
 
 	void AttachSound( EAttachedSoundType eType, const NDb::SComplexSoundDesc *pSound, bool bLooped );
 	void DetachSound( EAttachedSoundType eType );
+	void PlayMovementSound( const NDb::SComplexSoundDesc *pSound, ISoundScene *pSoundScene );
+
+	float GetMovementSoundVolume() const
+	{
+		return fMovementSoundVolume >= 0.0f ? fMovementSoundVolume : 1.0f;
+	}
+
+	CVec3 GetMovementSoundPosition() const
+	{
+		return fMovementSoundVolume >= 0.0f ? vMovementSoundPosition : GetCenter();
+	}
 
 	bool IsSoundAttached( EAttachedSoundType eType ) const
 	{
@@ -602,6 +617,7 @@ public:
 	}
 
 	virtual void SetVisible( const bool bVisible, const NDb::ESeason eSeason, const bool bIsNight );
+	void UpdateMovementSound( const SAINotifyPlacement &placement, float fVolume );
 
 	virtual bool IsVisible() const
 	{

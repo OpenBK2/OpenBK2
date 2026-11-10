@@ -109,6 +109,10 @@ CMapObj::CMapObj()
 
 CMapObj::~CMapObj()
 {
+	for ( const uint16_t wSound : movementTransitionSounds )
+	{
+		SoundScene()->RemoveSound( wSound );
+	}
 	for ( int i = 0; i < attachedSounds.size(); ++i )
 	{
 		DetachSound( (EAttachedSoundType)i );
@@ -165,8 +169,63 @@ void CMapObj::AttachSound( EAttachedSoundType eType, const NDb::SComplexSoundDes
 	{
 		DetachSound( eType );
 	}
-	attachedSounds[eType] =
-			SoundScene()->AddSound( pSound, GetCenter(), SFX_MIX_ALWAYS, bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID, 0, 2 );
+	// Falling and dive effects retain their combat/event volume.
+	const bool bMovement = eType == EAST_MOVEMENT || eType == EAST_IDLE;
+	const float fVolume = bMovement ? GetMovementSoundVolume() : 1.0f;
+	attachedSounds[eType] = SoundScene()->AddSound( pSound,
+	                                                bMovement ? GetMovementSoundPosition() : GetCenter(),
+	                                                SFX_MIX_ALWAYS,
+	                                                bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID,
+	                                                0,
+	                                                2,
+	                                                fVolume );
+}
+
+void CMapObj::UpdateMovementSound( const SAINotifyPlacement &placement, const float fVolume )
+{
+	fMovementSoundVolume = fVolume;
+	// Hidden visual objects stop moving; keep an audio position without updating tracks or particles.
+	vMovementSoundPosition = placement.bNewFormat ? placement.vPlacement : CVec3( placement.center, placement.z );
+	for ( const EAttachedSoundType eType : { EAST_MOVEMENT, EAST_IDLE } )
+	{
+		if ( attachedSounds[eType] != 0 )
+		{
+			SoundScene()->SetSoundVolume( attachedSounds[eType], fMovementSoundVolume );
+			SoundScene()->SetSoundPos( attachedSounds[eType], vMovementSoundPosition );
+		}
+	}
+	for ( auto it = movementTransitionSounds.begin(); it != movementTransitionSounds.end(); )
+	{
+		if ( SoundScene()->IsSoundFinished( *it ) )
+		{
+			SoundScene()->RemoveSound( *it );
+			it = movementTransitionSounds.erase( it );
+		}
+		else
+		{
+			SoundScene()->SetSoundVolume( *it, fMovementSoundVolume );
+			SoundScene()->SetSoundPos( *it, vMovementSoundPosition );
+			++it;
+		}
+	}
+}
+
+void CMapObj::PlayMovementSound( const NDb::SComplexSoundDesc *pSound, ISoundScene *pSoundScene )
+{
+	if ( fMovementSoundVolume < 0.0f )
+	{
+		pSoundScene->AddSound( pSound, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, 0, 2 );
+	}
+	else if ( fMovementSoundVolume > 0.0f )
+	{
+		// Retain start/stop samples until they finish so a fog refresh can also silence their tails.
+		const uint16_t wSound = pSoundScene->AddSound(
+				pSound, vMovementSoundPosition, SFX_MIX_IF_TIME_EQUALS, SAM_NEED_ID, 0, 2, fMovementSoundVolume );
+		if ( wSound != 0 )
+		{
+			movementTransitionSounds.push_back( wSound );
+		}
+	}
 }
 
 void CMapObj::DetachSound( EAttachedSoundType eType )
@@ -465,6 +524,10 @@ void CMapObj::AIUpdatePlacement( const SAINotifyPlacement &placement,
 		MakeOrientation( &quat, DWORDToVec3( placement.dwNormal ) );
 		SetPlacement( CVec3( placement.center, placement.z ), quat );
 		pScene->MoveObject( GetID(), CVec3( placement.center, placement.z ), quat, vScale );
+	}
+	if ( fMovementSoundVolume >= 0.0f )
+	{
+		vMovementSoundPosition = GetCenter();
 	}
 	for ( int i = 0; i < __EAST_COUNTER__; ++i )
 	{
@@ -1239,6 +1302,12 @@ int CMapObj::operator&( IBinSaver &saver )
 	saver.Add( 22, &nColorIndex );
 	saver.Add( 23, &eSeason );
 	saver.Add( 24, &bIsNight );
+	if ( !saver.IsReading() || saver.HasChunk( 25 ) )
+	{
+		saver.Add( 25, &fMovementSoundVolume );
+	}
+	saver.Add( 26, &vMovementSoundPosition );
+	saver.Add( 27, &movementTransitionSounds );
 
 	//
 	if ( saver.IsReading() )

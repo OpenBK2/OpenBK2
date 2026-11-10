@@ -29,3 +29,4 @@ target_link_libraries(B2_M1_World PRIVATE 3DLib 3Dmotor DebugTools Input libdb M
 if(WIN32)
     target_link_libraries(B2_M1_World PRIVATE winapi)
 endif()
+add_subdirectory(test)

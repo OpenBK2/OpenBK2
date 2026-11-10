@@ -999,6 +999,8 @@ void SAIGameConsts::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "InfantryFormationModifiersApplyInTrenches", (uint8_t*)&bInfantryFormationModifiersApplyInTrenches - pThis, sizeof(bInfantryFormationModifiersApplyInTrenches), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "AIPropertyConsts", (uint8_t*)&pAIPropertyConsts - pThis, sizeof(pAIPropertyConsts), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "DisableEntrenchmentReloadSlowdown", (uint8_t*)&bDisableEntrenchmentReloadSlowdown - pThis, sizeof(bDisableEntrenchmentReloadSlowdown), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "FOWSoundDistance", (uint8_t*)&fFOWSoundDistance - pThis, sizeof(fFOWSoundDistance), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "FOWSoundMinBasePercentage", (uint8_t*)&fFOWSoundMinBasePercentage - pThis, sizeof(fFOWSoundMinBasePercentage), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1024,6 +1026,8 @@ int SAIGameConsts::operator&( IXmlSaver &saver )
 	saver.Add( "InfantryFormationModifiersApplyInTrenches", &bInfantryFormationModifiersApplyInTrenches );
 	saver.Add( "AIPropertyConsts", &pAIPropertyConsts );
 	saver.Add( "DisableEntrenchmentReloadSlowdown", &bDisableEntrenchmentReloadSlowdown );
+	saver.Add( "FOWSoundDistance", &fFOWSoundDistance );
+	saver.Add( "FOWSoundMinBasePercentage", &fFOWSoundMinBasePercentage );
 
 	return 0;
 }
@@ -1052,6 +1056,14 @@ int SAIGameConsts::operator&( IBinSaver &saver )
 	}
 	saver.Add( 19, &pAIPropertyConsts );
 	saver.Add( 20, &bDisableEntrenchmentReloadSlowdown );
+	if ( !saver.IsReading() || saver.HasChunk( 21 ) )
+	{
+		saver.Add( 21, &fFOWSoundDistance );
+	}
+	if ( !saver.IsReading() || saver.HasChunk( 22 ) )
+	{
+		saver.Add( 22, &fFOWSoundMinBasePercentage );
+	}
 
 	return 0;
 }
@@ -1064,7 +1076,7 @@ uint32_t SAIGameConsts::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts << bDisableEntrenchmentReloadSlowdown;
+	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts << bDisableEntrenchmentReloadSlowdown << fFOWSoundDistance << fFOWSoundMinBasePercentage;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

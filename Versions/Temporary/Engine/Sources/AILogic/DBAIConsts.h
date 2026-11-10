@@ -621,13 +621,17 @@ namespace NDb
 		bool bInfantryFormationModifiersApplyInTrenches;
 		CDBPtr< SAIPropertyConsts > pAIPropertyConsts;
 		bool bDisableEntrenchmentReloadSlowdown;
+		float fFOWSoundDistance;
+		float fFOWSoundMinBasePercentage;
 
 		SAIGameConsts() :
 			__dwCheckSum( 0 ),
 			nRemoveParachuteTime( 0 ),
 			nGroundCrashPlaneSize( 100 ),
 			bInfantryFormationModifiersApplyInTrenches( true ),
-			bDisableEntrenchmentReloadSlowdown( false )
+			bDisableEntrenchmentReloadSlowdown( false ),
+			fFOWSoundDistance( -1.0000f ),
+			fFOWSoundMinBasePercentage( 0.1000f )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

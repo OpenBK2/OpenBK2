@@ -469,5 +469,11 @@ class SAIGameConsts
 	SAIPropertyConsts *_AIPropertyConsts;
 	// Entrenched units aim once per attack instead of adding aiming time to every reload; false keeps legacy timing.
 	bool _DisableEntrenchmentReloadSlowdown = false;
+	// Movement and idle sound reach beyond visible terrain, in gameplay meters; negative disables fog attenuation.
+	[preserveDefault]
+	float _FOWSoundDistance = -1.0;
+	// Minimum audible movement volume (0..1), scaled linearly to full volume near visible terrain.
+	[preserveDefault]
+	float _FOWSoundMinBasePercentage = 0.1;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

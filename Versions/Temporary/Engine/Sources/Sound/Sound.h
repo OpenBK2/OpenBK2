@@ -37,6 +37,7 @@ class CSound : public CObjectBase
 	bool bFinishedMark; // звук уже отыграл
 	bool bDimMark;      // начать затухание звука
 	NTimer::STime timeLastPosUpdate;
+	float fVolume = 1.0f;
 
 public:
 	CSound() {}
@@ -107,6 +108,16 @@ public:
 
 	// из-за затухания (по времени) или из-за расстояния громкость может быть не полной.
 	float GetVolume( const NTimer::STime time, const float fDist ) const;
+
+	void SetVolume( const float fNewVolume )
+	{
+		fVolume = fNewVolume;
+	}
+
+	float GetBaseVolume() const
+	{
+		return fVolume;
+	}
 
 	void SetBeginTime( const NTimer::STime time );
 
