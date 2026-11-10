@@ -2,8 +2,15 @@
 
 #include "HungarianMethod.h"
 
+#include <cmath>
+#include <cstdint>
+#include <numeric>
+
 bool CHungarianMethod::Init( const CArray2D<float> &_matrix )
 {
+	bCanSolve = false;
+	nSize = 0;
+	result.clear();
 	NI_ASSERT( _matrix.GetSizeX() == _matrix.GetSizeY(), "CHungarianMethod can work only with sqare matricies" )
 
 	if ( _matrix.GetSizeX() != _matrix.GetSizeY() )
@@ -14,7 +21,18 @@ bool CHungarianMethod::Init( const CArray2D<float> &_matrix )
 	matrix = _matrix;
 	nSize = matrix.GetSizeX();
 	result.resize( nSize );
-	result.assign( nSize, 0 );
+	std::iota( result.begin(), result.end(), 0 );
+	for ( int i = 0; i < nSize; ++i )
+	{
+		for ( int j = 0; j < nSize; ++j )
+		{
+			// NaN rows never acquire a zero, so the matching loop cannot finish.
+			if ( !std::isfinite( matrix[j][i] ) )
+			{
+				return false;
+			}
+		}
+	}
 
 	marks.SetSizes( nSize, nSize );
 	row.resize( nSize );
@@ -22,10 +40,11 @@ bool CHungarianMethod::Init( const CArray2D<float> &_matrix )
 	markRow.resize( nSize );
 	markCol.resize( nSize );
 
+	bCanSolve = true;
 	return true;
 }
 
-void CHungarianMethod::Minimize()
+bool CHungarianMethod::Minimize()
 {
 	for ( int i = 0; i < nSize; ++i )
 	{
@@ -40,6 +59,10 @@ void CHungarianMethod::Minimize()
 		for ( int j = 0; j < nSize; ++j )
 		{
 			matrix[j][i] -= fMin;
+			if ( !std::isfinite( matrix[j][i] ) )
+			{
+				return false;
+			}
 		}
 	}
 
@@ -57,8 +80,13 @@ void CHungarianMethod::Minimize()
 		for ( int i = 0; i < nSize; ++i )
 		{
 			matrix[j][i] -= fMin;
+			if ( !std::isfinite( matrix[j][i] ) )
+			{
+				return false;
+			}
 		}
 	}
+	return true;
 }
 
 void CHungarianMethod::MarkZeros()
@@ -90,9 +118,13 @@ void CHungarianMethod::MarkZeros()
 bool CHungarianMethod::FindMatchingInRow( const int nRow )
 {
 	int nCol = 0;
-	while ( marks[nCol][nRow] != 1 )
+	while ( nCol < nSize && marks[nCol][nRow] != 1 )
 	{
 		nCol++;
+	}
+	if ( nCol == nSize )
+	{
+		return false;
 	}
 	for ( int i = 0; i < nSize; ++i )
 	{
@@ -161,7 +193,7 @@ bool CHungarianMethod::IsSolved() const
 	return true;
 }
 
-void CHungarianMethod::UpdateMatrix()
+bool CHungarianMethod::UpdateMatrix()
 {
 	for ( int i = 0; i < nSize; ++i )
 	{
@@ -203,6 +235,7 @@ void CHungarianMethod::UpdateMatrix()
 	}
 
 	float fDelta = FP_MAX_VALUE;
+	bool bFoundDelta = false;
 	for ( int i = 0; i < nSize; ++i )
 	{
 		if ( markRow[i] == 1 )
@@ -211,13 +244,20 @@ void CHungarianMethod::UpdateMatrix()
 			{
 				if ( markCol[j] == 0 )
 				{
-					if ( fDelta > matrix[j][i] )
+					if ( !bFoundDelta || fDelta > matrix[j][i] )
 					{
 						fDelta = matrix[j][i];
+						bFoundDelta = true;
 					}
 				}
 			}
 		}
+	}
+	// Each adjustment must create a new uncovered zero. Otherwise retrying the
+	// same matching cannot make progress, even if all original costs were finite.
+	if ( !bFoundDelta || !( fDelta > 0.0f ) || !std::isfinite( fDelta ) )
+	{
+		return false;
 	}
 
 	for ( int i = 0; i < nSize; ++i )
@@ -227,6 +267,10 @@ void CHungarianMethod::UpdateMatrix()
 			for ( int j = 0; j < nSize; ++j )
 			{
 				matrix[j][i] += fDelta;
+				if ( !std::isfinite( matrix[j][i] ) )
+				{
+					return false;
+				}
 			}
 		}
 	}
@@ -237,9 +281,14 @@ void CHungarianMethod::UpdateMatrix()
 			for ( int i = 0; i < nSize; ++i )
 			{
 				matrix[j][i] -= fDelta;
+				if ( !std::isfinite( matrix[j][i] ) )
+				{
+					return false;
+				}
 			}
 		}
 	}
+	return true;
 }
 
 void CHungarianMethod::BuildResult()
@@ -259,17 +308,29 @@ void CHungarianMethod::BuildResult()
 
 void CHungarianMethod::Solve()
 {
-	Minimize();
-	while ( true )
+	if ( !bCanSolve || !Minimize() )
+	{
+		bCanSolve = false;
+		return;
+	}
+	// Bound recovery from numeric degeneracy by matrix size, never elapsed time.
+	// Keep the input-order permutation until a complete matching is available.
+	const uint64_t nMaxAdjustments = uint64_t( nSize ) * uint64_t( nSize );
+	for ( uint64_t nAdjustment = 0; nAdjustment <= nMaxAdjustments; ++nAdjustment )
 	{
 		MarkZeros();
-		while ( SwapMarks() )
-			;
+		for ( int nMatching = 0; nMatching < nSize && SwapMarks(); ++nMatching )
+		{
+		}
 		if ( IsSolved() )
+		{
+			BuildResult();
+			return;
+		}
+		if ( !UpdateMatrix() )
 		{
 			break;
 		}
-		UpdateMatrix();
 	}
-	BuildResult();
+	bCanSolve = false;
 }

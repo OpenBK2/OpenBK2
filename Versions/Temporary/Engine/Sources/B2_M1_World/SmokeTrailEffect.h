@@ -1,5 +1,16 @@
 #pragma once
 
+#include "Misc/Geom.h"
+#include "System/Basic.h"
+#include "System/BinSaver.h"
+#include "System/DB.h"
+#include "System/Streams.h"
+#include "System/Time.h"
+
+#include "B2_M1_World_export.h"
+
+#include <string>
+
 // Defensive member defaults; explicit constructor values still take precedence.
 
 namespace NDb
@@ -12,7 +23,7 @@ namespace NAnimation
 struct ISkeletonAnimator;
 }
 
-class CSmokeTrailEffect : public CObjectBase
+class B2_M1_WORLD_EXPORT CSmokeTrailEffect : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CSmokeTrailEffect );
 	//

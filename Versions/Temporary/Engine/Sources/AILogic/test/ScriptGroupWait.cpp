@@ -337,4 +337,57 @@ TEST_F( ScriptGroupWait, InvalidAreaArgumentsReturnSafely )
 	     "WaitForGroupInArea(0, 7, 0); Capture(3);" );
 	EXPECT_EQ( events, std::vector<int>( { 1, 2, 3 } ) );
 }
+
+TEST_F( ScriptGroupWait, ShortAndInvalidSleepsYieldBetweenLoopIterations )
+{
+	// Finite loops expose the former same-tick busy loop without hanging the test runner.
+	for ( const char *delay : { "", "1", "2", "3", "0", "-4", "0.25", "0/0", "1/0", "-1/0", "'invalid'" } )
+	{
+		SCOPED_TRACE( delay );
+		events.clear();
+		const std::string code = std::string( "for i = 1, 3 do Capture(i); Sleep(" ) + delay + "); end;";
+		Run( code.c_str() );
+		EXPECT_EQ( events, std::vector<int>( { 1 } ) );
+		vm->Segment();
+		EXPECT_EQ( events, std::vector<int>( { 1, 2 } ) );
+		vm->Segment();
+		EXPECT_EQ( events, std::vector<int>( { 1, 2, 3 } ) );
+		vm->Segment();
+		EXPECT_TRUE( errors.empty() );
+	}
+}
+
+TEST_F( ScriptGroupWait, NormalSleepKeepsItsExistingWholeSegmentTiming )
+{
+	Run( "Capture(1); Sleep(11); Capture(2);" );
+	EXPECT_EQ( events, std::vector<int>( { 1 } ) );
+	vm->Segment();
+	EXPECT_EQ( events, std::vector<int>( { 1 } ) );
+	vm->Segment();
+	EXPECT_EQ( events, std::vector<int>( { 1, 2 } ) );
+	EXPECT_TRUE( errors.empty() );
+}
+
+TEST_F( ScriptGroupWait, ShortSleepRemainsSuspendedAcrossSaveLoad )
+{
+	Run( "Capture(1); Sleep(1); Capture(2);" );
+	EXPECT_EQ( events, std::vector<int>( { 1 } ) );
+	SaveAndReload();
+	vm->Segment();
+	EXPECT_EQ( events, std::vector<int>( { 1, 2 } ) );
+	EXPECT_TRUE( errors.empty() );
+}
+
+TEST_F( ScriptGroupWait, OversizedFiniteSleepDoesNotOverflowIntoImmediateResume )
+{
+	Run( "Capture(1); Sleep(1e308); Capture(2);" );
+	EXPECT_EQ( events, std::vector<int>( { 1 } ) );
+	SaveAndReload();
+	for ( int i = 0; i < 3; ++i )
+	{
+		vm->Segment();
+		EXPECT_EQ( events, std::vector<int>( { 1 } ) );
+	}
+	EXPECT_TRUE( errors.empty() );
+}
 } // namespace

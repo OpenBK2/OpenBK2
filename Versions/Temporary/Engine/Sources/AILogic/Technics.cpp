@@ -329,7 +329,18 @@ void CMilitaryCar::PrepareToDelete()
 	// всех сидящих внутри - убить.
 	while ( GetNPassengers() )
 	{
-		GetPassenger( 0 )->Die( false, 0 );
+		CPtr<CSoldier> pPassenger = pass.front();
+		if ( IsValidObj( pPassenger ) && pPassenger->IsAlive() && pPassenger->IsInTransport() &&
+		     pPassenger->GetTransportUnit() == this )
+		{
+			pPassenger->Die( false, 0 );
+		}
+		// Death normally removes the passenger. Stale/dead entries cannot run that
+		// callback, and must not block teardown or kill a soldier now aboard another vehicle.
+		if ( !pass.empty() && pass.front() == pPassenger )
+		{
+			pass.pop_front();
+		}
 	}
 
 	for ( std::vector<CPtr<CAIUnit>>::iterator it = onBoard.begin(); it != onBoard.end(); ++it )

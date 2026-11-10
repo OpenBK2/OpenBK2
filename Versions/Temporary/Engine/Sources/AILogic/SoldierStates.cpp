@@ -978,7 +978,8 @@ void CSoldierAttackState::Segment()
 		// in tankpit - leave tankpit and repeat
 		if ( !pUnit->GetCurCmd()->IsFromAI() && pUnit->IsInTankPit() && eReject == ACK_NOT_IN_FIRE_RANGE )
 		{
-			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ), pUnit );
+			// A soldier may have been dug in by its formation without having the public ability.
+			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 			return;
 		}
 		//CRAP}

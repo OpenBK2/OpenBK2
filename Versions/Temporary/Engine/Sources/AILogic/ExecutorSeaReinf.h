@@ -2,6 +2,10 @@
 #include "AIUnit.h"
 #include "Executor.h"
 
+#include "AILogic_export.h"
+
+class CAIMap;
+
 class CExecutorTransportReinforcement : public CExecutor
 {
 	OBJECT_BASIC_METHODS( CExecutorTransportReinforcement );
@@ -51,6 +55,8 @@ public:
 	}
 
 	CExecutorTransportReinforcement() {}
+
+	AILOGIC_EXPORT static CVec2 FindUnloadPoint( CAIMap *pAIMap, const CVec2 &vStart, const CVec2 &vDestination );
 
 	CExecutorTransportReinforcement( std::list<CAIUnit *> *pTransports,
 	                                 const NDb::SReinforcement *_pReinf,

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AIUnit.h"
+#include "BoundedSampling.h"
 #include "LongObjectCreation.h"
 #include "System/FastMath.h"
 #include "UnitsIterators2.h"
@@ -15,6 +16,11 @@ BASIC_REGISTER_CLASS( AILOGIC, CLongObjectCreation );
 uint16_t CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd )
 {
 	CVec2 vTmp = vEnd - vBegin;
+	const float fLength = fabs( vTmp );
+	if ( !( fLength > 0.0f ) || !std::isfinite( fLength ) )
+	{
+		return 0;
+	}
 	Normalize( &vTmp );
 	float fAngle = NMath::ACos( ( vTmp.x ) / fabs( vTmp.x, vTmp.y ) );
 	if ( vTmp.y < 0 )
@@ -32,14 +38,16 @@ void CLongObjectCreation::SplitLineToSegrments( std::vector<CVec2> *_vPoints,
 	CVec2 currentPoint = vBegin;
 	std::vector<CVec2> &vPoints = *_vPoints;
 
-	if ( vBegin == vEnd )
+	const float allLenght = fabs( vEnd.x - vBegin.x, vEnd.y - vBegin.y );
+	if ( vBegin == vEnd || !NBoundedSampling::IsValidSpacing( allLenght, TRENCHWIDTH ) || !std::isfinite( vBegin.x ) ||
+	     !std::isfinite( vBegin.y ) || !std::isfinite( vEnd.x ) || !std::isfinite( vEnd.y ) )
 	{
 		return;
 	}
 	CVec2 vDir( vEnd - vBegin );
 	Normalize( &vDir );
 
-	float allLenght = fabs( vEnd.x - vBegin.x, vEnd.y - vBegin.y );
+	const size_t nOriginalSize = vPoints.size();
 	CVec2 vAddSegment;
 	vAddSegment.x = vDir.x * TRENCHWIDTH;
 	vAddSegment.y = vDir.y * TRENCHWIDTH;
@@ -50,14 +58,25 @@ void CLongObjectCreation::SplitLineToSegrments( std::vector<CVec2> *_vPoints,
 		vPoints.push_back( CVec2( currentPoint.x, currentPoint.y ) );
 	}
 
-	while ( fabs( vBegin.x - vAddSegment.x, vBegin.y - vAddSegment.y ) < allLenght )
+	float fPreviousDistance = 0.0f;
+	float fDistance = fabs( vBegin.x - vAddSegment.x, vBegin.y - vAddSegment.y );
+	int nSamples = 0;
+	while ( fDistance < allLenght )
 	{
+		if ( !( fDistance > fPreviousDistance ) || ++nSamples > NBoundedSampling::MAX_SAMPLES )
+		{
+			// A sub-ULP width can leave the point unchanged even when the width itself is positive.
+			vPoints.resize( nOriginalSize );
+			return;
+		}
 		vPoints.push_back( CVec2( vAddSegment.x, vAddSegment.y ) );
 		currentPoint = CVec2( vAddSegment.x, vAddSegment.y );
 		vAddSegment.x = vDir.x * TRENCHWIDTH;
 		vAddSegment.y = vDir.y * TRENCHWIDTH;
 		vAddSegment.x += currentPoint.x;
 		vAddSegment.y += currentPoint.y;
+		fPreviousDistance = fDistance;
+		fDistance = fabs( vBegin.x - vAddSegment.x, vBegin.y - vAddSegment.y );
 	}
 }
 

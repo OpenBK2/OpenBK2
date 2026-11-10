@@ -6,6 +6,8 @@
 #include "Misc/DetMath.h"
 #include "System/FastMath.h"
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
 
 const int SPLINE_STEP = 6;
@@ -195,21 +197,34 @@ uint16_t CheckArcTiles( TYPE &func,
                         const bool bForward,
                         CAIMap *pAIMap )
 {
+	if ( !std::isfinite( fRadius ) || fRadius < 0.0f || !std::isfinite( vUnit.x ) || !std::isfinite( vUnit.y ) )
+	{
+		// Invalid geometry cannot establish a traversable arc.
+		return 0;
+	}
 	const uint16_t wPerpAngle = ( bClockWise == bForward ) ? ( wStartAngle - 16384 ) : ( wStartAngle + 16384 );
 	const CVec2 vCenter = vUnit + fRadius * GetVectorByDirection( wPerpAngle );
 	SVector tile = SVector( -666, -666 );
 	const float fDelta = NDetMath::ATan2( 1.0f, fRadius ) * 65536.0f / FP_2PI;
-	const uint16_t wDelta = fDelta;
-	for ( uint16_t angle = 0; angle < wDiffAngle; angle += wDelta )
+	// The unwrapped counter must reach the endpoint; uint16_t addition can wrap forever.
+	// Huge turn radii also round the angular increment down to zero.
+	const uint32_t nDelta = (std::max)( 1u, uint32_t( fDelta ) );
+	for ( uint32_t angle = 0; angle < wDiffAngle; angle += nDelta )
 	{
 		const uint16_t wAngle = ( bClockWise ) ? ( wPerpAngle - angle ) : ( wPerpAngle + angle );
-		const SVector curTile = pAIMap->GetTile( vCenter - fRadius * GetVectorByDirection( wAngle ) );
+		const CVec2 vPoint = vCenter - fRadius * GetVectorByDirection( wAngle );
+		if ( !pAIMap->IsPointInside( vPoint ) )
+		{
+			// Reject off-map and non-finite samples before float-to-tile conversion.
+			return uint16_t( angle );
+		}
+		const SVector curTile = pAIMap->GetTile( vPoint );
 		if ( tile != curTile )
 		{
 			tile = curTile;
 			if ( !func( tile ) )
 			{
-				return angle;
+				return uint16_t( angle );
 			}
 		}
 	}

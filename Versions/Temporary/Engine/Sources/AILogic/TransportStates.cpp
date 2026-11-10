@@ -84,8 +84,9 @@ bool CTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_MOVE_TO || cmdType == ACTION_COMMAND_REVERSE_TO ||
 	         cmdType == ACTION_COMMAND_WAIT_FOR_UNITS || cmdType == ACTION_COMMAND_ROTATE_TO ||
 	         cmdType == ACTION_MOVE_BY_DIR || cmdType == ACTION_COMMAND_UNLOAD || cmdType == ACTION_COMMAND_GUARD ||
-	         cmdType == ACTION_COMMAND_DISAPPEAR || cmdType == ACTION_COMMAND_RESUPPLY_HR ||
-	         cmdType == ACTION_COMMAND_RESUPPLY || cmdType == ACTION_COMMAND_REPAIR || cmdType == ACTION_MOVE_LOAD_RU ||
+	         cmdType == ACTION_COMMAND_DISAPPEAR || cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH ||
+	         cmdType == ACTION_COMMAND_RESUPPLY_HR || cmdType == ACTION_COMMAND_RESUPPLY ||
+	         cmdType == ACTION_COMMAND_REPAIR || cmdType == ACTION_MOVE_LOAD_RU ||
 	         cmdType == ACTION_COMMAND_TAKE_ARTILLERY || cmdType == ACTION_COMMAND_DEPLOY_ARTILLERY ||
 	         cmdType == ACTION_COMMAND_FOLLOW || cmdType == ACTION_COMMAND_FOLLOW_NOW ||
 	         cmdType == ACTION_COMMAND_ENTRENCH_SELF || cmdType == ACTION_COMMAND_ENTRENCH_BEGIN ||
@@ -117,6 +118,11 @@ IUnitState *CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 	switch ( cmd.nCmdType )
 	{
+		case ACTION_MOVE_LEAVE_SELF_ENTRENCH:
+			// Internal movement prerequisites must remain available without the public ability.
+			pUnit->ResetHoldSector();
+			pResult = CTankPitLeaveState::Instance( pUnit );
+			break;
 		case ACTION_COMMAND_USE_SPYGLASS:
 			pResult = new CMechUseSpyglassState( pUnit, cmd.vPos );
 			break;
@@ -737,12 +743,23 @@ void CTransportLandState::Segment()
 					// find a formation to land
 					for ( int i = 0; i < nPassangers && pFormation == 0; ++i )
 					{
-						CFormation *pTmp = pTransport->GetPassenger( i )->GetFormation();
+						CSoldier *pPassenger = pTransport->GetPassenger( i );
+						if ( !IsValidObj( pPassenger ) || !pPassenger->IsAlive() )
+						{
+							continue;
+						}
+						CFormation *pTmp = pPassenger->GetFormation();
 						if ( pTmp != pGunCrew )
 						{
 							pFormation = pTmp;
 						}
 					}
+				}
+
+				// A stale manifest or changed gun crew can leave no formation to unload.
+				if ( !IsValidObj( pFormation ) )
+				{
+					break;
 				}
 
 				// check if still can unload
@@ -757,10 +774,16 @@ void CTransportLandState::Segment()
 					for ( int i = 0; i < nFormSize; ++i )
 					{
 						CSoldier *pSoldier = ( *pFormation )[i];
-						if ( pSoldier->IsInTransport() )
+						if ( IsValidObj( pSoldier ) && pSoldier->IsAlive() && pSoldier->IsInTransport() &&
+						     pSoldier->GetTransportUnit() == pTransport )
 						{
 							LandPassenger( pSoldier, vGoToPoint );
 						}
+					}
+					// Only retry when unloading consumed passengers; otherwise this state cannot make progress.
+					if ( pTransport->GetNPassengers() >= nPassangers )
+					{
+						break;
 					}
 					pFormation->SetCenter( vGoToPoint, true );
 

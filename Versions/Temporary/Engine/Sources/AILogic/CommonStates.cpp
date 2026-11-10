@@ -781,7 +781,8 @@ void CMechAttackUnitState::Segment()
 			// in tankpit - leave tankpit and repeat
 			if ( !pUnit->GetCurCmd()->IsFromAI() && pUnit->IsInTankPit() && ( eReject == ACK_NOT_IN_FIRE_RANGE ) )
 			{
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ), pUnit );
+				// Existing cover must be escapable without the public dig-in ability.
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 				return;
 			}
 			//CRAP}
@@ -1154,8 +1155,7 @@ void CCommonAttackCommonStatObjState::Segment()
 			if ( GetUnit()->GetCurCmd() && !GetUnit()->GetCurCmd()->IsFromAI() && GetUnit()->IsInTankPit() &&
 			     ( GetUnit()->GetGunsRejectReason() == ACK_NOT_IN_FIRE_RANGE ) )
 			{
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-				                                 GetUnit() );
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), GetUnit() );
 				return;
 			}
 

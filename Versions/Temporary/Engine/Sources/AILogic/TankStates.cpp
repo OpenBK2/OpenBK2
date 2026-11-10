@@ -701,8 +701,8 @@ void CMechUnitSupportFireState::Segment()
 					case ESFS_TURNING:
 						if ( pUnit->IsInTankPit() )
 						{
-							theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-							                                 pUnit );
+							// Turning requires leaving cover even if its public ability is unavailable.
+							theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 							return;
 						}
 
