@@ -8,9 +8,11 @@
 #include "../Commands.h"
 #include "../DBAIConsts.h"
 #include "../Diplomacy.h"
+#include "../GlobalWarFog.h"
 #include "../GroupLogic.h"
 #include "../Guns.h"
 #include "../ShootEstimator.h"
+#include "../Soldier.h"
 #include "../StatesFactory.h"
 #include "../StaticMembers.h"
 #include "../Technics.h"
@@ -61,6 +63,7 @@ class AggressiveAttacker : public testing::Test
 	CPtr<IUnitState> rest;
 	CDBPtr<NDb::SMechUnitRPGStats> stats;
 	CDBPtr<NDb::SMechUnitRPGStats> aircraftStats;
+	CDBPtr<NDb::SInfantryRPGStats> infantryStats;
 
 protected:
 	NDb::SExtendedStats *extended = nullptr;
@@ -198,11 +201,12 @@ protected:
 		SVector tile( int( position.x / SConsts::TILE_SIZE ), int( position.y / SConsts::TILE_SIZE ) );
 		SAIAngle direction( 0 );
 		bool idle = true;
-		float hp = 100;
+		float hp = dynamic_cast<CSoldier *>( unit ) ? 10 : 100;
 		CPtr<CAICommand> current = command;
 		CUnitStatsModifiers modifiers;
 		modifiers.Set( "test.fixture", modifier );
 		std::vector<int> visibility{ visible ? 1 : 0, 1, 0 };
+		uint8_t visibilityIndex = visible ? 1 : 0;
 		CPtr<CUnitGuns> unitGuns = unit == owner ? guns : emptyGuns;
 		CPtr<IAnimUnit> animation = unit == owner ? ownerAnimation : nullptr;
 		SFields path{ [&]( IBinSaver &saver )
@@ -231,6 +235,7 @@ protected:
 									saver.Add( 15, &hp );
 									saver.Add( 41, &animation );
 									saver.Add( 51, &visibility );
+									saver.Add( 52, &visibilityIndex );
 									saver.Add( 58, &modifiers );
 									saver.Add( 71, &cachedTargets );
 									saver.Add( 73, &cacheDuration );
@@ -242,7 +247,19 @@ protected:
 													saver.Add( 2, &unitStats );
 													saver.Add( 3, &unitGuns );
 												} };
-		if ( dynamic_cast<CArtillery *>( unit ) )
+		if ( dynamic_cast<CSoldier *>( unit ) )
+		{
+			SAIAngle maxAngle( 65535 );
+			SFields soldier{ [&]( IBinSaver &saver )
+			                 {
+												 saver.Add( 1, &ai );
+												 saver.Add( 4, &infantryStats );
+												 saver.Add( 6, &unitGuns );
+												 saver.Add( 9, &maxAngle );
+											 } };
+			LoadFields( unit, [&]( IBinSaver &saver ) { saver.Add( 1, &soldier ); } );
+		}
+		else if ( dynamic_cast<CArtillery *>( unit ) )
 		{
 			bool installed = true;
 			float operable = 1;
@@ -276,6 +293,20 @@ protected:
 		unit->SetBehaviourFire( SBehaviour::EFAtWill );
 	}
 
+	CAIUnit *MakeInfantry( float distance )
+	{
+		auto *soldierStats = MakeRecord<NDb::SInfantryRPGStats>( "InfantryRPGStats" );
+		soldierStats->etype = NDb::RPG_TYPE_SOLDIER;
+		soldierStats->fMaxHP = 10;
+		soldierStats->fPrice = 10;
+		soldierStats->fSmallAABBCoeff = 1;
+		soldierStats->vAABBHalfSize = CVec2( 2, 2 );
+		infantryStats = soldierStats;
+		CAIUnit *soldier = MakeObject<CAIUnit>( AI_INFANTRY );
+		PlaceUnit( soldier, distance );
+		return soldier;
+	}
+
 	CAIUnit *MakeAircraft( float distance )
 	{
 		if ( !aircraftStats )
@@ -304,6 +335,9 @@ protected:
 		modifier = MakeRecord<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
 		external.emplace_back( 1000, modifier );
 		owner = MakeObject<CAIUnit>( GetOwnerType() );
+		// Real firing paths update the owner animation in both fixture families.
+		ownerAnimation = MakeObject<IAnimUnit>( AI_ANIM_UNIT_MECH );
+		ownerAnimation->Init( owner );
 		enemy = MakeObject<CAIUnit>( AI_TANK );
 		rest = MakeObject<IUnitState>( 0x1508D494 );
 		guns = MakeObject<CUnitGuns>( 0x1108D4C7 );
@@ -677,6 +711,252 @@ TEST_F( EntrenchmentReload, MissingConstantsRetainLegacyTiming )
 	constants = nullptr;
 	SetTime( 10000 );
 	ExpectRepeatTiming( false );
+}
+
+// Reuse the real mech/weapon fixture for infantry engagements with independent flame and MG mounts.
+class MechFlamethrower : public AggressiveAttacker
+{
+protected:
+	CPtr<CBasicGun> machineGun;
+	CPtr<SCommonGunInfo> machineGunAmmo;
+	NDb::SWeaponRPGStats *machineGunWeapon = nullptr;
+
+	void LoadGun( CBasicGun *target, NDb::SWeaponRPGStats *stats, SCommonGunInfo *info, IGunsFactory::EGunTypes type )
+	{
+		CDBPtr<NDb::SWeaponRPGStats> weaponPointer = stats;
+		CPtr<SCommonGunInfo> ammoPointer = info;
+		int resting = 4; // CBasicGun::EST_REST.
+		bool canShoot = true;
+		float randomFactor = 1;
+		SFields gunStats{ [&]( IBinSaver &saver ) { saver.Add( 2, &weaponPointer ); } };
+		SFields basic{ [&]( IBinSaver &saver )
+		               {
+										 saver.Add( 1, &gunStats );
+										 saver.Add( 3, &resting );
+										 saver.Add( 5, &canShoot );
+										 saver.Add( 7, &type );
+										 saver.Add( 10, &randomFactor );
+										 saver.Add( 11, &randomFactor );
+										 saver.Add( 13, &owner );
+										 saver.Add( 15, &ammoPointer );
+										 // Isolate weapon choice from fog obstacles; range, armor and mount checks remain real.
+										 saver.Add( 27, &canShoot );
+									 } };
+		LoadFields( target, [&]( IBinSaver &saver ) { saver.Add( 1, &basic ); } );
+	}
+
+	void SetUp() override
+	{
+		AggressiveAttacker::SetUp();
+		theWarFog.Init( 256, 256, 32, 2.0f );
+		extended->bAggressiveAttacker = false;
+		enemy = MakeInfantry( 100 );
+		machineGun = MakeObject<CBasicGun>( 0x1108D4B5 );
+		machineGunAmmo = MakeObject<SCommonGunInfo>( 0x1108D4C9 );
+		machineGunAmmo->nGun = 1;
+		machineGunAmmo->nAmmo = 100;
+		machineGunWeapon = MakeRecord<NDb::SWeaponRPGStats>( "WeaponRPGStats" );
+		machineGunWeapon->eWeaponType = NDb::SWeaponRPGStats::WEAPON_MACHINEGUN;
+		machineGunWeapon->fRangeMin = 1;
+		machineGunWeapon->fRangeMax = 200;
+		machineGunWeapon->nAimingTime = 500;
+		machineGunWeapon->nAmmoPerBurst = 8;
+		machineGunWeapon->wDeltaAngle = 32768;
+		machineGunWeapon->shells.resize( 1 );
+		auto &bullet = machineGunWeapon->shells[0];
+		bullet.etrajectory = NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
+		bullet.fDamagePower = 5;
+		bullet.nPiercing = 3;
+		bullet.nPiercingRandom = 3;
+		bullet.nFireRate = 100;
+		bullet.nRelaxTime = 882;
+		weapon->eWeaponType = NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON;
+		weapon->nAimingTime = 1000;
+		weapon->nAmmoPerBurst = 2;
+		weapon->wDeltaAngle = 32768;
+		auto &flame = weapon->shells[0];
+		flame.etrajectory = NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER;
+		flame.fDamagePower = 80;
+		flame.fArea = 3;
+		flame.fArea2 = 3;
+		flame.nFireRate = 3000;
+		flame.nRelaxTime = 5000;
+		auto *stats =
+				const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+		stats->fSight = 200;
+		stats->platforms[0].guns.resize( 2 );
+		stats->platforms[0].guns[1].pWeapon = machineGunWeapon;
+		stats->platforms[0].guns[1].nPriority = 1;
+		// FireNow stops the hull, so initialize its real path and collision state too.
+		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
+		LoadGun( gun, weapon, ammo, IGunsFactory::FLAME_GUN );
+		LoadGun( machineGun, machineGunWeapon, machineGunAmmo, IGunsFactory::MOMENT_CML_GUN );
+		std::vector<CObj<CBasicGun>> gunArray{ gun.GetPtr(), machineGun.GetPtr() };
+		std::vector<CPtr<SCommonGunInfo>> commonGuns{ ammo, machineGunAmmo };
+		std::vector<int> beginnings{ 0, 1, 2 };
+		int count = 2;
+		int artilleryGun = 0;
+		SFields collection{ [&]( IBinSaver &saver )
+		                    {
+													saver.Add( 2, &machineGunWeapon->fRangeMax );
+													saver.Add( 4, &commonGuns );
+													saver.Add( 5, &gunArray );
+													saver.Add( 6, &beginnings );
+													saver.Add( 7, &count );
+												} };
+		LoadFields( owner->GetGuns(),
+		            [&]( IBinSaver &saver )
+		            {
+									saver.Add( 1, &collection );
+									saver.Add( 2, &artilleryGun );
+								} );
+	}
+
+	void ExpectGun( CBasicGun *expected, uint32_t forbidden = 0 )
+	{
+		estimator->Reset( enemy, false, forbidden );
+		EXPECT_EQ( estimator->GetBestGun(), expected );
+	}
+
+	void TearDown() override
+	{
+		theWarFog.Clear();
+		AggressiveAttacker::TearDown();
+	}
+
+	IUnitState *LoadSwarmAttack( CBasicGun *selected, bool secondaryScan = false )
+	{
+		CPtr<CAICommand> command = MakeObject<CAICommand>( 0x1108D44D );
+		command->ToUnitCmd().nCmdType = ACTION_COMMAND_SWARM_ATTACK_UNIT;
+		command->SetFromAI( true );
+		PlaceUnit( owner, 0, true, 0, command );
+		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
+		CPtr<IUnitState> attack = MakeObject<IUnitState>( 0x1108D4DE );
+		CPtr<CBasicGun> selectedGun = selected;
+		int phase = 4; // ESAS_SIMPLE_FIRING avoids path movement in this headless fixture.
+		int party = 1; // PlaceUnit assigns the infantry to the opposing party.
+		bool swarm = true;
+		NTimer::STime lastSecondaryScan = secondaryScan ? NTimer::STime( -2000 ) : 0;
+		std::vector<SFields> secondaryShots( 4, SFields{ []( IBinSaver & ) {} } );
+		SFields freeFire{ [&]( IBinSaver &saver )
+		                  {
+												saver.Add( 2, &secondaryShots );
+												saver.Add( 3, &lastSecondaryScan );
+											} };
+		LoadFields( attack,
+		            [&]( IBinSaver &saver )
+		            {
+									saver.Add( 1, &freeFire );
+									saver.Add( 3, &phase );
+									saver.Add( 13, &swarm );
+									saver.Add( 14, &owner );
+									saver.Add( 15, &party );
+									saver.Add( 19, &enemy );
+									saver.Add( 20, &selectedGun );
+								} );
+		owner->SetCurState( attack );
+		owner->Lock( selected );
+		owner->GetLastBehTime() = NTimer::STime( -5000 );
+		return attack;
+	}
+
+	CBasicGun *ReadSelectedGun( IUnitState *attack )
+	{
+		CPtr<CBasicGun> selected;
+		InspectFields( attack, [&]( IBinSaver &saver ) { saver.Add( 20, &selected ); } );
+		return selected;
+	}
+};
+
+TEST_F( MechFlamethrower, PrefersFlameOverBothMachineGunClassifications )
+{
+	ASSERT_TRUE( gun->CanShootToUnitWOMove( enemy ) )
+			<< "reject=" << gun->GetRejectReason() << " hp=" << enemy->GetHitPoints()
+			<< " position=" << enemy->GetCenterPlain().y << " range=" << gun->GetFireRangeMax();
+	for ( auto type : { NDb::SWeaponRPGStats::WEAPON_MACHINEGUN, NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON } )
+	{
+		machineGunWeapon->eWeaponType = type;
+		ExpectGun( gun );
+		// Secondary fire excludes the active flame gun and must still find the independent MG.
+		ExpectGun( machineGun, 1 );
+	}
+}
+
+TEST_F( MechFlamethrower, KeepsMachineGunOutsideFlameRangeAndWithNoFuel )
+{
+	for ( float distance : { 4.0f, 180.0f } )
+	{
+		PlaceUnit( enemy, distance );
+		ASSERT_FALSE( gun->CanShootToUnitWOMove( enemy ) );
+		ExpectGun( machineGun );
+	}
+	PlaceUnit( enemy, 100 );
+	ammo->nAmmo = 0;
+	ExpectGun( machineGun );
+}
+
+TEST_F( MechFlamethrower, RespectsMountLimitsAndNonInfantryTargets )
+{
+	owner->Lock( machineGun );
+	weapon->wDeltaAngle = 1;
+	auto *stats =
+			const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+	stats->platforms[0].guns[0].wDirection = 32768;
+	ASSERT_FALSE( gun->CanShootToUnitWOMove( enemy ) );
+	ExpectGun( machineGun );
+	owner->Unlock( machineGun );
+	weapon->wDeltaAngle = 32768;
+	stats->platforms[0].guns[0].wDirection = 0;
+	// Restore the original armored-target fixture; an ordinary fast gun still wins against it.
+	enemy = MakeObject<CAIUnit>( AI_TANK );
+	PlaceUnit( enemy, 100 );
+	machineGunWeapon->shells[0].fDamagePower = 100;
+	machineGunWeapon->shells[0].nPiercing = 1000;
+	ExpectGun( machineGun );
+}
+
+TEST_F( MechFlamethrower, SwarmSwitchesToFlameOnTheSameLiveTargetAfterLoad )
+{
+	IUnitState *attack = LoadSwarmAttack( machineGun );
+	RoundTrip( attack );
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
+	EXPECT_TRUE( gun->IsCommonGunFiring() );
+}
+
+TEST_F( MechFlamethrower, SwarmDoesNotInterruptAnActiveMachineGunBurst )
+{
+	IUnitState *attack = LoadSwarmAttack( machineGun );
+	machineGun->StartEnemyBurst( enemy, true );
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), machineGun.GetPtr() );
+	EXPECT_TRUE( machineGun->IsCommonGunFiring() );
+}
+
+TEST_F( MechFlamethrower, SwarmFallsBackWhenFlameLosesRangeOrFuel )
+{
+	IUnitState *attack = LoadSwarmAttack( gun );
+	PlaceUnit( enemy, 180 );
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), machineGun.GetPtr() );
+	PlaceUnit( enemy, 100 );
+	attack = LoadSwarmAttack( gun );
+	ammo->nAmmo = 0;
+	attack->Segment();
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), machineGun.GetPtr() );
+}
+
+TEST_F( MechFlamethrower, SecondaryMachineGunStartsAlongsideFlame )
+{
+	enemy->nUniqueID = 123;
+	units.AddUnitToUnits( enemy, enemy->GetPlayer(), enemy->GetStats()->etype );
+	units.AddUnitToMap( enemy );
+	IUnitState *attack = LoadSwarmAttack( gun, true );
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
+	EXPECT_TRUE( gun->IsCommonGunFiring() );
+	EXPECT_TRUE( machineGun->IsCommonGunFiring() );
 }
 
 TEST_F( AggressiveAttacker, DefaultsAndSupportedClasses )

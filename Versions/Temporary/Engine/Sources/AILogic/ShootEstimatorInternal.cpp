@@ -252,6 +252,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 	float fBestTime = 0;
 	*pBestGun = 0;
 	float fLargestArea2 = 0;
+	bool bBestIsCloseFlamethrower = false;
 
 	CVec2 vDirToEnemy = pEnemy->GetCenterPlain() - pOwner->GetCenterPlain();
 	const float fDist = fabs( vDirToEnemy );
@@ -399,14 +400,22 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 						fTime += pGun->GetAimTime( false ) + ( nBursts - 1 ) * pGun->GetRelaxTime( false ) +
 						         nBursts * ( ( nAmmoPerBurst - 1 ) * pGun->GetFireRate() );
 
-						if ( *pBestGun == 0 || fTime < fBestTime )
+						// Use flames against nearby infantry without moving closer or suppressing secondary guns.
+						// WeaponType is unreliable here: several vehicle MGs are classified as heavy cannons.
+						const bool bCloseFlamethrower =
+								pEnemy->IsInfantry() && shell.etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER &&
+								pGun->CanShootToUnitWOMove( pEnemy );
+						if ( *pBestGun == 0 || ( bCloseFlamethrower && !bBestIsCloseFlamethrower ) ||
+						     ( bCloseFlamethrower == bBestIsCloseFlamethrower && fTime < fBestTime ) )
 						{
 							*pBestGun = pGun;
 							*nBestGun = i;
 							fBestTime = fTime;
 							fLargestArea2 = shell.fArea2;
+							bBestIsCloseFlamethrower = bCloseFlamethrower;
 						}
-						else if ( pOwner->GetUnitAbilityDesc( NDb::ABILITY_COVER_FIRE ) != 0 && pEnemy->IsInfantry() )
+						else if ( bCloseFlamethrower == bBestIsCloseFlamethrower &&
+						          pOwner->GetUnitAbilityDesc( NDb::ABILITY_COVER_FIRE ) != 0 && pEnemy->IsInfantry() )
 						{
 							// Workaround for Cover Fire ability
 							// choose the gun with the largest Area2
