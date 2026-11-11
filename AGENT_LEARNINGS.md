@@ -333,3 +333,33 @@ context. Read `git diff` of every touched file before building.
   soldiers need wMaxAngle = 65535, and spatial visibility needs nVisIndexInUnits
   as well as visible4Party. Missing these produced fixture crashes and false
   firing rejections; exercise the real secondary-fire scan to catch them.
+
+## Host migration and recorded removal ownership
+
+- Compare packet-level applied removal segments before investigating combat UB.
+  In the 2026-11-09 match, backend removal reached the replacement host before
+  the departing host's leave packet. Local promotion caused rejection of that
+  in-flight packet: Musikant removed slot 0 at 7782, other survivors at 7781.
+  Recovered replay copies differing only in that tick reproduced both exact
+  checksum and RNG states. Host handoff needs a converged boundary before it
+  executes; taking the minimum after simulation passes it cannot repair history.
+- Command history retains CPtr, not CObj. A local CObj in PlayerRemoved invalidates
+  its recorded CDropPlayerCommand on scope exit, reconstructing it with player -1.
+  The replay then misreports the invalid object as an unknown command type. Test
+  the real recording ownership lifecycle, not only raw-new insertion into history.
+- Preserve original replay bytes and checksum samples when recovering invalid
+  removal records from packet logs. Label diagnostic copies and record changed
+  validity bytes, player fields, segment keys, and hashes. Build-ID disagreement
+  must remain visible even when full checksum/RNG reproduction succeeds.
+- Apply queued removals in slot order at command dispatch, after the manager
+  drains packets. Applying inside a packet handler makes simultaneous transfers
+  depend on arrival order. Remember applied cutoffs and stop on an earlier
+  correction after execution; this simulation has no rollback.
+- A packet P's commands execute at P + pack size + latency. Releasing a leaver's
+  ordinary receipt barrier must still require the command prefix before removal.
+  Keep a separate timeout for missing input from an already disconnected peer.
+- Host authority can change twice before a correction arrives. Preserve the
+  retiring host's correction authority for already-known departures, and defer
+  a future host's authenticated self-departure until its preceding handoff.
+  Exercise actual manager packet handling and recorded removal order, as well
+  as the portable scheduling policy.

@@ -58,7 +58,7 @@ void CMPManagerMode::StartGame()
 	bInitialLoadInProgress = true;
 	lags.resize( slots.size() );
 	// Track already-scheduled removals to keep host announcements idempotent.
-	scheduledDropSegmentBySlot.assign( slots.size(), -1 );
+	playerDrops.assign( slots.size(), NMPPlayerDrop::SPlayerDrop() );
 	lagsUpdate.bUpdating = false;
 	lagsUpdate.timeUpdatePeriod = 500;
 	int nMaxLagTime = ( NGameX::GetMPConsts()->nTimeUserMPLag + NGameX::GetMPConsts()->nTimeUserMPPause ) * 1000;
@@ -153,6 +153,7 @@ void CMPManagerMode::StartGame()
 
 	timeEndMatch = 0;
 	bOutcomeKnown = false;
+	bWinFromPlayerDrops = false;
 }
 
 void CMPManagerMode::WinGame()
@@ -179,7 +180,7 @@ void CMPManagerMode::LoseGame()
 
 void CMPManagerMode::ScheduleWinGame()
 {
-	if ( bOutcomeKnown || !IsValid( pTransceiver ) )
+	if ( ( bOutcomeKnown && !bWinFromPlayerDrops ) || !IsValid( pTransceiver ) )
 	{
 		return;
 	}
@@ -191,18 +192,20 @@ void CMPManagerMode::ScheduleWinGame()
 	                              fmt::format( "game_id={}", nGameID ) );
 	// All-left victories must use the announced drop boundary, not the local
 	// frame that noticed it. Surviving teammates can be several ticks apart.
+	// Recalculate after an earlier departure correction, even if the all-left
+	// victory is already pending; the old final tick would run extra simulation.
 	int nLastOpponentDrop = -1;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
-		if ( ( dwInitialPlayers & ( 1UL << i ) ) != 0 && slots[i].nTeam != slots[nOwnSlot].nTeam &&
-		     i < scheduledDropSegmentBySlot.size() )
+		if ( ( dwInitialPlayers & ( 1UL << i ) ) != 0 && slots[i].nTeam != slots[nOwnSlot].nTeam && i < playerDrops.size() )
 		{
-			nLastOpponentDrop = (std::max)( nLastOpponentDrop, scheduledDropSegmentBySlot[i] );
+			nLastOpponentDrop = (std::max)( nLastOpponentDrop, playerDrops[i].GetSegment() );
 		}
 	}
 	pTransceiver->ScheduleGameEnd( nLastOpponentDrop );
 	bWinOnGameEnd = true;
 	bOutcomeKnown = true;
+	bWinFromPlayerDrops = true;
 }
 
 void CMPManagerMode::ScheduleLoseGame()
@@ -216,6 +219,7 @@ void CMPManagerMode::ScheduleLoseGame()
 	BroadcastGameControlPacket( pPkt );
 	bWinOnGameEnd = false;
 	bOutcomeKnown = true;
+	bWinFromPlayerDrops = false;
 }
 
 std::string GenerateDateTimeReplayFilename()
@@ -615,8 +619,8 @@ void CMPManagerMode::AnalyzeLaggers()
 							bLaggingGameControlHost ? GetReplacementHostClientID( nHostClientID ) : -1;
 					const bool bOwnsDropAuthority =
 							IsGameControlHost() || ( bLaggingGameControlHost && GetOwnClientID() == nReplacementHostClientID );
-					if ( bOwnsDropAuthority && IsValid( pTransceiver ) && i >= 0 && i < scheduledDropSegmentBySlot.size() &&
-					     scheduledDropSegmentBySlot[i] < 0 )
+					if ( bOwnsDropAuthority && IsValid( pTransceiver ) && i >= 0 && i < playerDrops.size() &&
+					     playerDrops[i].GetSegment() < 0 )
 					{
 						if ( bLaggingGameControlHost )
 						{

@@ -108,3 +108,6 @@ __pycache__/
 # MangoHud's per-frame CSVs from launch.sh --frame-log
 /framelogs/
 .oodle-lab/
+
+# Special ASYNC debug helper files - replays and log reports
+async_debug/

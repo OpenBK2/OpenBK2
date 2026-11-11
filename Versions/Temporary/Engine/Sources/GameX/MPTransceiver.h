@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include "MPPlayerDrop.h"
 #include "MultiplayerNetPackets.h"
 #include "Server_Client_Common/PacketProcessor.h"
 #include "Transceiver.h"
@@ -57,6 +58,7 @@ struct SB2StartGameParams
 class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 {
 	OBJECT_BASIC_METHODS( CMPTransceiver );
+	friend class CMPPlayerDropTestAccess;
 
 	CPtr<IServerClient> pClient;
 	CPtr<IAICmdsAutoMagic> pCmdsSerializer;
@@ -133,7 +135,9 @@ private:
 	int nGameSpeed = {};
 
 	int nFinalSegment = {};
-	std::vector<int> playerRemovalSegments;
+	std::vector<NMPPlayerDrop::SPlayerDrop> playerRemovals;
+	bool bPlayerDropError = false;
+	NTimer::STime timeStartWaitingForRemovedPlayer = {};
 
 private:
 	bool Segment() override
@@ -143,6 +147,7 @@ private:
 
 	bool IsSegmentPackFinished();
 	bool IsSegmentFinishedByAll( int nSegment );
+	uint16_t GetMissingSegmentPlayers( int nSegment ) const;
 	void SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulCheckSum );
 	void FinalizeSegmentPack();
 	void AdvanceToNextSegment();
@@ -165,6 +170,7 @@ private:
 	int GetSegmentToExecute( const int nSegment ) const;
 	void StopWaitingForPlayer( int nPlayer, int nDropSegment );
 	void ApplyScheduledPlayerRemovals();
+	void FailPlayerDrop( int nPlayer, int nSegment, const char *szReason );
 
 public:
 	CMPTransceiver();
@@ -178,7 +184,7 @@ public:
 	const NDb::SMapInfo *GetMap() const override;
 	void EndGame();
 	void PlayerRemoved( int nPlayer );
-	void SchedulePlayerRemoval( int nPlayer, int nSegment );
+	bool SchedulePlayerRemoval( int nPlayer, int nSegment );
 	static const bool IsGamePacket( const CNetPacket *pPacket );
 
 	int operator&( IBinSaver &f ) override
@@ -207,6 +213,16 @@ public:
 	int GetCurrentCommonSegment() const
 	{
 		return nCommonSegment;
+	}
+
+	int GetLatency() const
+	{
+		return nLatency;
+	}
+
+	bool HasPlayerDropError() const
+	{
+		return bPlayerDropError;
 	}
 
 	unsigned long GetPlayerMask() const

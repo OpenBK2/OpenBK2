@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MPPlayerDrop.h"
 #include "MultiplayerCommandManager.h"
 #include "MultiplayerCommandProcessor.h"
 #include "Net/NetAddress.h"
@@ -24,6 +25,9 @@ class CCommandsHistory;
 
 struct CMPManagerMode : public CMPUIMessageProcessor, public CPacketProcessorBase, public CObjectBase
 {
+	// The headless integration fixture restores only the state normally set by the lobby.
+	friend class CMPPlayerDropTestAccess;
+
 public:
 	enum ENetMode
 	{
@@ -120,7 +124,7 @@ protected:
 	bool bWaitWindowShown;
 	CLaggerList lags;
 	SAutoUpdate lagsUpdate;
-	std::vector<int> scheduledDropSegmentBySlot;
+	std::vector<NMPPlayerDrop::SPlayerDrop> playerDrops;
 
 	std::list<int> pendingClients; // NEW_CLIENT-s that are received when we do not have our slot number yet
 
@@ -135,6 +139,7 @@ protected:
 	NTimer::STime timeNextInstaLoseCheck;
 	bool bOutcomeKnown;
 	bool bWinOnGameEnd;
+	bool bWinFromPlayerDrops = false;
 	SAutoUpdate pingUpdate;
 
 	CObj<CLANTester> pLanTester;
@@ -195,8 +200,9 @@ protected:
 	bool HasPlayerStartedLagging( int nPlayer );
 	int GetSlotByClientID( int nClientID ) const;
 	int GetSlotClientID( int nSlot );
-	void ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
+	bool ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
 	void ApplyScheduledSlotDrops();
+	void ResolvePendingHostDrops();
 	bool IsGameControlHost();
 	int GetReplacementHostClientID( int nRemovedClientID );
 	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );

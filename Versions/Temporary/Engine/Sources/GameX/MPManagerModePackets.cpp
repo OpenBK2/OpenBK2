@@ -301,8 +301,8 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 	// Queued reports from departing clients must not consume survivors' budgets.
 	// A scheduled drop already ends participation before the visible slot clears.
 	if ( !IsPlayerPresent( nSenderSlot ) || !IsPlayerPresent( nPlayer ) ||
-	     ( nSenderSlot < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nSenderSlot] >= 0 ) ||
-	     ( nPlayer < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nPlayer] >= 0 ) )
+	     ( nSenderSlot < playerDrops.size() && playerDrops[nSenderSlot].GetSegment() >= 0 ) ||
+	     ( nPlayer < playerDrops.size() && playerDrops[nPlayer].GetSegment() >= 0 ) )
 	{
 		return true;
 	}
@@ -387,6 +387,22 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 
 	if ( !IsAuthoritativeDropPacket( pPacket ) )
 	{
+		const int nSlot = pPacket->nSlotToDrop;
+		if ( nSlot >= 0 && nSlot < playerDrops.size() && IsValid( pTransceiver ) &&
+		     playerDrops[nSlot].DeferSelfAnnouncement(
+						 pPacket->nClientID, GetSlotClientID( nSlot ), pPacket->nSegment, pTransceiver->GetLatency() ) )
+		{
+			// A successor may have already left while this peer is still waiting for
+			// its predecessor's handoff. Retain only its own authenticated departure;
+			// this grants no authority until it becomes the known control host.
+			NGameX::MatchPacketTrace_Log(
+					pTransceiver->GetCurrentCommonSegment(),
+					"RX",
+					"HostDropDeferred",
+					pPacket->nClientID,
+					fmt::format( "slot={} target_seg={} host_id={}", nSlot, pPacket->nSegment, nHostClientID ) );
+			return true;
+		}
 		NGameX::MatchPacketTrace_Log(
 				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 				"RX",
@@ -399,14 +415,15 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 
 	// Waiting is stopped immediately by SchedulePlayerRemoval. Keep the host's
 	// simulation boundary unchanged even if this client is currently behind it.
-	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, pPacket->nSegment );
-	if ( nHostClientID != nPreviousHostClientID && IsGameControlHost() )
+	const bool bChanged = ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, pPacket->nSegment );
+	if ( ( bChanged || nHostClientID != nPreviousHostClientID ) && IsGameControlHost() )
 	{
-		// The departing host may have reached only some peers before disconnecting.
-		// Its successor relays the same accepted boundary before it can finish too.
-		// Only a newly assumed authority relays, so duplicates cannot loop.
+		// A backend removal may have promoted us before the old host's announcement
+		// arrived. Relay every earlier accepted decision, including that ordering;
+		// peers which missed the original must receive the correction as well.
+		// Unchanged duplicates never relay, so a forwarded decision cannot loop.
 		BroadcastSynchronizedPlayerDrop(
-				pPacket->nSlotToDrop, scheduledDropSegmentBySlot[pPacket->nSlotToDrop], "host_handoff" );
+				pPacket->nSlotToDrop, playerDrops[pPacket->nSlotToDrop].GetSegment(), "host_handoff" );
 	}
 	return true;
 }
