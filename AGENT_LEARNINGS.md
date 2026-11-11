@@ -363,3 +363,22 @@ context. Read `git diff` of every touched file before building.
   a future host's authenticated self-departure until its preceding handoff.
   Exercise actual manager packet handling and recorded removal order, as well
   as the portable scheduling policy.
+
+## Reliable transport and timeout voting
+
+- A retransmission alias can outlive its ACK record after immediate send failure
+  or a timer jump that expires the record before the retry creates the alias.
+  Retire the old alias at every packet-ID reuse, including empty transmissions.
+  Test a complete 16-bit cycle and preserve valid delayed-ACK retry chains.
+- A bounded ring is not a message-size limit when messages can stream through
+  it. Both outgoing enqueue and incoming frame assembly must make incremental
+  progress. Exercise the former boundary, multiple large frames, a missing
+  leading fragment, reordered/duplicated packets, and malformed length headers.
+  Allocate according to received data rather than an untrusted advertised size.
+- Timeout votes represent current observations. Match current eligible voters,
+  scrub departed voters, renew continued waits, and withdraw or expire approvals
+  after recovery. Different peers can observe recovery at different times;
+  test two actual managers and delivery of a newly generated retry.
+- CMake's copied runtime DLL can remain stale when only the DLL implementation
+  changes and a dependent test does not relink. Verify test-local DLL hashes
+  against built modules before accepting results after network-library changes.

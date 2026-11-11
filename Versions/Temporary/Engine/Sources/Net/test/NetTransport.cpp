@@ -41,6 +41,16 @@ struct CNetDriverTestAccess
 		NHPTimer::GetTime( &driver.lastTime );
 		driver.lastTime -= static_cast<NHPTimer::STime>( seconds * NHPTimer::GetClockRate() );
 	}
+
+	static int GetIncomingBytes( CNetDriver &driver, unsigned int id )
+	{
+		return driver.GetClient( id )->incomingPacket.GetSize();
+	}
+
+	static int GetIncomingFrameSize( CNetDriver &driver, unsigned int id )
+	{
+		return driver.GetClient( id )->nIncomingPacketSize;
+	}
 };
 } // namespace NNet
 
@@ -252,14 +262,14 @@ TEST( NetTransport, BufferedBurstLargerThanRingDrainsWithoutAnotherDatagram )
 	EXPECT_EQ( received[2], ( DirectMessage{ 17, Payload( 2, 20000 ) } ) );
 }
 
-TEST( NetTransport, MaximumLegalFrameAcceptsItsLastFragment )
+TEST( NetTransport, FormerFrameLimitAcceptsItsLastFragment )
 {
 	CPtr<CQueuedLinks> links = new CQueuedLinks();
 	CNetDriver driver( SNetDriverConsts( 60 ), false );
 	CNetDriverTestAccess::Init( driver, links );
 	const CNodeAddress peer = Address( 12101 );
 	CNetDriverTestAccess::AddPeer( driver, 17, peer );
-	// WritePacket permits a P2P payload below N_STREAM_BUFFER - 1000 bytes.
+	// Preserve the former frame-size boundary while supporting larger frames too.
 	const auto data = LargeFrames( 1, N_STREAM_BUFFER - 1002 );
 	const size_t partialSize = 31750;
 	PACKET_ID packetID = 100;
@@ -281,6 +291,156 @@ TEST( NetTransport, MaximumLegalFrameAcceptsItsLastFragment )
 	const auto received = ReadFullDirectMessages( driver );
 	ASSERT_EQ( received.size(), 1u );
 	EXPECT_EQ( received[0], ( DirectMessage{ 17, Payload( 1, N_STREAM_BUFFER - 1002 ) } ) );
+}
+
+TEST( NetTransport, LargeFramesRoundTripInOrderWithLossAndReordering )
+{
+	CPtr<CQueuedLinks> senderLinks = new CQueuedLinks();
+	CPtr<CQueuedLinks> receiverLinks = new CQueuedLinks();
+	CNetDriver sender( SNetDriverConsts( 60 ), false );
+	CNetDriver receiver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( sender, senderLinks );
+	CNetDriverTestAccess::Init( receiver, receiverLinks );
+	const CNodeAddress senderAddress = Address( 12200 );
+	const CNodeAddress receiverAddress = Address( 12201 );
+	// Both fixtures have login ID zero; each maps its sole remote endpoint to it.
+	CNetDriverTestAccess::AddPeer( sender, 0, receiverAddress );
+	CNetDriverTestAccess::AddPeer( receiver, 0, senderAddress );
+	std::vector<DirectMessage> expected;
+	for ( int size : { 0, 1, 126, 127, N_STREAM_BUFFER - 6, N_STREAM_BUFFER - 5, 100000, 1 } )
+	{
+		auto bytes = Payload( static_cast<int>( expected.size() ), size );
+		CMemoryStream packet;
+		if ( !bytes.empty() )
+		{
+			packet.Write( bytes.data(), static_cast<int>( bytes.size() ) );
+		}
+		ASSERT_TRUE( sender.SendDirect( 0, packet ) );
+		expected.emplace_back( 0, bytes );
+	}
+
+	struct DelayedDatagram
+	{
+		int round;
+		CQueuedLinks *destination;
+		CQueuedLinks::Datagram datagram;
+	};
+
+	std::vector<DelayedDatagram> delayed;
+	int nSent = 0;
+	int nDropped = 0;
+	auto Transfer = [&]( CQueuedLinks *source, CQueuedLinks *destination, const CNodeAddress &address, int round )
+	{
+		for ( const auto &datagram : source->outgoing )
+		{
+			++nSent;
+			if ( nSent % 17 == 0 )
+			{
+				++nDropped;
+				continue;
+			}
+			const int nDelay = nSent % 11 == 0 ? 3 : 0;
+			delayed.push_back( { round + nDelay, destination, { address, datagram.data } } );
+			if ( nSent % 13 == 0 )
+			{
+				delayed.push_back( { round + 1, destination, { address, datagram.data } } );
+			}
+		}
+		source->outgoing.clear();
+	};
+	std::vector<DirectMessage> received;
+	for ( int round = 0; round < 20000 && received.size() < expected.size(); ++round )
+	{
+		// Reverse equal-deadline delivery order to exercise stream reassembly.
+		for ( int i = static_cast<int>( delayed.size() ) - 1; i >= 0; --i )
+		{
+			if ( delayed[i].round <= round )
+			{
+				delayed[i].destination->incoming.push_back( delayed[i].datagram );
+				delayed.erase( delayed.begin() + i );
+			}
+		}
+		CNetDriverTestAccess::Elapse( sender, 0.06 );
+		CNetDriverTestAccess::Elapse( receiver, 0.06 );
+		sender.Step();
+		receiver.Step();
+		Transfer( senderLinks, receiverLinks, senderAddress, round );
+		Transfer( receiverLinks, senderLinks, receiverAddress, round );
+		auto messages = ReadFullDirectMessages( receiver );
+		received.insert( received.end(), messages.begin(), messages.end() );
+	}
+	EXPECT_GT( nDropped, 0 );
+	EXPECT_EQ( received, expected );
+}
+
+TEST( NetTransport, FrameLargerThanRingDrainsAcknowledgedBlocksAfterGapCloses )
+{
+	CPtr<CQueuedLinks> links = new CQueuedLinks();
+	CNetDriver driver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( driver, links );
+	const CNodeAddress peer = Address( 12202 );
+	CNetDriverTestAccess::AddPeer( driver, 17, peer );
+	const auto data = LargeFrames( 2, 100000 );
+	PACKET_ID packetID = 100;
+	for ( size_t offset = 255; offset < data.size(); offset += 255 )
+	{
+		const auto size = static_cast<unsigned char>( (std::min)( size_t( 255 ), data.size() - offset ) );
+		links->incoming.push_back( { peer, NormalBlock( 17, packetID++, offset, data.data() + offset, size ) } );
+	}
+	links->incoming.push_back( { peer, NormalBlock( 17, packetID++, 0, data.data(), 255 ) } );
+	driver.Step();
+	const auto received = ReadFullDirectMessages( driver );
+	ASSERT_EQ( received.size(), 2u );
+	EXPECT_EQ( received[0], ( DirectMessage{ 17, Payload( 1, 100000 ) } ) );
+	EXPECT_EQ( received[1], ( DirectMessage{ 17, Payload( 2, 100000 ) } ) );
+}
+
+TEST( NetTransport, MaximumAdvertisedFrameAllocatesOnlyReceivedBytes )
+{
+	CPtr<CQueuedLinks> links = new CQueuedLinks();
+	CNetDriver driver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( driver, links );
+	const CNodeAddress peer = Address( 12203 );
+	CNetDriverTestAccess::AddPeer( driver, 17, peer );
+	CMemoryStream header;
+	header << uint32_t( N_MAX_FRAME_SIZE * 2 );
+	// Split the four-byte header across datagrams as well as across updates.
+	links->incoming.push_back( { peer, NormalBlock( 17, 100, 0, header.GetBuffer(), 1 ) } );
+	driver.Step();
+	EXPECT_EQ( CNetDriverTestAccess::GetIncomingFrameSize( driver, 17 ), -1 );
+	links->incoming.push_back( { peer, NormalBlock( 17, 101, 1, header.GetBuffer() + 1, 3 ) } );
+	driver.Step();
+	EXPECT_EQ( CNetDriverTestAccess::GetIncomingFrameSize( driver, 17 ), N_MAX_FRAME_SIZE );
+	EXPECT_EQ( CNetDriverTestAccess::GetIncomingBytes( driver, 17 ), 0 );
+	const unsigned char type = 3; // PKT_DIRECT_MSG
+	links->incoming.push_back( { peer, NormalBlock( 17, 102, 4, &type, 1 ) } );
+	driver.Step();
+	EXPECT_EQ( CNetDriverTestAccess::GetIncomingBytes( driver, 17 ), 1 );
+	EXPECT_TRUE( ReadFullDirectMessages( driver ).empty() );
+}
+
+TEST( NetTransport, InvalidFrameLengthsReportConnectionRemoval )
+{
+	for ( uint32_t encoded : { 0u, 1u, 0x80000000u, 0xfffffffeu } )
+	{
+		SCOPED_TRACE( encoded );
+		CPtr<CQueuedLinks> links = new CQueuedLinks();
+		CNetDriver driver( SNetDriverConsts( 60 ), false );
+		CNetDriverTestAccess::Init( driver, links );
+		const CNodeAddress peer = Address( 12204 );
+		CNetDriverTestAccess::AddPeer( driver, 17, peer );
+		CMemoryStream header;
+		header << encoded;
+		links->incoming.push_back( { peer, NormalBlock( 17, 100, 0, header.GetBuffer(), 4 ) } );
+		driver.Step();
+		IDriver::EMessage type;
+		int clientID;
+		CMemoryStream packet;
+		ASSERT_TRUE( driver.GetMessage( &type, &clientID, nullptr, &packet ) );
+		EXPECT_EQ( type, IDriver::REMOVE_CLIENT );
+		EXPECT_EQ( clientID, 17 );
+		EXPECT_LT( driver.GetTimeSinceLastRecv( 17 ), 0 );
+	}
 }
 
 TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )

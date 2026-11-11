@@ -257,6 +257,10 @@ bool CMPManagerMode::OnConnectGameFailedPacket( class CConnectGameFailed *pPacke
 
 bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket )
 {
+	if ( !IsGameRunning() || bInitialLoadInProgress )
+	{
+		return true;
+	}
 	// Vote accounting must use packet sender identity, not local slot order, to stay deterministic across peers.
 	const int nVoterSlot = GetSlotByClientID( pPacket->nClientID );
 	if ( nVoterSlot < 0 || nVoterSlot >= slots.size() || !IsPlayerPresent( nVoterSlot ) )
@@ -265,13 +269,17 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 	}
 
 	const int nSlotToKick = pPacket->nSlotToKick;
-	if ( nSlotToKick < 0 || nSlotToKick >= slots.size() || !IsPlayerPresent( nSlotToKick ) )
+	if ( nSlotToKick < 0 || nSlotToKick >= lags.size() || !IsPlayerLagging( nSlotToKick ) ||
+	     nVoterSlot >= lags[nSlotToKick].timeKickVotes.size() ||
+	     ( nVoterSlot < playerDrops.size() && playerDrops[nVoterSlot].GetSegment() >= 0 ) ||
+	     ( nSlotToKick < playerDrops.size() && playerDrops[nSlotToKick].GetSegment() >= 0 ) )
 	{
 		return true;
 	}
 
 	const uint32_t dwPreVotes = lags[nSlotToKick].dwHatedBy;
 	lags[nSlotToKick].dwHatedBy |= ( 1UL << nVoterSlot );
+	lags[nSlotToKick].timeKickVotes[nVoterSlot] = GameTimer()->GetAbsTime();
 	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 	                              "RX",
 	                              "CB2SuggestKickPacket",
@@ -308,6 +316,9 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 	}
 
 	SLagInfo &lag = lags[pPacket->nPlayer];
+	// This sender observed the target recover. Its reliable stream orders this
+	// withdrawal after its previous kick votes, including a zero-budget recovery.
+	lag.dwHatedBy &= ~( 1UL << nSenderSlot );
 	//DebugTrace( "*** LAG UPDATE player %d, time %d --> %d", pPacket->nPlayer, lag.nLagLeft, pPacket->nTimeLeft );
 	const int nPreLagLeft = lag.nLagLeft;
 	// The packet contains a remaining budget, while an active local timer stores

@@ -7,6 +7,7 @@
 #include "Net/NetDriver.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include <array>
 #include <cstdint>
 
 struct IServerClient;
@@ -85,12 +86,23 @@ protected:
 		NTimer::STime timeStartLag; // Start of last lag
 		int nLagLeft;               // Remaining lag time
 		uint32_t dwHatedBy;         // They want him kicked already
+		NTimer::STime timeLastKickVote = 0;
+		// Votes are renewable observations, not permanent approvals. The receipt
+		// times use the local clock and one entry for each bit of dwHatedBy.
+		std::array<NTimer::STime, 32> timeKickVotes = {};
 
 		SLagInfo()
 			: timeStartLag( 0 )
 			, nLagLeft( 0 )
 			, dwHatedBy( 0 )
 		{
+		}
+
+		void ResetKickVotes()
+		{
+			dwHatedBy = 0;
+			timeLastKickVote = 0;
+			timeKickVotes.fill( 0 );
 		}
 	};
 

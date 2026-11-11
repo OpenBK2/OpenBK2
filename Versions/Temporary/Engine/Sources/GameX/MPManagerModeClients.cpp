@@ -342,7 +342,12 @@ bool CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 	dwLaggers &= ~( 1UL << nSlot );
 	dwLaggersOld &= ~( 1UL << nSlot );
 	dwUserPausedPlayers &= ~( 1UL << nSlot );
-	lags[nSlot].dwHatedBy = 0;
+	lags[nSlot].ResetKickVotes();
+	for ( SLagInfo &lag : lags )
+	{
+		// A removed player is no longer a voter for any other pending timeout.
+		lag.dwHatedBy &= ~( 1UL << nSlot );
+	}
 	if ( dwLaggers == 0 )
 	{
 		ShowWaitWindow( false );

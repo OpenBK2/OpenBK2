@@ -26,6 +26,12 @@
 
 #include <fmt/format.h>
 
+namespace
+{
+constexpr NTimer::STime KICK_VOTE_RETRY_PERIOD = 1000;
+constexpr NTimer::STime KICK_VOTE_LIFETIME = 3000;
+} // namespace
+
 // CMPManagerMode - game control - scoring, different modes, win/lose conditions, etc
 
 void CMPManagerMode::StartGame()
@@ -56,7 +62,7 @@ void CMPManagerMode::StartGame()
 	dwUserPausedPlayers = 0;
 	bWaitWindowShown = false;
 	bInitialLoadInProgress = true;
-	lags.resize( slots.size() );
+	lags.assign( slots.size(), SLagInfo() );
 	// Track already-scheduled removals to keep host announcements idempotent.
 	playerDrops.assign( slots.size(), NMPPlayerDrop::SPlayerDrop() );
 	lagsUpdate.bUpdating = false;
@@ -549,7 +555,7 @@ void CMPManagerMode::AnalyzeLaggers()
 	uint32_t dwPlayers = 0;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
-		if ( IsPlayerPresent( i ) )
+		if ( IsPlayerPresent( i ) && ( i >= playerDrops.size() || playerDrops[i].GetSegment() < 0 ) )
 		{
 			dwPlayers |= ( 1UL << i );
 		}
@@ -558,13 +564,22 @@ void CMPManagerMode::AnalyzeLaggers()
 	// Analyze other laggers
 	for ( int i = 0; i < slots.size(); ++i )
 	{
-		if ( i == nOwnSlot || !IsPlayerPresent( i ) )
+		if ( i == nOwnSlot || ( dwPlayers & ( 1UL << i ) ) == 0 )
 		{
 			continue;
 		}
 
 		SLagInfo &lagInfo = lags[i];
 		const bool bLaggingGameControlHost = ( GetSlotClientID( i ) == nHostClientID );
+		// A peer that recovered or stopped reporting cannot leave an approval
+		// behind indefinitely. Unsigned elapsed time also handles clock wrap.
+		for ( size_t nVoter = 0; nVoter < lagInfo.timeKickVotes.size(); ++nVoter )
+		{
+			if ( curTime - lagInfo.timeKickVotes[nVoter] > KICK_VOTE_LIFETIME )
+			{
+				lagInfo.dwHatedBy &= ~( uint32_t( 1 ) << nVoter );
+			}
+		}
 
 		if ( HasPlayerStartedLagging( i ) )
 		{
@@ -577,7 +592,7 @@ void CMPManagerMode::AnalyzeLaggers()
 		{
 			int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
 			lagInfo.nLagLeft = (std::max)( nTimeLeft, 0 );
-			lagInfo.dwHatedBy = 0;
+			lagInfo.ResetKickVotes();
 			lagInfo.timeStartLag = 0;
 			CPtr<CB2LagTimeUpdatePacket> pPkt = new CB2LagTimeUpdatePacket( 0, i, lagInfo.nLagLeft );
 			NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -593,7 +608,10 @@ void CMPManagerMode::AnalyzeLaggers()
 			int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
 			if ( nTimeLeft <= 0 )
 			{
-				if ( !( lagInfo.dwHatedBy & ( 1UL << nOwnSlot ) ) )
+				// Another observer may have briefly recovered and discarded our
+				// vote while we stayed blocked. Renew it, at most once per second.
+				if ( !( lagInfo.dwHatedBy & ( 1UL << nOwnSlot ) ) ||
+				     curTime - lagInfo.timeLastKickVote >= KICK_VOTE_RETRY_PERIOD )
 				{
 					CPtr<CB2SuggestKickPacket> pPkt = new CB2SuggestKickPacket( 0, i );
 					NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -604,6 +622,8 @@ void CMPManagerMode::AnalyzeLaggers()
 					pClient->SendGamePacket( pPkt, true );
 					const uint32_t dwPreVoteMask = lagInfo.dwHatedBy;
 					lagInfo.dwHatedBy |= ( 1UL << nOwnSlot );
+					lagInfo.timeLastKickVote = curTime;
+					lagInfo.timeKickVotes[nOwnSlot] = curTime;
 					NGameX::MatchPacketTrace_Log(
 							IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 							"DECISION",
@@ -613,7 +633,9 @@ void CMPManagerMode::AnalyzeLaggers()
 				}
 				// Kick voting is game-control-host authoritative; authority migrates if the original host leaves.
 				const uint32_t dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
-				if ( dwEligibleVoters != 0 && lagInfo.dwHatedBy == dwEligibleVoters )
+				// Votes from a departed or currently lagging peer do not veto an
+				// otherwise unanimous decision by the currently eligible players.
+				if ( dwEligibleVoters != 0 && ( lagInfo.dwHatedBy & dwEligibleVoters ) == dwEligibleVoters )
 				{
 					const int nReplacementHostClientID =
 							bLaggingGameControlHost ? GetReplacementHostClientID( nHostClientID ) : -1;

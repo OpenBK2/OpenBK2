@@ -2,6 +2,7 @@
 
 #include "../AICmdsAutoMagic.h"
 #include "../CommandsHistory.h"
+#include "../DBMPConsts.h"
 #include "../MPManagerModeNivalNet.hpp"
 #include "../MPTransceiver.h"
 #include "../ScenarioTracker.h"
@@ -11,6 +12,8 @@
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "System/ConsoleBuffer.h"
+
+#include <deque>
 
 #include <gtest/gtest.h>
 
@@ -27,10 +30,18 @@ class CRecordingServerClient : public IServerClient
 
 public:
 	std::vector<CPtr<CNetPacket>> sent;
+	std::deque<CPtr<CNetPacket>> received;
+	CPtr<CNetPacket> currentPacket;
 
 	CNetPacket *GetPacket() override
 	{
-		return nullptr;
+		currentPacket = nullptr;
+		if ( !received.empty() )
+		{
+			currentPacket = received.front();
+			received.pop_front();
+		}
+		return currentPacket;
 	}
 
 	void SendPacket( CNetPacket *pPacket ) override
@@ -99,12 +110,27 @@ struct SScenarioPlayers
 	}
 };
 
+struct SAbsoluteTimerState
+{
+	NTimer::STime timeCurrent = 0;
+	float fScale = 1;
+
+	int operator&( IBinSaver &saver )
+	{
+		saver.Add( 2, &timeCurrent );
+		saver.Add( 3, &fScale );
+		return 0;
+	}
+};
+
 struct STimerState
 {
+	SAbsoluteTimerState absolute;
 	int nSegmentDuration = 200;
 
 	int operator&( IBinSaver &saver )
 	{
+		saver.Add( 2, &absolute );
 		saver.Add( 7, &nSegmentDuration );
 		return 0;
 	}
@@ -219,6 +245,44 @@ public:
 	{
 		return pTransceiver->nFinalSegment;
 	}
+
+	static void
+	ConfigureLagVoting( CMPManagerModeNivalNet *pManager, CMPTransceiver *pTransceiver, uint32_t dwParticipants = 0x1c )
+	{
+		pManager->nHostClientID = REPLACEMENT_HOST;
+		pManager->bHost = pManager->nOwnSlot == 2;
+		pManager->pMPConsts = dynamic_cast<NDb::SMultiplayerConsts *>( NObjectFactory::MakeObject( 0x191B2300 ) );
+		pManager->timeNextGameHeartbeat = 0x7fffffff;
+		pManager->gamesUpdate.bUpdating = false;
+		pManager->updateChannels.bUpdating = false;
+		pManager->lagsUpdate.bUpdating = false;
+		pManager->bOutcomeKnown = true;
+		pManager->dwLaggers = 1UL << 3;
+		pManager->dwLaggersOld = pManager->dwLaggers;
+		pManager->lags[3].nLagLeft = 0;
+		pManager->lags[3].timeStartLag = GameTimer()->GetAbsTime();
+		for ( int nSlot = 0; nSlot < pManager->slots.size(); ++nSlot )
+		{
+			pManager->slots[nSlot].bPresent = ( dwParticipants & ( 1UL << nSlot ) ) != 0;
+		}
+		pTransceiver->wMask = dwParticipants;
+		pTransceiver->wWaitMask = dwParticipants;
+	}
+
+	static void SetObservedLaggers( CMPManagerMode *pManager, uint32_t dwPlayers )
+	{
+		pManager->dwLaggers = dwPlayers;
+	}
+
+	static void SetLagBudget( CMPManagerMode *pManager, int nSlot, int nMilliseconds )
+	{
+		pManager->lags[nSlot].nLagLeft = nMilliseconds;
+	}
+
+	static uint32_t GetVotes( const CMPManagerMode *pManager, int nSlot = 3 )
+	{
+		return pManager->lags[nSlot].dwHatedBy;
+	}
 };
 
 namespace
@@ -294,6 +358,32 @@ protected:
 		CObj<CNetPacket> packet = new CGameClientRemoved( DEPARTING_HOST );
 		CPacketProcessorBase *pProcessor = manager;
 		ASSERT_TRUE( pProcessor->ProcessPacket( packet ) );
+	}
+
+	void DispatchVote( int nSender )
+	{
+		CObj<CNetPacket> packet = new CB2SuggestKickPacket( nSender, 3 );
+		CPacketProcessorBase *pProcessor = manager;
+		ASSERT_TRUE( pProcessor->ProcessPacket( packet ) );
+	}
+
+	void StepManager()
+	{
+		CPacketProcessorBase *pProcessor = manager;
+		ASSERT_TRUE( pProcessor->Segment() );
+	}
+
+	static int CountVotes( const CRecordingServerClient *pClient )
+	{
+		int nCount = 0;
+		for ( const auto &packet : pClient->sent )
+		{
+			if ( dynamic_cast<const CB2SuggestKickPacket *>( packet.GetPtr() ) )
+			{
+				++nCount;
+			}
+		}
+		return nCount;
 	}
 
 	int CountRelays( int nSegment ) const
@@ -457,5 +547,181 @@ TEST_F( MPHostHandoff, SimultaneousDeparturesAreRecordedInSlotOrder )
 	EXPECT_EQ( ( *command )->GetDebugInfo(), "DropPlayer 5" );
 	EXPECT_FALSE( scenario->IsPlayerPresent( 0 ) );
 	EXPECT_FALSE( scenario->IsPlayerPresent( 5 ) );
+}
+
+TEST_F( MPHostHandoff, DepartedVoterDoesNotBlockAnotherPlayersTimeout )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver, 0x3d );
+	for ( int nVoter : { DEPARTING_HOST, REPLACEMENT_HOST, 266043, THIRD_PLAYER } )
+	{
+		DispatchVote( nVoter );
+	}
+	ASSERT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0x35u );
+	DispatchDrop( REPLACEMENT_HOST, 7780, 0 );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+}
+
+TEST_F( MPHostHandoff, LaggingVotersExtraApprovalDoesNotVetoEligibleVoters )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver, 0x3d );
+	CMPPlayerDropTestAccess::SetObservedLaggers( manager, 0x09 );
+	CMPPlayerDropTestAccess::SetLagBudget( manager, 0, 10000 );
+	for ( int nVoter : { DEPARTING_HOST, REPLACEMENT_HOST, 266043, THIRD_PLAYER } )
+	{
+		DispatchVote( nVoter );
+	}
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 0 ), -1 );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+}
+
+TEST_F( MPHostHandoff, ContinuousObserverRenewsVoteAfterHostsLocalRecovery )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver );
+	CObj<CRecordingServerClient> peerClient = new CRecordingServerClient;
+	CObj<CMPManagerModeNivalNet> peerManager =
+			dynamic_cast<CMPManagerModeNivalNet *>( NObjectFactory::MakeObject( 0x192444C0 ) );
+	CObj<CMPTransceiver> peerTransceiver = dynamic_cast<CMPTransceiver *>( NObjectFactory::MakeObject( 0x1713C440 ) );
+	CMPPlayerDropTestAccess::Initialize( peerManager, peerTransceiver, peerClient, history, ai, timer, 4 );
+	CMPPlayerDropTestAccess::ConfigureLagVoting( peerManager, peerTransceiver );
+	CPacketProcessorBase *pHost = manager;
+	CPacketProcessorBase *pPeer = peerManager;
+
+	ASSERT_TRUE( pPeer->Segment() );
+	ASSERT_EQ( CountVotes( peerClient ), 1 );
+	CPtr<CNetPacket> firstVote = peerClient->sent.back();
+	firstVote->nClientID = 266043;
+	ASSERT_TRUE( pHost->ProcessPacket( firstVote ) );
+	ASSERT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0x10u );
+
+	// Only the host briefly receives the target. The other observer remains
+	// blocked and must renew its approval without seeing its own recovery.
+	CMPPlayerDropTestAccess::SetObservedLaggers( manager, 0 );
+	StepManager();
+	ASSERT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0u );
+	CMPPlayerDropTestAccess::SetObservedLaggers( manager, 0x08 );
+	StepManager();
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+
+	timer->Update( 1999 );
+	ASSERT_EQ( timer->GetAbsTime(), 999u );
+	for ( int nFrame = 0; nFrame < 20; ++nFrame )
+	{
+		ASSERT_TRUE( pPeer->Segment() );
+	}
+	EXPECT_EQ( CountVotes( peerClient ), 1 );
+	timer->Update( 2000 );
+	ASSERT_TRUE( pPeer->Segment() );
+	ASSERT_EQ( CountVotes( peerClient ), 2 );
+	CPtr<CNetPacket> renewedVote = peerClient->sent.back();
+	ASSERT_NE( renewedVote.GetPtr(), firstVote.GetPtr() );
+	renewedVote->nClientID = 266043;
+	client->received.push_back( renewedVote );
+	// The ordinary manager loop drains this newly generated packet before its
+	// timeout decision. No manual re-delivery of the original vote is needed.
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+}
+
+TEST_F( MPHostHandoff, ExpiredApprovalCannotCompleteTimeoutConsensus )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver, 0x3c );
+	DispatchVote( 266043 );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+	timer->Update( 4001 );
+	ASSERT_EQ( timer->GetAbsTime(), 3001u );
+	DispatchVote( THIRD_PLAYER );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0x24u );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+	DispatchVote( 266043 );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+}
+
+TEST_F( MPHostHandoff, RenewedApprovalRefreshesItsReceiptLifetime )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver, 0x3c );
+	DispatchVote( 266043 );
+	StepManager();
+	timer->Update( 3000 );
+	DispatchVote( 266043 );
+	timer->Update( 5000 );
+	DispatchVote( THIRD_PLAYER );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+}
+
+TEST_F( MPHostHandoff, ZeroBudgetRecoveryWithdrawsTheSendersApproval )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver, 0x3c );
+	DispatchVote( 266043 );
+	CObj<CNetPacket> recovery = new CB2LagTimeUpdatePacket( 266043, 3, 0 );
+	CPacketProcessorBase *pProcessor = manager;
+	ASSERT_TRUE( pProcessor->ProcessPacket( recovery ) );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0u );
+	DispatchVote( THIRD_PLAYER );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+	DispatchVote( 266043 );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+}
+
+TEST_F( MPHostHandoff, ApprovalArrivingWhileTargetIsHealthyDoesNotSurviveIntoNextWait )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver );
+	CMPPlayerDropTestAccess::SetObservedLaggers( manager, 0 );
+	StepManager();
+	DispatchVote( 266043 );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0u );
+	CMPPlayerDropTestAccess::SetObservedLaggers( manager, 0x08 );
+	StepManager();
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+}
+
+TEST_F( MPHostHandoff, RecoveringObserverStopsRenewingItsApproval )
+{
+	CMPPlayerDropTestAccess::Initialize( manager, transceiver, client, history, ai, timer, 4 );
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver );
+	StepManager();
+	ASSERT_EQ( CountVotes( client ), 1 );
+	timer->Update( 2000 );
+	StepManager();
+	ASSERT_EQ( CountVotes( client ), 2 );
+	CMPPlayerDropTestAccess::SetObservedLaggers( manager, 0 );
+	StepManager();
+	ASSERT_NE( dynamic_cast<CB2LagTimeUpdatePacket *>( client->sent.back().GetPtr() ), nullptr );
+	timer->Update( 6000 );
+	StepManager();
+	EXPECT_EQ( CountVotes( client ), 2 );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0u );
+}
+
+TEST_F( MPHostHandoff, ApprovalRetryAndExpiryHandleAbsoluteClockWrap )
+{
+	STimerState nearWrap;
+	nearWrap.absolute.timeCurrent = 0xfffffe00u;
+	RestoreState( timer, nearWrap );
+	timer->Update( 1000 );
+	ASSERT_EQ( timer->GetAbsTime(), 0xfffffe00u );
+	CMPPlayerDropTestAccess::Initialize( manager, transceiver, client, history, ai, timer, 4 );
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver );
+	DispatchVote( REPLACEMENT_HOST );
+	StepManager();
+	ASSERT_EQ( CountVotes( client ), 1 );
+	timer->Update( 1999 );
+	StepManager();
+	EXPECT_EQ( CountVotes( client ), 1 );
+	timer->Update( 2000 );
+	StepManager();
+	EXPECT_EQ( CountVotes( client ), 2 );
+	timer->Update( 4001 );
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0x10u );
 }
 } // namespace

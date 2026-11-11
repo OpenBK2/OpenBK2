@@ -11,7 +11,8 @@ namespace NNet
 // CStreamTracker
 /////////////////////////////////////////////////////////////////////////////////////
 CStreamTracker::CStreamTracker()
-	: nChannelOutputOffset( 0 )
+	: nOutListOffset( 0 )
+	, nChannelOutputOffset( 0 )
 	, nChannelInputOffset( 0 )
 {
 }
@@ -25,6 +26,10 @@ bool CStreamTracker::IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET t
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit )
 {
+	// Packet IDs wrap. A mapping left by an expired or immediately failed send
+	// belongs to the old transmission, even when this new packet carries no data.
+	// Retire it before an ACK for the reused ID can commit an unrelated block.
+	reassign.erase( nPkt );
 	//	cout << "CHANNEL stats " << channelOutFlyList.size() << " " << channelOutList.size();
 	//	cout << " " << channelInList.size() << " " << reassign.size() << endl;
 	ASSERT( nSizeLimit <= N_MAX_PACKET_SIZE );
@@ -32,11 +37,17 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 	{
 		if ( channelOutBuf.GetSize() < N_MAX_PACKET_SIZE )
 		{
-			while ( !outList.empty() && channelOutBuf.GetBufSize() >= outList.front().GetSize() )
+			while ( !outList.empty() && channelOutBuf.GetBufSize() > 0 )
 			{
 				CMemoryStream &m = outList.front();
-				channelOutBuf.Write( m.GetBuffer(), m.GetSize() );
-				outList.pop_front();
+				// Frames may exceed the ring. Preserve their order while copying only
+				// the next available portion, instead of waiting for impossible space.
+				nOutListOffset += channelOutBuf.Write( m.GetBuffer() + nOutListOffset, m.GetSize() - nOutListOffset );
+				if ( nOutListOffset == m.GetSize() )
+				{
+					outList.pop_front();
+					nOutListOffset = 0;
+				}
 			}
 		}
 		if ( channelOutBuf.GetSize() == 0 )

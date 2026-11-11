@@ -36,8 +36,8 @@ public:
 		// buffer. The test that splits the copy was "nReadPtr + nRes > N_SIZE",
 		// and nReadPtr is unsigned, so a negative size was converted and passed
 		// it, leaving the second length negative and its memcpy enormous. The
-		// one caller whose size comes off the wire, CanReadPacket in NetA4.cpp,
-		// rejects a negative one before getting here, and the ASSERT in Write
+		// frame parser in NetA4.cpp validates wire sizes before getting here,
+		// and the ASSERT in Write
 		// below checks nothing in this tree, so the bound belongs here.
 		const int nRes = (std::min)( (std::max)( nBufSize, 0 ), GetSize() );
 		// Read is the only thing that moves nReadPtr, and does so modulo
@@ -126,6 +126,7 @@ public:
 
 private:
 	CRingBuffer<N_STREAM_BUFFER> channelOutBuf;
+	int nOutListOffset;
 	typedef unsigned int CHANNEL_DATA_OFFSET;
 #pragma pack( push, 1 )
 
