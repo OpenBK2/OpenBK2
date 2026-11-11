@@ -324,17 +324,12 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 	// The packet contains a remaining budget, while an active local timer stores
 	// its budget at timeStartLag. Charge elapsed time once before comparing them;
 	// otherwise every peer's resume report charges the same pause again.
-	const uint32_t dwPlayerBit = 1UL << pPacket->nPlayer;
-	const bool bTimerRunning =
-			pPacket->nPlayer == nOwnSlot ? ( dwUserPausedPlayers & dwPlayerBit ) != 0 : ( dwLaggersOld & dwPlayerBit ) != 0;
-	if ( bTimerRunning )
-	{
-		const NTimer::STime curTime = GameTimer()->GetAbsTime();
-		const int nTimeLeft = lag.nLagLeft - ( curTime - lag.timeStartLag );
-		lag.nLagLeft = (std::max)( nTimeLeft, 0 );
-		lag.timeStartLag = curTime;
-	}
+	AccountLagTime( nPlayer, GameTimer()->GetAbsTime() );
 	lag.nLagLeft = (std::min)( (std::max)( pPacket->nTimeLeft, 0 ), lag.nLagLeft );
+	if ( lag.nLagLeft != nPreLagLeft )
+	{
+		SendLagInfo();
+	}
 	NGameX::MatchPacketTrace_Log(
 			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 			"RX",
@@ -347,13 +342,19 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 
 bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
 {
-	if ( !IsGameRunning() )
+	if ( !IsGameRunning() || !IsValid( pTransceiver ) || pTransceiver->IsGameEnded() )
 	{
 		return true;
 	}
 
 	const int nSlot = GetSlotByClientID( pPacket->nClientID );
-	if ( nSlot < 0 || nSlot >= slots.size() || !IsPlayerPresent( nSlot ) )
+	if ( nSlot < 0 || nSlot >= lags.size() || nSlot == nOwnSlot || !IsPlayerPresent( nSlot ) ||
+	     ( nSlot < playerDrops.size() && playerDrops[nSlot].GetSegment() >= 0 ) )
+	{
+		return true;
+	}
+	const uint32_t dwPlayerBit = 1UL << nSlot;
+	if ( ( ( dwUserPausedPlayers & dwPlayerBit ) != 0 ) == pPacket->bPaused )
 	{
 		return true;
 	}
@@ -361,12 +362,15 @@ bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
 	const uint32_t dwPreUserPausedPlayers = dwUserPausedPlayers;
 	if ( pPacket->bPaused )
 	{
-		dwUserPausedPlayers |= ( 1UL << nSlot );
+		dwUserPausedPlayers |= dwPlayerBit;
 	}
 	else
 	{
-		dwUserPausedPlayers &= ~( 1UL << nSlot );
+		dwUserPausedPlayers &= ~dwPlayerBit;
 	}
+	// Announced pauses update UI and elapsed-time accounting immediately. They
+	// never call CommandTimeOut: this peer must still produce its own commands.
+	UpdateLagState( true );
 	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 	                              "RX",
 	                              "CB2UserPausePacket",

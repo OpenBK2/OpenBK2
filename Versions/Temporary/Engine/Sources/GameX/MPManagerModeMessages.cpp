@@ -191,39 +191,33 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 	}
 
 	const uint32_t dwLaggersBefore = dwLaggers;
-	// Lockstep reports are queued independently of UI pause requests. A report
-	// from before Ctrl+P must not clear the local pause or hide its Resume button.
-	const uint32_t dwOwnPause = nOwnSlot >= 0 && nOwnSlot < slots.size() ? dwUserPausedPlayers & ( 1UL << nOwnSlot ) : 0;
-	// Drops can be processed before an older UI lag report. Only retain players
-	// that are still present and actually required by the lockstep transceiver.
-	const uint32_t dwReportedLaggers =
-			( pMsg->dwLaggingPlayers | dwOwnPause ) & GetPresentMask() & pTransceiver->GetPlayerMask();
+	const uint32_t dwNetworkLaggersBefore = dwNetworkLaggers;
+	const bool bLoadingBefore = bInitialLoadInProgress;
 	if ( bInitialLoadInProgress && !pMsg->bInitialWait )
 	{
 		dwLaggersOld = 0;
 		bInitialLoadInProgress = false;
 	}
-	else if ( dwLaggers == dwReportedLaggers )
+	// Receipt reports and explicit pauses are independent reasons to wait. An
+	// older receipt report must not erase any player's already announced pause.
+	dwNetworkLaggers = pMsg->dwLaggingPlayers;
+	if ( !bInitialLoadInProgress )
 	{
-		if ( dwReportedLaggers == 0 )
-		{
-			ShowWaitWindow( false );
-		}
-		return true;
+		dwNetworkLaggers &= pTransceiver->GetCurrentMissingPlayers();
 	}
-
-	dwLaggers = dwReportedLaggers;
-	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-	                              "STATE",
-	                              "OnLagMessage",
-	                              GetOwnClientID(),
-	                              fmt::format( "initial={} pre_laggers={:08X} post_laggers={:08X}",
-	                                           pMsg->bInitialWait ? 1 : 0,
-	                                           dwLaggersBefore,
-	                                           dwLaggers ) );
-	// Several reports may arrive before AnalyzeLaggers updates dwLaggersOld.
-	ShowWaitWindow( dwLaggers != 0 );
-
+	UpdateLagState();
+	if ( dwLaggersBefore != dwLaggers || dwNetworkLaggersBefore != dwNetworkLaggers ||
+	     bLoadingBefore != bInitialLoadInProgress )
+	{
+		NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		                              "STATE",
+		                              "OnLagMessage",
+		                              GetOwnClientID(),
+		                              fmt::format( "initial={} pre_laggers={:08X} post_laggers={:08X}",
+		                                           pMsg->bInitialWait ? 1 : 0,
+		                                           dwLaggersBefore,
+		                                           dwLaggers ) );
+	}
 	//DebugTrace( "*** LAG STATUS: %x ", pMsg->dwLaggingPlayers );
 
 	return true;
@@ -261,7 +255,7 @@ bool CMPManagerMode::OnInterruptMessage( SMPUIMessage *pMsg )
 
 bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 {
-	if ( !IsGameRunning() || nOwnSlot < 0 || nOwnSlot >= slots.size() )
+	if ( !IsGameRunning() || bInitialLoadInProgress || nOwnSlot < 0 || nOwnSlot >= slots.size() )
 	{
 		return true;
 	}
@@ -269,7 +263,7 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 	// Only an explicit local pause controls CommandTimeOut; lag reports can
 	// change independently while delayed segment packets are being processed.
 	const bool bPausedNow = ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0;
-	if ( !bPausedNow && lags[nOwnSlot].nLagLeft < NGameX::GetMPConsts()->nTimeUserMPLag * 1000 )
+	if ( !bPausedNow && GetRemainingLagTime( nOwnSlot, GameTimer()->GetAbsTime() ) <= GetLagReserveMilliseconds() )
 	{
 		return true;
 	}
@@ -280,15 +274,30 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 
 void CMPManagerMode::SetUserPause( bool bPauseOn )
 {
+	if ( nOwnSlot < 0 || nOwnSlot >= lags.size() || !IsValid( pTransceiver ) || pTransceiver->IsGameEnded() ||
+	     !IsPlayerPresent( nOwnSlot ) || ( nOwnSlot < playerDrops.size() && playerDrops[nOwnSlot].GetSegment() >= 0 ) )
+	{
+		return;
+	}
+	const uint32_t dwOwnBit = 1UL << nOwnSlot;
+	if ( ( ( dwUserPausedPlayers & dwOwnBit ) != 0 ) == bPauseOn )
+	{
+		return;
+	}
 	const NTimer::STime curTime = GameTimer()->GetAbsTime();
+	AccountLagTime( nOwnSlot, curTime );
 	if ( bPauseOn )
 	{
-		dwUserPausedPlayers |= ( 1UL << nOwnSlot );
+		dwUserPausedPlayers |= dwOwnBit;
 	}
 	else
 	{
-		dwUserPausedPlayers &= ~( 1UL << nOwnSlot );
+		dwUserPausedPlayers &= ~dwOwnBit;
 	}
+	// Only the owner stops producing commands. Remote clients continue through
+	// their normal receipt barrier while displaying the announced pause at once.
+	pTransceiver->CommandTimeOut( bPauseOn );
+	UpdateLagState( true );
 	// Automatic pause expiry must publish the same state change as Resume.
 	pClient->SendGamePacket( new CB2UserPausePacket( 0, bPauseOn ), true );
 	NGameX::MatchPacketTrace_Log(
@@ -298,22 +307,9 @@ void CMPManagerMode::SetUserPause( bool bPauseOn )
 			GetOwnClientID(),
 			fmt::format( "slot={} paused={} user_pause_mask={:08X}", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
 
-	pTransceiver->CommandTimeOut( bPauseOn );
-	if ( !bPauseOn ) // Pause off
-	{
-		dwLaggers &= ~( 1UL << nOwnSlot );
-		int nTimeLeft = lags[nOwnSlot].nLagLeft - ( curTime - lags[nOwnSlot].timeStartLag );
-		lags[nOwnSlot].nLagLeft = (std::max)( nTimeLeft, 0 );
-		lags[nOwnSlot].ResetKickVotes();
-		lags[nOwnSlot].timeStartLag = 0;
-	}
-	else // Pause on
-	{
-		dwLaggers |= ( 1UL << nOwnSlot );
-		lags[nOwnSlot].timeStartLag = curTime;
-	}
-
-	ShowWaitWindow( dwLaggers != 0 );
+	// Observers may have spent less time waiting for our input than we paused.
+	// Publish the owner's charged budget so that discrepancy cannot accumulate.
+	PublishLagBudget( nOwnSlot );
 }
 
 bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )

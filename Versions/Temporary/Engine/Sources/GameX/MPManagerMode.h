@@ -128,9 +128,10 @@ protected:
 	int nHostClientID;
 	int nOwnSlot;
 	int nSlotsUsed;
-	uint32_t dwLaggers;           // Waiting for these players
-	uint32_t dwLaggersOld;        // same, previous state, used to find changes in AnalyzeLag();
-	uint32_t dwUserPausedPlayers; // Players that explicitly toggled MP pause
+	uint32_t dwNetworkLaggers = 0; // Receipt waits reported after the ordinary network timeout
+	uint32_t dwLaggers;            // Effective union of receipt waits and explicit pauses
+	uint32_t dwLaggersOld;         // Union whose elapsed time is currently being accounted
+	uint32_t dwUserPausedPlayers;  // Players that explicitly toggled MP pause
 	uint32_t dwInitialPlayers;
 	bool bInitialLoadInProgress;
 	bool bWaitWindowShown;
@@ -205,11 +206,14 @@ protected:
 	void ShowWaitWindow( bool bShow );
 	void SendLagInfo();
 	void AnalyzeLaggers();
+	void UpdateLagState( bool bRefreshUI = false );
+	int GetRemainingLagTime( int nPlayer, NTimer::STime curTime ) const;
+	void AccountLagTime( int nPlayer, NTimer::STime curTime );
+	void PublishLagBudget( int nPlayer );
+	int GetLagReserveMilliseconds() const;
 	uint32_t GetPresentMask() const;
 	bool IsPlayerPresent( int nPlayer );
 	bool IsPlayerLagging( int nPlayer );
-	bool HasPlayerStoppedLagging( int nPlayer );
-	bool HasPlayerStartedLagging( int nPlayer );
 	int GetSlotByClientID( int nClientID ) const;
 	int GetSlotClientID( int nSlot );
 	bool ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );

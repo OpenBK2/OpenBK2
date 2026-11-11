@@ -6,6 +6,8 @@
 #include "Server_Client_Common/PacketProcessor.h"
 #include "Transceiver.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 struct ICommandsHistory;
@@ -229,6 +231,10 @@ public:
 	{
 		return wWaitMask;
 	}
+
+	// Inspect the current input barrier without advancing simulation. Timeout
+	// accounting must observe recovered packets even during a local manual pause.
+	GAMEX_EXPORT uint32_t GetCurrentMissingPlayers() const;
 
 	int ScheduleGameEnd( const int _nSegment );
 

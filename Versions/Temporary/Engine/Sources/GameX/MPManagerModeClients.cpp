@@ -86,14 +86,14 @@ void CMPManagerMode::SendLagInfo()
 		return;
 	}
 
-	bool bOwnLag = IsPlayerLagging( nOwnSlot );
+	bool bOwnLag = ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0;
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
 	CPtr<SMPUILagInfoMessage> pInfoMsg = new SMPUILagInfoMessage( bOwnLag );
 
 	// Fill the info
 	if ( bOwnLag )
 	{
-		int nTimeLeft = lags[nOwnSlot].nLagLeft - ( curTime - lags[nOwnSlot].timeStartLag );
+		const int nTimeLeft = (std::max)( GetRemainingLagTime( nOwnSlot, curTime ) - GetLagReserveMilliseconds(), 0 );
 		pInfoMsg->nOwnTimeLeft = nTimeLeft / 1000;
 	}
 	for ( int i = 0; i < slots.size(); ++i )
@@ -103,8 +103,13 @@ void CMPManagerMode::SendLagInfo()
 			continue;
 		}
 
-		SLagInfo &lagInfo = lags[i];
-		int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
+		int nTimeLeft = GetRemainingLagTime( i, curTime );
+		if ( ( dwUserPausedPlayers & ( 1UL << i ) ) != 0 )
+		{
+			// An explicit pause ends at the network reserve, not when the entire
+			// disconnect allowance expires. Every observer shows that same limit.
+			nTimeLeft = (std::max)( nTimeLeft - GetLagReserveMilliseconds(), 0 );
+		}
 		SMPUILagInfoMessage::SLagItem newItem;
 		newItem.szName = slots[i].szName;
 		newItem.nSecondsLeft = bInitialLoadInProgress ? -1 : nTimeLeft / 1000;
@@ -143,24 +148,6 @@ bool CMPManagerMode::IsPlayerLagging( int nPlayer )
 		return false;
 	}
 	return ( dwLaggers & ( 1UL << nPlayer ) );
-}
-
-bool CMPManagerMode::HasPlayerStoppedLagging( int nPlayer )
-{
-	if ( !IsPlayerPresent( nPlayer ) )
-	{
-		return false;
-	}
-	return ( dwLaggersOld & ~dwLaggers & ( 1UL << nPlayer ) );
-}
-
-bool CMPManagerMode::HasPlayerStartedLagging( int nPlayer )
-{
-	if ( !IsPlayerPresent( nPlayer ) )
-	{
-		return false;
-	}
-	return ( ~dwLaggersOld & dwLaggers & ( 1UL << nPlayer ) );
 }
 
 int CMPManagerMode::GetSlotByClientID( int nClientID ) const
@@ -339,10 +326,12 @@ bool CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 	const uint32_t dwLaggersBefore = dwLaggers;
 	const uint32_t dwLaggersOldBefore = dwLaggersOld;
 	// Stop local lag accounting for this slot immediately to avoid repeated kick scheduling.
+	dwNetworkLaggers &= ~( 1UL << nSlot );
 	dwLaggers &= ~( 1UL << nSlot );
 	dwLaggersOld &= ~( 1UL << nSlot );
 	dwUserPausedPlayers &= ~( 1UL << nSlot );
 	lags[nSlot].ResetKickVotes();
+	lags[nSlot].timeStartLag = 0;
 	for ( SLagInfo &lag : lags )
 	{
 		// A removed player is no longer a voter for any other pending timeout.

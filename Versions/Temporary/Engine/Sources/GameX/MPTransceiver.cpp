@@ -387,6 +387,25 @@ bool CMPTransceiver::IsSegmentFinishedByAll( int nSegment )
 	return GetMissingSegmentPlayers( nSegment ) == 0;
 }
 
+uint32_t CMPTransceiver::GetCurrentMissingPlayers() const
+{
+	if ( !bIsGameRunning || bIsGameEnded || nCommonSegment < nLatency || nSegmentsPackSize <= 0 ||
+	     nCommonSegment % nSegmentsPackSize != 0 || !pConsts || pConsts->nMaxLatency <= 0 )
+	{
+		return 0;
+	}
+
+	const int nPastSegment = ( nSegment - nLatency + pConsts->nMaxLatency ) % pConsts->nMaxLatency;
+	if ( nPastSegment < 0 || nPastSegment >= segmFinished.size() )
+	{
+		return 0;
+	}
+
+	// Scheduled departures retain a separate command-prefix barrier, but no
+	// longer participate in ordinary lag voting. Do not turn them into laggers.
+	return GetMissingSegmentPlayers( nPastSegment ) & wWaitMask;
+}
+
 uint16_t CMPTransceiver::GetMissingSegmentPlayers( int nSegment ) const
 {
 	uint16_t wMissing = wWaitMask & ~segmFinished[nSegment];

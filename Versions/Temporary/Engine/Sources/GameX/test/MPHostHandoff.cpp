@@ -8,6 +8,7 @@
 #include "../ScenarioTracker.h"
 #include "AILogic/B2AI.h"
 #include "Client/ServerClientInterface.h"
+#include "Main/DBNetConsts.h"
 #include "Main/GameTimer.h"
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
@@ -176,6 +177,7 @@ public:
 		pManager->nSlotsUsed = 6;
 		pManager->dwLaggers = 0;
 		pManager->dwLaggersOld = 0;
+		pManager->dwNetworkLaggers = 0;
 		pManager->dwUserPausedPlayers = 0;
 		pManager->dwInitialPlayers = 0x3f;
 		pManager->bInitialLoadInProgress = false;
@@ -259,6 +261,7 @@ public:
 		pManager->bOutcomeKnown = true;
 		pManager->dwLaggers = 1UL << 3;
 		pManager->dwLaggersOld = pManager->dwLaggers;
+		pManager->dwNetworkLaggers = pManager->dwLaggers;
 		pManager->lags[3].nLagLeft = 0;
 		pManager->lags[3].timeStartLag = GameTimer()->GetAbsTime();
 		for ( int nSlot = 0; nSlot < pManager->slots.size(); ++nSlot )
@@ -267,11 +270,23 @@ public:
 		}
 		pTransceiver->wMask = dwParticipants;
 		pTransceiver->wWaitMask = dwParticipants;
+		// Timeout decisions now verify the real input barrier. Restore the
+		// matching missing receipt rather than only the manager's previous report.
+		CPtr<NDb::SNetGameConsts> consts = dynamic_cast<NDb::SNetGameConsts *>( NObjectFactory::MakeObject( 0x300A7B40 ) );
+		consts->nMaxLatency = 16;
+		pTransceiver->pConsts = consts;
+		pTransceiver->nSegment = pTransceiver->nCommonSegment % consts->nMaxLatency;
+		pTransceiver->segmFinished.assign( consts->nMaxLatency, 0 );
+		SetObservedLaggers( pManager, pManager->dwLaggers );
 	}
 
 	static void SetObservedLaggers( CMPManagerMode *pManager, uint32_t dwPlayers )
 	{
-		pManager->dwLaggers = dwPlayers;
+		pManager->dwNetworkLaggers = dwPlayers;
+		CMPTransceiver *pTransceiver = pManager->pTransceiver;
+		const int nPastSegment = ( pTransceiver->nSegment - pTransceiver->nLatency + pTransceiver->pConsts->nMaxLatency ) %
+		                         pTransceiver->pConsts->nMaxLatency;
+		pTransceiver->segmFinished[nPastSegment] = pTransceiver->wWaitMask & ~dwPlayers;
 	}
 
 	static void SetLagBudget( CMPManagerMode *pManager, int nSlot, int nMilliseconds )

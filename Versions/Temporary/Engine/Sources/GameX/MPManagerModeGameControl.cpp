@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <sstream>
 
 #include <fmt/format.h>
@@ -57,6 +58,7 @@ void CMPManagerMode::StartGame()
 	pScenarioTracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	pScenarioTracker->MissionStart( gameDesc.pMPMap->pMap, gameDesc.nTechLevel );
 
+	dwNetworkLaggers = 0;
 	dwLaggers = 0;
 	dwLaggersOld = 0;
 	dwUserPausedPlayers = 0;
@@ -250,6 +252,7 @@ void CMPManagerMode::EndGame()
 {
 	// No lag report can close this menu once the transceiver has been released.
 	// Clear it explicitly, including the empty list left by the final slot drop.
+	dwNetworkLaggers = 0;
 	dwLaggers = 0;
 	dwLaggersOld = 0;
 	dwUserPausedPlayers = 0;
@@ -526,9 +529,107 @@ bool CMPManagerMode::CheckInstantLose()
 	return false;
 }
 
+int CMPManagerMode::GetLagReserveMilliseconds() const
+{
+	const NDb::SMultiplayerConsts *pConsts = pMPConsts;
+	if ( !pConsts )
+	{
+		pConsts = NGameX::GetMPConsts();
+	}
+	const int nSeconds = pConsts ? (std::max)( pConsts->nTimeUserMPLag, 0 ) : 0;
+	return (std::min)( nSeconds, ( std::numeric_limits<int>::max )() / 1000 ) * 1000;
+}
+
+int CMPManagerMode::GetRemainingLagTime( int nPlayer, NTimer::STime curTime ) const
+{
+	if ( nPlayer < 0 || nPlayer >= lags.size() )
+	{
+		return 0;
+	}
+	const SLagInfo &lag = lags[nPlayer];
+	const int nRemaining = (std::max)( lag.nLagLeft, 0 );
+	if ( ( dwLaggersOld & ( 1UL << nPlayer ) ) == 0 )
+	{
+		return nRemaining;
+	}
+	// Subtract on the unsigned clock, then saturate before converting. A large
+	// timer jump must expire the budget rather than wrap it back to a positive one.
+	const NTimer::STime elapsed = curTime - lag.timeStartLag;
+	return elapsed >= NTimer::STime( nRemaining ) ? 0 : nRemaining - int( elapsed );
+}
+
+void CMPManagerMode::AccountLagTime( int nPlayer, NTimer::STime curTime )
+{
+	SLagInfo &lag = lags[nPlayer];
+	lag.nLagLeft = GetRemainingLagTime( nPlayer, curTime );
+	if ( ( dwLaggersOld & ( 1UL << nPlayer ) ) != 0 )
+	{
+		lag.timeStartLag = curTime;
+	}
+}
+
+void CMPManagerMode::PublishLagBudget( int nPlayer )
+{
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "TX",
+	                              "CB2LagTimeUpdatePacket",
+	                              GetOwnClientID(),
+	                              fmt::format( "player={} time_left={}", nPlayer, lags[nPlayer].nLagLeft ) );
+	pClient->SendGamePacket( new CB2LagTimeUpdatePacket( 0, nPlayer, lags[nPlayer].nLagLeft ), true );
+}
+
+void CMPManagerMode::UpdateLagState( bool bRefreshUI )
+{
+	const uint32_t dwAllowed = GetPresentMask() & ( IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+	dwNetworkLaggers &= dwAllowed;
+	dwUserPausedPlayers &= dwAllowed;
+	const uint32_t dwPrevious = dwLaggers;
+	dwLaggers = dwNetworkLaggers | dwUserPausedPlayers;
+	const NTimer::STime curTime = GameTimer()->GetAbsTime();
+	if ( !bInitialLoadInProgress )
+	{
+		for ( int i = 0; i < lags.size(); ++i )
+		{
+			const uint32_t dwBit = 1UL << i;
+			const bool bWasWaiting = ( dwLaggersOld & dwBit ) != 0;
+			const bool bIsWaiting = ( dwLaggers & dwBit ) != 0;
+			if ( !bWasWaiting && bIsWaiting )
+			{
+				lags[i].timeStartLag = curTime;
+			}
+			else if ( bWasWaiting && !bIsWaiting )
+			{
+				// Explicit pause and missing input share one clock. Ending one
+				// reason must not charge a second interval while the other remains.
+				AccountLagTime( i, curTime );
+				lags[i].ResetKickVotes();
+				lags[i].timeStartLag = 0;
+				if ( i != nOwnSlot && ( dwAllowed & dwBit ) != 0 )
+				{
+					PublishLagBudget( i );
+				}
+			}
+		}
+		dwLaggersOld = dwLaggers;
+	}
+	ShowWaitWindow( dwLaggers != 0 );
+	if ( bRefreshUI || dwPrevious != dwLaggers )
+	{
+		SendLagInfo();
+	}
+}
+
 void CMPManagerMode::AnalyzeLaggers()
 {
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
+	if ( !bInitialLoadInProgress && IsValid( pTransceiver ) )
+	{
+		// Local manual pause stops DoSegments, but received packets can still
+		// resolve a previously reported wait. Never vote against that stale mask.
+		// Only remove waits here; starting one retains the normal timeout delay.
+		dwNetworkLaggers &= pTransceiver->GetCurrentMissingPlayers();
+	}
+	UpdateLagState();
 
 	if ( bInitialLoadInProgress )
 	{
@@ -543,10 +644,7 @@ void CMPManagerMode::AnalyzeLaggers()
 	// Both the budget and elapsed time are milliseconds; the setting is seconds.
 	if ( ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0 )
 	{
-		SLagInfo &lagInfo = lags[nOwnSlot];
-		int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
-
-		if ( nTimeLeft <= NGameX::GetMPConsts()->nTimeUserMPLag * 1000 )
+		if ( GetRemainingLagTime( nOwnSlot, curTime ) <= GetLagReserveMilliseconds() )
 		{
 			SetUserPause( false );
 		}
@@ -581,31 +679,9 @@ void CMPManagerMode::AnalyzeLaggers()
 			}
 		}
 
-		if ( HasPlayerStartedLagging( i ) )
+		if ( IsPlayerLagging( i ) )
 		{
-			lagInfo.timeStartLag = curTime;
-			// A missing segment is not a disconnect: the host may be minimized,
-			// paused, or waiting for another peer. Host migration follows the same
-			// expired-budget/consensus path below as every other lagging player.
-		}
-		else if ( HasPlayerStoppedLagging( i ) )
-		{
-			int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
-			lagInfo.nLagLeft = (std::max)( nTimeLeft, 0 );
-			lagInfo.ResetKickVotes();
-			lagInfo.timeStartLag = 0;
-			CPtr<CB2LagTimeUpdatePacket> pPkt = new CB2LagTimeUpdatePacket( 0, i, lagInfo.nLagLeft );
-			NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			                              "TX",
-			                              "CB2LagTimeUpdatePacket",
-			                              GetOwnClientID(),
-			                              fmt::format( "player={} time_left={}", i, lagInfo.nLagLeft ) );
-			pClient->SendGamePacket( pPkt, true );
-			//DebugTrace( "*** LAG STOP for player %d at time %d, time left %d", i, curTime, lagInfo.nLagLeft );
-		}
-		else if ( IsPlayerLagging( i ) )
-		{
-			int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
+			int nTimeLeft = GetRemainingLagTime( i, curTime );
 			if ( nTimeLeft <= 0 )
 			{
 				// Another observer may have briefly recovered and discarded our
@@ -672,8 +748,6 @@ void CMPManagerMode::AnalyzeLaggers()
 			}
 		}
 	}
-	dwLaggersOld = dwLaggers;
-
 	if ( lagsUpdate.CheckNeedUpdate() )
 	{
 		SendLagInfo();

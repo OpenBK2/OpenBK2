@@ -382,3 +382,20 @@ context. Read `git diff` of every touched file before building.
 - CMake's copied runtime DLL can remain stale when only the DLL implementation
   changes and a dependent test does not relink. Verify test-local DLL hashes
   against built modules before accepting results after network-library changes.
+- Manual MP pause returns from DoSegments before refreshing lag reports, while
+  packet handling and timeout voting continue. Received command data can leave
+  a stale manager lag mask that two paused observers use to kick a recovered
+  peer. Test accepted receipt packets and fresh votes through actual handlers;
+  suppressing simulation must not suppress required-input status refresh.
+- The original explicit remote pause packet changed only metadata. Its UI waited
+  for the separate five-second missing-input threshold, and owner/observer
+  allowances remained different after resume. Distinguish simulation gating,
+  pause notification, and budget ownership when diagnosing a late pause screen.
+- Keep raw receipt waits separate from explicit pause reasons, and charge their
+  union once. Settle and rebase the active interval before applying a received
+  remaining-budget snapshot. Publish the owner's charged allowance on resume;
+  observers' later-starting clocks cannot reconcile themselves to it otherwise.
+- Verify recovered input after draining the entire packet batch and before kick
+  consensus. A queued vote can precede the recovery packet in that same batch.
+  Test both the no-kick case and a genuinely missing peer that still times out;
+  excluding every voter alone can conceal stale observation bugs.
