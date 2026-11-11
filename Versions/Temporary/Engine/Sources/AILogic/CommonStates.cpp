@@ -826,7 +826,15 @@ void CMechAttackUnitState::Segment()
 	}
 	else if ( pGun->GetNAmmo() == 0 )
 	{
-		StopFire();
+		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER )
+		{
+			// An empty preferred flamethrower must hand the attack back to the remaining weapons.
+			StartAgain();
+		}
+		else
+		{
+			StopFire();
+		}
 	}
 	else
 	{
@@ -843,7 +851,31 @@ void CMechAttackUnitState::Segment()
 			// если можно перевыбирать цель, то выбрать цель
 			if ( bSwarmAttack )
 			{
-				pUnit->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
+				const uint8_t nScanResult = pUnit->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
+				if ( !bFinish && nScanResult == 2 && IsValidObj( pEnemy ) && pEnemy->IsAlive() && pEnemy->IsInfantry() )
+				{
+					for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+					{
+						if ( pUnit->GetGun( i )->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER )
+						{
+							continue;
+						}
+						// Target scanning keeps a live current enemy without reevaluating its weapons.
+						// Refresh flame-equipped units at that same cadence, only between bursts.
+						pUnit->ResetShootEstimator( pEnemy, false, pUnit->GetForbiddenGuns() );
+						CBasicGun *pNewGun = pUnit->GetBestShootEstimatedGun();
+						if ( pNewGun && pNewGun != pGun &&
+						     ( pNewGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER ||
+						       pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER ) )
+						{
+							// Release only the old gun so secondary weapons can keep firing.
+							pGun->StopFire();
+							bAim = true;
+							StartStateWithGun( pNewGun );
+						}
+						break;
+					}
+				}
 			}
 			else
 			{

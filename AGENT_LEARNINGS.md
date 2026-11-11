@@ -312,3 +312,24 @@ context. Read `git diff` of every touched file before building.
   A few isolated renders missed this: full 512x512 batches failed on different
   valid units across cold runs, while the corrected batches rendered all 396
   model-backed records in the installed 403-unit data set.
+
+- Mech weapon selection uses `CTankShootEstimator::ChooseGun`. Its infantry MG
+  preference sets shots and bursts to zero, subtracting one relax time from the
+  score. Check actual weapon records before blaming that branch: BK2E-GBC's DT,
+  Besa and Browning vehicle MGs are tagged WEAPON_HEAVY_CANNON. The ordinary
+  estimator also charges an entire burst even when its first shot can kill;
+  the common vehicle flamethrower's two-shot burst scores 4 seconds before travel
+  and turning. Identify flames by shell trajectory, not weapon category.
+- Legacy SWARM scans call `LookForTarget`, which immediately returns for a live
+  current enemy. Updating only the scan's cached best gun cannot fix weapon
+  choice. Flame-equipped units now explicitly reevaluate that enemy at the scan
+  cadence between bursts. Release only the previous gun during a switch;
+  `CMechAttackUnitState::StopFire` stops every weapon. Secondary free fire cannot
+  move the hull controlled by the active gun, so the close-range flame preference
+  does not close the gap after an MG engages outside flame range.
+- Headless firing fixtures need more than selection fixtures: initialize the
+  owner's path/collision state and animation controller, the fog grid used by
+  MG point ratings, and a current command for empty-ammo reselection. Free
+  soldiers need wMaxAngle = 65535, and spatial visibility needs nVisIndexInUnits
+  as well as visible4Party. Missing these produced fixture crashes and false
+  firing rejections; exercise the real secondary-fire scan to catch them.
