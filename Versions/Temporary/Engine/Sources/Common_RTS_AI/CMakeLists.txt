@@ -31,3 +31,5 @@ target_link_libraries(Common_RTS_AI PRIVATE DebugTools Image libdb MemoryLib Mis
 if(WIN32)
     target_link_libraries(Common_RTS_AI PRIVATE winapi)
 endif()
+
+add_subdirectory(test)

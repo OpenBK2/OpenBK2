@@ -2,12 +2,16 @@
 
 #include "B2AI.h"
 #include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/Terrain.h"
 #include "DebugTools/DebugInfoManager.h"
 #include "ExecutorSeaReinf.h"
 #include "GroupLogic.h"
 #include "UnitStates.h"
 
 #include "AILogic_export.h"
+
+#include <cmath>
+#include <cstdint>
 
 extern CGroupLogic theGroupLogic;
 
@@ -26,6 +30,38 @@ static void DisplayDebugCross( const CVec2 &vPos,
 	segm.p2 = vPos + CVec2( 0, -fSize );
 	segm.dir = segm.p2 - segm.p1;
 	DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, nWidth, eColor );
+}
+
+CVec2 CExecutorTransportReinforcement::FindUnloadPoint( CAIMap *pAIMap, const CVec2 &vStart, const CVec2 &vDestination )
+{
+	CVec2 vCurPoint = vStart;
+	CVec2 vStep = vDestination - vStart;
+	const float fDistance = fabs( vStep );
+	if ( !pAIMap->IsPointInside( vStart ) || !std::isfinite( fDistance ) || !( fDistance > 0.0f ) )
+	{
+		return vCurPoint;
+	}
+	Normalize( &vStep );
+	vStep *= AI_TILE_SIZE;
+	// A straight ray leaves a rectangular map within its width plus height. Bound retries by that distance.
+	const int64_t nMaxSteps =
+			( int64_t( pAIMap->GetSizeX() ) + pAIMap->GetSizeY() ) * pAIMap->GetTileSize() / AI_TILE_SIZE + 2;
+	for ( int64_t nStep = 0; nStep < nMaxSteps; ++nStep )
+	{
+		const CVec2 vNext = vCurPoint + vStep;
+		if ( vNext == vCurPoint || !pAIMap->IsPointInside( vNext ) )
+		{
+			// Equal endpoints or rounded-away movement must not keep scanning the same water tile.
+			break;
+		}
+		const SVector vTile = pAIMap->GetTile( vNext );
+		if ( !pAIMap->IsTileInside( vTile ) || ( pAIMap->GetTerrain()->GetTileLockInfo( vTile ) & EAC_WATER ) != 0 )
+		{
+			break;
+		}
+		vCurPoint = vNext;
+	}
+	return vCurPoint;
 }
 
 CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIUnit *> *pTransports,
@@ -47,22 +83,7 @@ CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIU
 	}
 
 	// Find spot to send to: first impassable point along the line
-	CVec2 vCurPoint = vStart;
-	CVec2 vStep = _vUnload - vCurPoint;
-	Normalize( &vStep );
-	vStep = vStep * AI_TILE_SIZE;
-	while ( 1 )
-	{
-		SVector vTile = GetAIMap()->GetTile( vCurPoint + vStep );
-		if ( !GetAIMap()->IsPointInside( vCurPoint ) || !GetAIMap()->IsTileInside( vTile ) ||
-		     ( GetTerrain()->GetTileLockInfo( vTile ) & EAC_WATER ) != 0 )
-		{
-			break;
-		}
-
-		vCurPoint += vStep;
-	}
-	vUnload = vCurPoint;
+	vUnload = FindUnloadPoint( GetAIMap(), vStart, _vUnload );
 
 	// Give commands
 	std::vector<int> ids;

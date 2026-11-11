@@ -2,7 +2,10 @@
 
 #include "LinkObject.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
+#include <vector>
 
 class CAIUnit;
 struct SAIObjectsUnderConstructionUpdate;
@@ -42,7 +45,8 @@ protected:
 
 	// helper functions
 	uint16_t GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd );
-	void SplitLineToSegrments( std::vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH );
+	AILOGIC_EXPORT static void
+	SplitLineToSegrments( std::vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH );
 
 public:
 	CLongObjectCreation( const int _nPlayer, const bool _bAllowAIModification )

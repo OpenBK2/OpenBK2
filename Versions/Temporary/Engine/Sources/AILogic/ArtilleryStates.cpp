@@ -947,8 +947,8 @@ void CArtilleryBombardmentState::Segment()
 					{
 						if ( pUnit->IsInTankPit() )
 						{
-							theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-							                                 pUnit );
+							// Leaving cover is an internal movement prerequisite, independent of ability availability.
+							theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 							return;
 						}
 						eState = EABS_TURNING;
@@ -1233,8 +1233,7 @@ void CArtilleryRangeAreaState::Segment()
 					case ERAS_TURNING:
 						if ( pUnit->IsInTankPit() )
 						{
-							theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-							                                 pUnit );
+							theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 							return;
 						}
 
@@ -1729,8 +1728,7 @@ void CArtilleryAttackState::Segment()
 							{
 								if ( pArtillery->IsInTankPit() )
 								{
-									theGroupLogic.InsertUnitCommand(
-											SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ), pArtillery );
+									theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
 									return;
 								}
 								updater.AddUpdate(
@@ -1929,8 +1927,7 @@ void CArtilleryAttackCommonStatObjState::Segment()
 							{
 								if ( pArtillery->IsInTankPit() )
 								{
-									theGroupLogic.InsertUnitCommand(
-											SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ), pArtillery );
+									theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
 									return;
 								}
 								eState = EAS_ROTATING;

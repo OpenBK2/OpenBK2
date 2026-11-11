@@ -1,14 +1,18 @@
 #include "../stdafx.h"
 
+#include "../AIClassesID.h"
 #include "../Artillery.h"
+#include "../B2AI.h"
 #include "../Commands.h"
 #include "../Formation.h"
+#include "../GroupLogic.h"
 #include "../Soldier.h"
 #include "../StaticMembers.h"
 #include "../Technics.h"
 #include "../Trains.h"
 #include "../UnitStates.h"
 #include "../UnitTransfer.h"
+#include "Stats_B2_M1/Actions.h"
 #include "System/BinSaver.h"
 #include "System/Streams.h"
 
@@ -20,6 +24,32 @@
 
 namespace
 {
+class CRemovalState : public IUnitState
+{
+	OBJECT_NOCOPY_METHODS( CRemovalState );
+
+public:
+	int interruptions = 0;
+
+	void Segment() override {}
+
+	ETryStateInterruptResult TryInterruptState( CAICommand * ) override
+	{
+		++interruptions;
+		return TSIR_YES_IMMIDIATELY;
+	}
+
+	bool IsAttackingState() const override
+	{
+		return false;
+	}
+
+	const CVec2 GetPurposePoint() const override
+	{
+		return VNULL2;
+	}
+};
+
 struct SFixtureFields
 {
 	std::function<void( IBinSaver & )> write;
@@ -35,14 +65,28 @@ class UnitTransferAttachments : public testing::Test
 {
 	std::vector<CObj<CCommonUnit>> units;
 	std::vector<SBinSaverExternalObject> external;
+	CObj<IAILogic> logic;
 
 protected:
 	void TearDown() override
 	{
+		if ( logic )
+		{
+			NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
+			logic = nullptr;
+		}
 		CDecksSet<CObj<CAICommand>> emptyCommands( 64 );
 		LoadCommandQueue( emptyCommands );
 		CLinkObject::Clear();
 		units.clear();
+	}
+
+	void EnableRemoval()
+	{
+		logic = dynamic_cast<IAILogic *>( NObjectFactory::MakeObject( 0x1108D441 ) );
+		ASSERT_NE( logic.GetPtr(), nullptr );
+		NSingleton::RegisterSingleton( logic, IAILogic::tidTypeID );
+		theGroupLogic.Init( nullptr );
 	}
 
 	template <class T>
@@ -288,5 +332,92 @@ TEST_F( UnitTransferAttachments, QueuedCrewBoardingCannotSplitTheCrewFromItsTruc
 	LoadCommandQueue( commands );
 	EXPECT_TRUE( CollectTransferableUnits( { 10 }, 0 ).empty() );
 	EXPECT_EQ( CollectTransferableUnits( { 20 }, 0 ), ( std::vector<int>{ 10, 20 } ) );
+}
+
+TEST_F( UnitTransferAttachments, DeadAndMissingPassengersDoNotBlockVehicleRemoval )
+{
+	CAITransportUnit *transport = MakeUnit<CAITransportUnit>( 0x1108D445, 10 );
+	CAITransportUnit *otherTransport = MakeUnit<CAITransportUnit>( 0x1108D445, 20 );
+	CSoldier *dead = MakeUnit<CSoldier>( AI_INFANTRY, 30 );
+	CSoldier *transferred = MakeUnit<CSoldier>( AI_INFANTRY, 40 );
+	ASSERT_NE( transport, nullptr );
+	ASSERT_NE( otherTransport, nullptr );
+	ASSERT_NE( dead, nullptr );
+	ASSERT_NE( transferred, nullptr );
+	SetAlive( transport, false );
+	SetAlive( dead, false );
+	SetAlive( transferred, true );
+	transferred->SetRestInside( true, otherTransport );
+	std::list<CPtr<CSoldier>> passengers{ dead, nullptr, transferred };
+	SFixtureFields militaryCar{ [&]( IBinSaver &saver ) { saver.Add( 5, &passengers ); } };
+	LoadFields( transport, [&]( IBinSaver &saver ) { saver.Add( 1, &militaryCar ); } );
+	ASSERT_EQ( transport->GetNPassengers(), 3 );
+	transport->Disappear();
+	EXPECT_EQ( transport->GetNPassengers(), 0 );
+	EXPECT_TRUE( transferred->IsAlive() );
+	SAINotifyEntranceState entrance;
+	transferred->GetEntranceStateInfo( &entrance );
+	EXPECT_EQ( entrance.nTargetUniqueID, otherTransport->GetUniqueId() );
+}
+
+TEST_F( UnitTransferAttachments, DeadAndMissingFormationMembersDoNotBlockEitherRemovalEntryPoint )
+{
+	EnableRemoval();
+	for ( int mode = 0; mode < 2; ++mode )
+	{
+		SCOPED_TRACE( mode );
+		CFormation *formation = MakeUnit<CFormation>( 0x1108D498, 10 + 10 * mode );
+		CSoldier *dead = MakeUnit<CSoldier>( AI_INFANTRY, 11 + 10 * mode );
+		CSoldier *transferred = MakeUnit<CSoldier>( AI_INFANTRY, 12 + 10 * mode );
+		ASSERT_NE( formation, nullptr );
+		ASSERT_NE( dead, nullptr );
+		ASSERT_NE( transferred, nullptr );
+		SetAlive( dead, false );
+		SetAlive( transferred, true );
+		std::vector<CPtr<CSoldier>> members{ dead, nullptr, transferred };
+		LoadFields( formation, [&]( IBinSaver &saver ) { saver.Add( 24, &members ); } );
+		CObj<CRemovalState> state = new CRemovalState;
+		formation->SetCurState( state );
+		ASSERT_EQ( formation->Size(), 3 );
+		if ( mode == 0 )
+		{
+			formation->Disappear();
+		}
+		else
+		{
+			formation->Die( false, 0 );
+		}
+		EXPECT_EQ( formation->Size(), 0 );
+		EXPECT_FALSE( formation->IsAlive() );
+		EXPECT_TRUE( transferred->IsAlive() );
+		EXPECT_EQ( state->interruptions, 1 );
+	}
+}
+
+TEST_F( UnitTransferAttachments, DestroyedArtilleryRetiresStaleCrewWithoutKillingTransferredMembers )
+{
+	EnableRemoval();
+	CArtillery *gun = MakeUnit<CArtillery>( 0x1108D4AB, 10 );
+	CFormation *crew = MakeUnit<CFormation>( 0x1108D498, 20 );
+	CSoldier *dead = MakeUnit<CSoldier>( AI_INFANTRY, 30 );
+	CSoldier *transferred = MakeUnit<CSoldier>( AI_INFANTRY, 40 );
+	ASSERT_NE( gun, nullptr );
+	ASSERT_NE( crew, nullptr );
+	ASSERT_NE( dead, nullptr );
+	ASSERT_NE( transferred, nullptr );
+	SetAlive( dead, false );
+	SetAlive( transferred, true );
+	std::vector<CPtr<CSoldier>> members{ dead, nullptr, transferred };
+	LoadFields( crew, [&]( IBinSaver &saver ) { saver.Add( 24, &members ); } );
+	CObj<CRemovalState> state = new CRemovalState;
+	crew->SetCurState( state );
+	CPtr<CFormation> crewReference = crew;
+	LoadFields( gun, [&]( IBinSaver &saver ) { saver.Add( 16, &crewReference ); } );
+	ASSERT_EQ( gun->GetHitPoints(), 0 );
+	gun->TakeDamage( 0, nullptr, 0, nullptr );
+	EXPECT_EQ( crew->Size(), 0 );
+	EXPECT_FALSE( crew->IsAlive() );
+	EXPECT_TRUE( transferred->IsAlive() );
+	EXPECT_EQ( state->interruptions, 1 );
 }
 } // namespace

@@ -25,7 +25,7 @@ const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit 
 	const int nPriority = posUnit->second.nPriority;
 	const int nCell = posUnit->second.nCell;
 
-	if ( geometries.size() <= GetCurrentGeometry() )
+	if ( GetCurrentGeometry() < 0 || geometries.size() <= GetCurrentGeometry() )
 	{
 		return VNULL2;
 	}
@@ -35,7 +35,7 @@ const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit 
 	           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]",
 	                        pUnit->GetUniqueID(),
 	                        GetUnit()->GetUniqueID() ) );
-	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() )
+	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() || nCell < 0 || nCell >= posCell->second.size() )
 	{
 		return VNULL2;
 	}
@@ -57,12 +57,17 @@ const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *p
 	const int nPriority = posUnit->second.nPriority;
 	const int nCell = posUnit->second.nCell;
 
+	if ( GetCurrentGeometry() < 0 || geometries.size() <= GetCurrentGeometry() )
+	{
+		return 0;
+	}
+
 	CPriorityCells::const_iterator posCell = geometries[GetCurrentGeometry()].geometry.find( nPriority );
 	NI_ASSERT( posCell != geometries[GetCurrentGeometry()].geometry.end(),
 	           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]",
 	                        pUnit->GetUniqueID(),
 	                        GetUnit()->GetUniqueID() ) );
-	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() )
+	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() || nCell < 0 || nCell >= posCell->second.size() )
 	{
 		return 0;
 	}
@@ -129,6 +134,15 @@ void CGroupSmoothPath::RecalcCells()
 
 void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirection )
 {
+	if ( GetCurrentGeometry() < 0 || geometries.size() <= GetCurrentGeometry() )
+	{
+		for ( auto &entry : units )
+		{
+			entry.second.nCell = -1;
+		}
+		return;
+	}
+
 	std::vector<SUnitInfo> unitsList;
 	unitsList.reserve( GetUnitsCount() );
 	for ( CUnitsMap::iterator it = units.begin(); it != units.end(); ++it )
@@ -144,7 +158,15 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 		std::vector<SUnitInfo>::iterator itEnd = itStart;
 		int nCount = 0;
 		for ( ; ( itEnd != unitsList.end() && itEnd->nPriority == nPriority ); ++itEnd, ++nCount )
-			;
+		{
+		}
+
+		// Malformed geometry can omit this priority or provide too few cells.
+		// Such members use the formation center, and cannot retain stale cell indices.
+		for ( auto it = itStart; it != itEnd; ++it )
+		{
+			it->nCell = -1;
+		}
 
 		CPriorityCells::iterator pos = geometries[GetCurrentGeometry()].geometry.find( nPriority );
 		NI_ASSERT( pos != geometries[GetCurrentGeometry()].geometry.end(),
@@ -184,9 +206,10 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 						i++;
 					}
 				}
-				itStart = itEnd;
 			}
 		}
+		// Always consume this priority group, including rejected geometry data.
+		itStart = itEnd;
 	}
 	for ( std::vector<SUnitInfo>::iterator it = unitsList.begin(); it != unitsList.end(); ++it )
 	{
@@ -240,6 +263,11 @@ void CGroupSmoothPath::AddGeometry( const std::vector<SGeometryCellInfo> &cells 
 
 void CGroupSmoothPath::AlignGeometriesToCenter()
 {
+	if ( GetUnitsCount() == 0 )
+	{
+		return;
+	}
+
 	const CVec2 vDir1( 0, 1 );
 	const CVec2 vDir_1( 0, -1 );
 
@@ -263,7 +291,8 @@ void CGroupSmoothPath::AlignGeometriesToCenter()
 			           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]",
 			                        it->second.pUnit->GetUniqueID(),
 			                        GetUnit()->GetUniqueID() ) );
-			if ( posCell != geometries[i].geometry.end() )
+			if ( posCell != geometries[i].geometry.end() && it->second.nCell >= 0 &&
+			     it->second.nCell < posCell->second.size() )
 			{
 				const CVec2 vShift = -1.0f * vNewCenter + ( vDir1 ^ posCell->second[it->second.nCell].vUnitShift );
 

@@ -21,6 +21,8 @@
 
 #include "AILogic_export.h"
 
+#include <vector>
+
 #include <fmt/format.h>
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AB, CArtillery );
@@ -156,20 +158,42 @@ void CArtillery::TakeDamage( const float fDamage,
 		// пушка умерла, убить артиллеристов
 		if ( HasServeCrew() )
 		{
-			while ( IsValidObj( pCrew ) && pCrew->Size() != 0 )
+			// Death callbacks mutate the formation, but an already dead member does not.
+			// Visit the original roster once so a stale first member cannot stall the simulation.
+			CPtr<CFormation> pDyingCrew = pCrew;
+			std::vector<CPtr<CSoldier>> crewMembers;
+			for ( int i = 0; i < pCrew->Size(); ++i )
 			{
+				crewMembers.push_back( ( *pCrew )[i] );
+			}
+			for ( const CPtr<CSoldier> &pSoldier : crewMembers )
+			{
+				if ( !IsValidObj( pCrew ) || pCrew != pDyingCrew )
+				{
+					break;
+				}
+				if ( !IsValidObj( pSoldier ) || !pSoldier->IsAlive() ||
+				     ( pSoldier->GetFormation() != pDyingCrew && pSoldier->GetMemFormation() != pDyingCrew ) )
+				{
+					continue;
+				}
 				if ( pShotUnit )
 				{
 					theStatistics.UnitKilled( nPlayerOfShoot,
-					                          ( *pCrew )[0]->GetPlayer(),
-					                          ( *pCrew )[0]->GetStats()->fExpPrice,
+					                          pSoldier->GetPlayer(),
+					                          pSoldier->GetStats()->fExpPrice,
 					                          pShotUnit->GetReinforcementType(),
 					                          GetReinforcementType(),
 					                          true );
 				}
 				//theMPInfo.UnitsKilled( nPlayerOfShoot, (*pCrew)[0]->GetStats()->fPrice, (*pCrew)[0]->GetPlayer() );
 
-				( *pCrew )[0]->Die( false, 0 );
+				pSoldier->Die( false, 0 );
+			}
+			if ( IsValidObj( pCrew ) && pCrew == pDyingCrew && pCrew->Size() != 0 )
+			{
+				// Dead or missing members left behind no death callback to retire their formation.
+				pCrew->Disappear();
 			}
 			if ( IsValidObj( pCrew ) )
 			{
@@ -836,7 +860,8 @@ void CArtillery::InstallAction( const EActionNotify eInstallAction, bool bAlread
 		{
 			if ( IsInTankPit() )
 			{
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ), this );
+				// Leaving a pit is a movement prerequisite, even if the ability is no longer available.
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), this );
 			}
 			else
 			{

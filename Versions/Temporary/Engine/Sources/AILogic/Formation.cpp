@@ -696,33 +696,36 @@ void CFormation::PrepareToDelete()
 
 void CFormation::Disappear()
 {
-	// т.к. последний юнит формации вызовет эту функцию, то общее удаление формации выполняется только тогда
 	if ( Size() != 0 )
 	{
-		while ( Size() != 0 )
+		// Members normally remove themselves, with the last callback deleting the formation.
+		// Traverse a snapshot because already dead or stale members cannot run that callback.
+		const std::vector<CPtr<CSoldier>> members = soldiers;
+		for ( const CPtr<CSoldier> &pSoldier : members )
 		{
-			( *this )[0]->Disappear();
+			if ( IsValidObj( pSoldier ) && pSoldier->IsAlive() &&
+			     ( pSoldier->GetFormation() == this || pSoldier->GetMemFormation() == this ) )
+			{
+				pSoldier->Disappear();
+			}
 		}
+		if ( soldiers.empty() )
+		{
+			return;
+		}
+		// Retire the leftover membership without deleting a soldier owned by another formation.
+		soldiers.clear();
+		SetAlive( false );
 	}
-	else
-	{
-		PrepareToDelete();
-	}
+	PrepareToDelete();
 }
 
 void CFormation::Die( const bool fromExplosion, const float fDamage )
 {
-	// т.к. последний юнит формации вызовет эту функцию, то общее удаление формации выполняется только тогда
-	if ( Size() != 0 )
+	const bool bEmpty = Size() == 0;
+	Disappear();
+	if ( bEmpty )
 	{
-		while ( Size() != 0 )
-		{
-			( *this )[0]->Disappear();
-		}
-	}
-	else
-	{
-		PrepareToDelete();
 		theStatistics.UnitDead( this );
 	}
 }
@@ -751,7 +754,8 @@ const bool CFormation::SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vSh
 
 	if ( IsInTankPit() )
 	{
-		theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ), this );
+		// Leaving existing cover is a prerequisite even when the surviving squad cannot dig in again.
+		theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), this );
 		return true;
 	}
 	else

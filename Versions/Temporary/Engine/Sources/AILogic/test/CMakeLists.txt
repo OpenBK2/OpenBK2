@@ -179,6 +179,24 @@ if(WIN32)
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
 endif()
 
+# Exercise bounded effect/construction sampling and wrapped turn angles with malformed data.
+add_unit_test(EffectLoopProgress AILogic B2_M1_World Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+set_tests_properties(EffectLoopProgress_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(EffectLoopProgress_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
+
+# Exercise the real queue transition after casualties remove a squad's dig-in command.
+add_unit_test(DugInSurvivor AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(DugInSurvivor_test PRIVATE
+    DUG_IN_SURVIVOR_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(DugInSurvivor_test PROPERTIES TIMEOUT 30)
+if(WIN32)
+    set_tests_properties(DugInSurvivor_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
+
 add_unit_test(ScriptGroupWait AILogic Common_RTS_AI Stats_B2_M1 Script System Misc zlib gr2)
 set_tests_properties(ScriptGroupWait_test PROPERTIES TIMEOUT 60)
 if(WIN32)

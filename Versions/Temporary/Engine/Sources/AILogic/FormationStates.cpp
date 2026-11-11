@@ -109,6 +109,11 @@ CFormationStatesFactory *CFormationStatesFactory::Instance()
 bool CFormationStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
+	// Survivors can lose the public dig-in ability, but must always be able to leave existing cover.
+	if ( cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH )
+	{
+		return true;
+	}
 	return (
 			cmdType == ACTION_COMMAND_MOVE_TO || cmdType == ACTION_COMMAND_ROTATE_TO || cmdType == ACTION_COMMAND_ENTER ||
 			cmdType == ACTION_COMMAND_IDLE_BUILDING || cmdType == ACTION_COMMAND_IDLE_TRENCH ||
@@ -306,8 +311,7 @@ IUnitState *CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			          !pCommand->IsFromAI() ) // сначала выйти из TankPit, потом поехать куда послали
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pFormation );
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-				                                 pFormation );
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pFormation );
 			}
 			else
 			{
@@ -331,8 +335,7 @@ IUnitState *CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			if ( pFormation->IsInTankPit() )
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pFormation );
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-				                                 pFormation );
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pFormation );
 			}
 			else
 			{
@@ -346,8 +349,7 @@ IUnitState *CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			if ( pFormation->IsInTankPit() )
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pFormation );
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-				                                 pFormation );
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pFormation );
 			}
 			else
 			{
@@ -431,8 +433,7 @@ IUnitState *CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			if ( pFormation->IsInTankPit() )
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pFormation );
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-				                                 pFormation );
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pFormation );
 			}
 			else
 			{
@@ -647,8 +648,7 @@ IUnitState *CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 				if ( pFormation->IsInTankPit() )
 				{
 					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pFormation );
-					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ),
-					                                 pFormation );
+					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pFormation );
 				}
 				else
 				{

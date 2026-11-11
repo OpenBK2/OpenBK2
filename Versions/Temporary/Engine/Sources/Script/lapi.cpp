@@ -6,7 +6,9 @@
 */
 
 
+#include <cmath>
 #include <cstring>
+#include <limits>
 
 
 #include "lapi.h"
@@ -465,8 +467,21 @@ int LuaCFuncSleep( lua_State *L )
 		}
 		else
 		{
-			double lfToSleep = lua_tonumber( L, -1 );
-			thisThreadIsSleeping = lfToSleep * 50 / 200; //50 - old AI_SEGMENT_DURATION, 200 - new one
+			const double lfSegments = lua_tonumber( L, -1 ) / 4.0; // 50 ms script ticks, 200 ms AI segments.
+			// Every asynchronous Sleep must yield, including sub-segment or invalid delays.
+			// Bound the conversion too: overflowing an int can turn a long wait into a busy loop.
+			if ( !std::isfinite( lfSegments ) || lfSegments < 1.0 )
+			{
+				thisThreadIsSleeping = 1;
+			}
+			else if ( lfSegments >= (std::numeric_limits<int>::max)() )
+			{
+				thisThreadIsSleeping = (std::numeric_limits<int>::max)();
+			}
+			else
+			{
+				thisThreadIsSleeping = static_cast<int>( lfSegments );
+			}
 		}
 	}
 	return 0;

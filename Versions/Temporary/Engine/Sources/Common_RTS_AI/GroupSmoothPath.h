@@ -242,12 +242,16 @@ public:
 
 	const float GetMaxProjection() const
 	{
-		return geometries[GetCurrentGeometry()].fMaxProjection;
+		return GetCurrentGeometry() >= 0 && GetCurrentGeometry() < geometries.size()
+		           ? geometries[GetCurrentGeometry()].fMaxProjection
+		           : 0.0f;
 	}
 
 	const float GetRadius() const
 	{
-		return geometries[GetCurrentGeometry()].fRadius;
+		return GetCurrentGeometry() >= 0 && GetCurrentGeometry() < geometries.size()
+		           ? geometries[GetCurrentGeometry()].fRadius
+		           : 0.0f;
 	}
 
 	void NotifyPathShift( const float fPathShift )

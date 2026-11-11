@@ -2,7 +2,11 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
+#include "Misc/2Darray.h"
+
 #include "Common_RTS_AI_export.h"
+
+#include <vector>
 
 //  Венгерский метод решения задачи о назначениях. Используется при поиске путей, когда группу юнитов необходимо послать
 //в конечную точку, так что бы путь каждого юнита был минимален. При инициализации передается матрица расстояний между
@@ -12,18 +16,19 @@
 class COMMON_RTS_AI_EXPORT CHungarianMethod
 {
 	int nSize = 0;
+	bool bCanSolve = false;
 	CArray2D<float> matrix;
 	std::vector<int> result;
 
 	CArray2D<int> marks;
 	std::vector<int> row, col, markRow, markCol;
 
-	void Minimize();
+	bool Minimize();
 	void MarkZeros();
 	bool FindMatchingInRow( const int nRow );
 	bool SwapMarks();
 	bool IsSolved() const;
-	void UpdateMatrix();
+	bool UpdateMatrix();
 	void BuildResult();
 
 public:
@@ -32,6 +37,7 @@ public:
 	{
 	}
 
+	// Invalid costs retain a deterministic one-to-one assignment in input order.
 	bool Init( const CArray2D<float> &matrix );
 	void Solve();
 

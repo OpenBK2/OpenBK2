@@ -3,6 +3,7 @@
 #include "AIGeometry.h"
 #include "AIUnit.h"
 #include "Aviation.h"
+#include "BoundedSampling.h"
 #include "Cheats.h"
 #include "CombatEstimator.h"
 #include "DifficultyLevel.h"
@@ -997,11 +998,18 @@ void CFlameThrowerExpl::Explode()
 {
 	CVec3 vDir( vTargetPos - vShooterPos );
 	const float fLength( fabs( vDir ) );
-	Normalize( &vDir );
-	// create nuber of cumulative explosions along the trajectory and explode them
 	const float fRadius = GetArea();
+	NBoundedSampling::CTrace trace( fLength, fRadius );
+	if ( !trace.IsValid() )
+	{
+		// Invalid mod radii must not stall simulation or create an unbounded number of damage events.
+		return;
+	}
+	Normalize( &vDir );
+	// Create cumulative explosions along the trajectory, preserving the original float spacing.
 
-	for ( float fL = 0; fL < fLength; fL += fRadius )
+	float fL;
+	while ( trace.GetNext( &fL ) )
 	{
 		const CVec3 vPos( GetHeights()->GetGroundPoint( vDir * fL + vShooterPos ) );
 		CPtr<CExplosion> pE = new CBurstExpl( GetWhoFire(), GetWeapon(), vPos, vShooterPos, GetShellType(), true, 0, true );
