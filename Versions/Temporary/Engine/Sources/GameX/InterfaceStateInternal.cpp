@@ -347,6 +347,12 @@ const std::wstring &CInterfaceState::GetMLTag( const std::wstring &wszName ) con
 			return GET_TEXT_PRE( it->, Text );
 		}
 	}
+	else if ( wszName == L"outline" )
+	{
+		// Older UI data has no outline tag; mods can override this default through UIConsts.Tags.
+		static const std::wstring wszOutline = L"<font outlinesize=1 outlinecolor=black forcefontsize = 1>";
+		return wszOutline;
+	}
 	NI_ASSERT( 0, fmt::format( "Designers: custom ML tag '{}' not found", szName ) );
 	return empty;
 }
