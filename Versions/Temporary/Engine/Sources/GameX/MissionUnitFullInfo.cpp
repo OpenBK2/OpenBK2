@@ -1049,7 +1049,7 @@ void CMissionUnitFullInfo::ShowHP()
 
 		//		float fHP = hps[0].fFraction * hps[0].fMax;
 		//		int nHP = fHP > 1.0f ? fHP : ( fHP != 0.0f ? 1.0f : 0.0f );
-		std::wstring wszValue = L"<val outline>" +  NStr::ToUnicode( std::to_string( hps[0].nHP ) );
+		std::wstring wszValue = L"<val outline>" + NStr::ToUnicode( std::to_string( hps[0].nHP ) );
 		if ( pHPView )
 		{
 			pHPView->SetText( pHPView->GetDBText() + wszValue );
