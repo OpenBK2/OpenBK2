@@ -333,17 +333,16 @@ public:
 
 	bool IsTimeToRun() const override
 	{
-		return !pTask || pTask->IsFinished() || pCell->IsDangerous() || pCell->GetNNeeded( eResupplyType ) == 0;
+		// The commander can destroy a finished task before this delayed check runs.
+		// CPtr retains its address, but destruction resets IsFinished() and the task's cell.
+		return !IsValid( pTask ) || pTask->IsFinished() || pCell->IsDangerous() || pCell->GetNNeeded( eResupplyType ) == 0;
 	}
 
 	void Run() override
 	{
-		if ( pTask )
+		if ( IsValid( pTask ) && !pTask->IsFinished() )
 		{
-			if ( !pTask->IsFinished() )
-			{
-				pTask->CancelTask( pCommander );
-			}
+			pTask->CancelTask( pCommander );
 		}
 	}
 };

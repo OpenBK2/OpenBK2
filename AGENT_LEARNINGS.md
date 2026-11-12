@@ -844,3 +844,16 @@ context. Read `git diff` of every touched file before building.
   resource IDs, so unnamed runtime resources cannot round-trip as active sources.
 - Save/load tests must reacquire a unit's owned state after loading the unit.
   Loading replaces that state; a retained CPtr to the previous state is invalid.
+
+## Delayed resupply task lifetime
+
+- CCommander removes finished tasks before their delayed cell checks necessarily
+  run. A retained CPtr stays non-null, but destruction resets the task's finished
+  flag and cell pointer. Check IsValid in both delayed-check eligibility and Run;
+  cancelling the reconstructed task dereferences its null cell in MarkUnderSupply.
+  Regression coverage must drop the last CObj owner, not merely mark a task finished.
+- Mistake: copy-initializing CPtr from CObj does not use an implicit conversion in
+  this pointer implementation. Initialize from GetPtr() when changing pointer kinds.
+- The SDK Debuggers directory can contain only support DLLs. The installed WinDbg
+  package exposes cdbX64.exe under the user's WindowsApps package alias; that alias
+  may need execution outside the sandbox even for read-only dump analysis.
