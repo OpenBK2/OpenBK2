@@ -551,6 +551,12 @@ context. Read `git diff` of every touched file before building.
 
 ## Multiplayer reinforcement controls
 
+- `ReinforcementPoints[].IsDefault` only enables an entry at initialization.
+  To keep it available after losing every base, leave its zero-based index out
+  of every `PlayerBonusObjects[].PlayerBonuses[player].PointID` mapping.
+  `PointID = -1` is ignored by `EnablePosition`; an omitted PointID defaults to 0.
+  This does not bypass call credits, cooldowns, or CLASSIC's base-loss timer.
+
 - Base ownership credits are applied by `CKeyBuildingBonusSystem` through the
   reinforcement array, separately from the scenario tracker's flag bookkeeping.
   Their loss values are signed deltas. Keep capture's timer reset when the delta
