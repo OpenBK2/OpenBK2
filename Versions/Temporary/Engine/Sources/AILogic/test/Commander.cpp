@@ -8,12 +8,36 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <vector>
 
 #include <gtest/gtest.h>
 
 namespace
 {
+struct SFields
+{
+	std::function<void( IBinSaver & )> visit;
+
+	int operator&( IBinSaver &saver )
+	{
+		visit( saver );
+		return 0;
+	}
+};
+
+void LoadFields( CObjectBase *object, SFields fields, const std::vector<SBinSaverExternalObject> &external )
+{
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, external );
+		saver->Add( 1, &fields );
+	}
+	stream.Seek( 0 );
+	CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, external );
+	loader->AddPolymorphicBase( 1, object );
+}
+
 class CTestCommander : public CCommander
 {
 	OBJECT_NOCOPY_METHODS( CTestCommander );
@@ -146,6 +170,87 @@ TEST( Commander, FinishedTaskReturnsItsWorkersBeforeCompaction )
 	commander->Segment();
 	EXPECT_EQ( finished->nReleases, 1 );
 	EXPECT_EQ( active->nReleases, 2 );
+}
+
+TEST( Commander, DelayedResupplyCheckIgnoresTaskDestroyedByCommander )
+{
+	CObj<CTestCommander> commander = new CTestCommander;
+	CObj<CResupplyCellInfo> cell = dynamic_cast<CResupplyCellInfo *>( NObjectFactory::MakeObject( 0x1508D498 ) );
+	CObj<IGeneralTask> task = dynamic_cast<IGeneralTask *>( NObjectFactory::MakeObject( 0x1508D496 ) );
+	CPtr<IGeneralDelayedTask> check = dynamic_cast<IGeneralDelayedTask *>( NObjectFactory::MakeObject( 0x1508D495 ) );
+	ASSERT_NE( cell, nullptr );
+	ASSERT_NE( task, nullptr );
+	ASSERT_NE( check, nullptr );
+	std::vector<SBinSaverExternalObject> external{
+		{ 1, cell.GetPtr() }, { 2, task.GetPtr() }, { 3, commander.GetPtr() } };
+	CPtr<CResupplyCellInfo> target = cell.GetPtr();
+	CPtr<IGeneralTask> retained = task.GetPtr();
+	CPtr<ICommander> manager = commander.GetPtr();
+	LoadFields( task, { [&]( IBinSaver &saver ) { saver.Add( 3, &target ); } }, external );
+	LoadFields( check,
+	            { [&]( IBinSaver &saver )
+	              {
+									saver.Add( 2, &retained );
+									saver.Add( 3, &target );
+									saver.Add( 4, &manager );
+								} },
+	            external );
+	commander->AddTask( task );
+	task = nullptr;
+
+	// With no remaining requests, the commander finishes and destroys the task.
+	commander->Segment();
+	ASSERT_NE( retained, nullptr );
+	ASSERT_FALSE( IsValid( retained ) );
+	ASSERT_FALSE( retained->IsFinished() ); // Destruction reconstructs default fields at the retained address.
+	ASSERT_TRUE( check->IsTimeToRun() );
+	check->Run();
+	EXPECT_TRUE( commander->workers.empty() );
+
+	// New requests in the same cell must not keep an obsolete delayed check queued.
+	std::vector<float> requests( _ERT_COUNT, 1.0f );
+	LoadFields( cell, { [&]( IBinSaver &saver ) { saver.Add( 3, &requests ); } }, external );
+	EXPECT_TRUE( check->IsTimeToRun() );
+}
+
+TEST( Commander, DelayedResupplyCheckCancelsLiveTaskAndReturnsWorkerOnce )
+{
+	CObj<CTestCommander> commander = new CTestCommander;
+	CObj<CResupplyCellInfo> cell = dynamic_cast<CResupplyCellInfo *>( NObjectFactory::MakeObject( 0x1508D498 ) );
+	CObj<IGeneralTask> task = dynamic_cast<IGeneralTask *>( NObjectFactory::MakeObject( 0x1508D496 ) );
+	CPtr<IGeneralDelayedTask> check = dynamic_cast<IGeneralDelayedTask *>( NObjectFactory::MakeObject( 0x1508D495 ) );
+	CObj<CArtillery> worker = MakeArtillery( 42 );
+	ASSERT_NE( cell, nullptr );
+	ASSERT_NE( task, nullptr );
+	ASSERT_NE( check, nullptr );
+	ASSERT_NE( worker, nullptr );
+	std::vector<SBinSaverExternalObject> external{
+		{ 1, cell.GetPtr() }, { 2, task.GetPtr() }, { 3, commander.GetPtr() }, { 4, worker.GetPtr() } };
+	CPtr<CResupplyCellInfo> target = cell.GetPtr();
+	CPtr<IGeneralTask> retained = task.GetPtr();
+	CPtr<ICommander> manager = commander.GetPtr();
+	CPtr<CCommonUnit> transport = worker.GetPtr();
+	LoadFields( task,
+	            { [&]( IBinSaver &saver )
+	              {
+									saver.Add( 3, &target );
+									saver.Add( 6, &transport );
+								} },
+	            external );
+	LoadFields( check,
+	            { [&]( IBinSaver &saver )
+	              {
+									saver.Add( 2, &retained );
+									saver.Add( 3, &target );
+									saver.Add( 4, &manager );
+								} },
+	            external );
+	ASSERT_TRUE( check->IsTimeToRun() );
+	check->Run();
+	EXPECT_TRUE( task->IsFinished() );
+	EXPECT_EQ( WorkerIDs( commander->workers ), ( std::vector<int>{ 42 } ) );
+	check->Run();
+	EXPECT_EQ( WorkerIDs( commander->workers ), ( std::vector<int>{ 42 } ) );
 }
 
 TEST( Commander, EqualSeverityKeepsSavedTaskOrder )
