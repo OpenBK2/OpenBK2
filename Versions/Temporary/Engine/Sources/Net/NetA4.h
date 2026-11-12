@@ -16,6 +16,9 @@
 
 namespace NNet
 {
+// The existing long frame header stores twice the size in a positive int32.
+constexpr int N_MAX_FRAME_SIZE = 0x3fffffff;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 class CNetDriver : public IDriver
 {
@@ -67,6 +70,9 @@ private:
 		SClientAddressInfo addrInfo;
 		CAckTracker acks;
 		CStreamTracker data;
+		CMemoryStream incomingPacket;
+		int nIncomingPacketSize = -1;
+		bool bInvalidFrame = false;
 		bool bTryShortcut;
 		float fTimeToSendData;
 
@@ -111,6 +117,7 @@ private:
 	                       const std::vector<CP2PTracker::UCID> &received );
 
 	void PollMessages( SPeer *pPeer );
+	void RejectFrame( SPeer *pPeer );
 	void ProcessP2PMessages();
 
 	//

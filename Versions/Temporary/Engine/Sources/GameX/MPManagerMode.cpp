@@ -139,6 +139,15 @@ bool CMPManagerMode::Segment()
 
 	if ( IsGameRunning() )
 	{
+		// Consecutive hosts can leave before their announcements reach this peer.
+		// Resolve deferred self-announcements in authority order before simulation.
+		ResolvePendingHostDrops();
+		if ( pTransceiver->HasPlayerDropError() )
+		{
+			OnCriticalNetworkError( L"A player departure could not be synchronized.<br>"
+			                        L"The match was stopped to prevent different simulation results." );
+			return true;
+		}
 		// Keep manager-side slot visibility in sync with transceiver drop segment processing.
 		ApplyScheduledSlotDrops();
 		AnalyzeLaggers();

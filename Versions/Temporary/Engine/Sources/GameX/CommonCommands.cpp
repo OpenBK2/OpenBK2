@@ -3,6 +3,7 @@
 #include "AILogic/B2AI.h"
 #include "CommonCommands.h"
 #include "Input/Bind.h"
+#include "Main/CommandsHistory.hpp"
 #include "Misc/2Darray.h"
 #include "ScenarioTracker.h"
 
@@ -274,6 +275,15 @@ int CControlSumHistoryCommand::operator&( IBinSaver &saver )
 // **
 // **
 // ************************************************************************************************************************ //
+
+void CDropPlayerCommand::RecordAndExecute( ICommandsHistory *pHistory, int nSegment, int nPlayer )
+{
+	// History retains CPtr references. A temporary CObj would clear and invalidate
+	// the recorded command when this scope ends, replacing its player with -1.
+	CPtr<IAILogicCommandB2> pCommand = new CDropPlayerCommand( nPlayer );
+	pHistory->AddCommand( nSegment, pCommand );
+	pCommand->Execute();
+}
 
 void CDropPlayerCommand::Execute()
 {

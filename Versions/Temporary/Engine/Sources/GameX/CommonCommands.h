@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+struct ICommandsHistory;
+
 class CControlSumCheckCommand : public IAILogicCommandB2
 {
 	OBJECT_BASIC_METHODS( CControlSumCheckCommand );
@@ -103,6 +105,9 @@ class GAMEX_EXPORT CDropPlayerCommand : public IAILogicCommandB2
 	}
 
 public:
+	// Record the simulation input before applying its ownership and presence changes.
+	static void RecordAndExecute( ICommandsHistory *pHistory, int nSegment, int nPlayer );
+
 	CDropPlayerCommand()
 		: nPlayerToDrop( -1 )
 	{

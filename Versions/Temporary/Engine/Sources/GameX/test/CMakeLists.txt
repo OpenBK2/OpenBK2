@@ -1,5 +1,7 @@
 # Exercise the real standard-library trace writer without loading game modules.
 add_unit_test(MPPacketTraceLog SOURCES ../MPPacketTraceLog.cpp)
+# Exercise host handoff and removal boundaries without loading game modules.
+add_unit_test(MPPlayerDrop)
 # Exercise the real game-constants snapshot with generated database records.
 add_unit_test(MPDataChecksum GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 # Check data-backed online/LAN settings and compatibility with older XML and binary resources.
@@ -35,6 +37,10 @@ target_compile_definitions(CoopScenario_test PRIVATE
     COOP_SCENARIO_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 add_unit_test(UnitTransferCommand GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 add_unit_test(ReplayPlayerDrop GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+add_unit_test(MPHostHandoff GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+# Exercise real pause packets, input recovery and allowance accounting without a map.
+add_unit_test(MPPause GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2
+    SOURCES ../MultiplayerCommandProcessor.cpp)
 add_unit_test(ReplayCommandTiming GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 # Exercise real replay rows and click dispatch without a graphics device.
 add_unit_test(ReplayPlayerSelection GameX UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
@@ -56,7 +62,7 @@ if(WIN32)
     set_tests_properties(MessageParts_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
     # GameX loads UI's FFmpeg codecs, including DLLs outside CMake's link graph.
-    set_tests_properties(MPDataChecksum_test MPCoopRules_test CoopScenario_test UnitTransferCommand_test ReplayPlayerDrop_test ReplayCommandTiming_test ReplayPlayerSelection_test MPDifficultySelection_test UnitTransferUI_test MPSideFlags_test PROPERTIES
+    set_tests_properties(MPDataChecksum_test MPCoopRules_test CoopScenario_test UnitTransferCommand_test ReplayPlayerDrop_test MPHostHandoff_test MPPause_test ReplayCommandTiming_test ReplayPlayerSelection_test MPDifficultySelection_test UnitTransferUI_test MPSideFlags_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
     set_property(TARGET MPDataChecksum_test APPEND PROPERTY
         LINK_DEPENDS $<TARGET_FILE:GameX>)

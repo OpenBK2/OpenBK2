@@ -1,11 +1,13 @@
 #pragma once
 
+#include "MPPlayerDrop.h"
 #include "MultiplayerCommandManager.h"
 #include "MultiplayerCommandProcessor.h"
 #include "Net/NetAddress.h"
 #include "Net/NetDriver.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include <array>
 #include <cstdint>
 
 struct IServerClient;
@@ -24,6 +26,9 @@ class CCommandsHistory;
 
 struct CMPManagerMode : public CMPUIMessageProcessor, public CPacketProcessorBase, public CObjectBase
 {
+	// The headless integration fixture restores only the state normally set by the lobby.
+	friend class CMPPlayerDropTestAccess;
+
 public:
 	enum ENetMode
 	{
@@ -81,12 +86,23 @@ protected:
 		NTimer::STime timeStartLag; // Start of last lag
 		int nLagLeft;               // Remaining lag time
 		uint32_t dwHatedBy;         // They want him kicked already
+		NTimer::STime timeLastKickVote = 0;
+		// Votes are renewable observations, not permanent approvals. The receipt
+		// times use the local clock and one entry for each bit of dwHatedBy.
+		std::array<NTimer::STime, 32> timeKickVotes = {};
 
 		SLagInfo()
 			: timeStartLag( 0 )
 			, nLagLeft( 0 )
 			, dwHatedBy( 0 )
 		{
+		}
+
+		void ResetKickVotes()
+		{
+			dwHatedBy = 0;
+			timeLastKickVote = 0;
+			timeKickVotes.fill( 0 );
 		}
 	};
 
@@ -112,15 +128,16 @@ protected:
 	int nHostClientID;
 	int nOwnSlot;
 	int nSlotsUsed;
-	uint32_t dwLaggers;           // Waiting for these players
-	uint32_t dwLaggersOld;        // same, previous state, used to find changes in AnalyzeLag();
-	uint32_t dwUserPausedPlayers; // Players that explicitly toggled MP pause
+	uint32_t dwNetworkLaggers = 0; // Receipt waits reported after the ordinary network timeout
+	uint32_t dwLaggers;            // Effective union of receipt waits and explicit pauses
+	uint32_t dwLaggersOld;         // Union whose elapsed time is currently being accounted
+	uint32_t dwUserPausedPlayers;  // Players that explicitly toggled MP pause
 	uint32_t dwInitialPlayers;
 	bool bInitialLoadInProgress;
 	bool bWaitWindowShown;
 	CLaggerList lags;
 	SAutoUpdate lagsUpdate;
-	std::vector<int> scheduledDropSegmentBySlot;
+	std::vector<NMPPlayerDrop::SPlayerDrop> playerDrops;
 
 	std::list<int> pendingClients; // NEW_CLIENT-s that are received when we do not have our slot number yet
 
@@ -135,6 +152,7 @@ protected:
 	NTimer::STime timeNextInstaLoseCheck;
 	bool bOutcomeKnown;
 	bool bWinOnGameEnd;
+	bool bWinFromPlayerDrops = false;
 	SAutoUpdate pingUpdate;
 
 	CObj<CLANTester> pLanTester;
@@ -188,15 +206,19 @@ protected:
 	void ShowWaitWindow( bool bShow );
 	void SendLagInfo();
 	void AnalyzeLaggers();
+	void UpdateLagState( bool bRefreshUI = false );
+	int GetRemainingLagTime( int nPlayer, NTimer::STime curTime ) const;
+	void AccountLagTime( int nPlayer, NTimer::STime curTime );
+	void PublishLagBudget( int nPlayer );
+	int GetLagReserveMilliseconds() const;
 	uint32_t GetPresentMask() const;
 	bool IsPlayerPresent( int nPlayer );
 	bool IsPlayerLagging( int nPlayer );
-	bool HasPlayerStoppedLagging( int nPlayer );
-	bool HasPlayerStartedLagging( int nPlayer );
 	int GetSlotByClientID( int nClientID ) const;
 	int GetSlotClientID( int nSlot );
-	void ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
+	bool ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
 	void ApplyScheduledSlotDrops();
+	void ResolvePendingHostDrops();
 	bool IsGameControlHost();
 	int GetReplacementHostClientID( int nRemovedClientID );
 	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );

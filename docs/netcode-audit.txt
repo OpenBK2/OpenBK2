@@ -1,0 +1,242 @@
+Netcode audit, 2026-11-11
+Repository: port, a33f83abf (includes the preceding ASYNC fix)
+
+FIX STATUS, 2026-11-11
+
+Findings 1-4 below are fixed in the working tree, with no commits made.
+The remaining findings are separate follow-up work and are not fixed here.
+The packet format and host-authoritative synchronized removal path are unchanged.
+
+1. CStreamTracker retires a packet number's previous retransmission alias before
+   every reuse, including empty packets. This also handles aliases created after
+   an ACK record has already expired, as well as chains of failed retries.
+   Current-cycle delayed acknowledgements still commit the correct retry chain.
+
+2. Queued frames now fill the outgoing ring incrementally. Incoming frames drain
+   the receive ring into a partial message until complete, preserving FIFO order.
+   Lengths are validated against the existing encoding's positive signed range;
+   impossible lengths fail the connection explicitly. Announced lengths do not
+   allocate their full size before data arrives. Large messages no longer block
+   themselves, or messages following them, at the ring's former size boundary.
+
+3. Timeout consensus requires all currently eligible voters, ignoring unrelated
+   bits. Scheduling a departure also removes that player's outstanding votes
+   against other players and excludes it from subsequent consensus decisions.
+
+4. A continuously blocked observer renews its vote once per second. Approvals
+   expire after three seconds without renewal, and the existing recovery packet
+   withdraws that sender's approval even when its remaining lag budget is zero.
+   Recovery resets local vote state; healthy targets and pending departures
+   reject stale approvals. Elapsed-time checks handle the absolute clock wrapping.
+
+Permanent regressions are in Net/test/NetPacketLifetime.cpp (six cases),
+Net/test/NetTransport.cpp (four added cases), and GameX/test/MPHostHandoff.cpp
+(nine added cases), under Versions/Temporary/Engine/Sources. They exercise the
+real trackers, driver and multiplayer manager; no duplicate policy model is used.
+
+Validation: Windows x64 Release Game and Server builds passed using the Visual
+Studio developer environment. All eight selected CTest targets passed:
+NetTransport, NetPacketLifetime, MPHostHandoff, MPPlayerDrop,
+ClientConnectionRemoval, ReplayPlayerDrop, ReplayCommandTiming, MPPacketTraceLog.
+The six packet-lifetime regressions also passed GCC 9.3 C++17 with ASan/UBSan
+and leak detection. That Linux run used the production tracker sources with
+narrow storage/clock adapters, not a complete Linux game or driver build.
+
+The original audit follows. Its code locations and failure reproductions refer
+to a33f83abf before these fixes. Historical diagnostic sources and logs remain in
+async_debug/investigation/net_audit; this report and the companion connection
+audit have moved to docs. No live reproduction of the reported incident exists.
+
+ORIGINAL AUDIT
+
+Scope: reliable UDP stream/ACK handling, peer connection setup and fallback,
+client packet queues, multiplayer lag reporting and timeout kick decisions.
+During this audit, production sources were not changed. Diagnostic sources, executables, logs and
+XML results were kept under ignored investigation/build directories.
+
+No logs exist for the reported A/B mutual-wait incident. The failures below
+are independently demonstrated defects, not an attribution of that incident.
+
+PRIORITY FINDINGS FOR AN ESTABLISHED MATCH
+
+1. A local UDP send failure can cause permanent data loss after sequence reuse.
+
+   Net/NetA4.cpp:934-940 handles Send(false) by calling AckTracker::PacketLost
+   and StreamTracker::Rollback. PacketLost erases the ACK entry immediately
+   (Net/NetAcks.cpp:385-400). The retransmission creates an old-ID -> new-ID
+   entry (Net/NetStream.cpp:89), but the old ACK entry no longer exists to
+   expire and remove that entry through StreamTracker::Erase.
+
+   After a full 16-bit sequence cycle, Commit follows that stale mapping
+   (Net/NetStream.cpp:208 onward) and can delete an unrelated, undelivered
+   stream block. The receiver then has an unfillable byte gap, preventing
+   delivery of later messages even while datagrams continue to arrive.
+
+   Reproduction: local send failure at ID 100, successful retry 101, full
+   65,536-ID reuse, new 100 delivered, new 101 lost. ACK 100 wrongly commits
+   new 101. Neither its data nor the following message is ever delivered.
+   The otherwise identical ordinary-network-loss control recovers both.
+   Requires a local send failure, later sequence reuse, and loss of the
+   wrongly committed block. At the configured maximum 20 datagrams/second,
+   a full cycle takes at least 54.6 minutes; normal traffic can take longer.
+
+   Evidence: NetReliabilityAudit.cpp, FailedSendCannotLeaveReassignmentAcrossSequenceReuse
+   and OrdinaryLossControlRecoversAfterSequenceReuse. Also reproduced from
+   unchanged tracker sources under Linux ASan/UBSan.
+   Fix direction: give failed transmissions the same bounded remapping
+   lifetime as timed-out transmissions, or explicitly distinguish a send
+   that never left the socket from an in-flight retransmission.
+
+2. Oversized messages are accepted and permanently block the stream.
+
+   Net/NetA4.cpp:131 checks its frame limit only with NI_ASSERT, which does
+   not evaluate in this build. SendDirect has no corresponding rejection.
+   Net/NetStream.cpp:35 requires a whole queued frame to fit in a ring with
+   32,767 usable bytes. A direct payload of 32,763 bytes becomes a 32,768-byte
+   frame and can never enter that ring. Every later message queues behind it.
+   A 32,762-byte payload starts transmission, but is not safe either: the
+   receive gate at Net/NetStream.h:115 requires 255 free bytes. A 32,767-byte
+   frame leaves only 127 free bytes for its final 127-byte fragment, so the
+   receiver refuses it and cannot consume the incomplete frame to free space.
+
+   CNet's optional compression does not impose a bound, and multiplayer batches
+   all pending AI commands without a size cap. No actual match-sized offending
+   batch was supplied; the accepted-payload deadlock is reproduced at the API.
+   Evidence: NetOversizedFrameAudit.cpp, two failing cases and a sending control.
+   Fix direction: enforce and propagate a supported frame-size limit before
+   queueing, with application splitting, or implement properly streamed frames
+   and a receive gate that accounts for the actual incoming fragment length.
+
+3. A departed voter's stale bit can prevent a later timeout kick forever.
+
+   GameX/MPManagerModeGameControl.cpp:615-616 compares the entire collected
+   vote mask for exact equality with currently eligible voters. Removing A
+   clears votes against A (MPManagerModeClients.cpp:345), but does not clear
+   A's vote against B. The extra bit makes equality impossible even when all
+   surviving eligible voters have voted for B.
+
+   Actual manager packet handlers and departure application reproduced votes
+   0x35 versus eligible 0x34 for 100 manager frames without removal. Clearing
+   only A's stale bit immediately schedules B's removal at 7782.
+   Evidence: KickVoteAudit.cpp and its passing characterization/result log.
+   Fix direction: require all current eligible votes, ignoring ineligible bits,
+   and define how membership changes affect stored vote state.
+
+4. A locally observed recovery erases votes that other clients never resend.
+
+   GameX/MPManagerModeGameControl.cpp:580 clears every vote when this observer
+   sees B recover. Lines 596-614 send this observer's vote only once while B
+   continuously lags. If the host briefly receives B but C remains blocked,
+   the host erases C's vote while C thinks it has already sent it.
+
+   Two actual managers reproduced the mismatch: C sends exactly once, host
+   clears that vote, B stalls again, and 100 frames cannot reach consensus.
+   Redelivering C's prior vote immediately schedules the removal.
+   Evidence: KickVoteRecoveryAudit.cpp and its passing characterization.
+   Fix direction: a defined vote epoch/expiry and retransmission mechanism.
+   Merely changing the equality in finding 3 does not fix this second race.
+
+CONNECTION-SETUP AND INITIAL DELIVERY FINDINGS
+
+5. The initial empty ACK can falsely acknowledge sequence zero.
+
+   Net/NetAcks.cpp:44 initializes 'nothing received' to 0, SendPktAcks sends
+   that value at 336, and ReceivePktAcks unconditionally acknowledges it at 257.
+   Outbound sequence IDs are 16-bit values seeded from the clock. If an initial
+   packet with ID 0 is lost, a peer that has received nothing can falsely ACK
+   it, permanently removing its bytes from the reliable stream.
+   Evidence: NetReliabilityAudit.cpp, EmptyAcknowledgementMustNotConfirmPacketZero;
+   Windows production tracker and Linux ASan/UBSan reproductions agree.
+   Fix direction: represent ACK validity explicitly; no 16-bit value is a safe
+   universal 'nothing received' sentinel. Consider wire-version compatibility.
+
+6. Direct/relay fallback can leave the two ends on incompatible routes.
+
+   The accepting effort succeeds upon receipt of identity, before its reply
+   reaches the connecting peer. That peer can independently time out and
+   switch to a relay. The server records this fallback but does not negotiate
+   a route change with the other end. CSimpleConnection rejects server-relayed
+   game packets, and CThroughServerConnection rejects direct peer packets.
+   Neither endpoint converges on the other's route.
+   Evidence: ConnectionRouteAudit.cpp, TimedOutHandshakeLeavesPeersOnIncompatibleRoutes.
+   References: Client/ConnectionEffortInternal.cpp:82,181,229;
+   Client/ConnectionInternal.h:39,72; Server/GameLobby.cpp:676.
+   This is a demonstrated setup race, not evidence of a spontaneous midmatch
+   route transition. Fix direction: negotiate and acknowledge route changes.
+
+7. An initial server probe can remain connecting forever after failure.
+
+   Client/ConnectionEffortInternal.cpp:62 lets the nested connection processor
+   queue a failure, but lines 65-77 drain its output only inside a loop that
+   requires an incoming packet. A login timeout/rejection can change the
+   driver to INACTIVE without emitting such a packet. The separate effort
+   timeout applies only after ECONNECT_CLIENT, so fallback never starts.
+   Evidence: ConnectionRouteAudit.cpp,
+   InitialProbeFailureNeverReachesEffortWithoutAnIncomingMessage.
+   Fix direction: drain nested connection-state events independently of
+   incoming application packets and bound both handshake phases.
+
+8. NAT traversal uses the wrong sockets.
+
+   Client/ConnectionEffortInternal.cpp:160 registers the peer probe using
+   persistent pNet rather than pConnet2PlayersNet. Server/ControlLobby.cpp:274
+   records the sending socket's IP/port, so it advertises the lobby endpoint.
+   Evidence: ConnectionRouteAudit.cpp, RegistrationUsesLobbySocketRatherThanProbedSocket.
+
+   Separately, Client/ConnectionEffort.cpp:11 creates a fresh links manager
+   for each punch packet. It does not send from the socket whose mapping is
+   needed for the actual peer connection. This second issue is source-proven;
+   no live router experiment was performed.
+   Fix direction: register and punch from the actual retained peer sockets.
+
+9. Early packets buffered during connection installation are never delivered.
+
+   Client/PlayGameProcessor.cpp:182 queues unhandled accepting-net packets.
+   ProcessEfforts installs a successful connection at 227 without replaying
+   that waiting queue into it. The queue is only retried against new efforts,
+   whose handlers do not consume normal application packets, or expires.
+   Evidence: WaitingPacketAudit.cpp: an application packet arriving just
+   before installation stays queued after 100 updates; the identical packet
+   arriving after installation is delivered. The success boundary is restored
+   by a completed test effort; actual processor and connection code run.
+   Fix direction: deliver matching pending packets, preserving order, as part
+   of promoting the effort to an established connection.
+
+ADDITIONAL SOURCE-LEVEL CONCERNS
+
+- Net/NetA4.cpp:184 reads plain EState state without a lock, while the driver
+  worker updates it. State is declared at NetA4.h:82 and Init starts the worker
+  at NetA4.cpp:310. This is a C++ data race; no ThreadSanitizer reproduction or
+  incident attribution is claimed. Use the existing mutex or an appropriate
+  atomic state/access protocol, including any associated rejection details.
+- Established direct-link failure is converted into CGameClientRemoved and
+  the connection is erased; no reconnect or relay attempt is made. This is
+  a recovery limitation, not proof that the original transport failed because
+  of a code bug. A single bad pair can therefore affect match membership even
+  while both clients retain their lobby and other-peer connections.
+
+VALIDATION AND RELATION TO THE REPORTED INCIDENT
+
+Built 13 targeted diagnostic cases against current production Windows code.
+Five assertions of desired reliable behavior fail as expected, demonstrating
+the two tracker failures, two large-frame failures and lost early packet.
+Five passing characterizations demonstrate the two voting defects and three
+connection-setup defects. Three positive controls pass. The included 10 existing
+client tests and 12 existing transport tests also pass. Linux tracker repros
+agree under AddressSanitizer and UndefinedBehaviorSanitizer.
+
+The wait dialog reports locally missing segment sources. If B stops receiving
+A, B stops advancing/sending later segments; other clients can subsequently
+wait for B as well. Different displayed names are therefore compatible with
+a single broken path. The voting bugs explain failure to recover after waits
+and departures, but do not establish what caused the first missing packet.
+
+For the next incident, retain every client's packet trace, particularly A and
+B, plus match duration and client transport logs. To diagnose findings 1-2
+directly, record per-peer sequence IDs, stream offsets, send failures, route
+type and queue sizes; application segment logs alone do not expose the lost
+byte range. Kick traces should include present/lagging/eligible/vote masks.
+
+Recommended implementation order: reliable stream loss and size handling;
+kick-vote lifecycle; then handshake/fallback/early-packet delivery. Add permanent
+regressions from these isolated cases before changing protocol behavior.

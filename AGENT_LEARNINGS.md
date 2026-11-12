@@ -177,6 +177,9 @@ This file is meant for AI agents only, both for read and write purposes.
 - UI text fitting: glyph advances and padded line cells are not visible letter bounds. PT Sans's initial `J` can extend left of its origin. Try the smallest translation that fits the visible letters before removing runtime font enlargement, and use that same corrected origin when drawing placed captions. Correct horizontal overhang per line before combining paragraph bounds; different lines can overhang opposite edges. Keep intentional scroll viewport clipping out of font fitting. Round wrapping constraints inward and autosized bounds outward when converting between screen pixels and virtual coordinates.
 - Font regressions should use the actual control, style, parent clip, and shipped font. Encyclopedia names occur in both the body-font list and the centered heading; testing only the heading misses list failures. Include 800x600, the 1024x768 reference size, widescreen and ultrawide sizes, and 4K.
 - Broader glyph tests can use the six runtime sizing code pages from `NCodePages`. Check `CFace::HasGlyph` so replacement glyphs do not masquerade as coverage of unsupported characters, and exclude raw markup delimiters from plain-text samples. UI bound checks and independent bitmap coverage tests complement each other.
+- `<val ...>` styles resolve through GameX's `CInterfaceState::GetMLTag` and
+  `UIConsts.Tags`. The HP outline uses a fallback only when that tag is absent;
+  mod-defined tags take precedence. Append it after the caption's DB formatting.
 - Windows builds here use Visual Studio's `Launch-VsDevShell.ps1` and bundled CMake. If sandboxed Ninja stalls before compilation, stop only the processes started for that build and retry through the approval tool. The bundled formatter is under `VC/Tools/Llvm/x64/bin`; pass it to the hygiene wrapper with `CLANG_FORMAT`.
 - The `python` and `py -3` commands can resolve to inaccessible Microsoft Store executables. For hygiene scripts, use the working interpreter recorded as `_Python3_EXECUTABLE` in the configured build's `CMakeCache.txt`.
 - Fail fast when loading the Visual Studio environment: use `$ErrorActionPreference = 'Stop'` and, if scripts are disabled, a process-scoped execution-policy bypass before `Launch-VsDevShell.ps1`. Otherwise PowerShell can continue into CMake without SDK library paths and report unrelated missing libraries such as `ole32.lib`. In Windows PowerShell, restore `Continue` before redirecting native build output and check `$LASTEXITCODE`; otherwise a CMake warning on stderr can terminate an otherwise valid build.
@@ -453,6 +456,88 @@ context. Read `git diff` of every touched file before building.
   soldiers need wMaxAngle = 65535, and spatial visibility needs nVisIndexInUnits
   as well as visible4Party. Missing these produced fixture crashes and false
   firing rejections; exercise the real secondary-fire scan to catch them.
+- Autonomous artillery targeting in `CAIUnit::LookForTargetInRange` substitutes
+  noticeable crewmen for a manned gun and omits the gun itself. Explicit mech
+  attacks initially evaluate the actual ordered target instead. In BK2E-GBC,
+  Churchill MKVII Late's Besa has range 20, a 0.78-second single-burst score and
+  HEAVY_CANNON classification, versus range 35 and 2-second aim for its 75 mm.
+  Ordinary travel-plus-kill scoring can therefore favor an MG approach to a
+  crewman even with a usable cannon shot. While moving, secondary free fire
+  excludes priority-zero guns unless firing in movement is enabled. Artillery
+  and serving-crew targets now prefer usable shots over approaches, and SWARM
+  reevaluates these engagements between bursts at its existing scan cadence.
+  `GetArtilleryIfCrew` identifies serving crew without new DB fields.
+- Mistake: partially reloading an attack-state test fixture cleared omitted
+  scalar fields, including its SWARM flag and enemy party. Initialize movement
+  phase and permissions in the same load as the other attack fields. Exercise
+  a real unfinished path and assert both stopping and firing after reselection;
+  checking only the selected gun missed the malformed fixture.
+
+## Host migration and recorded removal ownership
+
+- Compare packet-level applied removal segments before investigating combat UB.
+  In the 2026-11-09 match, backend removal reached the replacement host before
+  the departing host's leave packet. Local promotion caused rejection of that
+  in-flight packet: Musikant removed slot 0 at 7782, other survivors at 7781.
+  Recovered replay copies differing only in that tick reproduced both exact
+  checksum and RNG states. Host handoff needs a converged boundary before it
+  executes; taking the minimum after simulation passes it cannot repair history.
+- Command history retains CPtr, not CObj. A local CObj in PlayerRemoved invalidates
+  its recorded CDropPlayerCommand on scope exit, reconstructing it with player -1.
+  The replay then misreports the invalid object as an unknown command type. Test
+  the real recording ownership lifecycle, not only raw-new insertion into history.
+- Preserve original replay bytes and checksum samples when recovering invalid
+  removal records from packet logs. Label diagnostic copies and record changed
+  validity bytes, player fields, segment keys, and hashes. Build-ID disagreement
+  must remain visible even when full checksum/RNG reproduction succeeds.
+- Apply queued removals in slot order at command dispatch, after the manager
+  drains packets. Applying inside a packet handler makes simultaneous transfers
+  depend on arrival order. Remember applied cutoffs and stop on an earlier
+  correction after execution; this simulation has no rollback.
+- A packet P's commands execute at P + pack size + latency. Releasing a leaver's
+  ordinary receipt barrier must still require the command prefix before removal.
+  Keep a separate timeout for missing input from an already disconnected peer.
+- Host authority can change twice before a correction arrives. Preserve the
+  retiring host's correction authority for already-known departures, and defer
+  a future host's authenticated self-departure until its preceding handoff.
+  Exercise actual manager packet handling and recorded removal order, as well
+  as the portable scheduling policy.
+
+## Reliable transport and timeout voting
+
+- A retransmission alias can outlive its ACK record after immediate send failure
+  or a timer jump that expires the record before the retry creates the alias.
+  Retire the old alias at every packet-ID reuse, including empty transmissions.
+  Test a complete 16-bit cycle and preserve valid delayed-ACK retry chains.
+- A bounded ring is not a message-size limit when messages can stream through
+  it. Both outgoing enqueue and incoming frame assembly must make incremental
+  progress. Exercise the former boundary, multiple large frames, a missing
+  leading fragment, reordered/duplicated packets, and malformed length headers.
+  Allocate according to received data rather than an untrusted advertised size.
+- Timeout votes represent current observations. Match current eligible voters,
+  scrub departed voters, renew continued waits, and withdraw or expire approvals
+  after recovery. Different peers can observe recovery at different times;
+  test two actual managers and delivery of a newly generated retry.
+- CMake's copied runtime DLL can remain stale when only the DLL implementation
+  changes and a dependent test does not relink. Verify test-local DLL hashes
+  against built modules before accepting results after network-library changes.
+- Manual MP pause returns from DoSegments before refreshing lag reports, while
+  packet handling and timeout voting continue. Received command data can leave
+  a stale manager lag mask that two paused observers use to kick a recovered
+  peer. Test accepted receipt packets and fresh votes through actual handlers;
+  suppressing simulation must not suppress required-input status refresh.
+- The original explicit remote pause packet changed only metadata. Its UI waited
+  for the separate five-second missing-input threshold, and owner/observer
+  allowances remained different after resume. Distinguish simulation gating,
+  pause notification, and budget ownership when diagnosing a late pause screen.
+- Keep raw receipt waits separate from explicit pause reasons, and charge their
+  union once. Settle and rebase the active interval before applying a received
+  remaining-budget snapshot. Publish the owner's charged allowance on resume;
+  observers' later-starting clocks cannot reconcile themselves to it otherwise.
+- Verify recovered input after draining the entire packet batch and before kick
+  consensus. A queued vote can precede the recovery packet in that same batch.
+  Test both the no-kick case and a genuinely missing peer that still times out;
+  excluding every voter alone can conceal stale observation bugs.
 
 ## Generated binary defaults
 

@@ -8,6 +8,7 @@
 #include "../Commands.h"
 #include "../DBAIConsts.h"
 #include "../Diplomacy.h"
+#include "../Formation.h"
 #include "../GlobalWarFog.h"
 #include "../GroupLogic.h"
 #include "../Guns.h"
@@ -21,6 +22,7 @@
 #include "../UnitStates.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/CommonPathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
@@ -824,7 +826,7 @@ protected:
 		AggressiveAttacker::TearDown();
 	}
 
-	IUnitState *LoadSwarmAttack( CBasicGun *selected, bool secondaryScan = false )
+	IUnitState *LoadSwarmAttack( CBasicGun *selected, bool secondaryScan = false, bool approaching = false )
 	{
 		CPtr<CAICommand> command = MakeObject<CAICommand>( 0x1108D44D );
 		command->ToUnitCmd().nCmdType = ACTION_COMMAND_SWARM_ATTACK_UNIT;
@@ -833,7 +835,8 @@ protected:
 		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
 		CPtr<IUnitState> attack = MakeObject<IUnitState>( 0x1108D4DE );
 		CPtr<CBasicGun> selectedGun = selected;
-		int phase = 4; // ESAS_SIMPLE_FIRING avoids path movement in this headless fixture.
+		// ESAS_BRUTE_MOVING exercises an approach; other tests use ESAS_SIMPLE_FIRING.
+		int phase = approaching ? 1 : 4;
 		int party = 1; // PlaceUnit assigns the infantry to the opposing party.
 		bool swarm = true;
 		NTimer::STime lastSecondaryScan = secondaryScan ? NTimer::STime( -2000 ) : 0;
@@ -853,6 +856,7 @@ protected:
 									saver.Add( 15, &party );
 									saver.Add( 19, &enemy );
 									saver.Add( 20, &selectedGun );
+									saver.Add( 23, &approaching );
 								} );
 		owner->SetCurState( attack );
 		owner->Lock( selected );
@@ -953,6 +957,160 @@ TEST_F( MechFlamethrower, SecondaryMachineGunStartsAlongsideFlame )
 	units.AddUnitToUnits( enemy, enemy->GetPlayer(), enemy->GetStats()->etype );
 	units.AddUnitToMap( enemy );
 	IUnitState *attack = LoadSwarmAttack( gun, true );
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
+	EXPECT_TRUE( gun->IsCommonGunFiring() );
+	EXPECT_TRUE( machineGun->IsCommonGunFiring() );
+}
+
+// Reuse the independent mounts with Churchill/Besa timing and real serving-crew relationships.
+class MechArtilleryEngagement : public MechFlamethrower
+{
+protected:
+	CPtr<CArtillery> artillery;
+	CPtr<CFormation> crew;
+
+	void SetCrew( bool serving )
+	{
+		CPtr<CFormation> formation = serving ? crew.GetPtr() : nullptr;
+		SFields soldier{ [&]( IBinSaver &saver ) { saver.Add( 18, &formation ); } };
+		LoadFields( enemy, [&]( IBinSaver &saver ) { saver.Add( 1, &soldier ); } );
+	}
+
+	void SetUp() override
+	{
+		MechFlamethrower::SetUp();
+		weapon->fRangeMin = 4 * 32;
+		weapon->fRangeMax = 35 * 32;
+		weapon->nAimingTime = 2000;
+		weapon->nAmmoPerBurst = 1;
+		weapon->shells[0].etrajectory = NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
+		weapon->shells[0].nRelaxTime = 1800;
+		machineGunWeapon->eWeaponType = NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON;
+		machineGunWeapon->fRangeMax = 20 * 32;
+		machineGunWeapon->nAmmoPerBurst = 5;
+		machineGunWeapon->shells[0].nFireRate = 70;
+		machineGunWeapon->shells[0].nRelaxTime = 749;
+		LoadGun( gun, weapon, ammo, IGunsFactory::MOMENT_CML_GUN );
+		int artilleryGun = -1;
+		LoadFields( owner->GetGuns(), [&]( IBinSaver &saver ) { saver.Add( 2, &artilleryGun ); } );
+		auto *stats = const_cast<NDb::SUnitBaseRPGStats *>( owner->GetStats() );
+		stats->fSpeed = 10 * 32 / 3600.0f;
+		stats->fSight = 35 * 32;
+		PlaceUnit( enemy, 22 * 32 );
+
+		artillery = MakeObject<CArtillery>( AI_ARTILLERY );
+		PlaceUnit( artillery, 22 * 32 );
+		auto *artilleryStats = MakeRecord<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
+		artilleryStats->etype = NDb::RPG_TYPE_ART_GUN;
+		artilleryStats->fMaxHP = 50;
+		artilleryStats->vAABBHalfSize = CVec2( 4, 8 );
+		CDBPtr<NDb::SMechUnitRPGStats> artilleryStatsPointer = artilleryStats;
+		LoadFields( artillery, [&]( IBinSaver &saver ) { saver.Add( 2, &artilleryStatsPointer ); } );
+		crew = MakeObject<CFormation>( 0x1108D498 );
+		CPtr<IUnitState> serving = MakeObject<IUnitState>( 0x1108D4BF );
+		LoadFields( serving, [&]( IBinSaver &saver ) { saver.Add( 8, &artillery ); } );
+		crew->SetCurState( serving );
+		SetCrew( true );
+	}
+};
+
+TEST_F( MechArtilleryEngagement, PrefersUsableCannonOnlyForArtilleryAndServingCrew )
+{
+	ASSERT_EQ( enemy->GetArtilleryIfCrew(), artillery.GetPtr() );
+	ASSERT_TRUE( gun->CanShootToUnitWOMove( enemy ) );
+	ASSERT_FALSE( machineGun->CanShootToUnitWOMove( enemy ) );
+	SetCrew( false );
+	// Without the artillery relationship, the original score favors the shorter MG approach.
+	ExpectGun( machineGun );
+	SetCrew( true );
+	for ( auto type : { NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON, NDb::SWeaponRPGStats::WEAPON_MACHINEGUN } )
+	{
+		machineGunWeapon->eWeaponType = type;
+		ExpectGun( gun );
+	}
+	// A soft artillery piece also uses range preference, without relying on MG armor rejection.
+	enemy = artillery.GetPtr();
+	machineGunWeapon->shells[0].fDamagePower = 100;
+	ExpectGun( gun );
+}
+
+TEST_F( MechArtilleryEngagement, KeepsExistingChoiceWhenBothWeaponsOrNeitherAreInRange )
+{
+	PlaceUnit( enemy, 18 * 32 );
+	ExpectGun( machineGun );
+	PlaceUnit( enemy, 40 * 32 );
+	SetCrew( false );
+	estimator->Reset( enemy, false, 0 );
+	CBasicGun *originalChoice = estimator->GetBestGun();
+	ASSERT_NE( originalChoice, nullptr );
+	SetCrew( true );
+	ExpectGun( originalChoice );
+}
+
+TEST_F( MechArtilleryEngagement, FallsBackForEmptyForbiddenAndUnusableCannon )
+{
+	ammo->nAmmo = 0;
+	ExpectGun( machineGun );
+	ammo->nAmmo = 10;
+	ExpectGun( machineGun, 1 );
+	weapon->fRangeMin = 23 * 32;
+	ExpectGun( machineGun );
+	weapon->fRangeMin = 4 * 32;
+	owner->Lock( machineGun );
+	weapon->wDeltaAngle = 1;
+	auto *stats =
+			const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+	stats->platforms[0].guns[0].wDirection = 32768;
+	ASSERT_FALSE( gun->CanShootToUnitWOMove( enemy ) );
+	ExpectGun( machineGun );
+}
+
+TEST_F( MechArtilleryEngagement, SwarmStopsMachineGunApproachForCannonShotAfterLoad )
+{
+	IUnitState *attack = LoadSwarmAttack( machineGun, false, true );
+	// The cannon is loaded; this check should not wait for the fixture's initial reload timer.
+	ammo->lastShoot = NTimer::STime( -5000 );
+	ASSERT_FALSE( gun->IsRelaxing() );
+	RoundTrip( attack );
+	// Give the real path controller an unfinished approach, then require the attack to stop it.
+	IPath *path = CreatePathByDirection(
+			owner->GetCenterPlain(), CVec2( 0, 1 ), owner->GetCenterPlain() + CVec2( 0, 160 ), GetAIMap() );
+	ASSERT_NE( path, nullptr );
+	ASSERT_TRUE( owner->SendAlongPath( path ) );
+	ASSERT_FALSE( owner->IsIdle() );
+	ASSERT_EQ( ReadSelectedGun( attack ), machineGun.GetPtr() );
+	ASSERT_TRUE( machineGun->CanShootToUnit( enemy ) ) << "reject=" << machineGun->GetRejectReason();
+	ASSERT_FALSE( machineGun->IsFiring() );
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
+	EXPECT_TRUE( gun->IsCommonGunFiring() );
+	EXPECT_TRUE( owner->IsIdle() );
+}
+
+TEST_F( MechArtilleryEngagement, SwarmKeepsActiveBurstAndFallsBackAfterCannonAmmoRunsOut )
+{
+	PlaceUnit( enemy, 18 * 32 );
+	IUnitState *attack = LoadSwarmAttack( gun );
+	gun->StartEnemyBurst( enemy, true );
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
+	gun->StopFire();
+	ammo->nAmmo = 0;
+	attack->Segment();
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), machineGun.GetPtr() );
+}
+
+TEST_F( MechArtilleryEngagement, SecondaryMachineGunContinuesAlongsideCannon )
+{
+	PlaceUnit( enemy, 18 * 32 );
+	enemy->nUniqueID = 123;
+	units.AddUnitToUnits( enemy, enemy->GetPlayer(), enemy->GetStats()->etype );
+	units.AddUnitToMap( enemy );
+	IUnitState *attack = LoadSwarmAttack( gun, true );
+	// Keep the main weapon between scans, while the real secondary-fire scan selects the MG.
+	owner->GetLastBehTime() = 0;
 	attack->Segment();
 	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
 	EXPECT_TRUE( gun->IsCommonGunFiring() );

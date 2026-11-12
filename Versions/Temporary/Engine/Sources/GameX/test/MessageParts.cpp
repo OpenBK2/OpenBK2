@@ -163,4 +163,37 @@ TEST_F( MessageParts, RealValHandlerResolvesTheLinkedRecordAndOldDataBackups )
 		}
 	}
 }
+
+TEST_F( MessageParts, OutlineFallbackPreservesAuthoredOverridesAndMessageLookup )
+{
+	WriteText( "outline.txt", u"<font outlinesize=2 outlinecolor=white>" );
+	WriteText( "message-outline.txt", u"<font outlinesize=3 outlinecolor=red>" );
+	WriteText( "empty-outline.txt", u"" );
+	std::ofstream( directory / "default-ui.xdb" ) << "<UIConstsB2/>";
+	std::ofstream( directory / "custom-ui.xdb" )
+			<< "<UIConstsB2><Tags><Item><Name>outline</Name><TextFileRef href=\"outline.txt\"/>"
+				 "</Item></Tags></UIConstsB2>";
+	std::ofstream( directory / "empty-ui.xdb" )
+			<< "<UIConstsB2><Tags><Item><Name>outline</Name><TextFileRef href=\"empty-outline.txt\"/>"
+				 "</Item></Tags></UIConstsB2>";
+	std::ofstream( directory / "outline-parts.xdb" )
+			<< "<MessageParts><Parts><Item><ValName>outline</ValName>"
+				 "<ValueTextFileRef href=\"message-outline.txt\"/></Item></Parts></MessageParts>";
+	std::ofstream( directory / "message-ui.xdb" )
+			<< "<UIConstsB2><Tags><Item><Name>outline</Name><TextFileRef href=\"outline.txt\"/>"
+				 "</Item></Tags><MessageParts href=\"outline-parts.xdb\"/></UIConstsB2>";
+	CObj<IInterfaceState> state = MakeObject<IInterfaceState>( 0x300C8D44 );
+	ASSERT_NE( state, nullptr );
+	NGlobal::SetVar( "ui_consts", "default-ui.xdb" );
+	EXPECT_EQ( state->ExpandMLTag( L"outline", -1 ), L"<font outlinesize=1 outlinecolor=black forcefontsize = 1>" );
+	NGlobal::SetVar( "ui_consts", "custom-ui.xdb" );
+	EXPECT_EQ( state->ExpandMLTag( L"outline", -1 ), L"<font outlinesize=2 outlinecolor=white>" );
+	// An authored empty tag suppresses the fallback, while message parts retain their higher priority.
+	NGlobal::SetVar( "ui_consts", "empty-ui.xdb" );
+	EXPECT_TRUE( state->ExpandMLTag( L"outline", -1 ).empty() );
+	NGlobal::SetVar( "ui_consts", "message-ui.xdb" );
+	EXPECT_EQ( state->ExpandMLTag( L"outline", -1 ), L"<font outlinesize=3 outlinecolor=red>" );
+	NGlobal::RemoveVar( "ui_consts" );
+	EXPECT_TRUE( state->ExpandMLTag( L"outline", -1 ).empty() );
+}
 } // namespace

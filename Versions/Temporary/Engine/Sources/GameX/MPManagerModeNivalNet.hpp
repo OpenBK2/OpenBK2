@@ -9,6 +9,7 @@
 class CMPManagerModeNivalNet : public CMPManagerMode
 {
 	OBJECT_NOCOPY_METHODS( CMPManagerModeNivalNet );
+	friend class CMPPlayerDropTestAccess;
 
 	enum EGameState
 	{

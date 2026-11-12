@@ -31,6 +31,22 @@ struct SScenarioPlayers
 	}
 };
 
+void RestorePresentPlayers( IScenarioTracker *pTracker )
+{
+	// Restore four present players without loading a map. The real AI has no units.
+	SScenarioPlayers scenario;
+	CMemoryStream state;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &state, SAVER_MODE_WRITE );
+		saver->Add( 1, &scenario );
+	}
+	state.Seek( 0 );
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &state, SAVER_MODE_READ );
+		saver->AddPolymorphicBase( 1, pTracker );
+	}
+}
+
 class CReplayDropSingletons
 {
 public:
@@ -48,13 +64,31 @@ public:
 };
 } // namespace
 
-TEST( ReplayPlayerDrop, RecordedRemovalUpdatesScenarioPresenceForEveryViewer )
+TEST( ReplayPlayerDrop, RecordedRemovalSurvivesExecutionScopeAndUpdatesEveryViewer )
 {
-	// Record through the real history, then round-trip its polymorphic command format.
+	// Use multiplayer's actual creation and execution scope. Directly adding a new
+	// command to history missed the temporary CObj invalidating it after execution.
 	CObj<ICommandsHistory> history = dynamic_cast<ICommandsHistory *>( NObjectFactory::MakeObject( 0x1007AB80 ) );
 	ASSERT_NE( history, nullptr );
-	history->AddCommand( 19470, new CDropPlayerCommand( 2 ) );
+	{
+		CObj<IScenarioTracker> tracker = dynamic_cast<IScenarioTracker *>( NObjectFactory::MakeObject( 0x1117BB00 ) );
+		CObj<IAILogic> ai = dynamic_cast<IAILogic *>( NObjectFactory::MakeObject( 0x1108D441 ) );
+		ASSERT_NE( tracker, nullptr );
+		ASSERT_NE( ai, nullptr );
+		RestorePresentPlayers( tracker );
+		tracker->SetLocalPlayer( 0 );
+		CReplayDropSingletons singletons( tracker, ai );
+		ASSERT_TRUE( tracker->IsPlayerPresent( 2 ) );
+		CDropPlayerCommand::RecordAndExecute( history, 19470, 2 );
+		EXPECT_FALSE( tracker->IsPlayerPresent( 2 ) );
+	}
 	CHistory recorded = history->GetCommandsHistory();
+	ASSERT_EQ( recorded.size(), 1 );
+	ASSERT_EQ( recorded.count( 19470 ), 1 );
+	ASSERT_EQ( recorded.at( 19470 ).size(), 1 );
+	ASSERT_TRUE( IsValid( recorded.at( 19470 ).front() ) );
+	EXPECT_EQ( recorded.at( 19470 ).front()->GetDebugInfo(), "DropPlayer 2" );
+	// Round-trip the retained command after the live removal has returned.
 	CMemoryStream replay;
 	{
 		CObj<IBinSaver> saver = CreateBinSaver( &replay, SAVER_MODE_WRITE );
@@ -69,8 +103,8 @@ TEST( ReplayPlayerDrop, RecordedRemovalUpdatesScenarioPresenceForEveryViewer )
 	ASSERT_EQ( loaded.size(), 1 );
 	ASSERT_EQ( loaded.count( 19470 ), 1 );
 	ASSERT_EQ( loaded.at( 19470 ).size(), 1 );
-	CObj<IAILogicCommandB2> command = loaded.at( 19470 ).front().GetPtr();
-	ASSERT_NE( command, nullptr );
+	CPtr<IAILogicCommandB2> command = loaded.at( 19470 ).front();
+	ASSERT_TRUE( IsValid( command ) );
 	EXPECT_TRUE( command->NeedToBeStored() );
 	EXPECT_EQ( command->GetDebugInfo(), "DropPlayer 2" );
 
@@ -80,19 +114,8 @@ TEST( ReplayPlayerDrop, RecordedRemovalUpdatesScenarioPresenceForEveryViewer )
 		CObj<IAILogic> ai = dynamic_cast<IAILogic *>( NObjectFactory::MakeObject( 0x1108D441 ) );
 		ASSERT_NE( tracker, nullptr );
 		ASSERT_NE( ai, nullptr );
-		// Restore four present players without loading a map. The real AI has no units;
-		// this catches the old command updating diplomacy alone and leaving the slot present.
-		SScenarioPlayers scenario;
-		CMemoryStream state;
-		{
-			CObj<IBinSaver> saver = CreateBinSaver( &state, SAVER_MODE_WRITE );
-			saver->Add( 1, &scenario );
-		}
-		state.Seek( 0 );
-		{
-			CObj<IBinSaver> saver = CreateBinSaver( &state, SAVER_MODE_READ );
-			saver->AddPolymorphicBase( 1, tracker.GetPtr() );
-		}
+		// Replay must update scenario presence as well as diplomacy for every viewer.
+		RestorePresentPlayers( tracker );
 		tracker->SetLocalPlayer( nViewer );
 		CReplayDropSingletons singletons( tracker, ai );
 		ASSERT_TRUE( tracker->IsPlayerPresent( 2 ) );

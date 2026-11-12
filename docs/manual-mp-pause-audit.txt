@@ -1,0 +1,176 @@
+Manual multiplayer pause audit, 2026-11-11
+Inspected revision: port, cb20faf95 (includes the four preceding netcode fixes).
+Source paths below are relative to Versions/Temporary/Engine/Sources.
+
+IMPLEMENTATION STATUS, 2026-11-11
+
+The four findings below are addressed in the working tree. Nothing is committed.
+The existing packet format, command-input barrier and synchronized removal path
+are preserved. This does not introduce a shared wall clock or a new host-owned
+pause protocol.
+
+- The manager tracks explicit pauses separately from reported missing input.
+  Pause receipts immediately update the wait window, its contents and accounting,
+  without stopping the receiving client's command production. Resuming one pause
+  preserves other players' pauses and any independent missing-input wait.
+- Before timeout decisions, the manager checks the transceiver's actual current
+  receipt barrier after draining packets. Recovered input clears old lag state
+  and votes even when local simulation is manually paused. Ordinary new network
+  waits retain their existing five-second notification threshold.
+- A shared accounting helper charges the union of pause and network-wait reasons
+  once, with saturated unsigned elapsed-time arithmetic. The owner publishes its
+  charged remaining allowance on pause, resume and automatic expiry using the
+  existing budget packet. Repeated state packets do not restart the clock.
+- Explicit-pause countdowns exclude the reserved network allowance. Exhausted
+  allowance cannot start another pause. Pending departures cannot restore pause
+  state or consume survivors' budgets; initial loading does not start these timers.
+
+Permanent tests: GameX/test/MPPause.cpp has 14 actual-handler regressions covering
+immediate notification, short pauses, overlaps, budget reconciliation, duplicate
+packets, automatic expiry, actual command recovery while both observers pause,
+receipt and vote ordering within one manager batch, genuine timeout removal,
+departures and clock wrap. MPHostHandoff's existing fixtures now supply matching
+real receipt state for their reported lag masks.
+
+Validation: Windows x64 Release Game and Server builds passed with Visual Studio
+CMake in its developer environment. All 99 tests in nine selected CTest targets
+passed: MPPause, MPHostHandoff, MPPlayerDrop, ReplayPlayerDrop,
+ReplayCommandTiming, MPPacketTraceLog, NetTransport, NetPacketLifetime and
+ClientConnectionRemoval. Formatting and whitespace checks passed. No live
+multi-machine match or full Linux build was run for this change.
+
+The original audit and its pre-fix diagnostic evidence follow. Its source line
+numbers refer to cb20faf95, before the implementation above.
+
+ORIGINAL AUDIT
+
+FUNCTIONAL ASSESSMENT
+
+An ordinary manual pause does stop the game. SetUserPause calls CommandTimeOut
+on the requesting client's transceiver, which stops its simulation and production
+of further command packets. Other clients consume already-buffered commands and
+then stop at the normal lockstep input barrier. The displayed wait window is a
+separate mechanism; its late appearance does not imply continued simulation.
+
+Network processing continues during a manual pause. MPTransceiver::DoSegments
+calls pClient->Segment before checking bWaiting, and the manager continues
+draining received packets before AnalyzeLaggers. Resume releases the requesting
+client's gate, allowing command exchange and normal lockstep progress to resume.
+There is no demonstrated ASYNC caused by an ordinary manual pause in this audit.
+
+The feature nevertheless needs fixes beyond cosmetic countdown synchronization.
+
+1. A received explicit pause does not drive remote pause reporting.
+
+   GameX/MPManagerModePackets.cpp:348 only sets/clears dwUserPausedPlayers.
+   It does not change remote lag state, timer start, or wait-window visibility.
+   OnLagMessage at MPManagerModeMessages.cpp:196 preserves only the local player's
+   explicit pause. Remote flags therefore do not trigger a notification.
+
+   MPTransceiver.cpp:40 and 788-797 wait more than 5000 ms after missing command
+   input before reporting ordinary lag. This delay follows exhaustion of the
+   buffered input, rather than receipt of the explicit pause packet. Low ping
+   cannot remove it. A short pause can end without a remote pause notification.
+
+2. Remaining allowances can diverge permanently after resume.
+
+   The owner starts its timer immediately (MPManagerModeMessages.cpp:313).
+   An observer starts only when ordinary lag is reported
+   (MPManagerModeGameControl.cpp:584-586). SetUserPause(false) charges the owner
+   but sends only CB2UserPausePacket's boolean, not its remaining budget.
+
+   Example with an initial 120000 ms budget: a ten-second owner pause leaves
+   110000 ms locally. An observer that starts counting five seconds later retains
+   115000 ms. Its recovery report is minimum-clamped against the owner's value;
+   the owner stays at 110000, but nothing sends that lower value to the observer.
+   This affects stored future allowances, not just the current clock display.
+   Overlapping manual pauses can remain entirely absent from observers' budgets
+   when those observers are already waiting for another player's input.
+
+3. Manual pause freezes lag observations while timeout voting continues.
+
+   MPTransceiver.cpp:245 returns when bWaiting is set. Consequently SetLagState
+   and ReportLags cannot clear the old wait report, even when recovered command
+   packets have updated segmFinished. AnalyzeLaggers continues evaluating and
+   renewing kick votes against that old manager-side dwLaggers mask.
+
+   A problematic sequence is: A (host) and C were waiting for B; A and C both
+   manually pause; B's missing commands arrive; A and C retain the old B lag
+   observation. If B's remaining lag budget expires during their pauses, their
+   fresh votes can reach consensus against B despite its input having arrived.
+   This is a functional timeout-accounting problem, not a timer-label problem.
+
+   Reproduced through actual manager, transceiver, timer and packet-handler
+   objects: A and C both entered manual pause through their registered UI
+   handlers. B's segment 7778 was then accepted by both, completing the required
+   receipt mask (0x1c). Their paused DoSegments calls emitted no fresh lag report.
+   With B's remaining budget at ten seconds and both manual pauses still active,
+   C generated a new kick vote. Delivering it through A's ordinary receive queue
+   caused the host to schedule B's removal at simulation segment 7782.
+
+4. The displayed "allowed pause time" includes the reserved network allowance.
+
+   StartGame combines nTimeUserMPPause and nTimeUserMPLag. SendLagInfo displays
+   that total, but AnalyzeLaggers auto-resumes when only nTimeUserMPLag remains.
+   The repository's Test_MultiplayerConsts.xdb specifies 150 + 30 seconds, so
+   a fresh allowance is displayed as 3:00 but manual pause ends at 0:30.
+   Schema defaults are 120 + 60, which display 3:00 and end at 1:00 instead.
+   Actual installations/mods may use different constants. The UI label explicitly
+   calls this the player's allowed pause time, which does not match the quantity.
+
+RECOMMENDED FIXES
+
+First, refresh required-input availability before timeout decisions even while
+local simulation is manually paused. A recovered peer must stop accumulating
+lag time and kick approvals as soon as its required commands arrive. Keep this
+observation independent of whether this client is allowed to advance a tick.
+
+Keep explicit manual-pause state separate from missing-input state. Derive the
+wait display from both, showing the requester immediately on packet receipt.
+Starting or ending one reason must preserve the other reason. Do not implement
+remote notifications by calling CommandTimeOut(true) on every receiving client;
+that would stop each receiver's command production and alter the lockstep gates.
+
+Publish a consistent remaining allowance on resume, including automatic expiry.
+The existing budget-update packet offers a small compatible starting point, but
+the ownership and overlap rules must be explicit: charge an interval once, and
+do not let delayed reports revive an expired allowance. Display manual-pause
+time separately from the network reserve. Exact wall-clock equality is not
+required for deterministic simulation; a consistent budget and clear state are.
+
+For a stronger subsequent design, the game-control host could own manual-pause
+allowances and publish identified pause transitions with remaining durations.
+Receivers would interpolate locally and reconcile to updates, with explicit host
+handoff and overlapping-pause rules. This is broader than the immediate fixes.
+An exactly shared simulation stop segment would also require a coordinated
+future boundary, rather than independently freezing peers on packet arrival.
+
+Pause messages also share the reliable command-data FIFO, so a large queue or a
+missing earlier fragment can delay their delivery despite low RTT. Diagnose this
+using existing TX/RX pause traces before changing transport priority. The fixed
+five-second reporting delay already explains a late popup with prompt delivery.
+
+Regression coverage should include short pauses; immediate remote notification;
+overlapping requests and independent resumes; ordinary lag recovering while
+observers remain manually paused; automatic expiry; matching final allowances;
+duplicates; player departure; and continued network processing during pause.
+
+VALIDATION
+
+Four diagnostic characterizations passed on Windows x64 Release against the
+current production DLLs: pause receipt changes only metadata; ten-second owner
+pause versus five-second observer wait retains different budgets after exchange;
+pause during existing ordinary lag retains the earlier timer; and overlapping
+manual pauses can kick a peer whose required commands have already recovered.
+The tests assert the current faulty behavior; passing does not mean it is fixed.
+
+Source: async_debug/investigation/pause_audit/ManualPauseManagerAudit.cpp
+Minimal DB fixture: async_debug/investigation/pause_audit/data/PauseAudit.xdb
+Results: async_debug/investigation/net_audit/ManualPauseManagerAudit-results.xml
+Run log: async_debug/investigation/net_audit/ManualPauseManagerAudit-run.log
+
+The diagnostic uses real engine objects with controlled clocks and a recording
+client/UI; it is not a live three-machine network test. The budget test restores
+the owner's starting pause state; the incorrect-kick test enters both pauses
+through the actual UI handlers and accepts the actual segment packet type.
+No production sources were changed and no commits were made for this audit.

@@ -316,8 +316,24 @@ const NDb::STexture *CInterfaceState::GetTextureEntry( const std::string &szID )
 
 const std::wstring &CInterfaceState::GetMLTag( const std::wstring &wszName ) const
 {
+	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	// Resolve message values through the same path as every existing <val> tag.
-	return NGameX::GetMessagePart( GetUIConsts(), wszName );
+	const std::wstring &wszTag = NGameX::GetMessagePart( pUIConsts, wszName );
+	if ( pUIConsts && wszName == L"outline" && wszTag.empty() )
+	{
+		for ( const auto &tag : pUIConsts->tags )
+		{
+			if ( tag.szName == "outline" )
+			{
+				// An explicitly configured empty outline still overrides the default.
+				return wszTag;
+			}
+		}
+		// Older UI data has no outline tag; mods can override this default through UIConsts.Tags.
+		static const std::wstring wszOutline = L"<font outlinesize=1 outlinecolor=black forcefontsize = 1>";
+		return wszOutline;
+	}
+	return wszTag;
 }
 
 const std::wstring &CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) const

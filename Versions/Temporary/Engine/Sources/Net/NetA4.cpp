@@ -105,34 +105,17 @@ bool CSendPacket::bLastPacket;
 
 // packet to/from stream
 
-static bool CanReadPacket( CRingBuffer<N_STREAM_BUFFER> &buf )
+static bool WritePacket( std::list<CMemoryStream> *pDst, CMemoryStream &pkt )
 {
-	if ( buf.GetSize() < 1 )
+	if ( pkt.GetSize() <= 0 || pkt.GetSize() > N_MAX_FRAME_SIZE )
 	{
 		return false;
 	}
-	int nSize = 0;
-	buf.Peek( &nSize, 1 );
-	// Short frames have only a one-byte header, including the final segment marker.
-	const int nHeaderSize = ( nSize & 1 ) ? 1 : 4;
-	if ( buf.GetSize() < nHeaderSize )
-	{
-		return false;
-	}
-	buf.Peek( &nSize, nHeaderSize );
-	nSize >>= 1;
-	if ( nSize >= 0 && nSize <= buf.GetSize() - nHeaderSize )
-	{
-		return true;
-	}
-	return false;
-}
-
-static void WritePacket( std::list<CMemoryStream> *pDst, CMemoryStream &pkt )
-{
-	NI_ASSERT( pkt.GetSize() < N_STREAM_BUFFER - 1000, fmt::format( "Wrong memory stream size ({})", pkt.GetSize() ) );
 	CMemoryStream &b = pDst->emplace_back();
-	int nSize = pkt.GetSize();
+	uint32_t nSize = pkt.GetSize();
+	// Exact allocation avoids the generic stream growth doubling a maximum
+	// payload plus its header past the signed size range.
+	b.SetSizeDiscard( nSize + ( nSize >= 128 ? 4 : 1 ) );
 	if ( nSize >= 128 )
 	{
 		nSize <<= 1;
@@ -145,20 +128,7 @@ static void WritePacket( std::list<CMemoryStream> *pDst, CMemoryStream &pkt )
 		b.Write( &nSize, 1 );
 	}
 	b.Write( pkt.GetBuffer(), pkt.GetSize() );
-}
-
-static void ReadPacket( CRingBuffer<N_STREAM_BUFFER> &src, CMemoryStream *pDst )
-{
-	NI_ASSERT( CanReadPacket( src ), "Can't read a packet" );
-	int nSize = 0;
-	src.Read( &nSize, 1 );
-	if ( ( nSize & 1 ) == 0 )
-	{
-		src.Read( ( (char *)&nSize ) + 1, 3 );
-	}
-	nSize >>= 1;
-	pDst->SetSizeDiscard( nSize );
-	src.Read( pDst->GetBufferForWrite(), nSize );
+	return true;
 }
 
 // ************************************************************************************************************************ //
@@ -362,7 +332,8 @@ bool CNetDriver::SendBroadcast( const CMemoryStream &_pkt )
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
-	if ( state != ACTIVE )
+	// P2P adds a type byte and a four-byte broadcast sequence number.
+	if ( state != ACTIVE || _pkt.GetSize() > N_MAX_FRAME_SIZE - 5 )
 	{
 		return false;
 	}
@@ -379,6 +350,11 @@ bool CNetDriver::SendBroadcast( const CMemoryStream &_pkt )
 bool CNetDriver::SendDirect( int nClient, const CMemoryStream &_pkt )
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
+	// Check before the P2P type byte is added or the encoded length can overflow.
+	if ( _pkt.GetSize() > N_MAX_FRAME_SIZE - 1 )
+	{
+		return false;
+	}
 	CMemoryStream pkt = _pkt;
 
 	// CRAP{ for traffic measurement
@@ -776,25 +752,69 @@ void CNetDriver::AddOutputMessage( EMessage msg,
 	}
 }
 
+void CNetDriver::RejectFrame( SPeer *pPeer )
+{
+	// An invalid length cannot be resynchronized in this byte stream. Publish
+	// the ordinary connection failure instead of keeping a permanently full ring.
+	pPeer->bInvalidFrame = true;
+	DebugTrace( "Invalid network frame from client %u", pPeer->clientID );
+	p2p.KickClient( pPeer->clientID, bIsBroadcast );
+}
+
 void CNetDriver::PollMessages( SPeer *pPeer )
 {
 	// seek for packets through incoming traffic
 	// Drain complete frames before a following LOGOUT can retire this connection.
-	for ( ;; )
+	while ( !pPeer->bInvalidFrame )
 	{
 		// Closing an out-of-order gap can fill the ring before all acknowledged
-		// blocks fit. Each consumed frame makes room for the remaining blocks.
+		// blocks fit. Consume partial frames too, including frames larger than it.
 		pPeer->data.PumpIncoming();
-		if ( !CanReadPacket( pPeer->data.channelInBuf ) )
+		auto &input = pPeer->data.channelInBuf;
+		if ( pPeer->nIncomingPacketSize < 0 )
+		{
+			uint32_t nEncodedSize = 0;
+			if ( input.Peek( &nEncodedSize, 1 ) == 0 )
+			{
+				break;
+			}
+			const int nHeaderSize = ( nEncodedSize & 1 ) ? 1 : 4;
+			if ( input.GetSize() < nHeaderSize )
+			{
+				break;
+			}
+			input.Read( &nEncodedSize, nHeaderSize );
+			const uint32_t nSize = nEncodedSize >> 1;
+			// Every P2P frame has at least a type byte. Reject negative legacy
+			// lengths without converting them to a huge allocation or stalled read.
+			if ( nSize == 0 || nSize > N_MAX_FRAME_SIZE )
+			{
+				RejectFrame( pPeer );
+				return;
+			}
+			pPeer->nIncomingPacketSize = nSize;
+		}
+		CMemoryStream &pkt = pPeer->incomingPacket;
+		const int nReceived = pkt.GetSize();
+		const int nRead = (std::min)( input.GetSize(), pPeer->nIncomingPacketSize - nReceived );
+		if ( nRead == 0 )
 		{
 			break;
 		}
-		CMemoryStream pkt;
-		ReadPacket( pPeer->data.channelInBuf, &pkt );
+		// Allocate only bytes actually received, not the advertised frame size.
+		pkt.SetSize( nReceived + nRead );
+		input.Read( pkt.GetBufferForWrite() + nReceived, nRead );
+		if ( pkt.GetSize() != pPeer->nIncomingPacketSize )
+		{
+			continue;
+		}
 #ifdef LOG
 		cout << "receive packet from " << pPeer->addr.GetFastName() << " size=" << pkt.GetSize() << endl;
 #endif
+		pkt.Seek( 0 );
 		p2p.ProcessPacket( pPeer->clientID, pkt, bIsBroadcast );
+		pkt.SetSizeDiscard( 0 );
+		pPeer->nIncomingPacketSize = -1;
 	}
 }
 
@@ -869,13 +889,17 @@ void CNetDriver::StepActive( float fDeltaTime )
 	ProcessP2PMessages();
 
 	// form output packets
+	std::vector<CP2PTracker::UCID> invalidFrames;
 	for ( int pi = 0; pi < p2p.packets.size(); ++pi )
 	{
 		CP2PTracker::SPacket &p = p2p.packets[pi];
 		SPeer *pPeer = GetClient( p.addr );
 		if ( pPeer )
 		{
-			WritePacket( &pPeer->data.outList, p.pkt );
+			if ( !WritePacket( &pPeer->data.outList, p.pkt ) )
+			{
+				invalidFrames.push_back( pPeer->clientID );
+			}
 
 #ifdef LOG
 			cout << "output packet to " << p.addr.GetFastName() << " size=" << p.pkt.GetSize() << endl;
@@ -889,6 +913,15 @@ void CNetDriver::StepActive( float fDeltaTime )
 		}
 	}
 	p2p.packets.resize( 0 );
+	// Kicking can enqueue P2P control messages, so do it after consuming the
+	// outgoing vector instead of invalidating the frame currently being inspected.
+	for ( CP2PTracker::UCID clientID : invalidFrames )
+	{
+		if ( SPeer *pPeer = GetClient( clientID ) )
+		{
+			RejectFrame( pPeer );
+		}
+	}
 
 	int nKicksLeft = 5; // limit the number of timeout kicks per step
 	// send updates & check for timeouts

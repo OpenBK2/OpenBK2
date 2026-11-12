@@ -1,0 +1,84 @@
+Client connection audit (read-only production inspection)
+
+Status, 2026-11-11: moved to docs alongside netcode-audit.txt. The four established
+match fixes documented there do not address the setup/route issues below. These
+remain follow-up findings. Code locations refer to port commit a33f83abf.
+Historical diagnostic sources and logs remain in async_debug/investigation/net_audit.
+
+Validation: ConnectionRouteAudit compiled against the current production source
+objects and ran successfully on Windows. All 13 tests passed: 10 existing tests
+and 3 diagnostic cases asserting the buggy behavior. See ConnectionRouteAudit-run.log
+and ConnectionRouteAudit-results.xml. No claims depend on a live NAT experiment.
+
+1. Direct/relay disagreement has no convergence or recovery.
+
+ConnectionEffortInternal.cpp:229-239 marks the accepting effort successful as
+soon as CIndentityPacket arrives, before its identity response reaches the other
+side. The other effort independently fails at lines82-87 if that response has
+not arrived by its timeout. It creates a CThroughServerEffort (181-183), whose
+GetState unconditionally reports ES_SUCCESS (ConnectionEffortInternal.h:141-144).
+The first side retains CSimpleConnection. The server's fallback handler merely
+records departure-notification subscribers (Server/GameLobby.cpp:676-711); it
+does not notify the other endpoint to switch routes.
+
+CSimpleConnection::ProcessPacketFromServer always returns false
+(ConnectionInternal.h:39-42). CThroughServerConnection ignores peer-net packets
+(72-75). Neither path can receive the other's commands. A relay reports IsAlive
+true unconditionally (81-84). No later test or negotiation reconciles the route.
+
+Diagnostic ConnectionRouteAudit.cpp recreates real server effort identity
+success, real client effort Segment timeout, real fallback objects, and verifies
+both refuse the opposite route's game packet. No live network is used; only
+socket I/O is replaced by a recording driver. This is a setup bug, not proof
+that an established match can switch routes spontaneously.
+
+2. The temporary peer probe reports the persistent lobby socket's endpoint.
+
+ConnectionEffortInternal.cpp:40-49 creates pConnet2PlayersNet and connects that
+socket to the lobby to learn its external mapping. On success, lines158-160
+send CNewGameConnectingClient through pNet, the persistent lobby connection,
+instead of pConnet2PlayersNet. Server/ControlLobby.cpp:274-276 obtains IP/port
+from the socket carrying that packet. Server/GameLobby.cpp:339-346 consequently
+gives the target peer the lobby UDP endpoint for the new peer connection.
+
+Diagnostic RegistrationUsesLobbySocketRatherThanProbedSocket verifies the real
+method emits the registration on the lobby driver and none on the probe driver.
+This breaks NAT traversal for mappings associated with the actual peer socket.
+
+3. Hole punching sends from a fresh throwaway socket.
+
+ConnectionEffort.cpp:11-23 creates a new client links manager for each NOP.
+Net/LinksManager.cpp:327-332 calls Init(0), which creates and binds a fresh UDP
+socket (84-116). The manager is released at function exit and closes its socket
+(75-82). Neither the accepting socket nor the connecting socket sends these
+punch packets. A NAT mapping opened by that packet therefore belongs to the
+wrong socket. This is separate from the wrong registration socket in finding2.
+Source-proven; no live router experiment was attempted.
+
+4. An initial probe timeout never advances to fallback without another packet.
+
+ConnectionEffortInternal.cpp:62 calls CConnectServerProcessor::Segment, which
+queues a failure when the probe driver's state becomes INACTIVE. However its
+output queue is only drained inside the ReceivePacket loop (65-77). Initial
+login timeout/rejection produces no incoming event: Net/NetA4.cpp:712-715 and
+735-738 only change state/reject reason. The separate timeout at line82 applies
+only after ECONNECT_CLIENT. Thus an unsuccessful first server probe remains
+ES_CONNECTING indefinitely and never reaches CreateNextEffort.
+
+Diagnostic InitialProbeFailureNeverReachesEffortWithoutAnIncomingMessage calls
+the real Segment repeatedly with an INACTIVE driver, observes ES_CONNECTING,
+and then verifies the undrained failure is sitting in the nested processor.
+
+5. An established direct-link failure is treated as a player removal.
+
+ConnectionInternal.cpp:37-57 converts CNetRemoveClient or failed connection into
+CGameClientRemoved. PlayGameProcessor.cpp:266-282 erases that dead connection.
+It does not start a new effort or relay. The only CreateNextEffort call is in
+the initial effort processing at239. This can turn a single A-B path failure
+into lockstep waits/departures even when both clients retain their server and
+other-peer links. It is an observed lack of recovery, not a claim that the
+transport break itself was caused by these classes. GameX's kick/lag policy
+determines the downstream cascade and is audited separately.
+
+Production worktree remains untouched. The original ClientConnectionRemoval
+tests are included in the diagnostic TU alongside the three added audit cases.

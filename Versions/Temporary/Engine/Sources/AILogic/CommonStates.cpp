@@ -828,9 +828,10 @@ void CMechAttackUnitState::Segment()
 	}
 	else if ( pGun->GetNAmmo() == 0 )
 	{
-		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER )
+		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER ||
+		     ( IsValidObj( pEnemy ) && ( pEnemy->GetStats()->IsArtillery() || pEnemy->GetArtilleryIfCrew() != 0 ) ) )
 		{
-			// An empty preferred flamethrower must hand the attack back to the remaining weapons.
+			// An empty preferred weapon must hand these engagements back to the remaining guns.
 			StartAgain();
 		}
 		else
@@ -854,20 +855,31 @@ void CMechAttackUnitState::Segment()
 			if ( bSwarmAttack )
 			{
 				const uint8_t nScanResult = pUnit->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
-				if ( !bFinish && nScanResult == 2 && IsValidObj( pEnemy ) && pEnemy->IsAlive() && pEnemy->IsInfantry() )
+				if ( !bFinish && nScanResult == 2 && IsValidObj( pEnemy ) && pEnemy->IsAlive() )
 				{
-					for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+					const bool bArtilleryTarget = pEnemy->GetStats()->IsArtillery() || pEnemy->GetArtilleryIfCrew() != 0;
+					bool bRefreshWeapons = bArtilleryTarget;
+					if ( !bRefreshWeapons && pEnemy->IsInfantry() )
 					{
-						if ( pUnit->GetGun( i )->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER )
+						for ( int i = 0; i < pUnit->GetNGuns(); ++i )
 						{
-							continue;
+							if ( pUnit->GetGun( i )->GetShell().etrajectory ==
+							     NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER )
+							{
+								bRefreshWeapons = true;
+								break;
+							}
 						}
+					}
+					if ( bRefreshWeapons )
+					{
 						// Target scanning keeps a live current enemy without reevaluating its weapons.
-						// Refresh flame-equipped units at that same cadence, only between bursts.
+						// Also reconsider artillery approaches at this cadence, without interrupting bursts.
 						pUnit->ResetShootEstimator( pEnemy, false, pUnit->GetForbiddenGuns() );
 						CBasicGun *pNewGun = pUnit->GetBestShootEstimatedGun();
 						if ( pNewGun && pNewGun != pGun &&
-						     ( pNewGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER ||
+						     ( bArtilleryTarget ||
+						       pNewGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER ||
 						       pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER ) )
 						{
 							// Release only the old gun so secondary weapons can keep firing.
@@ -875,7 +887,6 @@ void CMechAttackUnitState::Segment()
 							bAim = true;
 							StartStateWithGun( pNewGun );
 						}
-						break;
 					}
 				}
 			}

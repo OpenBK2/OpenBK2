@@ -156,33 +156,41 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 	                                           wWaitMask ) );
 	// A disconnect changes the simulation just like a player command. Record it at
 	// the applied boundary, before this segment's orders, so replay also transfers the units.
-	CObj<IAILogicCommandB2> pDropCommand = new CDropPlayerCommand( nPlayer );
-	pCmdsHistory->AddCommand( nCommonSegment, pDropCommand );
-	pDropCommand->Execute();
+	CDropPlayerCommand::RecordAndExecute( pCmdsHistory, nCommonSegment, nPlayer );
 	NInput::PostEvent( "mission_remove_player", nPlayer, 0 );
 }
 
-void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
+bool CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
 {
-	if ( nPlayer < 0 || nPlayer >= playerRemovalSegments.size() )
+	if ( bIsGameEnded || nPlayer < 0 || nPlayer >= playerRemovals.size() )
 	{
-		return;
+		return false;
+	}
+
+	NMPPlayerDrop::SPlayerDrop &removal = playerRemovals[nPlayer];
+	const int nPrevious = removal.GetRemovalSegment( nLatency );
+	const NMPPlayerDrop::EResult result = removal.Schedule( nSegment, nCommonSegment, nLatency );
+	if ( result == NMPPlayerDrop::TOO_LATE )
+	{
+		// There is no rollback: transferring now would preserve two different
+		// histories. Refuse the correction before changing either membership mask.
+		FailPlayerDrop( nPlayer, nSegment, "late_drop_boundary" );
+		return false;
+	}
+	if ( result == NMPPlayerDrop::INVALID )
+	{
+		return false;
+	}
+	if ( result == NMPPlayerDrop::UNCHANGED )
+	{
+		return true;
 	}
 
 	StopWaitingForPlayer( nPlayer, nSegment );
-
-	// Stop executing this player's commands at the first segment that cannot be
-	// guaranteed to have reached every survivor. The actual scenario removal is
-	// delayed by latency, because commands for segment N execute at common N+latency.
-	const int nSimulationRemovalSegment = nSegment + nLatency;
-
-	// Idempotent queueing: keep the earliest simulation removal for the same player.
-	const int nCurrent = playerRemovalSegments[nPlayer];
-	if ( nCurrent < 0 || nSimulationRemovalSegment < nCurrent )
-	{
-		playerRemovalSegments[nPlayer] = nSimulationRemovalSegment;
-	}
-	NGameX::MatchPacketTrace_RecordDropScheduled( nPlayer, playerRemovalSegments[nPlayer] );
+	// Removal precedes orders at this boundary. Packet P's orders execute at
+	// P + latency + pack size; required earlier packets still gate those ticks.
+	const int nSimulationRemovalSegment = removal.GetRemovalSegment( nLatency );
+	NGameX::MatchPacketTrace_RecordDropScheduled( nPlayer, nSimulationRemovalSegment );
 	NGameX::MatchPacketTrace_Log( nCommonSegment,
 	                              "DECISION",
 	                              "SchedulePlayerRemoval",
@@ -191,14 +199,12 @@ void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
 	                                           nPlayer,
 	                                           nSegment,
 	                                           nSimulationRemovalSegment,
-	                                           playerRemovalSegments[nPlayer],
-	                                           nCurrent ) );
+	                                           nSimulationRemovalSegment,
+	                                           nPrevious ) );
 
-	// Late packet fallback: apply immediately if this segment has already passed locally.
-	if ( playerRemovalSegments[nPlayer] >= 0 && playerRemovalSegments[nPlayer] <= nCommonSegment )
-	{
-		ApplyScheduledPlayerRemovals();
-	}
+	// Apply only at dispatch, after the manager has drained its packet queue.
+	// Applying here would make simultaneous transfers follow packet arrival order.
+	return !bPlayerDropError;
 }
 
 // perform segments for AI
@@ -229,13 +235,11 @@ void CMPTransceiver::DoSegments()
 		return;
 	}
 
-	// Apply removals on their simulation boundary, including the final tick.
-	ApplyScheduledPlayerRemovals();
-
 	// A final boundary already reached must finish even while a local user pause
 	// is active. Never enter another packet wait after reaching that boundary.
 	if ( nFinalSegment >= 0 && nCommonSegment >= nFinalSegment )
 	{
+		ApplyScheduledPlayerRemovals();
 		EndGame();
 		return;
 	}
@@ -246,15 +250,19 @@ void CMPTransceiver::DoSegments()
 
 	while ( pTimer->CanStartNextSegment() )
 	{
-		// Keep removal processing inside the loop as well, because network packets can arrive between updates.
-		ApplyScheduledPlayerRemovals();
-
 		if ( IsSegmentPackFinished() )
 		{
 			// прибавляется MAX_LATENCY, т.к. модуль от отрицательных чисел считается неправильно
 			const int nPastSegment = ( nSegment - nLatency + pConsts->nMaxLatency ) % pConsts->nMaxLatency;
 			if ( nCommonSegment < nLatency || IsSegmentFinishedByAll( nPastSegment ) )
 			{
+				// Commit all departures in slot order immediately before this tick's
+				// orders, only once its required command prefix is available.
+				ApplyScheduledPlayerRemovals();
+				if ( bIsGameEnded )
+				{
+					return;
+				}
 				SetLagState( nPastSegment, false );
 
 				bCommandsFromHistory = true;
@@ -278,6 +286,11 @@ void CMPTransceiver::DoSegments()
 		}
 		else
 		{
+			ApplyScheduledPlayerRemovals();
+			if ( bIsGameEnded )
+			{
+				return;
+			}
 			AdvanceToNextSegment();
 		}
 
@@ -294,20 +307,50 @@ void CMPTransceiver::DoSegments()
 
 void CMPTransceiver::ApplyScheduledPlayerRemovals()
 {
-	for ( int i = 0; i < playerRemovalSegments.size(); ++i )
+	for ( int i = 0; i < playerRemovals.size(); ++i )
 	{
-		const int nSegment = playerRemovalSegments[i];
-		if ( nSegment >= 0 && nSegment <= nCommonSegment )
+		NMPPlayerDrop::SPlayerDrop &removal = playerRemovals[i];
+		const int nSegment = removal.GetRemovalSegment( nLatency );
+		if ( !removal.IsPending() || nSegment > nCommonSegment )
+		{
+			continue;
+		}
+		if ( nSegment < nCommonSegment )
+		{
+			FailPlayerDrop( i, removal.GetSegment(), "missed_drop_boundary" );
+			return;
+		}
+		if ( nSegment == nCommonSegment )
 		{
 			NGameX::MatchPacketTrace_Log( nCommonSegment,
 			                              "STATE",
 			                              "ApplyScheduledPlayerRemovals",
 			                              players[i].nClientID,
 			                              fmt::format( "slot={} target_seg={} apply_seg={}", i, nSegment, nCommonSegment ) );
+			// Keep the applied decision so duplicates cannot requeue or erase it.
+			removal.MarkApplied();
 			PlayerRemoved( i );
-			playerRemovalSegments[i] = -1;
 		}
 	}
+}
+
+void CMPTransceiver::FailPlayerDrop( int nPlayer, int nSegment, const char *szReason )
+{
+	if ( bPlayerDropError )
+	{
+		return;
+	}
+	bPlayerDropError = true;
+	NGameX::MatchPacketTrace_Log( nCommonSegment,
+	                              "ERROR",
+	                              "PlayerDropSynchronizationFailed",
+	                              players[nPlayer].nClientID,
+	                              fmt::format( "slot={} requested_seg={} reason={}", nPlayer, nSegment, szReason ) );
+	NGameX::MatchPacketTrace_Flush( "player_drop_error" );
+	// The manager displays the network error on its next update. Stop simulation
+	// immediately, including when the failure occurs inside a catch-up loop.
+	Singleton<IScenarioTracker>()->MissionCancel();
+	EndGame();
 }
 
 void CMPTransceiver::ExecuteCommands( int nFromSegment )
@@ -342,7 +385,44 @@ void CMPTransceiver::ExecuteCommands( int nFromSegment )
 
 bool CMPTransceiver::IsSegmentFinishedByAll( int nSegment )
 {
-	return ( segmFinished[nSegment] & wWaitMask ) == wWaitMask;
+	return GetMissingSegmentPlayers( nSegment ) == 0;
+}
+
+uint32_t CMPTransceiver::GetCurrentMissingPlayers() const
+{
+	if ( !bIsGameRunning || bIsGameEnded || nCommonSegment < nLatency || nSegmentsPackSize <= 0 ||
+	     nCommonSegment % nSegmentsPackSize != 0 || !pConsts || pConsts->nMaxLatency <= 0 )
+	{
+		return 0;
+	}
+
+	const int nPastSegment = ( nSegment - nLatency + pConsts->nMaxLatency ) % pConsts->nMaxLatency;
+	if ( nPastSegment < 0 || nPastSegment >= segmFinished.size() )
+	{
+		return 0;
+	}
+
+	// Scheduled departures retain a separate command-prefix barrier, but no
+	// longer participate in ordinary lag voting. Do not turn them into laggers.
+	return GetMissingSegmentPlayers( nPastSegment ) & wWaitMask;
+}
+
+uint16_t CMPTransceiver::GetMissingSegmentPlayers( int nSegment ) const
+{
+	uint16_t wMissing = wWaitMask & ~segmFinished[nSegment];
+	// A departure releases the ordinary receipt barrier immediately, but commands
+	// that execute before its removal still require the departing player's packet.
+	// Peer streams are ordered, so the absolute receipt counter proves that prefix.
+	for ( int i = 0; i < playerRemovals.size(); ++i )
+	{
+		if ( i != nMyLogicID && IsPlayerPresent( i ) &&
+		     playerRemovals[i].RequiresPacket(
+						 nCommonSegment, nLatency, nSegmentsPackSize, players[i].nLastReceivedSegment ) )
+		{
+			wMissing |= 1U << i;
+		}
+	}
+	return wMissing;
 }
 
 bool CMPTransceiver::IsSegmentPackFinished()
@@ -458,10 +538,9 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	                                           int( pPacket->aiCommands.size() ) ) );
 	int nPlayerSegment = pPacket->nSegment % pConsts->nMaxLatency;
 	//DebugTrace( "+++ receive SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nPlayer, nPlayerSegment, pPacket->nSegment, pPacket->ulCheckSum, pPacket->aiCommands.size() );
-	if ( IsPlayerWaitedFor( nPlayer ) )
-	{
-		SetSegmentFinished( nPlayer, nPlayerSegment, pPacket->ulCheckSum );
-	}
+	// Pending departures may still need earlier command packets. Keep receipt
+	// accounting until simulation removal, even after the manager stops waiting.
+	SetSegmentFinished( nPlayer, nPlayerSegment, pPacket->ulCheckSum );
 	const int nSegmentToExecuteCommand = GetSegmentToExecute( pPacket->nSegment );
 	for ( std::list<SRawCommand>::iterator it = pPacket->aiCommands.begin(); it != pPacket->aiCommands.end(); ++it )
 	{
@@ -656,6 +735,8 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	bCommandsFromHistory = false;
 	bIsGameRunning = false;
 	bIsGameEnded = false;
+	bPlayerDropError = false;
+	timeStartWaitingForRemovedPlayer = 0;
 	pClient = _pClient;
 	pCmdsSerializer = CreateAICmdsAutoMagic();
 	pConsts = NGameX::GetNetConsts();
@@ -689,7 +770,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	nGameSpeed = params.nSpeedAdjustment;
 	checkSums.SetSizes( pConsts->nMaxLatency, players.size() );
 	segmFinished.resize( pConsts->nMaxLatency, 0 );
-	playerRemovalSegments.assign( players.size(), -1 );
+	playerRemovals.assign( players.size(), NMPPlayerDrop::SPlayerDrop() );
 	cmds.Clear();
 	cmds.SetSizes( players.size(), pConsts->nMaxLatency );
 	checkSums.FillZero();
@@ -709,6 +790,28 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 		const auto message = fmt::format( "WAIT({}/{})", segmFinished[nSegment], wWaitMask );
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str() );
 		NTimer::STime curTime = pTimer->GetAbsTime();
+		const uint16_t wMissingRemovedPlayers = GetMissingSegmentPlayers( nSegment ) & ~wWaitMask;
+		if ( wMissingRemovedPlayers == 0 )
+		{
+			timeStartWaitingForRemovedPlayer = 0;
+		}
+		else if ( timeStartWaitingForRemovedPlayer == 0 )
+		{
+			timeStartWaitingForRemovedPlayer = curTime;
+		}
+		else if ( curTime - timeStartWaitingForRemovedPlayer > s_nInterruptTimeout )
+		{
+			// A disconnected peer cannot be kicked again to recover missing input.
+			// End explicitly instead of skipping its commands or waiting forever.
+			for ( int i = 0; i < players.size(); ++i )
+			{
+				if ( ( wMissingRemovedPlayers & ( 1U << i ) ) != 0 )
+				{
+					FailPlayerDrop( i, nCommonSegment, "missing_pre_drop_commands" );
+					return;
+				}
+			}
+		}
 		if ( timeStartWaiting == 0 )
 		{
 			timeStartWaiting = curTime;
@@ -726,6 +829,7 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, "" );
 		ReportLags( 0, false );
 		timeStartWaiting = 0;
+		timeStartWaitingForRemovedPlayer = 0;
 	}
 }
 

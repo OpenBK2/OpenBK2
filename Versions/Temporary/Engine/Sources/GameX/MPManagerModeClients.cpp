@@ -91,14 +91,14 @@ void CMPManagerMode::SendLagInfo()
 		return;
 	}
 
-	bool bOwnLag = IsPlayerLagging( nOwnSlot );
+	bool bOwnLag = ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0;
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
 	CPtr<SMPUILagInfoMessage> pInfoMsg = new SMPUILagInfoMessage( bOwnLag );
 
 	// Fill the info
 	if ( bOwnLag )
 	{
-		int nTimeLeft = lags[nOwnSlot].nLagLeft - ( curTime - lags[nOwnSlot].timeStartLag );
+		const int nTimeLeft = (std::max)( GetRemainingLagTime( nOwnSlot, curTime ) - GetLagReserveMilliseconds(), 0 );
 		pInfoMsg->nOwnTimeLeft = nTimeLeft / 1000;
 	}
 	for ( int i = 0; i < slots.size(); ++i )
@@ -108,8 +108,13 @@ void CMPManagerMode::SendLagInfo()
 			continue;
 		}
 
-		SLagInfo &lagInfo = lags[i];
-		int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
+		int nTimeLeft = GetRemainingLagTime( i, curTime );
+		if ( ( dwUserPausedPlayers & ( 1UL << i ) ) != 0 )
+		{
+			// An explicit pause ends at the network reserve, not when the entire
+			// disconnect allowance expires. Every observer shows that same limit.
+			nTimeLeft = (std::max)( nTimeLeft - GetLagReserveMilliseconds(), 0 );
+		}
 		SMPUILagInfoMessage::SLagItem newItem;
 		newItem.szName = slots[i].szName;
 		newItem.nSecondsLeft = bInitialLoadInProgress ? -1 : nTimeLeft / 1000;
@@ -148,24 +153,6 @@ bool CMPManagerMode::IsPlayerLagging( int nPlayer )
 		return false;
 	}
 	return ( dwLaggers & ( 1UL << nPlayer ) );
-}
-
-bool CMPManagerMode::HasPlayerStoppedLagging( int nPlayer )
-{
-	if ( !IsPlayerPresent( nPlayer ) )
-	{
-		return false;
-	}
-	return ( dwLaggersOld & ~dwLaggers & ( 1UL << nPlayer ) );
-}
-
-bool CMPManagerMode::HasPlayerStartedLagging( int nPlayer )
-{
-	if ( !IsPlayerPresent( nPlayer ) )
-	{
-		return false;
-	}
-	return ( ~dwLaggersOld & dwLaggers & ( 1UL << nPlayer ) );
 }
 
 int CMPManagerMode::GetSlotByClientID( int nClientID ) const
@@ -213,7 +200,7 @@ int CMPManagerMode::GetReplacementHostClientID( int nRemovedClientID )
 		const int nClientID = GetSlotClientID( i );
 		// A received drop stops lockstep waiting immediately, but the slot can
 		// remain visible until its announced segment. Never elect that leaver.
-		const bool bDropScheduled = i < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[i] >= 0;
+		const bool bDropScheduled = i < playerDrops.size() && playerDrops[i].GetSegment() >= 0;
 		if ( slot.bPresent && !bDropScheduled && nClientID >= 0 && nClientID != nRemovedClientID )
 		{
 			return nClientID;
@@ -230,6 +217,17 @@ void CMPManagerMode::PromoteGameControlHostAfterRemoval( int nRemovedClientID )
 	}
 
 	const int nOldHostClientID = nHostClientID;
+	for ( NMPPlayerDrop::SPlayerDrop &drop : playerDrops )
+	{
+		drop.RememberCorrectionAuthority( nOldHostClientID );
+	}
+	const int nOldHostSlot = GetSlotByClientID( nOldHostClientID );
+	if ( nOldHostSlot >= 0 && nOldHostSlot < playerDrops.size() )
+	{
+		// Backend disconnect and the host's final announcement use different routes.
+		// Keep authority for that host's own departure after promoting its successor.
+		playerDrops[nOldHostSlot].RememberHost( nOldHostClientID );
+	}
 	nHostClientID = GetReplacementHostClientID( nRemovedClientID );
 	NGameX::MatchPacketTrace_Log(
 			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -248,46 +246,50 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 	}
 
 	const int nSlotToDrop = pPacket->nSlotToDrop;
-	if ( nSlotToDrop < 0 || nSlotToDrop >= slots.size() )
+	if ( nSlotToDrop < 0 || nSlotToDrop >= slots.size() || nSlotToDrop >= playerDrops.size() ||
+	     !IsValid( pTransceiver ) ||
+	     !NMPPlayerDrop::SPlayerDrop::IsValidSegment( pPacket->nSegment, pTransceiver->GetLatency() ) )
 	{
 		return false;
 	}
 
-	// If the current game-control host is being dropped, accept either its own
-	// clean leave packet or a packet from the deterministic replacement host.
-	if ( GetSlotClientID( nSlotToDrop ) == nHostClientID )
+	const int nTargetClientID = GetSlotClientID( nSlotToDrop );
+	const int nReplacementHostClientID =
+			nTargetClientID == nHostClientID ? GetReplacementHostClientID( nHostClientID ) : -1;
+	if ( !playerDrops[nSlotToDrop].IsAuthoritative(
+					 pPacket->nClientID, nHostClientID, nTargetClientID, nReplacementHostClientID ) )
 	{
-		const int nReplacementHostClientID = GetReplacementHostClientID( nHostClientID );
-		if ( pPacket->nClientID == nHostClientID ||
-		     nReplacementHostClientID >= 0 && pPacket->nClientID == nReplacementHostClientID )
+		return false;
+	}
+
+	if ( nTargetClientID == nHostClientID )
+	{
+		const int nOldHostClientID = nHostClientID;
+		for ( NMPPlayerDrop::SPlayerDrop &drop : playerDrops )
 		{
-			const int nOldHostClientID = nHostClientID;
-			nHostClientID = nReplacementHostClientID;
-			NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			                              "STATE",
-			                              "PromoteGameControlHostFromDropPacket",
-			                              GetOwnClientID(),
-			                              fmt::format( "old_host={} new_host={} slot={} target_seg={}",
-			                                           nOldHostClientID,
-			                                           nHostClientID,
-			                                           nSlotToDrop,
-			                                           pPacket->nSegment ) );
-			OnGameControlHostChanged( nOldHostClientID, nHostClientID, nOldHostClientID );
-			return true;
+			drop.RememberCorrectionAuthority( nOldHostClientID );
 		}
+		playerDrops[nSlotToDrop].RememberHost( nOldHostClientID );
+		nHostClientID = nReplacementHostClientID;
+		NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		                              "STATE",
+		                              "PromoteGameControlHostFromDropPacket",
+		                              GetOwnClientID(),
+		                              fmt::format( "old_host={} new_host={} slot={} target_seg={}",
+		                                           nOldHostClientID,
+		                                           nHostClientID,
+		                                           nSlotToDrop,
+		                                           pPacket->nSegment ) );
+		OnGameControlHostChanged( nOldHostClientID, nHostClientID, nOldHostClientID );
 	}
 
-	if ( pPacket->nClientID == nHostClientID )
-	{
-		return true;
-	}
-
-	return false;
+	return true;
 }
 
 void CMPManagerMode::BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason )
 {
-	if ( !IsGameControlHost() )
+	if ( !IsGameControlHost() || !IsValid( pTransceiver ) || pTransceiver->HasPlayerDropError() ||
+	     !NMPPlayerDrop::SPlayerDrop::IsValidSegment( nSegment, pTransceiver->GetLatency() ) )
 	{
 		return;
 	}
@@ -301,33 +303,45 @@ void CMPManagerMode::BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, c
 	BroadcastGameControlPacket( new CB2DropPlayerAtSegmentPacket( 0, nSlot, nSegment ) );
 }
 
-void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
+bool CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 {
-	if ( nSlot < 0 || nSlot >= slots.size() )
+	if ( nSlot < 0 || nSlot >= slots.size() || !IsValid( pTransceiver ) )
 	{
-		return;
+		return false;
 	}
 
 	// Remember and apply the earliest authoritative drop segment for this slot.
-	if ( scheduledDropSegmentBySlot.size() != slots.size() )
+	if ( playerDrops.size() != slots.size() )
 	{
-		scheduledDropSegmentBySlot.assign( slots.size(), -1 );
+		playerDrops.assign( slots.size(), NMPPlayerDrop::SPlayerDrop() );
 	}
-	const int nCurrent = scheduledDropSegmentBySlot[nSlot];
-	if ( nCurrent >= 0 && nCurrent <= nSegment )
+	const int nCurrent = playerDrops[nSlot].GetSegment();
+	// Validate in the transceiver before changing membership or the manager's
+	// retained decision. It refuses to rewrite a simulation tick already executed.
+	if ( !pTransceiver->SchedulePlayerRemoval( nSlot, nSegment ) )
 	{
-		return;
+		return false;
+	}
+	if ( playerDrops[nSlot].Schedule( nSegment, pTransceiver->GetCurrentCommonSegment(), pTransceiver->GetLatency() ) !=
+	     NMPPlayerDrop::SCHEDULED )
+	{
+		return false;
 	}
 
 	const uint32_t dwLaggersBefore = dwLaggers;
 	const uint32_t dwLaggersOldBefore = dwLaggersOld;
-	scheduledDropSegmentBySlot[nSlot] = nSegment;
-
 	// Stop local lag accounting for this slot immediately to avoid repeated kick scheduling.
+	dwNetworkLaggers &= ~( 1UL << nSlot );
 	dwLaggers &= ~( 1UL << nSlot );
 	dwLaggersOld &= ~( 1UL << nSlot );
 	dwUserPausedPlayers &= ~( 1UL << nSlot );
-	lags[nSlot].dwHatedBy = 0;
+	lags[nSlot].ResetKickVotes();
+	lags[nSlot].timeStartLag = 0;
+	for ( SLagInfo &lag : lags )
+	{
+		// A removed player is no longer a voter for any other pending timeout.
+		lag.dwHatedBy &= ~( 1UL << nSlot );
+	}
 	if ( dwLaggers == 0 )
 	{
 		ShowWaitWindow( false );
@@ -348,16 +362,18 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 					dwLaggersOldBefore,
 					dwLaggersOld ) );
 
-	// Defer both lockstep and manager-side removal to the same segment boundary.
-	if ( IsValid( pTransceiver ) )
+	// A removed local player must not retain a pause whose ownership bit was cleared above.
+	if ( nSlot == nOwnSlot )
 	{
-		// A removed local player must not retain a pause whose ownership bit was cleared above.
-		if ( nSlot == nOwnSlot )
-		{
-			pTransceiver->CommandTimeOut( false );
-		}
-		pTransceiver->SchedulePlayerRemoval( nSlot, nSegment );
+		pTransceiver->CommandTimeOut( false );
 	}
+	if ( bWinFromPlayerDrops )
+	{
+		// Keep the final simulation boundary aligned with corrected departures.
+		// Other victory reasons retain their independently announced finish tick.
+		ScheduleWinGame();
+	}
+	return true;
 }
 
 void CMPManagerMode::ApplyScheduledSlotDrops()
@@ -366,7 +382,7 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 	{
 		return;
 	}
-	if ( scheduledDropSegmentBySlot.size() != slots.size() )
+	if ( playerDrops.size() != slots.size() )
 	{
 		return;
 	}
@@ -374,7 +390,7 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 	const int nCommonSegment = pTransceiver->GetCurrentCommonSegment();
 	for ( int i = 0; i < slots.size(); ++i )
 	{
-		const int nDropSegment = scheduledDropSegmentBySlot[i];
+		const int nDropSegment = playerDrops[i].GetSegment();
 		if ( nDropSegment < 0 || nDropSegment > nCommonSegment )
 		{
 			continue;
@@ -399,6 +415,39 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 			                 dwPrePresentMask,
 			                 dwPostPresentMask ) );
 			NGameX::MatchPacketTrace_RecordDropApplied( i, nCommonSegment );
+		}
+	}
+}
+
+void CMPManagerMode::ResolvePendingHostDrops()
+{
+	// Each iteration retires one known host. Do not skip the authority chain:
+	// peers that have not received a later disconnect must validate the same handoffs.
+	for ( size_t i = 0; i < slots.size() && IsValid( pTransceiver ) && !pTransceiver->HasPlayerDropError(); ++i )
+	{
+		const int nHostSlot = GetSlotByClientID( nHostClientID );
+		if ( nHostSlot < 0 || nHostSlot >= playerDrops.size() )
+		{
+			return;
+		}
+		const int nOldHost = nHostClientID;
+		NMPPlayerDrop::SPlayerDrop &drop = playerDrops[nHostSlot];
+		const int nDeferredSegment = drop.TakeDeferredSegment();
+		if ( nDeferredSegment >= 0 )
+		{
+			// This self-announcement was authenticated when received, but its sender
+			// had not become our host yet. It can now pass the ordinary authority check.
+			CPtr<CB2DropPlayerAtSegmentPacket> pPacket =
+					new CB2DropPlayerAtSegmentPacket( nOldHost, nHostSlot, nDeferredSegment );
+			OnB2DropPlayerAtSegmentPacket( pPacket );
+		}
+		else if ( drop.IsDisconnected() )
+		{
+			RemoveClient( nOldHost, false );
+		}
+		if ( nHostClientID == nOldHost )
+		{
+			return;
 		}
 	}
 }
@@ -443,14 +492,18 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 					IsGameControlHost() || ( bRemovingGameControlHost && GetOwnClientID() == nReplacementHostClientID );
 			if ( IsValid( pTransceiver ) )
 			{
-				if ( scheduledDropSegmentBySlot.size() != slots.size() )
+				if ( playerDrops.size() != slots.size() )
 				{
-					scheduledDropSegmentBySlot.assign( slots.size(), -1 );
+					playerDrops.assign( slots.size(), NMPPlayerDrop::SPlayerDrop() );
 				}
+
+				// Retain a disconnect observed before this client becomes control host.
+				// A later handoff must not elect it and wait for a second notification.
+				playerDrops[i].RememberDisconnect();
 
 				// Schedule by lockstep membership, not slot UI state.
 				// Slot presence can already be false here while transceiver still waits for this player.
-				if ( scheduledDropSegmentBySlot[i] < 0 && ( pTransceiver->GetPlayerMask() & ( 1UL << i ) ) != 0 )
+				if ( playerDrops[i].GetSegment() < 0 && ( pTransceiver->GetPlayerMask() & ( 1UL << i ) ) != 0 )
 				{
 					const int nDropSegment = pTransceiver->GetCurrentCommonSegment();
 					if ( bOwnsDropAuthority )
