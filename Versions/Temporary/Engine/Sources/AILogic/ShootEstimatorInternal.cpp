@@ -252,7 +252,8 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 	float fBestTime = 0;
 	*pBestGun = 0;
 	float fLargestArea2 = 0;
-	bool bBestIsCloseFlamethrower = false;
+	int nBestPreference = -1;
+	const bool bArtilleryTarget = pEnemy->GetStats()->IsArtillery() || pEnemy->GetArtilleryIfCrew() != 0;
 
 	CVec2 vDirToEnemy = pEnemy->GetCenterPlain() - pOwner->GetCenterPlain();
 	const float fDist = fabs( vDirToEnemy );
@@ -405,17 +406,21 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 						const bool bCloseFlamethrower =
 								pEnemy->IsInfantry() && shell.etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER &&
 								pGun->CanShootToUnitWOMove( pEnemy );
-						if ( *pBestGun == 0 || ( bCloseFlamethrower && !bBestIsCloseFlamethrower ) ||
-						     ( bCloseFlamethrower == bBestIsCloseFlamethrower && fTime < fBestTime ) )
+						// Do not approach artillery or its crew for a faster weapon when another has a usable shot.
+						// Keep the close-flame preference and ordinary timing within each preference level.
+						const int nPreference =
+								bCloseFlamethrower ? 2 : ( bArtilleryTarget && pGun->CanShootToUnitWOMove( pEnemy ) ? 1 : 0 );
+						if ( *pBestGun == 0 || nPreference > nBestPreference ||
+						     ( nPreference == nBestPreference && fTime < fBestTime ) )
 						{
 							*pBestGun = pGun;
 							*nBestGun = i;
 							fBestTime = fTime;
 							fLargestArea2 = shell.fArea2;
-							bBestIsCloseFlamethrower = bCloseFlamethrower;
+							nBestPreference = nPreference;
 						}
-						else if ( bCloseFlamethrower == bBestIsCloseFlamethrower &&
-						          pOwner->GetUnitAbilityDesc( NDb::ABILITY_COVER_FIRE ) != 0 && pEnemy->IsInfantry() )
+						else if ( nPreference == nBestPreference && pOwner->GetUnitAbilityDesc( NDb::ABILITY_COVER_FIRE ) != 0 &&
+						          pEnemy->IsInfantry() )
 						{
 							// Workaround for Cover Fire ability
 							// choose the gun with the largest Area2

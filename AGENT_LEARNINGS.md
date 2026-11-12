@@ -333,6 +333,22 @@ context. Read `git diff` of every touched file before building.
   soldiers need wMaxAngle = 65535, and spatial visibility needs nVisIndexInUnits
   as well as visible4Party. Missing these produced fixture crashes and false
   firing rejections; exercise the real secondary-fire scan to catch them.
+- Autonomous artillery targeting in `CAIUnit::LookForTargetInRange` substitutes
+  noticeable crewmen for a manned gun and omits the gun itself. Explicit mech
+  attacks initially evaluate the actual ordered target instead. In BK2E-GBC,
+  Churchill MKVII Late's Besa has range 20, a 0.78-second single-burst score and
+  HEAVY_CANNON classification, versus range 35 and 2-second aim for its 75 mm.
+  Ordinary travel-plus-kill scoring can therefore favor an MG approach to a
+  crewman even with a usable cannon shot. While moving, secondary free fire
+  excludes priority-zero guns unless firing in movement is enabled. Artillery
+  and serving-crew targets now prefer usable shots over approaches, and SWARM
+  reevaluates these engagements between bursts at its existing scan cadence.
+  `GetArtilleryIfCrew` identifies serving crew without new DB fields.
+- Mistake: partially reloading an attack-state test fixture cleared omitted
+  scalar fields, including its SWARM flag and enemy party. Initialize movement
+  phase and permissions in the same load as the other attack fields. Exercise
+  a real unfinished path and assert both stopping and firing after reselection;
+  checking only the selected gun missed the malformed fixture.
 
 ## Host migration and recorded removal ownership
 
