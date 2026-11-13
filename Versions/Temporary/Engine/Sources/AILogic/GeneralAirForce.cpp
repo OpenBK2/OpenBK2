@@ -15,6 +15,7 @@
 #include "UnitCreation.h"
 #include "UnitsIterators.h"
 #include "UnitsIterators2.h"
+#include "Weather.h"
 
 #include "AILogic_export.h"
 
@@ -120,7 +121,8 @@ void CGeneralAirForce::Segment()
 				break;
 			}
 
-			if ( theReinfArray[nPlayer].CanCallNow() && theReinfArray[nPlayer].HasReinforcement( NDb::RT_FIGHTERS ) )
+			if ( theReinfArray[nPlayer].CanCallNow() && theReinfArray[nPlayer].HasReinforcement( NDb::RT_FIGHTERS ) &&
+			     theWeather.CanCallAviation( nPlayer, NDb::RT_FIGHTERS ) )
 			{
 				if ( PrepeareFighters( nPlayer ) )
 				{
@@ -269,12 +271,18 @@ bool CGeneralAirForce::CallReinforcement( const int nPlayer,
 	{
 		return false;
 	}
+	// Ordinary aircraft leave immediately in active weather, including its fade transitions.
+	// Keep support requests for a later turn without spending a call or changing arrival tracking.
+	if ( !theWeather.CanCallAviation( nPlayer, eType ) )
+	{
+		return false;
+	}
 
 	// Keep one pending aircraft category until the reinforcement system creates its batch.
 	timeWaitForReinforceSystem = curTime + TIME_WAIT_FOR_REINFORCE_SYSTEM;
 	nCurrentRequest = eForceType;
 	Requests::const_iterator posReq = pos->second.begin();
-	theReinfArray[nPlayer].AddCallReinforcementCommand( eType, posReq->second.vPoint );
+	theReinfArray[nPlayer].AddCallReinforcementCommand( eType, posReq->second.vPoint, true );
 	return true;
 }
 

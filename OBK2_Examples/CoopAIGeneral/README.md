@@ -28,6 +28,18 @@ more ground reinforcements. It is not an absolute limit on all map or scripted
 units. The General uses the bot's own calls and cooldowns, independently of human
 MP timed credit grants and `SpawnStartingUnits`.
 
+Human reinforcement types still come from the selected nation and tech level in
+`MultiplayerConsts`: the map's `ReinforcementTypes` list selects which categories
+are available. Those categories must also exist in that nation/tech catalogue.
+An empty catalogue leaves the human player with no types, even with call credits
+and a default reinforcement point. A default point does not require an owned base.
+
+`MapInfo.Weather.WeatherPeriod` controls automatic bad weather independently of
+the `Visuals` reference. Set the period to `0` for a mission without automatic bad
+weather; an empty `Visuals` reference alone does not disable it. The General waits
+for flyable weather before ordering ordinary aircraft. Aircraft with an unlocked
+Master Pilot ability retain their all-weather exception.
+
 Keep groups controlled by repeated Lua `Cmd`/`QCmd` orders out of
 `mobileScriptIDs`; otherwise the script and General can both issue orders to
 them. Ungrouped units arriving through normal reinforcement calls are handed to

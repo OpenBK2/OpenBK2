@@ -653,6 +653,14 @@ context. Read `git diff` of every touched file before building.
 - `NTimer::STime` is unsigned. A test deadline of -1 is in the future, not already
   elapsed. Advance the real serialized simulation clock instead of relying on a
   signed-time assumption when testing reinforcement timers.
+- Human MP recipes are replaced by matching categories from the selected
+  nation/tech catalogue. A valid map list, credits and default entry cannot make
+  an empty `MultiplayerConsts` catalogue callable. Inspect effective loose and
+  packaged overrides before changing base ownership or reinforcement rules.
+- `Weather.Visuals` does not control simulation weather. A mission can look clear
+  while a nonzero `WeatherPeriod` makes fixed-wing aircraft retreat. Set the
+  period to zero to disable automatic weather; General eligibility must use the
+  simulation weather and the owning player's unlocked abilities.
 
 ## Editor reinforcement defaults
 

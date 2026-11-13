@@ -20,19 +20,23 @@ class CPlayerReinforcement
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		NDb::EReinforcementType eType = {};
 		CVec2 vPoint;
+		bool bGeneralCall = false;
 
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &eType );
 			f.Add( 3, &vPoint );
+			// Old queued player/script commands retain their explicit-call behavior.
+			f.Add( 4, &bGeneralCall );
 			return 0;
 		}
 
 		SCallReinforcementCommand() {}
 
-		SCallReinforcementCommand( NDb::EReinforcementType _eType, const CVec2 &_vPoint )
+		SCallReinforcementCommand( NDb::EReinforcementType _eType, const CVec2 &_vPoint, bool _bGeneralCall )
 			: eType( _eType )
 			, vPoint( _vPoint )
+			, bGeneralCall( _bGeneralCall )
 		{
 		}
 	};
@@ -135,7 +139,7 @@ private:
 public:
 	AILOGIC_EXPORT CPlayerReinforcement();
 
-	void AddCallReinforcementCommand( NDb::EReinforcementType eType, const CVec2 &vPoint );
+	void AddCallReinforcementCommand( NDb::EReinforcementType eType, const CVec2 &vPoint, bool bGeneralCall = false );
 	static const NDb::SDeployTemplate *GetDeployTemplate( const NDb::SReinforcementPosition &positionToDeploy,
 	                                                      NDb::EReinforcementType eType );
 	void EnablePosition( int nPositionID, bool bEnable );
