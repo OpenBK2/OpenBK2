@@ -251,8 +251,12 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 	const int nTargetClientID = GetSlotClientID( nSlotToDrop );
 	const int nReplacementHostClientID =
 			nTargetClientID == nHostClientID ? GetReplacementHostClientID( nHostClientID ) : -1;
-	if ( !playerDrops[nSlotToDrop].IsAuthoritative(
-					 pPacket->nClientID, nHostClientID, nTargetClientID, nReplacementHostClientID ) )
+	// Online surrender travels on the authenticated, persistent lobby stream.
+	// Any player may describe its own final input, never another player's slot.
+	const bool bSelfDeparture =
+			GetMode() == ENM_NIVAL_NET && nTargetClientID >= 0 && pPacket->nClientID == nTargetClientID;
+	if ( !bSelfDeparture && !playerDrops[nSlotToDrop].IsAuthoritative(
+															pPacket->nClientID, nHostClientID, nTargetClientID, nReplacementHostClientID ) )
 	{
 		return false;
 	}

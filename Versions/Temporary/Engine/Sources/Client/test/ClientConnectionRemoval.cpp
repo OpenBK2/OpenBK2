@@ -46,6 +46,23 @@ struct CPlayGameProcessorTestAccess
 	{
 		AddRelay( *client.pPlayGameProcessor, clientID );
 	}
+
+	static void AddConnection( CServerClient &client, int clientID, IConnection *connection )
+	{
+		client.pPlayGameProcessor->connections[clientID] = connection;
+		client.pPlayGameProcessor->nOurGameID = 968;
+	}
+
+	static bool HasConnection( const CServerClient &client, int clientID )
+	{
+		return HasConnection( *client.pPlayGameProcessor, clientID );
+	}
+
+	static bool IsAwaitingServerRemoval( const CServerClient &client, int clientID )
+	{
+		const auto &pending = client.pPlayGameProcessor->pendingServerRemovals;
+		return pending.find( clientID ) != pending.end();
+	}
 };
 
 namespace
@@ -169,6 +186,56 @@ public:
 	{
 		return 0;
 	}
+};
+
+// Only the already-established direct transport is simulated. Its notification
+// and the lobby's serialized response run through the real client processors.
+class CQueuedDirectConnection : public IConnection
+{
+	OBJECT_NOCOPY_METHODS( CQueuedDirectConnection );
+	bool bAlive = true;
+
+public:
+	std::list<CPtr<CNetPacket>> packets;
+
+	bool IsAlive() const override
+	{
+		return bAlive;
+	}
+
+	CNet *GetNet() override
+	{
+		return nullptr;
+	}
+
+	void SendGamePacket( CNetPacket * ) override {}
+
+	bool ProcessPacketFromPlayersNet( CNetPacket * ) override
+	{
+		return false;
+	}
+
+	bool ProcessPacketFromServer( CNetPacket * ) override
+	{
+		return false;
+	}
+
+	CNetPacket *GetPacket() override
+	{
+		if ( packets.empty() )
+		{
+			return nullptr;
+		}
+		CPtr<CNetPacket> packet = packets.front();
+		packets.pop_front();
+		if ( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ) )
+		{
+			bAlive = false;
+		}
+		return packet.Extract();
+	}
+
+	void TogglePauseNet( bool ) const override {}
 };
 
 void ReceiveDrop( CPlayGameProcessor &processor, int sender, int slot, int segment )
@@ -384,4 +451,95 @@ TEST( ClientConnectionRemoval, ServerForwardsUnknownInnerControlWithoutChangingI
 	expected << int( 40 ) << hostID << unknownType << uint8_t( 2 ) << int( 7645 );
 	ASSERT_EQ( forwarded.GetSize(), expected.GetSize() );
 	EXPECT_EQ( std::memcmp( forwarded.GetBuffer(), expected.GetBuffer(), expected.GetSize() ), 0 );
+}
+
+TEST( ClientConnectionRemoval, DirectLogoutWaitsForFinalServerForwardAndOrderedConfirmation )
+{
+	CPtr<CRecordingDriver> driver = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, driver );
+	CPtr<CQueuedDirectConnection> connection = new CQueuedDirectConnection();
+	connection->packets.push_back( new CGameClientRemoved( hostID ) );
+	connection->packets.push_back( new CGameClientRemoved( hostID ) );
+	CPlayGameProcessorTestAccess::AddConnection( client, hostID, connection );
+	client.Segment();
+
+	EXPECT_EQ( client.GetPacket(), nullptr );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasConnection( client, hostID ) );
+	EXPECT_TRUE( CPlayGameProcessorTestAccess::IsAwaitingServerRemoval( client, hostID ) );
+	ASSERT_EQ( driver->sent.size(), 1u );
+	CPtr<CNetPacket> query = Deserialize( driver->sent.front() );
+	auto *subscription = dynamic_cast<CThroughServerConnectionPacket *>( query.GetPtr() );
+	ASSERT_NE( subscription, nullptr );
+	EXPECT_EQ( subscription->nClientWith, hostID );
+	EXPECT_EQ( subscription->nGameID, 968 );
+
+	// The retired direct channel is no longer needed: the server stream carries
+	// the final self-departure before confirming that the player left the room.
+	driver->received.push_back(
+			Serialize( new CDirectPacketToClient( 0, hostID, new CB2DropPlayerAtSegmentPacket( 0, 2, 7645 ) ) ) );
+	driver->received.push_back( Serialize( new CGameClientDead( 0, hostID ) ) );
+	client.Segment();
+	CPtr<CNetPacket> packet = client.GetPacket();
+	auto *drop = dynamic_cast<CB2DropPlayerAtSegmentPacket *>( packet.GetPtr() );
+	ASSERT_NE( drop, nullptr );
+	EXPECT_EQ( drop->nClientID, hostID );
+	EXPECT_EQ( drop->nSegment, 7645 );
+	packet = client.GetPacket();
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ), nullptr );
+	EXPECT_EQ( packet->nClientID, hostID );
+	EXPECT_EQ( client.GetPacket(), nullptr );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::IsAwaitingServerRemoval( client, hostID ) );
+	EXPECT_EQ( driver->sent.size(), 1u );
+}
+
+TEST( ClientConnectionRemoval, ServerConfirmationDrainsAStillConnectedDirectQueueWithoutAnotherQuery )
+{
+	CPtr<CRecordingDriver> driver = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, driver );
+	CPtr<CQueuedDirectConnection> connection = new CQueuedDirectConnection();
+	connection->packets.push_back( new CB2DropPlayerAtSegmentPacket( hostID, 2, 7645 ) );
+	connection->packets.push_back( new CGameClientRemoved( hostID ) );
+	CPlayGameProcessorTestAccess::AddConnection( client, hostID, connection );
+	driver->received.push_back( Serialize( new CGameClientDead( 0, hostID ) ) );
+	client.Segment();
+	CPtr<CNetPacket> packet = client.GetPacket();
+	ASSERT_NE( dynamic_cast<CB2DropPlayerAtSegmentPacket *>( packet.GetPtr() ), nullptr );
+	packet = client.GetPacket();
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ), nullptr );
+	EXPECT_EQ( client.GetPacket(), nullptr );
+	EXPECT_TRUE( driver->sent.empty() );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasConnection( client, hostID ) );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::IsAwaitingServerRemoval( client, hostID ) );
+}
+
+TEST( ClientConnectionRemoval, BrokenDirectPathDoesNotRemoveAPlayerStillInTheServerRoom )
+{
+	CPtr<CRecordingDriver> driver = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, driver );
+	CPtr<CQueuedDirectConnection> connection = new CQueuedDirectConnection();
+	connection->packets.push_back( new CGameClientRemoved( hostID ) );
+	CPlayGameProcessorTestAccess::AddConnection( client, hostID, connection );
+	client.Segment();
+	// A still-present player produces no immediate server death notification.
+	// Ordinary lockstep timeout policy handles the broken path in the meantime.
+	for ( int nFrame = 0; nFrame < 10; ++nFrame )
+	{
+		client.Segment();
+		EXPECT_EQ( client.GetPacket(), nullptr );
+	}
+	EXPECT_TRUE( CPlayGameProcessorTestAccess::IsAwaitingServerRemoval( client, hostID ) );
+	EXPECT_EQ( driver->sent.size(), 1u );
+	client.SendPacket( new CLeaveGamePacket( 0, 968 ) );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::IsAwaitingServerRemoval( client, hostID ) );
+}
+
+TEST( ClientConnectionRemoval, UnknownServerDeathDoesNotInventARemoval )
+{
+	CPlayGameProcessor processor( nullptr, "127.0.0.1", 1, 0, 60 );
+	CPtr<CNetPacket> packet = new CGameClientDead( 0, hostID );
+	EXPECT_FALSE( processor.ProcessPacket( packet ) );
+	EXPECT_EQ( processor.GetPacket(), nullptr );
 }

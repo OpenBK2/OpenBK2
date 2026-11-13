@@ -33,6 +33,7 @@
 #include "GameX_export.h"
 
 #include <cstdint>
+#include <limits>
 
 #include <float.h>
 #include <fmt/format.h>
@@ -480,7 +481,31 @@ void CMPTransceiver::FinalizeSegmentPack()
 	                                           pPacket->ulCheckSum,
 	                                           int( pPacket->aiCommands.size() ) ) );
 	aiCommandsToSend.clear();
+	nLastSentSegment = pPacket->nSegment;
+	departurePackets.push_back( pPacket );
+	// Producing P requires each survivor's P-latency, which in turn required our
+	// P-2*latency. Everything older has already reached every active survivor.
+	// Retain an extra pack on each side of that bound, including startup packets.
+	const int64_t nOldest = int64_t( nLastSentSegment ) - 2 * int64_t( nLatency ) - 2 * int64_t( nSegmentsPackSize );
+	while ( !departurePackets.empty() &&
+	        static_cast<CAISegmentFinishedPacket *>( departurePackets.front().GetPtr() )->nSegment < nOldest )
+	{
+		departurePackets.pop_front();
+	}
 	pClient->SendGamePacket( pPacket, true );
+}
+
+int CMPTransceiver::GetDepartureSegment() const
+{
+	// The final produced packet executes at P + pack + latency. Remove at the
+	// next pack boundary, exactly where peers would need the first unsent packet.
+	const int64_t nDropSegment =
+			nLastSentSegment < 0 ? nSegmentsPackSize : int64_t( nLastSentSegment ) + 2 * int64_t( nSegmentsPackSize );
+	if ( nSegmentsPackSize <= 0 || nLatency < 0 || nDropSegment > ( std::numeric_limits<int>::max )() - nLatency )
+	{
+		return -1;
+	}
+	return int( nDropSegment );
 }
 
 void CMPTransceiver::AdvanceToNextSegment()
@@ -728,6 +753,8 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	bIsGameRunning = false;
 	bIsGameEnded = false;
 	bPlayerDropError = false;
+	departurePackets.clear();
+	nLastSentSegment = -1;
 	timeStartWaitingForRemovedPlayer = 0;
 	pClient = _pClient;
 	pCmdsSerializer = CreateAICmdsAutoMagic();

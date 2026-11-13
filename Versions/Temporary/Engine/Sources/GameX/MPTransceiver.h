@@ -9,6 +9,7 @@
 #include "GameX_export.h"
 
 #include <cstdint>
+#include <list>
 
 struct ICommandsHistory;
 struct IServerClient;
@@ -109,6 +110,9 @@ public:
 
 private:
 	std::list<CPtr<IAILogicCommandB2>> aiCommandsToSend;
+	// Keep the small unacknowledged tail alive when surrender tears down peer links.
+	std::list<CPtr<CNetPacket>> departurePackets;
+	int nLastSentSegment = -1;
 
 	struct SPlayer
 	{
@@ -235,6 +239,12 @@ public:
 	// Inspect the current input barrier without advancing simulation. Timeout
 	// accounting must observe recovered packets even during a local manual pause.
 	GAMEX_EXPORT uint32_t GetCurrentMissingPlayers() const;
+	GAMEX_EXPORT int GetDepartureSegment() const;
+
+	const std::list<CPtr<CNetPacket>> &GetDeparturePackets() const
+	{
+		return departurePackets;
+	}
 
 	int ScheduleGameEnd( const int _nSegment );
 

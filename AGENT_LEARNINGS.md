@@ -418,3 +418,10 @@ context. Read `git diff` of every touched file before building.
   consensus. A queued vote can precede the recovery packet in that same batch.
   Test both the no-kick case and a genuinely missing peer that still times out;
   excluding every voter alone can conceal stale observation bugs.
+- Mistake: enforcing the pre-departure command prefix without testing delayed
+  ordinary surrender exposed a receiver-clock cutoff that required packets the
+  leaver never produced. Base voluntary departure on the actual final packet,
+  retain its trailing commands across transport teardown, and test skewed peers.
+  A reliable queued send does not survive destroying its connection. Raw peer
+  LOGOUT and persistent lobby control are different routes; order membership
+  removal through the lobby before allowing it to choose a competing cutoff.

@@ -4,6 +4,7 @@
 #include "Server_Client_Common/PacketProcessor.h"
 
 #include <cstdint>
+#include <set>
 
 class CNet;
 class CNetPacket;
@@ -21,6 +22,9 @@ class CPlayGameProcessor : public CPacketProcessor
 
 	typedef std::unordered_map<int, CPtr<IConnection>> TConnections;
 	TConnections connections;
+	// A direct transport can close before the departing player's final lobby
+	// relays arrive. Only the ordered server notification confirms membership.
+	std::set<int> pendingServerRemovals;
 
 	typedef std::unordered_map<int, CPtr<CConnectionEffort>> TConnectionEfforts;
 	TConnectionEfforts connectionEfforts;
@@ -62,7 +66,7 @@ class CPlayGameProcessor : public CPacketProcessor
 	void StartServerConnect();
 	void ProcessConnectServerProcessor();
 	void ProcessAcceptingGamersPackets();
-	void DrainConnectionPackets( IConnection *pConnection );
+	void DrainConnectionPackets( IConnection *pConnection, bool bServerConfirmed = false );
 	void ProcessEfforts();
 	void Clear();
 	// The id is passed in rather than read back out of pEffort: this is called

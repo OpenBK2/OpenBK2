@@ -1,0 +1,66 @@
+Online surrender regression (2026-11-14)
+
+Evidence
+
+reports/FM and reports/Oiyou contain two viewpoints of game 1219 on Fallen
+Leaves. Oiyou produced command packets 0 through 14667 and then surrendered
+at common segment 14668. FM received that entire sequence, with matching
+checksums and command counts. No command packet was missing from this pair
+of reports.
+
+FM processed the backend departure at its own segment 14670 and selected
+that value as the drop cutoff. At segment 14671, the retained-command-prefix
+guard then required Oiyou's packet 14668. Oiyou had never produced it.
+The five-second missing_pre_drop_commands error was therefore inevitable.
+This was a departure-boundary bug, not evidence of random simulation drift.
+
+There is a second problem under loss: CLeaveGamePacket immediately destroys
+the direct match connections. Their reliable queues can still hold final
+commands. A reliable send alone does not preserve data across that teardown.
+The raw peer LOGOUT can also arrive before lobby-forwarded game control.
+
+Fix
+
+Every online surrender sends a small retained suffix of actual command
+packets, then an authenticated self-departure, through the existing persistent
+lobby route before CLeaveGamePacket. This applies to ordinary clients as well
+as the control host. It adds no wire packet or server protocol requirement.
+
+For final packet P, pack size B and latency L, commands execute at P+B+L.
+The announced cutoff is P+2B, so removal occurs at P+2B+L: the first command
+execution boundary that would require the never-produced next packet P+B.
+This preserves the final produced commands. Before any packet is produced,
+the cutoff is B. Receiver-local clocks do not select voluntary leave cutoffs.
+
+Producing P requires every active survivor's P-L; that in turn requires the
+leaver's P-2L. The cache retains packets through that bound plus two packs.
+The existing receipt deduplication prevents the relayed copies running twice.
+
+Raw direct disconnects query/subscribe to the existing server membership
+notification instead of immediately publishing a removal. The persistent
+server stream delivers final commands and the self-departure before confirming
+membership removal, even if the direct connection has already been destroyed.
+A broken peer path whose player remains in the lobby still uses the ordinary
+multiplayer timeout policy.
+
+Self-departure authority is limited to the authenticated sender's own slot.
+Existing host authority, command-prefix checks and rejection of corrections
+after simulation execution remain in place. Missing input is never invented
+or silently skipped. All participants need the updated client for this path.
+
+Scope and validation
+
+The supplied reports and the user's three-player Clumsy reproduction are from
+the online multiplayer lobby. LAN's separate transport shutdown is unchanged.
+The focused tests exercise actual online surrender packets, command receipt
+and dispatch, lost peer tails, delayed lobby delivery, duplicate packets and
+server-confirmed disconnect ordering. They supplement the existing pause,
+host-handoff, replay-removal and transport regressions.
+
+Validation completed with the Visual Studio developer environment and bundled
+CMake: Game and Server build successfully; all 113 cases in the 10 selected
+test executables pass, including 10 new graceful-leave cases and 4 new Client
+ordering cases. Changed C++ files pass the repository formatter check, and
+git diff --check passes. Runtime DLL hashes were checked against the rebuilt
+modules. This is automated packet-sequence validation, not a fresh interactive
+Clumsy multiplayer match; Linux was not built in this Windows session.

@@ -190,10 +190,21 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 	}
 }
 
-void CPlayGameProcessor::DrainConnectionPackets( IConnection *pConnection )
+void CPlayGameProcessor::DrainConnectionPackets( IConnection *pConnection, bool bServerConfirmed )
 {
 	while ( CPtr<CNetPacket> pPacket = pConnection->GetPacket() )
 	{
+		if ( CGameClientRemoved *pRemoved = dynamic_cast<CGameClientRemoved *>( pPacket.GetPtr() ) )
+		{
+			// LOGOUT on a direct channel can overtake the final command prefix
+			// and self-departure relayed through the lobby. Subscribe to the same
+			// server stream instead of choosing a fallback cutoff prematurely.
+			if ( !bServerConfirmed && pendingServerRemovals.insert( pRemoved->nClientID ).second )
+			{
+				pNet->SendPacket( new CThroughServerConnectionPacket( 0, pRemoved->nClientID, nOurGameID ) );
+			}
+			continue;
+		}
 		PushPacket( pPacket );
 	}
 }
@@ -360,11 +371,12 @@ bool CPlayGameProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket )
 	{
 		// Server notifications can follow forwarded game packets in the same
 		// receive batch. Deliver those packets before destroying their queue.
-		DrainConnectionPackets( iter->second );
+		DrainConnectionPackets( iter->second, true );
 		connections.erase( iter );
 	}
 	PushPacket( pPacket );
 	connectionEfforts.erase( pPacket->nKicked );
+	pendingServerRemovals.erase( pPacket->nKicked );
 
 	return true;
 }
@@ -394,6 +406,7 @@ void CPlayGameProcessor::Clear()
 {
 	pAcceptGamersNet = 0;
 	connections.clear();
+	pendingServerRemovals.clear();
 	connectionEfforts.clear();
 	pConnectGamePacket = 0;
 	pConnectServerProcessor = 0;
@@ -445,7 +458,7 @@ bool CPlayGameProcessor::ProcessGameKilled( CGameKilled *pPacket )
 		// the same batch that delivered its final relayed game packets.
 		for ( TConnections::iterator iter = connections.begin(); iter != connections.end(); ++iter )
 		{
-			DrainConnectionPackets( iter->second );
+			DrainConnectionPackets( iter->second, true );
 		}
 		Clear();
 		PushPacket( pPacket );
@@ -465,17 +478,23 @@ bool CPlayGameProcessor::ProcessConnectedGameID( CConnectedGameID *pPacket )
 bool CPlayGameProcessor::ProcessGameClientDead( CGameClientDead *pPacket )
 {
 	TConnections::iterator iter = connections.find( pPacket->nDeadClient );
+	if ( iter == connections.end() && pendingServerRemovals.find( pPacket->nDeadClient ) == pendingServerRemovals.end() )
+	{
+		return false;
+	}
 	if ( iter != connections.end() )
 	{
 		// A relay may already hold the departing host's final drop or outcome
 		// packet. Preserve its order before publishing the removal notification.
-		DrainConnectionPackets( iter->second );
-		PushPacket( new CGameClientRemoved( pPacket->nDeadClient ) );
+		DrainConnectionPackets( iter->second, true );
 		connections.erase( iter );
-		return true;
 	}
-
-	return false;
+	// The direct connection may already have been retired by Segment. Its
+	// pending subscription still authorizes this ordered removal notification.
+	pendingServerRemovals.erase( pPacket->nDeadClient );
+	connectionEfforts.erase( pPacket->nDeadClient );
+	PushPacket( new CGameClientRemoved( pPacket->nDeadClient ) );
+	return true;
 }
 
 void CPlayGameProcessor::TogglePauseAcceptGamersNet( bool bPause )

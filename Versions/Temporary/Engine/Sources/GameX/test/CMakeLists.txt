@@ -10,6 +10,8 @@ add_unit_test(MPHostHandoff GameX libdb System Misc Main AILogic Stats_B2_M1 zli
 # Exercise real pause packets, input recovery and allowance accounting without a map.
 add_unit_test(MPPause GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2
     SOURCES ../MultiplayerCommandProcessor.cpp)
+add_unit_test(MPGracefulLeave GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2
+    SOURCES ../MultiplayerCommandProcessor.cpp)
 add_unit_test(ReplayCommandTiming GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 add_unit_test(UnitTransferUI UI 3Dmotor libdb System Misc gr2)
 # Resolve the flags of an installed game's sides, when one is named (see the source).
@@ -21,7 +23,7 @@ target_compile_definitions(MPDataChecksum_test PRIVATE
     MP_CHECKSUM_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 if(WIN32)
     # GameX loads UI's FFmpeg codecs, including DLLs outside CMake's link graph.
-    set_tests_properties(MPDataChecksum_test UnitTransferCommand_test ReplayPlayerDrop_test MPHostHandoff_test MPPause_test ReplayCommandTiming_test UnitTransferUI_test MPSideFlags_test PROPERTIES
+    set_tests_properties(MPDataChecksum_test UnitTransferCommand_test ReplayPlayerDrop_test MPHostHandoff_test MPPause_test MPGracefulLeave_test ReplayCommandTiming_test UnitTransferUI_test MPSideFlags_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
     set_property(TARGET MPDataChecksum_test APPEND PROPERTY
         LINK_DEPENDS $<TARGET_FILE:GameX>)

@@ -232,7 +232,28 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 	                              fmt::format( "running={}", IsGameRunning() ? 1 : 0 ) );
 	if ( IsGameRunning() )
 	{
-		if ( IsGameControlHost() && IsValid( pTransceiver ) )
+		if ( GetMode() == ENM_NIVAL_NET && IsValid( pTransceiver ) && !pTransceiver->HasPlayerDropError() )
+		{
+			const int nDropSegment = pTransceiver->GetDepartureSegment();
+			if ( nDropSegment >= 0 )
+			{
+				// The persistent lobby stream outlives EndGame's peer teardown. Send
+				// actual trailing commands before the cutoff and the server leave;
+				// a remote client's later local tick cannot describe our final input.
+				for ( const CPtr<CNetPacket> &pPacket : pTransceiver->GetDeparturePackets() )
+				{
+					BroadcastGameControlPacket( pPacket );
+				}
+				NGameX::MatchPacketTrace_Log(
+						pTransceiver->GetCurrentCommonSegment(),
+						"TX",
+						"CB2DropPlayerAtSegmentPacket",
+						GetOwnClientID(),
+						fmt::format( "slot={} target_seg={} reason=voluntary_leave", nOwnSlot, nDropSegment ) );
+				BroadcastGameControlPacket( new CB2DropPlayerAtSegmentPacket( 0, nOwnSlot, nDropSegment ) );
+			}
+		}
+		else if ( IsGameControlHost() && IsValid( pTransceiver ) )
 		{
 			BroadcastSynchronizedPlayerDrop( nOwnSlot, pTransceiver->GetCurrentCommonSegment(), "control_host_leave" );
 		}
