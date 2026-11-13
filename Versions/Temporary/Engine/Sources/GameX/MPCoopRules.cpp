@@ -28,6 +28,11 @@ bool IsCoopGame( const SB2GameSpecificData &game )
 	return game.eType == SB2GameSpecificData::EGT_COOP;
 }
 
+bool IsMultiplayerNationSelectionDisabled( const SB2GameSpecificData &game )
+{
+	return game.pMPMap && game.pMPMap->bDisableNationSelection;
+}
+
 int GetMultiplayerSlotCount( const SB2GameSpecificData &game )
 {
 	return IsCoopGame( game ) && game.pMPMap && game.pMPMap->pMap ? game.pMPMap->pMap->players.size() : game.nPlayers;
@@ -106,6 +111,46 @@ std::vector<int> GetAllowedMultiplayerNations( const SB2GameSpecificData &game, 
 		nations.push_back( i );
 	}
 	return nations;
+}
+
+std::vector<int> GetAllowedMultiplayerNationsForSlot( const SB2GameSpecificData &game,
+                                                      int nSlot,
+                                                      const NDb::SMultiplayerConsts *pConsts )
+{
+	if ( !IsHumanMultiplayerSlot( game, nSlot ) )
+	{
+		return {};
+	}
+	const auto nations = GetAllowedMultiplayerNations( game, pConsts );
+	if ( !IsMultiplayerNationSelectionDisabled( game ) )
+	{
+		return nations;
+	}
+	if ( !game.pMPMap->pMap || nSlot >= game.pMPMap->pMap->players.size() ||
+	     !game.pMPMap->pMap->players[nSlot].pPartyInfo )
+	{
+		return {};
+	}
+	if ( !pConsts )
+	{
+		pConsts = GetMPConsts();
+	}
+	if ( !pConsts )
+	{
+		return {};
+	}
+	// Match the tracker's existing first-match mapping from authored PartyInfo to an MP nation.
+	// The fixed nation must still satisfy the map whitelist and tech-level availability.
+	const auto &party = game.pMPMap->pMap->players[nSlot].pPartyInfo;
+	for ( int i = 0; i < pConsts->sides.size(); ++i )
+	{
+		if ( pConsts->sides[i].pPartyInfo == party )
+		{
+			return std::find( nations.begin(), nations.end(), i ) != nations.end() ? std::vector<int>{ i }
+			                                                                       : std::vector<int>{};
+		}
+	}
+	return {};
 }
 
 bool ResolveMultiplayerMapRules( SB2GameSpecificData *pGame,
@@ -190,6 +235,16 @@ bool ResolveMultiplayerMapRules( SB2GameSpecificData *pGame,
 		pGame->bRandomPlacement = false;
 		pGame->nTimeLimit = 0; // COOP ends only when the map script decides its result.
 	}
+	if ( IsMultiplayerNationSelectionDisabled( *pGame ) )
+	{
+		for ( int i = 0; i < GetMultiplayerSlotCount( *pGame ); ++i )
+		{
+			if ( IsHumanMultiplayerSlot( *pGame, i ) && GetAllowedMultiplayerNationsForSlot( *pGame, i, pConsts ).empty() )
+			{
+				return RejectRules( pError, "<val MP_RULE_INVALID_PLAYER_ASSIGNMENT>" );
+			}
+		}
+	}
 	if ( pError )
 	{
 		pError->clear();
@@ -217,7 +272,6 @@ bool ValidateMultiplayerLobby( const SB2GameSpecificData &game,
 	{
 		return RejectRules( pError, "<val MP_RULE_LOBBY_SETTINGS_MISMATCH>" );
 	}
-	const auto nations = GetAllowedMultiplayerNations( game, pConsts );
 	int nHumans = 0;
 	int nTeams[2] = {};
 	for ( int i = 0; i < slots.size(); ++i )
@@ -227,8 +281,10 @@ bool ValidateMultiplayerLobby( const SB2GameSpecificData &game,
 		{
 			continue;
 		}
+		const auto nations = GetAllowedMultiplayerNationsForSlot( game, i, pConsts );
 		if ( !IsHumanMultiplayerSlot( game, i ) || slot.nTeam < 0 || slot.nTeam > 1 ||
 		     ( IsCoopGame( game ) && slot.nTeam != 0 ) ||
+		     ( IsMultiplayerNationSelectionDisabled( game ) && slot.bRandomCountry ) ||
 		     std::find( nations.begin(), nations.end(), slot.nCountry ) == nations.end() )
 		{
 			return RejectRules( pError, "<val MP_RULE_INVALID_PLAYER_ASSIGNMENT>" );

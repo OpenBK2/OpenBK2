@@ -65,7 +65,11 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 	slots[nOwnSlot].szName = szMPName;
 	slots[nOwnSlot].bPresent = true;
 	slots[nOwnSlot].nClientID = GetOwnClientID();
-	slots[nOwnSlot].nCountry = NGameX::GetAllowedMultiplayerNations( gameDesc ).front();
+	slots[nOwnSlot].nCountry = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, nOwnSlot ).front();
+	if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+	{
+		slots[nOwnSlot].bRandomCountry = false;
+	}
 	nHostClientID = slots[nOwnSlot].nClientID;
 	nSlotsUsed = 1;
 
@@ -197,10 +201,14 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 	{
 		newSlot.nTeam = 0;
 	}
-	const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+	const auto nations = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, pMsg->nSlot );
 	if ( newSlot.bPresent && std::find( nations.begin(), nations.end(), newSlot.nCountry ) == nations.end() )
 	{
 		return true;
+	}
+	if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+	{
+		newSlot.bRandomCountry = false;
 	}
 
 	if ( IsInGameRoom() )

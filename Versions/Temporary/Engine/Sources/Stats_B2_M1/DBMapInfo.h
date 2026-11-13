@@ -827,6 +827,8 @@ namespace NDb
 		bool bAddReinfsWithTimer;
 		int nOnBaseCaptureReinfPointsGain;
 		int nOnBaseLostReinfPointsLoss;
+		bool bDisableReinforcementOverride;
+		bool bDisableNationSelection;
 
 		SMultiplayerMap() :
 			__dwCheckSum( 0 ),
@@ -838,7 +840,9 @@ namespace NDb
 			bSpawnStartingUnits( true ),
 			bAddReinfsWithTimer( true ),
 			nOnBaseCaptureReinfPointsGain( 1 ),
-			nOnBaseLostReinfPointsLoss( -1 )
+			nOnBaseLostReinfPointsLoss( -1 ),
+			bDisableReinforcementOverride( false ),
+			bDisableNationSelection( false )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

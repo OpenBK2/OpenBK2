@@ -157,6 +157,7 @@ struct SMultiplayerReplayInfo
 	// Snapshot of the multiplayer map rules used when the recorded mission started.
 	bool bSpawnStartingUnits = true;
 	bool bAddReinfsWithTimer = true;
+	bool bDisableReinforcementOverride = false;
 	int nOnBaseCaptureReinfPointsGain = 1;
 	int nOnBaseLostReinfPointsLoss = -1;
 
@@ -224,6 +225,8 @@ struct SMultiplayerReplayInfo
 		{
 			f.Add( 26, &nOnBaseLostReinfPointsLoss );
 		}
+		// Older recordings used the selected nation/tech reinforcement catalogue.
+		f.Add( 27, &bDisableReinforcementOverride );
 		return 0;
 	}
 
@@ -267,6 +270,7 @@ struct SMultiplayerReplayInfo
 		bCoopPlayersRecorded = src.bCoopPlayersRecorded;
 		bSpawnStartingUnits = src.bSpawnStartingUnits;
 		bAddReinfsWithTimer = src.bAddReinfsWithTimer;
+		bDisableReinforcementOverride = src.bDisableReinforcementOverride;
 		nOnBaseCaptureReinfPointsGain = src.nOnBaseCaptureReinfPointsGain;
 		nOnBaseLostReinfPointsLoss = src.nOnBaseLostReinfPointsLoss;
 		return *this;

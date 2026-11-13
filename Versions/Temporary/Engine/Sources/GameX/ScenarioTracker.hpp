@@ -557,6 +557,7 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	int nMultiplayerDifficulty = 0;
 	bool bSpawnStartingUnits = true;
 	bool bAddReinfsWithTimer = true;
+	bool bDisableReinforcementOverride = false;
 	int nOnBaseCaptureReinfPointsGain = 1;
 	int nOnBaseLostReinfPointsLoss = -1;
 
@@ -620,6 +621,8 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 			f.Add( 28, &nOnBaseLostReinfPointsLoss );
 		}
 		SerializeObjectives( f );
+		// Missing in older saves: retain their nation/tech reinforcement substitution policy.
+		f.Add( 32, &bDisableReinforcementOverride );
 		return 0;
 	}
 
@@ -701,6 +704,13 @@ public:
 	bool GetAddReinfsWithTimer() const override
 	{
 		return bAddReinfsWithTimer;
+	}
+
+	void SetDisableReinforcementOverride( bool bDisable ) override;
+
+	bool GetDisableReinforcementOverride() const override
+	{
+		return bDisableReinforcementOverride;
 	}
 
 	void SetOnBaseCaptureReinfPointsGain( int nPoints ) override

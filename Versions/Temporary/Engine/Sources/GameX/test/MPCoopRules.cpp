@@ -110,6 +110,15 @@ protected:
 		}
 		return slots;
 	}
+
+	void ConfigureLockedNations()
+	{
+		map->bDisableNationSelection = true;
+		constants->sides[1].pPartyInfo = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
+		constants->sides[2].pPartyInfo = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
+		mission->players[1].pPartyInfo = constants->sides[1].pPartyInfo;
+		mission->players[3].pPartyInfo = constants->sides[2].pPartyInfo;
+	}
 };
 
 TEST_F( MPCoopRules, ResolvesForcedSettingsWithoutTurningUnrestrictedTechIntoMinusOne )
@@ -318,5 +327,104 @@ TEST_F( MPCoopRules, ClassicRetainsBothTeamsRequirement )
 	slots[1].nTeam = 1;
 	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) ) << error;
 	EXPECT_EQ( game.nTimeLimit, 60 );
+}
+
+TEST_F( MPCoopRules, NationSelectionDefaultsToExistingWhitelistBehavior )
+{
+	EXPECT_FALSE( map->bDisableNationSelection );
+	EXPECT_FALSE( map->bDisableReinforcementOverride );
+	map->allowedNations = { 1, 2 };
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	EXPECT_FALSE( NGameX::IsMultiplayerNationSelectionDisabled( game ) );
+	for ( int slot : { 1, 3 } )
+	{
+		EXPECT_EQ( NGameX::GetAllowedMultiplayerNationsForSlot( game, slot, constants ), ( std::vector<int>{ 1, 2 } ) );
+	}
+	// Existing Random selections remain valid when the new map flag is absent.
+	const auto slots = ReadySlots();
+	EXPECT_TRUE( slots[1].bRandomCountry );
+	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) ) << error;
+}
+
+TEST_F( MPCoopRules, LockedNationsUseSparseMapPlayerIDsAndRejectOtherAssignments )
+{
+	ConfigureLockedNations();
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	EXPECT_TRUE( NGameX::IsMultiplayerNationSelectionDisabled( game ) );
+	EXPECT_EQ( NGameX::GetAllowedMultiplayerNationsForSlot( game, 1, constants ), ( std::vector<int>{ 1 } ) );
+	EXPECT_EQ( NGameX::GetAllowedMultiplayerNationsForSlot( game, 3, constants ), ( std::vector<int>{ 2 } ) );
+	for ( int slot : { -1, 0, 2, 4, 5, 6 } )
+	{
+		EXPECT_TRUE( NGameX::GetAllowedMultiplayerNationsForSlot( game, slot, constants ).empty() ) << slot;
+	}
+	auto slots = ReadySlots();
+	slots[1].bRandomCountry = false;
+	slots[3].bRandomCountry = false;
+	// Both are valid global nations, but the second human's map slot specifies nation 2.
+	EXPECT_FALSE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) );
+	slots[3].nCountry = 2;
+	ASSERT_TRUE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) ) << error;
+	slots[1].bRandomCountry = true;
+	EXPECT_FALSE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) );
+	slots[1].bRandomCountry = false;
+	slots[1].nCountry = 2;
+	EXPECT_FALSE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) );
+}
+
+TEST_F( MPCoopRules, LockedNationsRejectMissingUnmatchedDisallowedAndUnavailableParties )
+{
+	ConfigureLockedNations();
+	mission->players[1].pPartyInfo = nullptr;
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	mission->players[1].pPartyInfo = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	mission->players[1].pPartyInfo = constants->sides[1].pPartyInfo;
+	map->allowedNations = { 1 };
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	// Choosing exact map reinforcement recipes does not waive lobby nation restrictions.
+	map->bDisableReinforcementOverride = true;
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	map->allowedNations.clear();
+	mission->players[1].pPartyInfo = constants->sides[0].pPartyInfo;
+	map->nForcedTechLevel = 1;
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	map->nForcedTechLevel = 0;
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	// Unselected authored HUMAN slots need not resolve, but opening another player place checks it.
+	game.nPlayers = 3;
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	mission->players[4].pPartyInfo = constants->sides[2].pPartyInfo;
+	EXPECT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+}
+
+TEST_F( MPCoopRules, ClassicLockedNationsKeepRandomPlacementAndUseDestinationMapSlots )
+{
+	ConfigureLockedNations();
+	map->eGameType = NDb::CLASSIC;
+	game.bRandomPlacement = true;
+	game.nTimeLimit = 60;
+	mission->players[0].pPartyInfo = constants->sides[2].pPartyInfo;
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	EXPECT_TRUE( game.bRandomPlacement );
+	EXPECT_EQ( game.nTimeLimit, 60 );
+	EXPECT_EQ( NGameX::GetAllowedMultiplayerNationsForSlot( game, 0, constants ), ( std::vector<int>{ 2 } ) );
+	EXPECT_EQ( NGameX::GetAllowedMultiplayerNationsForSlot( game, 1, constants ), ( std::vector<int>{ 1 } ) );
+	std::vector<SMPSlot> slots( 2 );
+	for ( int i = 0; i < 2; ++i )
+	{
+		slots[i].bPresent = true;
+		slots[i].bAccept = true;
+		slots[i].bRandomCountry = false;
+		slots[i].nTeam = i;
+		slots[i].nColour = i;
+		slots[i].nCountry = 2 - i;
+	}
+	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) ) << error;
+	// A start packet cannot retain the source slot's nation after the host shuffles players.
+	slots[0].nCountry = 1;
+	slots[1].nCountry = 2;
+	EXPECT_FALSE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) );
+	mission->players.resize( 1 );
+	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
 }
 } // namespace

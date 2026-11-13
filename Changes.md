@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Multiplayer maps can set `DisableReinforcementOverride` to keep exact map-authored reinforcement recipes and `DisableNationSelection` to hide nation selection and use each human slot's map-configured party. Both default to `false` and work in CLASSIC and COOP. Reinforcement policy and finalized nations are preserved in replays. See `OBK2_Examples/MultiplayerMapOverrides`.
+
 - Added optional fog attenuation for unit movement, engine idle, and engine start/stop sounds. `AIGameConsts.FOWSoundDistance` sets the reach beyond visible terrain in gameplay meters; the default `-1` preserves legacy playback. `FOWSoundMinBasePercentage` (default `0.1`) sets the minimum audible gain before linear scaling to full volume. Audio refreshes with unit visibility, while firing, impacts, explosions and death sounds retain their existing behavior. See `OBK2_Examples/FOWSound`.
 
 - Added `AIGameConsts.DisableEntrenchmentReloadSlowdown` (default `false`). Set it to `true` to stop entrenched units from repeating their initial aiming delay after every shot at the same target. Normal aiming, turret movement and reload time still apply; omitted or false values retain legacy timing.

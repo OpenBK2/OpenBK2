@@ -244,6 +244,69 @@ TEST_F( CoopScenario, StartingUnitPolicyKeepsRecipesAvailableInBothModes )
 	}
 }
 
+TEST_F( CoopScenario, DisabledOverrideKeepsMapRecipesAcrossNationChangesInBothModes )
+{
+	auto *catalogueRecipe = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+	auto *otherRecipe = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+	auto *mapOnlyRecipe = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+	mapOnlyRecipe->eType = NDb::RT_BOMBERS;
+	auto *otherParty = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
+	auto *startingUnits = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+	multiplayerConsts->sides.resize( 2 );
+	multiplayerConsts->sides[0].pPartyInfo = botParty;
+	multiplayerConsts->sides[1].pPartyInfo = otherParty;
+	for ( auto &side : multiplayerConsts->sides )
+	{
+		side.techLevels.resize( 1 );
+		side.techLevels[0].pStartingUnits = startingUnits;
+	}
+	multiplayerConsts->sides[0].techLevels[0].reinforcements.push_back( catalogueRecipe );
+	multiplayerConsts->sides[1].techLevels[0].reinforcements.push_back( otherRecipe );
+	map->players[0].pPartyInfo = botParty;
+	map->players[0].reinforcementTypes = { botReinforcement, nullptr, mapOnlyRecipe };
+	for ( const auto mode : { IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL, IAIScenarioTracker::EGT_MULTI_COOP } )
+	{
+		SCOPED_TRACE( int( mode ) );
+		tracker->SetGameType( mode );
+		tracker->MissionStart( map, 0 );
+		EXPECT_FALSE( tracker->GetDisableReinforcementOverride() );
+		// Match live/replay setup: apply map policy before adding the connected roster.
+		tracker->SetDisableReinforcementOverride( true );
+		tracker->AddPlayer( 0 );
+		tracker->SetPlayerSide( 0, 0 );
+		tracker->SetPlayerParty( 0, 0 );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), botReinforcement );
+		EXPECT_EQ( tracker->GetReinforcement( 0, mapOnlyRecipe->eType ), mapOnlyRecipe );
+		tracker->SetPlayerParty( 0, 1 );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), botReinforcement );
+		EXPECT_EQ( tracker->GetPlayerParty( 0 ), otherParty );
+		EXPECT_EQ( tracker->GetStartUnits( 0 ), startingUnits );
+
+		tracker->SetDisableReinforcementOverride( false );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), otherRecipe );
+		EXPECT_EQ( tracker->GetReinforcement( 0, mapOnlyRecipe->eType ), nullptr );
+		tracker->SetDisableReinforcementOverride( true );
+		// An empty selected catalogue cannot erase authored recipes when replacement is disabled.
+		multiplayerConsts->sides[1].techLevels[0].reinforcements.clear();
+		tracker->SetPlayerParty( 0, 1 );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), botReinforcement );
+		EXPECT_EQ( tracker->GetReinforcement( 0, mapOnlyRecipe->eType ), mapOnlyRecipe );
+		tracker->SetDisableReinforcementOverride( false );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), nullptr );
+		if ( tracker->IsCooperative() )
+		{
+			EXPECT_EQ( tracker->GetReinforcement( 1, botReinforcement->eType ), botReinforcement );
+		}
+		multiplayerConsts->sides[1].techLevels[0].reinforcements.push_back( otherRecipe );
+		tracker->SetDisableReinforcementOverride( true );
+		tracker->MissionStart( map, 0 );
+		EXPECT_FALSE( tracker->GetDisableReinforcementOverride() );
+		tracker->AddPlayer( 0 );
+		tracker->SetPlayerParty( 0, 0 );
+		EXPECT_EQ( tracker->GetReinforcement( 0, botReinforcement->eType ), catalogueRecipe );
+	}
+}
+
 TEST_F( CoopScenario, TimedCallPolicyPreservesExplicitGrantsAndMissionDefaults )
 {
 	for ( const auto mode : { IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL, IAIScenarioTracker::EGT_MULTI_COOP } )
@@ -273,10 +336,12 @@ TEST_F( CoopScenario, OlderTrackerSaveRestoresArmyAndTimedCallDefaultsOnAReusedO
 	ASSERT_NE( restored, nullptr );
 	EXPECT_TRUE( restored->GetSpawnStartingUnits() );
 	EXPECT_TRUE( restored->GetAddReinfsWithTimer() );
+	EXPECT_FALSE( restored->GetDisableReinforcementOverride() );
 	EXPECT_EQ( restored->GetOnBaseCaptureReinfPointsGain(), 1 );
 	EXPECT_EQ( restored->GetOnBaseLostReinfPointsLoss(), -1 );
 	restored->SetSpawnStartingUnits( false );
 	restored->SetAddReinfsWithTimer( false );
+	restored->SetDisableReinforcementOverride( true );
 	restored->SetOnBaseCaptureReinfPointsGain( 0 );
 	restored->SetOnBaseLostReinfPointsLoss( -3 );
 	CMemoryStream stream;
@@ -292,6 +357,7 @@ TEST_F( CoopScenario, OlderTrackerSaveRestoresArmyAndTimedCallDefaultsOnAReusedO
 	}
 	EXPECT_TRUE( restored->GetSpawnStartingUnits() );
 	EXPECT_TRUE( restored->GetAddReinfsWithTimer() );
+	EXPECT_FALSE( restored->GetDisableReinforcementOverride() );
 	EXPECT_EQ( restored->GetOnBaseCaptureReinfPointsGain(), 1 );
 	EXPECT_EQ( restored->GetOnBaseLostReinfPointsLoss(), -1 );
 }
@@ -302,6 +368,7 @@ TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 	tracker->SetScriptOutcome( 1 );
 	tracker->SetSpawnStartingUnits( false );
 	tracker->SetAddReinfsWithTimer( false );
+	tracker->SetDisableReinforcementOverride( true );
 	tracker->SetOnBaseCaptureReinfPointsGain( 0 );
 	tracker->SetOnBaseLostReinfPointsLoss( -3 );
 	CMemoryStream stream;
@@ -320,6 +387,7 @@ TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 	EXPECT_EQ( restored->GetScriptOutcome(), 1 );
 	EXPECT_FALSE( restored->GetSpawnStartingUnits() );
 	EXPECT_FALSE( restored->GetAddReinfsWithTimer() );
+	EXPECT_TRUE( restored->GetDisableReinforcementOverride() );
 	EXPECT_EQ( restored->GetOnBaseCaptureReinfPointsGain(), 0 );
 	EXPECT_EQ( restored->GetOnBaseLostReinfPointsLoss(), -3 );
 	EXPECT_TRUE( restored->IsPlayerPresent( 3 ) );
@@ -759,6 +827,7 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	original.nScriptResult = 2;
 	original.bSpawnStartingUnits = false;
 	original.bAddReinfsWithTimer = false;
+	original.bDisableReinforcementOverride = true;
 	original.nOnBaseCaptureReinfPointsGain = 3;
 	original.nOnBaseLostReinfPointsLoss = 0;
 	original.slots.resize( 5 );
@@ -781,16 +850,19 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	EXPECT_EQ( restored.nScriptResult, 2 );
 	EXPECT_FALSE( restored.bSpawnStartingUnits );
 	EXPECT_FALSE( restored.bAddReinfsWithTimer );
+	EXPECT_TRUE( restored.bDisableReinforcementOverride );
 	EXPECT_EQ( restored.nOnBaseCaptureReinfPointsGain, 3 );
 	EXPECT_EQ( restored.nOnBaseLostReinfPointsLoss, 0 );
 	SMultiplayerReplayInfo copied;
 	EXPECT_TRUE( copied.bSpawnStartingUnits );
 	EXPECT_TRUE( copied.bAddReinfsWithTimer );
+	EXPECT_FALSE( copied.bDisableReinforcementOverride );
 	EXPECT_EQ( copied.nOnBaseCaptureReinfPointsGain, 1 );
 	EXPECT_EQ( copied.nOnBaseLostReinfPointsLoss, -1 );
 	copied = restored;
 	EXPECT_FALSE( copied.bSpawnStartingUnits );
 	EXPECT_FALSE( copied.bAddReinfsWithTimer );
+	EXPECT_TRUE( copied.bDisableReinforcementOverride );
 	EXPECT_EQ( copied.nOnBaseCaptureReinfPointsGain, 3 );
 	EXPECT_EQ( copied.nOnBaseLostReinfPointsLoss, 0 );
 	ASSERT_EQ( restored.slots.size(), 5 );
@@ -809,11 +881,13 @@ TEST( CoopReplay, MissingOutcomeAndArmyPolicyChunksKeepLegacyDefaults )
 	SMultiplayerReplayInfo restored;
 	EXPECT_TRUE( restored.bSpawnStartingUnits );
 	EXPECT_TRUE( restored.bAddReinfsWithTimer );
+	EXPECT_FALSE( restored.bDisableReinforcementOverride );
 	EXPECT_EQ( restored.nOnBaseCaptureReinfPointsGain, 1 );
 	EXPECT_EQ( restored.nOnBaseLostReinfPointsLoss, -1 );
 	restored.nScriptResult = 2;
 	restored.bSpawnStartingUnits = false;
 	restored.bAddReinfsWithTimer = false;
+	restored.bDisableReinforcementOverride = true;
 	restored.nOnBaseCaptureReinfPointsGain = 3;
 	restored.nOnBaseLostReinfPointsLoss = 0;
 	stream.Seek( 0 );
@@ -825,6 +899,7 @@ TEST( CoopReplay, MissingOutcomeAndArmyPolicyChunksKeepLegacyDefaults )
 	EXPECT_EQ( restored.nScriptResult, 0 );
 	EXPECT_TRUE( restored.bSpawnStartingUnits );
 	EXPECT_TRUE( restored.bAddReinfsWithTimer );
+	EXPECT_FALSE( restored.bDisableReinforcementOverride );
 	EXPECT_EQ( restored.nOnBaseCaptureReinfPointsGain, 1 );
 	EXPECT_EQ( restored.nOnBaseLostReinfPointsLoss, -1 );
 }
@@ -856,12 +931,14 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	NSingleton::RegisterSingleton( tracker, IScenarioTracker::tidTypeID );
 	tracker->SetSpawnStartingUnits( false );
 	tracker->SetAddReinfsWithTimer( false );
+	tracker->SetDisableReinforcementOverride( true );
 	tracker->SetOnBaseCaptureReinfPointsGain( 3 );
 	tracker->SetOnBaseLostReinfPointsLoss( 0 );
 	history->StartNewGame( map );
 	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
 	tracker->SetSpawnStartingUnits( true );
 	tracker->SetAddReinfsWithTimer( true );
+	tracker->SetDisableReinforcementOverride( false );
 	tracker->SetOnBaseCaptureReinfPointsGain( 1 );
 	tracker->SetOnBaseLostReinfPointsLoss( -1 );
 	SetBotName( 1, u"Renamed after start" );
@@ -886,6 +963,7 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	const auto recorded = readHistoryInfo();
 	EXPECT_FALSE( recorded.bSpawnStartingUnits );
 	EXPECT_FALSE( recorded.bAddReinfsWithTimer );
+	EXPECT_TRUE( recorded.bDisableReinforcementOverride );
 	EXPECT_EQ( recorded.nOnBaseCaptureReinfPointsGain, 3 );
 	EXPECT_EQ( recorded.nOnBaseLostReinfPointsLoss, 0 );
 	EXPECT_TRUE( recorded.bCoopPlayersRecorded );
@@ -904,6 +982,7 @@ TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
 	const auto classic = readHistoryInfo();
 	EXPECT_TRUE( classic.bSpawnStartingUnits );
 	EXPECT_TRUE( classic.bAddReinfsWithTimer );
+	EXPECT_FALSE( classic.bDisableReinforcementOverride );
 	EXPECT_EQ( classic.nOnBaseCaptureReinfPointsGain, 1 );
 	EXPECT_EQ( classic.nOnBaseLostReinfPointsLoss, -1 );
 	EXPECT_FALSE( classic.bCoopPlayersRecorded );

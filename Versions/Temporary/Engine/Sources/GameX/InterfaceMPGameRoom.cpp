@@ -285,6 +285,10 @@ bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
 
 bool CInterfaceMPGameRoom::OnChangeSideReaction()
 {
+	if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+	{
+		return true;
+	}
 	// Invoked when OWN slot changes
 	// Process country change
 	SUISlot &slot = slots[nOwnSlot];
@@ -386,7 +390,7 @@ bool CInterfaceMPGameRoom::OnRejectGameReaction()
 	SUISlot &slot = slots[nOwnSlot];
 	slot.info.bAccept = false;
 	slot.pColour->Enable( true );
-	slot.pCountry->Enable( NGameX::GetAllowedMultiplayerNations( gameDesc ).size() > 1 );
+	slot.pCountry->Enable( NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, nOwnSlot ).size() > 1 );
 	slot.pTeam->Enable( !NGameX::IsCoopGame( gameDesc ) );
 	if ( slot.pControlDisabler )
 	{
@@ -401,6 +405,15 @@ bool CInterfaceMPGameRoom::OnRejectGameReaction()
 void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 {
 	CPtr<SMPUIUpdateSlotMessage> pMsg = new SMPUIUpdateSlotMessage;
+	if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+	{
+		const auto nations = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, nSlot );
+		if ( !nations.empty() )
+		{
+			slots[nSlot].info.nCountry = nations.front();
+		}
+		slots[nSlot].info.bRandomCountry = false;
+	}
 	if ( slots[nSlot].info.bRandomCountry )
 	{
 		// Display, Random and backend validation use the same map-filtered IDs.
@@ -595,6 +608,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		slot.pPlayerName->SetName( fmt::format( "Name{}", i ) );
 		slot.pCountry = GetChildChecked<IComboBox>( pWnd, "Country", true );
 		slot.pCountry->SetName( fmt::format( "Country{}", i ) );
+		slot.pCountry->ShowWindow( !NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) );
 
 		//Set viewer
 		slot.pCountry->SetViewer( new CTextureViewer() );
@@ -712,7 +726,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 		}
 
 		slot.pPlayerNameText->SetText( slot.pPlayerNameText->GetDBText() + NStr::ToUnicode( slot.info.szName ) );
-		const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+		const auto nations = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, i );
 		if ( nations.size() == 1 )
 		{
 			slot.info.nCountry = nations.front();
@@ -733,7 +747,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 
 		// Hide unused slots
 		//slot.pPlayerName->ShowWindow( slot.info.bPresent );
-		slot.pCountry->ShowWindow( slot.info.bPresent );
+		slot.pCountry->ShowWindow( slot.info.bPresent && !NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) );
 		slot.pTeam->ShowWindow( slot.info.bPresent && !NGameX::IsCoopGame( gameDesc ) );
 		slot.pColour->ShowWindow( slot.info.bPresent );
 		slot.pAccept->ShowWindow( slot.info.bPresent );

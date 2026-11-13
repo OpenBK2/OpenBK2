@@ -453,6 +453,10 @@ class SMultiplayerMap
 	[chunkID = 13; preserveDefault] int _OnBaseCaptureReinfPointsGain = 1;
 	// Signed reinforcement point change when losing a base. Negative removes points; zero disables the loss.
 	[chunkID = 14; preserveDefault] int _OnBaseLostReinfPointsLoss = -1;
+	// Keep each map player's reinforcement recipes instead of replacing them from MultiplayerConsts.
+	[chunkID = 15] bool _DisableReinforcementOverride = false;
+	// Hide nation selection and use each human map slot's PartyInfo; allowed nation and tech restrictions still apply.
+	[chunkID = 16] bool _DisableNationSelection = false;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
