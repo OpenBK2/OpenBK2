@@ -13,6 +13,7 @@
 #include "SingleReinforcement.h"
 #include "Stats_B2_M1/ReinfUpdates.h"
 #include "System/RandomGen.h"
+#include "Weather.h"
 
 #include <algorithm>
 #include <cstdint>
@@ -249,9 +250,11 @@ CPlayerReinforcement::GetDeployTemplate( const NDb::SReinforcementPosition &posi
 	return pTemplate;
 }
 
-void CPlayerReinforcement::AddCallReinforcementCommand( NDb::EReinforcementType eType, const CVec2 &vPoint )
+void CPlayerReinforcement::AddCallReinforcementCommand( NDb::EReinforcementType eType,
+                                                        const CVec2 &vPoint,
+                                                        bool bGeneralCall )
 {
-	commands.push_back( SCallReinforcementCommand( eType, vPoint ) );
+	commands.push_back( SCallReinforcementCommand( eType, vPoint, bGeneralCall ) );
 }
 
 void CPlayerReinforcement::SendReinforcementToPoint( std::list<std::pair<int, CObjectBase *>> &objects,
@@ -623,6 +626,12 @@ void CPlayerReinforcement::Segment()
 
 	for ( int i = 0; i < commands.size(); ++i )
 	{
+		// Weather can change after the General queues a call and before this tick creates it.
+		// Its support request remains pending for a later retry; explicit player/script calls are unchanged.
+		if ( commands[i].bGeneralCall && !theWeather.CanCallAviation( nPlayer, commands[i].eType ) )
+		{
+			continue;
+		}
 		if ( commands[i].eType == NDb::RT_SUPER_WEAPON )
 		{
 			vSuperWeaponCallPoint = commands[i].vPoint;

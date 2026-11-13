@@ -3,6 +3,8 @@
 #include "Aviation.h"
 #include "Diplomacy.h"
 #include "NewUpdater.h"
+#include "ScenarioTracker.h"
+#include "Statistics.h"
 #include "Stats_B2_M1/AIUpdates.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "UnitCreation.h"
@@ -15,6 +17,7 @@ CWeather theWeather;
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CUnitCreation theUnitCreation;
+extern CStatistics theStatistics;
 
 void CWeather::Clear()
 {
@@ -121,6 +124,59 @@ void CWeather::On()
 bool CWeather::IsActive() const
 {
 	return eState != EWS_CLEAR;
+}
+
+bool CWeather::CanCallAviation( int nPlayer, NDb::EReinforcementType eType ) const
+{
+	if ( !IsActive() )
+	{
+		return true;
+	}
+
+	IAIScenarioTracker *pTracker = GetScenarioTracker();
+	const NDb::SReinforcement *pReinforcement = pTracker ? pTracker->GetReinforcement( nPlayer, eType ) : nullptr;
+	if ( !pReinforcement )
+	{
+		return false;
+	}
+
+	// Match newly created aircraft's ability level, including the owning player's leader cap.
+	// Reading the local player here would make COOP decisions depend on the replay/client viewpoint.
+	const int nAbilityLevel = theStatistics.GetAbilityLevel( nPlayer, eType );
+	bool bHasAircraft = false;
+	for ( const NDb::SReinforcementEntry &entry : pReinforcement->entries )
+	{
+		if ( !entry.pMechUnit || !entry.pMechUnit->IsAviation() )
+		{
+			continue;
+		}
+		bHasAircraft = true;
+		// Helicopters do not use the fixed-wing patrol state's weather-forced departure.
+		if ( entry.pMechUnit->etype == NDb::RPG_TYPE_AVIA_HELICOPTER )
+		{
+			continue;
+		}
+		const NDb::SUnitActions *pActions = entry.pMechUnit->pActions;
+		bool bMasterPilot = false;
+		if ( pActions )
+		{
+			for ( int i = 0; i < pActions->specialAbilities.size() && i <= nAbilityLevel; ++i )
+			{
+				const NDb::SUnitSpecialAblityDesc *pAbility = pActions->specialAbilities[i];
+				if ( pAbility && pAbility->eName == NDb::ABILITY_MASTER_PILOT )
+				{
+					bMasterPilot = true;
+					break;
+				}
+			}
+		}
+		// A mixed batch must not spend a call on planes that immediately leave.
+		if ( !bMasterPilot )
+		{
+			return false;
+		}
+	}
+	return bHasAircraft;
 }
 
 void CWeather::Segment()
