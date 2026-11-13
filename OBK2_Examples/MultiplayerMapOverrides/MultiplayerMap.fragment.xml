@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Merge these fields into an existing MultiplayerMap record. -->
+<MultiplayerMap>
+	<DisableReinforcementOverride>true</DisableReinforcementOverride>
+	<DisableNationSelection>true</DisableNationSelection>
+</MultiplayerMap>

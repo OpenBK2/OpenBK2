@@ -55,7 +55,7 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 		{
 			pPacket->info.nTeam = 0;
 		}
-		const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+		const auto nations = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, pPacket->nSlot );
 		if ( pPacket->info.bPresent &&
 		     std::find( nations.begin(), nations.end(), pPacket->info.nCountry ) == nations.end() )
 		{
@@ -65,6 +65,10 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 				return true;
 			}
 			pPacket->info.nCountry = nations.front();
+		}
+		if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+		{
+			pPacket->info.bRandomCountry = false;
 		}
 	}
 	//NI_VERIFY( IsInGameRoom(), "PRG: Received slot info while not in game room", return true );
@@ -248,7 +252,6 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 		return true;
 	}
 	slots.resize( NGameX::GetMultiplayerSlotCount( gameDesc ) );
-	const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( !NGameX::IsHumanMultiplayerSlot( gameDesc, i ) )
@@ -261,9 +264,14 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 		{
 			slots[i].nTeam = 0;
 		}
+		const auto nations = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, i );
 		if ( std::find( nations.begin(), nations.end(), slots[i].nCountry ) == nations.end() )
 		{
 			slots[i].nCountry = nations.front();
+		}
+		if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+		{
+			slots[i].bRandomCountry = false;
 		}
 	}
 	if ( nOwnSlot >= 0 && !NGameX::IsHumanMultiplayerSlot( gameDesc, nOwnSlot ) )

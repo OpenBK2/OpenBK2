@@ -137,6 +137,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 	nMultiplayerDifficulty = 0;
 	bSpawnStartingUnits = true;
 	bAddReinfsWithTimer = true;
+	bDisableReinforcementOverride = false;
 	nOnBaseCaptureReinfPointsGain = 1;
 	nOnBaseLostReinfPointsLoss = -1;
 	ResetObjectives();
@@ -1062,15 +1063,25 @@ void CScenarioTrackerMultiplayer::SetPlayerSide( const int nPlayer, const int nN
 	}
 }
 
+void CScenarioTrackerMultiplayer::SetDisableReinforcementOverride( bool bDisable )
+{
+	bDisableReinforcementOverride = bDisable;
+	// MissionStart precedes map-rule setup, so refresh any already-present players too.
+	for ( int nPlayer = 0; nPlayer < players.size(); ++nPlayer )
+	{
+		UpdateReinforcements( nPlayer );
+	}
+}
+
 void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
 	{
 		return;
 	}
-	if ( IsMapControlledPlayer( nPlayer ) )
+	if ( IsMapControlledPlayer( nPlayer ) || ( IsMultiplayer() && bDisableReinforcementOverride ) )
 	{
-		// Human tech/nation restrictions never replace the mission author's bot loadouts.
+		// Bots always retain authored recipes; either multiplayer mode may opt humans into the same policy.
 		SearchAvalableReinforcements( pMission, &players[nPlayer].reinforcementTypes, 0, nPlayer );
 		return;
 	}

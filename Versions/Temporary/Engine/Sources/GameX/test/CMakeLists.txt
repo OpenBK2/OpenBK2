@@ -65,7 +65,8 @@ target_compile_definitions(MPDataChecksum_test PRIVATE
 if(WIN32)
     set_tests_properties(MessageParts_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
-    # GameX loads UI's FFmpeg codecs, including DLLs outside CMake's link graph.
+    # All GameX tests, including COOP and departure recovery, need UI's FFmpeg codecs
+    # from DLLs outside CMake's link graph.
     set_tests_properties(MPDataChecksum_test MPCoopRules_test CoopScenario_test UnitTransferCommand_test ReplayPlayerDrop_test MPHostHandoff_test MPPause_test MPGracefulLeave_test MPAbruptLeave_test ReplayCommandTiming_test ReplayPlayerSelection_test MPDifficultySelection_test UnitTransferUI_test MPSideFlags_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
     set_property(TARGET MPDataChecksum_test APPEND PROPERTY
