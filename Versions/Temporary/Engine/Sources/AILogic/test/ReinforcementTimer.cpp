@@ -5,6 +5,7 @@
 #include "../DBAIConsts.h"
 #include "../Diplomacy.h"
 #include "../KeyBuildingBonusSystem.h"
+#include "../NewUpdater.h"
 #include "../PlayerReinforcement.h"
 #include "../Units.h"
 #include "Common_RTS_AI/AIMap.h"
@@ -15,6 +16,7 @@
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "Main/GameTimer.h"
+#include "Stats_B2_M1/ReinfUpdates.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
@@ -22,6 +24,7 @@
 #include <chrono>
 #include <filesystem>
 #include <limits>
+#include <list>
 #include <tuple>
 #include <utility>
 
@@ -36,6 +39,17 @@ struct SSimulationTime
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 25, &time );
+		return 0;
+	}
+};
+
+struct SQueuedReinforcementUpdates
+{
+	std::list<CPtr<CEventUpdater::CUpdateData>> pending;
+
+	int operator&( IBinSaver &saver )
+	{
+		saver.Add( 2, &pending );
 		return 0;
 	}
 };
@@ -88,6 +102,7 @@ protected:
 
 	void SetUp() override
 	{
+		ResetUpdates();
 		const auto stamp = std::chrono::steady_clock::now().time_since_epoch().count();
 		directory = std::filesystem::temp_directory_path() / ( "obk2-reinforcement-timer-" + std::to_string( stamp ) );
 		ASSERT_TRUE( std::filesystem::create_directory( directory ) );
@@ -142,6 +157,8 @@ protected:
 
 	void TearDown() override
 	{
+		// Notifications hold database references, so release them before closing this fixture's database.
+		ResetUpdates();
 		theReinfArray.clear();
 		NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
 		logic = nullptr;
@@ -179,6 +196,33 @@ protected:
 		stream.Seek( 0 );
 		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
 		loader->Add( 1, target );
+	}
+
+	void ResetUpdates()
+	{
+		SQueuedReinforcementUpdates empty;
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->Add( 1, &empty );
+		}
+		stream.Seek( 0 );
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		loader->Add( 1, &updater );
+	}
+
+	SQueuedReinforcementUpdates ReadUpdates()
+	{
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->Add( 1, &updater );
+		}
+		stream.Seek( 0 );
+		SQueuedReinforcementUpdates result;
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		loader->Add( 1, &result );
+		return result;
 	}
 };
 
@@ -343,6 +387,123 @@ TEST_P( ReinforcementTimer, DisabledStartingArmyStillEnablesOrdinaryReinforcemen
 	CPlayerReinforcement restored;
 	CopyController( &controller, &restored );
 	EXPECT_TRUE( restored.CanCallNow() );
+}
+
+TEST_P( ReinforcementTimer, DefaultEntryWithoutOwnedBasesPublishesAvailableTypesAndEnabledButton )
+{
+	// Match The Encirclement: two human slots have eight types, twenty credits and
+	// an independent default entry. Three enemy-held bases unlock other entries.
+	auto *party = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
+	ASSERT_NE( party, nullptr );
+	const std::vector<NDb::EReinforcementType> types{ NDb::RT_MAIN_INFANTRY,
+	                                                  NDb::RT_ASSAULT_INFANTRY,
+	                                                  NDb::RT_ARTILLERY_ANTITANK,
+	                                                  NDb::RT_LIGHT_TANKS,
+	                                                  NDb::RT_TANKS,
+	                                                  NDb::RT_HEAVY_TANKS,
+	                                                  NDb::RT_FIGHTERS,
+	                                                  NDb::RT_ENGINEERING };
+	multiplayerConsts->sides.resize( 1 );
+	auto &side = multiplayerConsts->sides[0];
+	side.pPartyInfo = party;
+	side.techLevels.resize( 3 );
+	for ( auto type : types )
+	{
+		auto *recipe = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+		ASSERT_NE( recipe, nullptr );
+		recipe->eType = type;
+		side.techLevels[2].reinforcements.push_back( recipe );
+	}
+	side.techLevels[2].pStartingUnits = side.techLevels[2].reinforcements.front();
+	map->players.resize( 4 );
+	for ( int player = 0; player < 2; ++player )
+	{
+		auto &info = map->players[player];
+		info.nDiplomacySide = 0;
+		info.pPartyInfo = party;
+		info.nReinforcementCalls = 20;
+		info.reinforcementTypes = side.techLevels[2].reinforcements;
+		info.reinforcementPoints.resize( 4 );
+		info.reinforcementPoints[0].bIsDefault = true;
+	}
+	map->players[2].nDiplomacySide = 1;
+	map->players[2].ePlayerType = NDb::AI_BOT;
+	map->players[3].nDiplomacySide = 2;
+	map->playerBonusObjects.resize( 3 );
+	for ( int base = 0; base < 3; ++base )
+	{
+		auto &bonus = map->playerBonusObjects[base];
+		bonus.nLinkID = 100 + base;
+		bonus.playerBonuses.resize( 3 );
+		for ( int player = 0; player < 2; ++player )
+		{
+			bonus.playerBonuses[player].nPointID = base + 1;
+		}
+	}
+	logic->SetNPlayers( 3 );
+	theDipl.SetParty( 2, 1 );
+	for ( int local = 0; local < 2; ++local )
+	{
+		SCOPED_TRACE( local );
+		tracker->MissionStart( map, 2 );
+		for ( int player = 0; player < 3; ++player )
+		{
+			tracker->AddPlayer( player );
+		}
+		for ( int player = 0; player < 2; ++player )
+		{
+			tracker->SetPlayerParty( player, 0 );
+		}
+		tracker->SetLocalPlayer( local );
+		tracker->SetSpawnStartingUnits( false );
+		tracker->SetAddReinfsWithTimer( TimerEnabled() );
+		logic->SetMyDiplomacyInfo( -1, local );
+		for ( const auto &base : map->playerBonusObjects )
+		{
+			tracker->KeyBuildingOwnerChange( base.nLinkID, 2 );
+		}
+		ResetUpdates();
+		CPlayerReinforcement controller;
+		controller.InitPlayerReinforcement( local, map, aiConsts );
+		ASSERT_TRUE( controller.CanCallNow() );
+		controller.PlaceInitialUnits();
+		controller.Segment();
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( local ), 20 );
+		const auto updates = ReadUpdates();
+		std::vector<NDb::EReinforcementType> announced;
+		bool entryEnabled = false;
+		bool buttonEnabled = false;
+		for ( const auto &update : updates.pending )
+		{
+			ASSERT_TRUE( update->bValid );
+			if ( const auto *available = dynamic_cast<const SAIAvailableReinfUpdate *>( update->pData.GetPtr() ) )
+			{
+				ASSERT_NE( available->pReinf, nullptr );
+				EXPECT_TRUE( available->bEnabled );
+				EXPECT_EQ( available->nReinforcementCallsLeft, 20 );
+				announced.push_back( available->pReinf->eType );
+			}
+			if ( const auto *point = dynamic_cast<const SAIReinfPointUpdate *>( update->pData.GetPtr() ) )
+			{
+				EXPECT_EQ( point->nPointID, 0 );
+				EXPECT_TRUE( point->bEnable );
+				entryEnabled = entryEnabled || point->bEnable;
+			}
+			if ( const auto *recycle = dynamic_cast<const SAIReinfRecycleUpdate *>( update->pData.GetPtr() ) )
+			{
+				EXPECT_TRUE( recycle->bEnabled );
+				EXPECT_EQ( recycle->timeRecycleEnd, 0u );
+				buttonEnabled = recycle->bEnabled;
+			}
+		}
+		std::sort( announced.begin(), announced.end() );
+		EXPECT_EQ( announced, types );
+		EXPECT_TRUE( entryEnabled );
+		EXPECT_TRUE( buttonEnabled );
+		CPlayerReinforcement restored;
+		CopyController( &controller, &restored );
+		EXPECT_TRUE( restored.CanCallNow() );
+	}
 }
 
 INSTANTIATE_TEST_SUITE_P( MultiplayerModes,

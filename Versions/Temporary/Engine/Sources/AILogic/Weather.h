@@ -1,6 +1,14 @@
 #pragma once
 
 #include "SceneB2/WeatherVisual.h"
+#include "System/Time.h"
+
+#include "AILogic_export.h"
+
+namespace NDb
+{
+enum EReinforcementType : int;
+}
 
 class CWeather
 {
@@ -31,6 +39,7 @@ public:
 	void Clear();
 
 	bool IsActive() const;
+	bool CanCallAviation( int nPlayer, NDb::EReinforcementType eType ) const;
 	void Segment();
 
 	// turn on/off weather manually
@@ -39,3 +48,5 @@ public:
 	// turn on/off automatic weather changes
 	void SwitchAutomatic( const bool bSwitchAutomatic );
 };
+
+extern AILOGIC_EXPORT CWeather theWeather;
