@@ -636,6 +636,14 @@ context. Read `git diff` of every touched file before building.
 
 ## Multiplayer reinforcement controls
 
+- `SMultiplayerMap` is now declared in `Stats_B2_M1/DBMapInfo.cll`, rather than
+  `GameX/DBConsts.cll`. Map reinforcement override policy must reach the tracker
+  before live/replay player assignment, which refreshes each player's recipes.
+  Replay policy is captured at match start rather than re-read from edited data.
+- CLASSIC random placement rehashes logical player slots before starting. A
+  nation locked to map `PartyInfo` must be resolved again for the destination
+  slot, then recorded in the finalized roster for loading screens and replays.
+
 - `ReinforcementPoints[].IsDefault` only enables an entry at initialization.
   To keep it available after losing every base, leave its zero-based index out
   of every `PlayerBonusObjects[].PlayerBonuses[player].PointID` mapping.

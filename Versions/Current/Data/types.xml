@@ -29694,6 +29694,62 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>cd010000</Type>
+					<Name>DisableReinforcementOverride</Name>
+					<ChunkID>15</ChunkID>
+					<Description>Keep each map player&apos;s reinforcement recipes instead of replacing them from MultiplayerConsts.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>15</Data>
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>false</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>cd010000</Type>
+					<Name>DisableNationSelection</Name>
+					<ChunkID>16</ChunkID>
+					<Description>Hide nation selection and use each human map slot&apos;s PartyInfo; allowed nation and tech restrictions still apply.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>chunkID</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>16</Data>
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>false</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>421665920</TypeID>
 		</Item>

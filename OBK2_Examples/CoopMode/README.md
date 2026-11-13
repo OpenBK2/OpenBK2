@@ -23,6 +23,8 @@ references and dimensions to your mission:
 | `AllowedNations` | Empty | Zero-based MultiplayerConsts side indexes for human players. Empty permits every side available at the selected tech. |
 | `SpawnStartingUnits` | `true` | Spawn the automatic nation/tech-level starting army. Set to `false` to skip it in either CLASSIC or COOP. |
 | `AddReinfsWithTimer` | `true` | Periodically grant extra human reinforcement calls. Set to `false` to disable these grants and hide the HUD countdown in either mode. |
+| `DisableReinforcementOverride` | `false` | Keep the map's exact reinforcement recipes instead of substituting the selected nation/tech catalogue. |
+| `DisableNationSelection` | `false` | Hide nation selection and use each human slot's map-authored `PartyInfo`. Existing nation and tech restrictions still apply. |
 
 `Players` remains the maximum number of **humans**, not the total number of map
 players. At least two humans must be connected and ready to start. If the host
@@ -34,6 +36,9 @@ restrict the choice, including Random. An invalid index or a list with no nation
 available at the chosen tech is a data error and prevents starting. Forced tech
 is displayed but cannot be changed. COOP hides team selection and disables
 random-placement and match time-limit controls; all humans join side 0.
+
+The [map override guide](../MultiplayerMapOverrides/README.md) includes an example
+for keeping authored reinforcement recipes and locking nations per human slot.
 
 Difficulty is selected by the host in the multiplayer game settings. Populate
 `MapInfo.CustomDifficultyLevels` with `DifficultyLevel` records in the desired

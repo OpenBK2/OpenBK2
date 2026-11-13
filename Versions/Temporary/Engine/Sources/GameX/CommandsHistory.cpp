@@ -79,6 +79,7 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		// Preserve map rules even if the resource changes before saving or playback.
 		replayInfo.bSpawnStartingUnits = !pTracker || pTracker->GetSpawnStartingUnits();
 		replayInfo.bAddReinfsWithTimer = !pTracker || pTracker->GetAddReinfsWithTimer();
+		replayInfo.bDisableReinforcementOverride = pTracker && pTracker->GetDisableReinforcementOverride();
 		replayInfo.nOnBaseCaptureReinfPointsGain = pTracker ? pTracker->GetOnBaseCaptureReinfPointsGain() : 1;
 		replayInfo.nOnBaseLostReinfPointsLoss = pTracker ? pTracker->GetOnBaseLostReinfPointsLoss() : -1;
 		// Resolve names once: replay presentation must survive later map/text edits.
@@ -409,6 +410,7 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	pScenarioTracker->SetMultiplayerDifficulty( replayInfo.nDifficulty );
 	pScenarioTracker->SetSpawnStartingUnits( replayInfo.bSpawnStartingUnits );
 	pScenarioTracker->SetAddReinfsWithTimer( replayInfo.bAddReinfsWithTimer );
+	pScenarioTracker->SetDisableReinforcementOverride( replayInfo.bDisableReinforcementOverride );
 	pScenarioTracker->SetOnBaseCaptureReinfPointsGain( replayInfo.nOnBaseCaptureReinfPointsGain );
 	pScenarioTracker->SetOnBaseLostReinfPointsLoss( replayInfo.nOnBaseLostReinfPointsLoss );
 

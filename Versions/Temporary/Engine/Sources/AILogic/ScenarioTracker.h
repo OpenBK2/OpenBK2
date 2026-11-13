@@ -91,6 +91,14 @@ struct IAIScenarioTracker : public CObjectBase
 		return true;
 	}
 
+	// Multiplayer maps can keep their authored recipes instead of nation/tech catalogue replacements.
+	virtual void SetDisableReinforcementOverride( bool bDisable ) {}
+
+	virtual bool GetDisableReinforcementOverride() const
+	{
+		return false;
+	}
+
 	// Signed base ownership bonuses default to the original multiplayer rules.
 	virtual void SetOnBaseCaptureReinfPointsGain( int nPoints ) {}
 

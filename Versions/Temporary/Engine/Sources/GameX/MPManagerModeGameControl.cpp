@@ -64,6 +64,7 @@ void CMPManagerMode::StartGame()
 	pScenarioTracker->SetMultiplayerDifficulty( gameDesc.nDifficultyLevel );
 	pScenarioTracker->SetSpawnStartingUnits( gameDesc.pMPMap->bSpawnStartingUnits );
 	pScenarioTracker->SetAddReinfsWithTimer( gameDesc.pMPMap->bAddReinfsWithTimer );
+	pScenarioTracker->SetDisableReinforcementOverride( gameDesc.pMPMap->bDisableReinforcementOverride );
 	pScenarioTracker->SetOnBaseCaptureReinfPointsGain( gameDesc.pMPMap->nOnBaseCaptureReinfPointsGain );
 	pScenarioTracker->SetOnBaseLostReinfPointsLoss( gameDesc.pMPMap->nOnBaseLostReinfPointsLoss );
 
@@ -834,6 +835,16 @@ void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 		SMPSlot &slot = slots[i];
 		slot = newSlots[i];
 		slot.nClientID = newSlots[i].nClientID;
+		if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+		{
+			// CLASSIC random placement changes map player IDs, so the destination slot owns the authored nation.
+			const auto nations = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, i );
+			if ( !nations.empty() )
+			{
+				slot.nCountry = nations.front();
+			}
+			slot.bRandomCountry = false;
+		}
 		if ( !slot.bPresent )
 		{
 			DebugTrace( "+++ New Slot %d: empty", i );

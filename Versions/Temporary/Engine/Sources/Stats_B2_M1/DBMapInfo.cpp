@@ -1585,6 +1585,8 @@ void SMultiplayerMap::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "AddReinfsWithTimer", (uint8_t*)&bAddReinfsWithTimer - pThis, sizeof(bAddReinfsWithTimer), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "OnBaseCaptureReinfPointsGain", (uint8_t*)&nOnBaseCaptureReinfPointsGain - pThis, sizeof(nOnBaseCaptureReinfPointsGain), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "OnBaseLostReinfPointsLoss", (uint8_t*)&nOnBaseLostReinfPointsLoss - pThis, sizeof(nOnBaseLostReinfPointsLoss), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "DisableReinforcementOverride", (uint8_t*)&bDisableReinforcementOverride - pThis, sizeof(bDisableReinforcementOverride), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( "DisableNationSelection", (uint8_t*)&bDisableNationSelection - pThis, sizeof(bDisableNationSelection), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1603,6 +1605,8 @@ int SMultiplayerMap::operator&( IXmlSaver &saver )
 	saver.Add( "AddReinfsWithTimer", &bAddReinfsWithTimer );
 	saver.Add( "OnBaseCaptureReinfPointsGain", &nOnBaseCaptureReinfPointsGain );
 	saver.Add( "OnBaseLostReinfPointsLoss", &nOnBaseLostReinfPointsLoss );
+	saver.Add( "DisableReinforcementOverride", &bDisableReinforcementOverride );
+	saver.Add( "DisableNationSelection", &bDisableNationSelection );
 
 	return 0;
 }
@@ -1636,6 +1640,8 @@ int SMultiplayerMap::operator&( IBinSaver &saver )
 	{
 		saver.Add( 14, &nOnBaseLostReinfPointsLoss );
 	}
+	saver.Add( 15, &bDisableReinforcementOverride );
+	saver.Add( 16, &bDisableNationSelection );
 
 	return 0;
 }
@@ -1648,7 +1654,7 @@ uint32_t SMultiplayerMap::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations << bSpawnStartingUnits << bAddReinfsWithTimer << nOnBaseCaptureReinfPointsGain << nOnBaseLostReinfPointsLoss;
+	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations << bSpawnStartingUnits << bAddReinfsWithTimer << nOnBaseCaptureReinfPointsGain << nOnBaseLostReinfPointsLoss << bDisableReinforcementOverride << bDisableNationSelection;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
