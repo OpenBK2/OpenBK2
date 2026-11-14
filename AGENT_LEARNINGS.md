@@ -446,3 +446,15 @@ context. Read `git diff` of every touched file before building.
   resend immutable snapshots rejected before local membership confirmation.
   A departure during loading must release the loaded-player barrier as well
   as the running command barrier, or the agreed removal tick is unreachable.
+
+## Pathfinding fallback bounds
+
+- A clamped path start can become invalid again when CalculatePath substitutes
+  lastKnownGoodTile for a blocked start. Unit initialization seeds that cache from
+  placement without a bounds check. Validate the fallback against CAIMap before
+  adopting it; a passable neighbor does not make the current tile safe to index.
+  The November 14 dumps all read mapBuf[640][243] at the same instruction.
+- Terrain fixtures must refresh SmoothLock after adding static obstacles before
+  asserting CanUnitGo. Omitting that refresh left the fixture's start passable
+  and bypassed the failing fallback branch. Propagate helper assertion failures
+  so a malformed fixture cannot continue into misleading path assertions.

@@ -708,6 +708,13 @@ bool CCommonPathFinder::CalculatePath()
 	SVector startSearchPoint;
 	if ( pTerrain->CanUnitGo( nBoundTileRadius, startPoint, aiClass ) == FREE_NONE )
 	{
+		// The saved tile can come from placement outside the map. A passable neighbor
+		// does not make that tile safe to index in mapBuf; keep the clamped start on failure.
+		if ( !pAIMap->IsTileInside( lastKnownGoodTile ) )
+		{
+			finishPoint = startPoint;
+			return false;
+		}
 		startSearchPoint = lastKnownGoodTile;
 		startPoint = lastKnownGoodTile;
 	}
