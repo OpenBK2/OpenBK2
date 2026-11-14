@@ -156,5 +156,6 @@ enum EPauseType
 	PAUSE_TYPE_INTERFACE = 2, // pause specified by interface
 
 	PAUSE_TYPE_WAIT_FOR_CONNECT = 3,
-	PAUSE_TYPE_MP_NO_SEGMENT_DATA = 100, // no segment data in multiplayer mode
+	PAUSE_TYPE_MP_NO_SEGMENT_DATA = 100,    // no segment data in multiplayer mode
+	PAUSE_TYPE_MP_DEPARTURE_RECOVERY = 101, // keep networking alive while survivors agree on removal
 };

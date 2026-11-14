@@ -1,0 +1,80 @@
+Abrupt multiplayer departure recovery (2026-11-14)
+
+Scope
+
+This extends the normal online-surrender fix to Alt+F4, process termination,
+crashes, server-confirmed disconnects and authoritative lag-timeout removal.
+The online server is unchanged. Every game client must have this implementation;
+older clients do not participate in the new recovery exchange. LAN remains on
+its separate existing departure path.
+
+Why another path is needed
+
+A dead process cannot send its final cutoff or flush its command queues. Its
+last command batches may have reached only some survivors. A receiver-local
+cutoff can therefore request packets never produced, and blindly dropping the
+missing commands can disagree with a survivor that already executed them.
+
+Recovery
+
+1. A confirmed departure or authorized timeout starts a recovery round. Each
+   survivor freezes simulation but keeps network processing and server
+   heartbeats active. The existing MP wait window is shown without a user
+   Resume action or a countdown. Recovery does not consume manual-pause or
+   ordinary lag allowances.
+2. Survivors exchange immutable snapshots: their frozen simulation tick,
+   recent actual command packets for departed players, and any previously
+   accepted removal decisions and associated repair input.
+3. The lowest surviving slot coordinates. After every surviving participant
+   has reported, it assembles and validates all required command prefixes.
+   For a newly departed player whose highest captured packet is P, its cutoff
+   is P+2B and removal is P+2B+L (pack size B, latency L). Before packet zero,
+   the cutoff is B. No command packet is fabricated. A removal must not precede
+   any survivor's frozen simulation tick.
+4. A single commit carries the agreed cutoffs and complete repair data. Each
+   recipient validates and imports missing packets, schedules removal, then
+   releases only the recovery pause. Ordinary commands and removal events
+   retain their existing deterministic dispatch and replay-recording order.
+
+Failure ordering
+
+The round identity is a monotonically growing mask of departed original slots;
+players cannot rejoin a running match. A further departure restarts collection
+with the larger mask. Reports rejected before membership confirmation are
+resent unchanged when requested. A regular peer cannot invent a departure:
+unknown exclusions need local confirmation or existing host/removal authority.
+
+If the coordinator dies after delivering a commit to only some survivors, the
+next round collects those accepted decisions and their repair data. It preserves
+their cutoffs exactly. Smaller-round commits and later ordinary drop packets
+for recovery-owned slots cannot change them. This also covers a delayed graceful
+surrender announcement racing with abrupt-disconnect recovery.
+
+Received packet caches are bounded against local simulation progress, rather
+than a faster sender's newest receipt. Accepted commit data survives cache
+pruning so a replacement coordinator can repair a slower survivor. All cohorts,
+cutoffs and command imports are validated before simulation resumes.
+
+Limits
+
+Recovery needs the surviving clients to exchange control messages through the
+existing lobby connection. Complete server/network outages or a nonresponsive
+participant not yet confirmed disconnected can keep the match paused. There is
+no five-second forced continuation or fabricated input. Actual conflicting or
+incomplete recovery data is rejected while simulation remains frozen.
+
+Validation
+
+MPAbruptLeave uses independently timed actual online managers/transceivers,
+serialized packets and deterministic delayed delivery, with a headless AI stub.
+It compares executed commands and recorded removal ticks across survivors.
+Cases cover uneven command prefixes, delayed membership confirmation, late
+native packets, late legacy drop announcements, host departure, simultaneous
+departures, coordinator failure after partial commit, a seven-second recovery,
+manual-pause independence, rejected prefix gaps and departure before packet zero.
+Existing surrender, host handoff, pause, replay and transport suites also run.
+The Visual Studio developer-environment build of Game and Server succeeds;
+all 126 cases in 11 selected test executables pass, including 13 new abrupt
+departure cases. Changed C++ files pass the repository formatter check and
+git diff --check. Test-local GameX and Main DLL hashes match rebuilt modules.
+No interactive Clumsy match or Linux build was performed in this Windows session.

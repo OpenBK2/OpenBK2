@@ -10,6 +10,7 @@
 
 #include <cstdint>
 #include <list>
+#include <vector>
 
 struct ICommandsHistory;
 struct IServerClient;
@@ -73,8 +74,8 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	std::vector<int> myHistoryHashes;
 #endif
 
-	int nLatency = {};
-	int nSegmentsPackSize = {};
+	int nLatency = 2;
+	int nSegmentsPackSize = 1;
 
 	int nSegment = {}; // номер текущего сегмента
 	// Not serialized here, unlike the single player transceiver's copy of the
@@ -121,6 +122,9 @@ private:
 		bool bLoaded = {};
 		// Reliable peer streams are ordered; keep absolute ticks across ring reuse.
 		int nLastReceivedSegment = -1;
+		// Surviving peers can repair a departed player's trailing input without
+		// reconstructing commands or relying on the destroyed peer connection.
+		std::list<CPtr<CNetPacket>> recoveryPackets;
 
 		SPlayer()
 			: nClientID( -1 )
@@ -135,6 +139,7 @@ private:
 	CDBPtr<NDb::SMapInfo> pMapInfo;
 	int nGameID = {};
 	bool bWaiting = {};
+	bool bDepartureRecovery = false;
 	NTimer::STime timeStartWaiting = {};
 
 	CArray2D<uint32_t> checkSums;
@@ -156,6 +161,7 @@ private:
 	uint16_t GetMissingSegmentPlayers( int nSegment ) const;
 	void SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulCheckSum );
 	void FinalizeSegmentPack();
+	void PruneRecoveryCommands();
 	void AdvanceToNextSegment();
 	void ExecuteCommands( int nFromSegment );
 	bool IsAsyncDetected( int nSegment );
@@ -225,6 +231,30 @@ public:
 	{
 		return nLatency;
 	}
+
+	int GetSegmentsPackSize() const
+	{
+		return nSegmentsPackSize;
+	}
+
+	// Recovery pauses simulation independently of manual pause while packets
+	// continue to be pumped and retained for the surviving cohort.
+	GAMEX_EXPORT void SetDepartureRecovery( bool bRecovering );
+
+	bool IsRecoveringDeparture() const
+	{
+		return bDepartureRecovery;
+	}
+
+	// Replace the output with retained raw packets in player/segment order.
+	GAMEX_EXPORT void GetRecoveryCommands( uint32_t dwPlayers, std::vector<SMPRecoveryCommand> *pCommands ) const;
+	// Compare original stream metadata and payload without changing either packet.
+	static GAMEX_EXPORT bool SameRecoveryCommand( const SMPRecoveryCommand &first, const SMPRecoveryCommand &second );
+	// Requires recovery pause. Reject incomplete prefixes before changing any
+	// receipt counter; existing commands are never deserialized a second time.
+	GAMEX_EXPORT bool RestoreRecoveryCommands( const std::vector<SMPRecoveryCommand> &commands,
+	                                           uint32_t dwPlayers,
+	                                           const std::vector<int> &cutoffs );
 
 	bool HasPlayerDropError() const
 	{

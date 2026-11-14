@@ -32,7 +32,9 @@
 
 #include "GameX_export.h"
 
+#include <algorithm>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 
 #include <float.h>
@@ -223,6 +225,12 @@ void CMPTransceiver::DoSegments()
 		return;
 	}
 	pClient->Segment();
+	// Membership recovery freezes simulation, not the network pump. It also
+	// precedes loading and final-boundary handling so neither can bypass it.
+	if ( bDepartureRecovery )
+	{
+		return;
+	}
 	if ( !IsGameRunning() )
 	{
 		CheckRunGame();
@@ -508,12 +516,226 @@ int CMPTransceiver::GetDepartureSegment() const
 	return int( nDropSegment );
 }
 
+void CMPTransceiver::SetDepartureRecovery( bool bRecovering )
+{
+	if ( bDepartureRecovery == bRecovering )
+	{
+		return;
+	}
+	bDepartureRecovery = bRecovering;
+	if ( IsValid( pTimer ) )
+	{
+		// A user Resume or an ordinary input receipt must not release this pause.
+		pTimer->Pause( bRecovering, PAUSE_TYPE_MP_DEPARTURE_RECOVERY );
+	}
+	if ( !bRecovering )
+	{
+		timeStartWaiting = 0;
+		timeStartWaitingForRemovedPlayer = 0;
+	}
+}
+
+void CMPTransceiver::PruneRecoveryCommands()
+{
+	// Prune against our executed frontier, not the newest received packet: a
+	// faster peer's receipt must not discard input a slower survivor still needs.
+	const int64_t nOldest = int64_t( nCommonSegment ) - 2 * int64_t( nLatency ) - 2 * int64_t( nSegmentsPackSize );
+	for ( SPlayer &player : players )
+	{
+		while ( !player.recoveryPackets.empty() &&
+		        static_cast<CAISegmentFinishedPacket *>( player.recoveryPackets.front().GetPtr() )->nSegment < nOldest )
+		{
+			player.recoveryPackets.pop_front();
+		}
+	}
+}
+
+void CMPTransceiver::GetRecoveryCommands( uint32_t dwPlayers, std::vector<SMPRecoveryCommand> *pCommands ) const
+{
+	if ( !pCommands )
+	{
+		return;
+	}
+	pCommands->clear();
+	for ( int i = 0; i < players.size() && i < 32; ++i )
+	{
+		if ( ( dwPlayers & ( uint32_t( 1 ) << i ) ) == 0 )
+		{
+			continue;
+		}
+		// The originating client already queues its own commands directly; its
+		// outgoing tail is the equivalent source of raw packets for another peer.
+		const auto &packets = i == nMyLogicID ? departurePackets : players[i].recoveryPackets;
+		for ( const CPtr<CNetPacket> &pPacket : packets )
+		{
+			SMPRecoveryCommand &command = pCommands->emplace_back();
+			command.nPlayer = i;
+			command.nSegment = static_cast<CAISegmentFinishedPacket *>( pPacket.GetPtr() )->nSegment;
+			command.pPacket = pPacket;
+		}
+	}
+}
+
+static bool HaveSameRecoveryCommands( const CAISegmentFinishedPacket &first, const CAISegmentFinishedPacket &second )
+{
+	if ( first.ulCheckSum != second.ulCheckSum || first.aiCommands.size() != second.aiCommands.size() )
+	{
+		return false;
+	}
+	auto firstCommand = first.aiCommands.begin();
+	auto secondCommand = second.aiCommands.begin();
+	for ( ; firstCommand != first.aiCommands.end(); ++firstCommand, ++secondCommand )
+	{
+		if ( firstCommand->nTypeID != secondCommand->nTypeID ||
+		     firstCommand->cmd.GetSize() != secondCommand->cmd.GetSize() ||
+		     ( firstCommand->cmd.GetSize() != 0 &&
+		       std::memcmp( firstCommand->cmd.GetBuffer(), secondCommand->cmd.GetBuffer(), firstCommand->cmd.GetSize() ) !=
+		           0 ) )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool CMPTransceiver::SameRecoveryCommand( const SMPRecoveryCommand &first, const SMPRecoveryCommand &second )
+{
+	const auto *pFirst = dynamic_cast<const CAISegmentFinishedPacket *>( first.pPacket.GetPtr() );
+	const auto *pSecond = dynamic_cast<const CAISegmentFinishedPacket *>( second.pPacket.GetPtr() );
+	return pFirst && pSecond && first.nPlayer >= 0 && first.nSegment >= 0 && first.nPlayer == second.nPlayer &&
+	       first.nSegment == second.nSegment && first.nSegment == pFirst->nSegment &&
+	       second.nSegment == pSecond->nSegment && HaveSameRecoveryCommands( *pFirst, *pSecond );
+}
+
+bool CMPTransceiver::RestoreRecoveryCommands( const std::vector<SMPRecoveryCommand> &commands,
+                                              uint32_t dwPlayers,
+                                              const std::vector<int> &cutoffs )
+{
+	const auto Reject = [this]( const char *szReason, int nPlayer, int nPacket )
+	{
+		NGameX::MatchPacketTrace_Log( nCommonSegment,
+		                              "ERROR",
+		                              "RecoveryCommandsRejected",
+		                              -1,
+		                              fmt::format( "reason={} slot={} packet={}", szReason, nPlayer, nPacket ) );
+		return false;
+	};
+	if ( !bDepartureRecovery || nSegmentsPackSize <= 0 || nLatency < 0 || players.size() > 32 )
+	{
+		return Reject( "invalid_recovery_state", -1, -1 );
+	}
+	const uint32_t dwKnownPlayers = players.size() == 32 ? ~uint32_t( 0 ) : ( uint32_t( 1 ) << players.size() ) - 1;
+	if ( ( dwPlayers & ~dwKnownPlayers ) != 0 )
+	{
+		return Reject( "invalid_player_mask", -1, -1 );
+	}
+	for ( int i = 0; i < players.size(); ++i )
+	{
+		if ( ( dwPlayers & ( uint32_t( 1 ) << i ) ) != 0 && IsPlayerPresent( i ) &&
+		     ( i >= cutoffs.size() || !NMPPlayerDrop::SPlayerDrop::IsValidSegment( cutoffs[i], nLatency ) ||
+		       cutoffs[i] % nSegmentsPackSize != 0 ) )
+		{
+			return Reject( "invalid_cutoff", i, -1 );
+		}
+	}
+
+	std::vector<const SMPRecoveryCommand *> ordered;
+	ordered.reserve( commands.size() );
+	for ( const SMPRecoveryCommand &command : commands )
+	{
+		const auto *pPacket = dynamic_cast<CAISegmentFinishedPacket *>( command.pPacket.GetPtr() );
+		if ( command.nPlayer < 0 || command.nPlayer >= players.size() ||
+		     ( dwPlayers & ( uint32_t( 1 ) << command.nPlayer ) ) == 0 || !pPacket || command.nSegment < 0 ||
+		     command.nSegment % nSegmentsPackSize != 0 || command.nSegment != pPacket->nSegment )
+		{
+			return Reject( "invalid_packet", command.nPlayer, command.nSegment );
+		}
+		// Previously applied removals keep their history for other survivors, but
+		// must never deserialize or execute those commands again on this client.
+		if ( IsPlayerPresent( command.nPlayer ) && command.nSegment < cutoffs[command.nPlayer] - nSegmentsPackSize )
+		{
+			const auto &localPackets =
+					command.nPlayer == nMyLogicID ? departurePackets : players[command.nPlayer].recoveryPackets;
+			for ( const CPtr<CNetPacket> &pLocal : localPackets )
+			{
+				const auto *pLocalPacket = static_cast<CAISegmentFinishedPacket *>( pLocal.GetPtr() );
+				if ( pLocalPacket->nSegment == command.nSegment && !HaveSameRecoveryCommands( *pLocalPacket, *pPacket ) )
+				{
+					return Reject( "conflicting_local_packet", command.nPlayer, command.nSegment );
+				}
+			}
+			ordered.push_back( &command );
+		}
+	}
+	std::sort( ordered.begin(),
+	           ordered.end(),
+	           []( const SMPRecoveryCommand *first, const SMPRecoveryCommand *second )
+	           {
+							 return first->nPlayer < second->nPlayer ||
+		                  ( first->nPlayer == second->nPlayer && first->nSegment < second->nSegment );
+						 } );
+
+	// Validate every missing suffix before importing any player's data. A later
+	// receipt counter cannot prove a gap that existed on a different peer.
+	std::vector<const SMPRecoveryCommand *> missing;
+	size_t nCommand = 0;
+	for ( int i = 0; i < players.size(); ++i )
+	{
+		if ( ( dwPlayers & ( uint32_t( 1 ) << i ) ) == 0 || !IsPlayerPresent( i ) )
+		{
+			continue;
+		}
+		const int nLast = i == nMyLogicID ? nLastSentSegment : players[i].nLastReceivedSegment;
+		int64_t nNext = nLast < 0 ? 0 : int64_t( nLast ) + nSegmentsPackSize;
+		const SMPRecoveryCommand *pPrevious = nullptr;
+		while ( nCommand < ordered.size() && ordered[nCommand]->nPlayer == i )
+		{
+			const SMPRecoveryCommand *pCommand = ordered[nCommand++];
+			if ( pPrevious && pPrevious->nSegment == pCommand->nSegment )
+			{
+				if ( !HaveSameRecoveryCommands( *static_cast<CAISegmentFinishedPacket *>( pPrevious->pPacket.GetPtr() ),
+				                                *static_cast<CAISegmentFinishedPacket *>( pCommand->pPacket.GetPtr() ) ) )
+				{
+					return Reject( "conflicting_packet", i, pCommand->nSegment );
+				}
+				continue;
+			}
+			pPrevious = pCommand;
+			if ( pCommand->nSegment <= nLast )
+			{
+				continue;
+			}
+			if ( pCommand->nSegment != nNext || i == nMyLogicID ||
+			     int64_t( pCommand->nSegment ) + nLatency + nSegmentsPackSize < nCommonSegment )
+			{
+				return Reject( "noncontiguous_prefix", i, int( nNext ) );
+			}
+			missing.push_back( pCommand );
+			nNext += nSegmentsPackSize;
+		}
+		if ( nNext < int64_t( cutoffs[i] ) - nSegmentsPackSize )
+		{
+			return Reject( "missing_prefix", i, int( nNext ) );
+		}
+	}
+	for ( const SMPRecoveryCommand *pCommand : missing )
+	{
+		auto *pPacket = static_cast<CAISegmentFinishedPacket *>( pCommand->pPacket.GetPtr() );
+		const int nOriginalClientID = pPacket->nClientID;
+		pPacket->nClientID = players[pCommand->nPlayer].nClientID;
+		OnAISegmentFinishedPacket( pPacket );
+		pPacket->nClientID = nOriginalClientID;
+	}
+	return true;
+}
+
 void CMPTransceiver::AdvanceToNextSegment()
 {
 	pTimer->NextSegment();
 	pAI->Segment();
 	++nCommonSegment;
 	nSegment = nCommonSegment % pConsts->nMaxLatency;
+	PruneRecoveryCommands();
 	//DebugTrace( "+++ Local Player %d move to segment %d (%d)", nMyLogicID, nSegment, nCommonSegment );
 }
 
@@ -544,6 +766,8 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	}
 	// StartMission must not discard packets already received during loading.
 	player.nLastReceivedSegment = pPacket->nSegment;
+	player.recoveryPackets.push_back( pPacket );
+	PruneRecoveryCommands();
 	NGameX::MatchPacketTrace_Log( nCommonSegment,
 	                              "RX",
 	                              "CAISegmentFinishedPacket",
@@ -682,7 +906,9 @@ void CMPTransceiver::CheckRunGame()
 	{
 		SPlayer &player = players[i];
 
-		if ( IsPlayerPresent( i ) && !player.bLoaded )
+		// A departure committed during loading releases the network barrier now;
+		// its deterministic simulation removal runs once the survivors start.
+		if ( IsPlayerWaitedFor( i ) && !player.bLoaded )
 		{
 			bCanStart = false;
 			dwWaitFor = dwWaitFor | ( 1UL << i );
@@ -708,6 +934,7 @@ void CMPTransceiver::EndGame()
 		return;
 	}
 	bIsGameEnded = true;
+	SetDepartureRecovery( false );
 	CommandTimeOut( false );
 	SetLagState( 0, false );
 	NGameX::MatchPacketTrace_Log( nCommonSegment,
@@ -753,6 +980,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	bIsGameRunning = false;
 	bIsGameEnded = false;
 	bPlayerDropError = false;
+	SetDepartureRecovery( false );
 	departurePackets.clear();
 	nLastSentSegment = -1;
 	timeStartWaitingForRemovedPlayer = 0;
@@ -767,7 +995,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	nGameID = params.nGameID;
 	int nCurrentPlayers = params.clients.size();
 	pMapInfo = params.pMapInfo;
-	players.resize( pMapInfo->players.size() );
+	players.assign( pMapInfo->players.size(), SPlayer() );
 	DebugTrace( "+++ MPT: start game, %d plrs, me = %d", nCurrentPlayers, nMySlot );
 	for ( int i = 0; i < nCurrentPlayers; ++i )
 	{

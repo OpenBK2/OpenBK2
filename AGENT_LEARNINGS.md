@@ -425,3 +425,13 @@ context. Read `git diff` of every touched file before building.
   A reliable queued send does not survive destroying its connection. Raw peer
   LOGOUT and persistent lobby control are different routes; order membership
   removal through the lobby before allowing it to choose a competing cutoff.
+- Abrupt departures cannot use the host's clock as the departed stream's final
+  frontier. Freeze survivors, recover actual raw packets, and validate the full
+  required prefix before committing. Keep recovery separate from manual pause
+  and normal lag budgets. A failed coordinator can partially deliver a commit:
+  preserve accepted cutoffs and repair data in the next frozen snapshot, and
+  fence both older recovery commits and late ordinary drop announcements.
+  Membership notifications arrive at different times; matching requests must
+  resend immutable snapshots rejected before local membership confirmation.
+  A departure during loading must release the loaded-player barrier as well
+  as the running command barrier, or the agreed removal tick is unreachable.

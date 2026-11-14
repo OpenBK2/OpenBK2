@@ -10,6 +10,7 @@
 #include "Client/ServerClientInterface.h"
 #include "Main/DBNetConsts.h"
 #include "Main/GameTimer.h"
+#include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "System/ConsoleBuffer.h"
 
@@ -207,6 +208,7 @@ public:
 		pManager->pClient = pClient;
 		pManager->pTransceiver = pTransceiver;
 		pManager->nOwnSlot = nOwnSlot;
+		pManager->nGameID = 968;
 		pManager->nHostClientID = CLIENT_IDS[HOST];
 		pManager->nSlotsUsed = 3;
 		pManager->dwNetworkLaggers = 0;
@@ -473,7 +475,9 @@ protected:
 		CPtr<TPacket> result;
 		for ( const auto &packet : peer.client->sent )
 		{
-			if ( auto *pTyped = dynamic_cast<TPacket *>( packet.GetPtr() ) )
+			const auto *pRelay = dynamic_cast<CDirectPacketToClient *>( packet.GetPtr() );
+			CNetPacket *pInner = pRelay ? pRelay->pPacket.GetPtr() : packet.GetPtr();
+			if ( auto *pTyped = dynamic_cast<TPacket *>( pInner ) )
 			{
 				result = pTyped;
 			}
@@ -706,12 +710,13 @@ TEST_F( MPPause, ActualRecoveredCommandsClearStaleVotesWhileBothObserversArePaus
 	Run( host );
 	EXPECT_EQ( CMPPlayerDropTestAccess::Votes( host.manager, TARGET ), 0u );
 	EXPECT_EQ( CMPPlayerDropTestAccess::Removal( host.transceiver, TARGET ), -1 );
+	EXPECT_FALSE( host.transceiver->IsRecoveringDeparture() );
 	EXPECT_EQ( CMPPlayerDropTestAccess::Laggers( host.manager ) & TARGET_BIT, 0u );
 	EXPECT_TRUE( CMPPlayerDropTestAccess::LocalWait( host.transceiver ) );
 	EXPECT_TRUE( CMPPlayerDropTestAccess::LocalWait( observer.transceiver ) );
 }
 
-TEST_F( MPPause, GenuineMissingInputRemainsEligibleForTimeoutWhileHostIsPaused )
+TEST_F( MPPause, GenuineMissingInputStartsRecoveryWhileHostIsPaused )
 {
 	for ( SPeer *pPeer : { &host, &observer } )
 	{
@@ -725,8 +730,25 @@ TEST_F( MPPause, GenuineMissingInputRemainsEligibleForTimeoutWhileHostIsPaused )
 	Run( observer );
 	ASSERT_NE( LastPacket<CB2SuggestKickPacket>( observer ), nullptr );
 	DeliverSent( observer, host );
-	EXPECT_EQ( CMPPlayerDropTestAccess::Removal( host.transceiver, TARGET ), 7782 );
+	// Timeout consensus must enter recovery even while manually paused, but it
+	// cannot guess the departed player's cutoff before the other survivor replies.
+	EXPECT_EQ( CMPPlayerDropTestAccess::Removal( host.transceiver, TARGET ), -1 );
+	EXPECT_TRUE( host.transceiver->IsRecoveringDeparture() );
+	EXPECT_TRUE( timer->HasPause( PAUSE_TYPE_MP_DEPARTURE_RECOVERY ) );
+	CPtr<CB2DepartureRecoveryPacket> report = LastPacket<CB2DepartureRecoveryPacket>( host );
+	ASSERT_NE( report, nullptr );
+	EXPECT_EQ( report->ePhase, CB2DepartureRecoveryPacket::SNAPSHOT );
+	EXPECT_EQ( report->dwDeparted, TARGET_BIT );
+	EXPECT_EQ( report->nCommonSegment, 7780 );
+	ASSERT_EQ( report->cutoffs.size(), 3u );
+	EXPECT_EQ( report->cutoffs[TARGET], -1 );
 	EXPECT_TRUE( CMPPlayerDropTestAccess::LocalWait( host.transceiver ) );
+	EXPECT_TRUE( CMPPlayerDropTestAccess::WindowShown( host.manager ) );
+	// Resume releases only the user's pause; recovery still owns simulation.
+	TogglePause( host );
+	EXPECT_FALSE( CMPPlayerDropTestAccess::LocalWait( host.transceiver ) );
+	EXPECT_TRUE( host.transceiver->IsRecoveringDeparture() );
+	EXPECT_TRUE( timer->HasPause( PAUSE_TYPE_MP_DEPARTURE_RECOVERY ) );
 }
 
 TEST_F( MPPause, ReceiptInTheSamePacketBatchInvalidatesAnEarlierQueuedKickVote )
@@ -753,6 +775,7 @@ TEST_F( MPPause, ReceiptInTheSamePacketBatchInvalidatesAnEarlierQueuedKickVote )
 	EXPECT_EQ( CMPPlayerDropTestAccess::Votes( host.manager, TARGET ), 0u );
 	EXPECT_EQ( LastPacket<CB2SuggestKickPacket>( host ), nullptr );
 	EXPECT_EQ( CMPPlayerDropTestAccess::Removal( host.transceiver, TARGET ), -1 );
+	EXPECT_FALSE( host.transceiver->IsRecoveringDeparture() );
 }
 
 TEST_F( MPPause, ScheduledDepartureCannotReintroducePauseOrConsumeBudget )

@@ -87,6 +87,7 @@ set(SOURCES
     MPManager.cpp
     MPManagerMode.cpp
     MPManagerModeClients.cpp
+    MPManagerModeRecovery.cpp
     MPManagerModeGameControl.cpp
     MPManagerModeLAN.cpp
     MPManagerModeMessages.cpp

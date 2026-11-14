@@ -67,6 +67,10 @@ void CMPManagerMode::StartGame()
 	lags.assign( slots.size(), SLagInfo() );
 	// Track already-scheduled removals to keep host announcements idempotent.
 	playerDrops.assign( slots.size(), NMPPlayerDrop::SPlayerDrop() );
+	dwRecoveryRound = 0;
+	dwCompletedRecovery = 0;
+	recoveryReports.clear();
+	pRecoveryCommit = nullptr;
 	lagsUpdate.bUpdating = false;
 	lagsUpdate.timeUpdatePeriod = 500;
 	int nMaxLagTime = ( NGameX::GetMPConsts()->nTimeUserMPLag + NGameX::GetMPConsts()->nTimeUserMPPause ) * 1000;
@@ -548,7 +552,7 @@ int CMPManagerMode::GetRemainingLagTime( int nPlayer, NTimer::STime curTime ) co
 	}
 	const SLagInfo &lag = lags[nPlayer];
 	const int nRemaining = (std::max)( lag.nLagLeft, 0 );
-	if ( ( dwLaggersOld & ( 1UL << nPlayer ) ) == 0 )
+	if ( IsDepartureRecoveryActive() || ( dwLaggersOld & ( 1UL << nPlayer ) ) == 0 )
 	{
 		return nRemaining;
 	}
@@ -580,6 +584,15 @@ void CMPManagerMode::PublishLagBudget( int nPlayer )
 
 void CMPManagerMode::UpdateLagState( bool bRefreshUI )
 {
+	if ( IsDepartureRecoveryActive() )
+	{
+		ShowWaitWindow( true );
+		if ( bRefreshUI )
+		{
+			SendLagInfo();
+		}
+		return;
+	}
 	const uint32_t dwAllowed = GetPresentMask() & ( IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
 	dwNetworkLaggers &= dwAllowed;
 	dwUserPausedPlayers &= dwAllowed;
@@ -720,6 +733,11 @@ void CMPManagerMode::AnalyzeLaggers()
 					if ( bOwnsDropAuthority && IsValid( pTransceiver ) && i >= 0 && i < playerDrops.size() &&
 					     playerDrops[i].GetSegment() < 0 )
 					{
+						if ( GetMode() == ENM_NIVAL_NET )
+						{
+							BeginDepartureRecovery( uint32_t( 1 ) << i );
+							return;
+						}
 						if ( bLaggingGameControlHost )
 						{
 							PromoteGameControlHostAfterRemoval( nHostClientID );

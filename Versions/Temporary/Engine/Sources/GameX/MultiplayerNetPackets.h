@@ -4,6 +4,7 @@
 #include "Server_Client_Common/NetPacket.h"
 
 #include <cstdint>
+#include <vector>
 
 class CB2SlotInfoPacket : public CNetPacket
 {
@@ -193,5 +194,56 @@ public:
 		, nSlotToDrop( uint8_t( _nSlotToDrop ) )
 		, nSegment( _nSegment )
 	{
+	}
+};
+
+// A survivor retains the original packet, including empty batches and checksum.
+// The enclosing recovery message authenticates the survivor forwarding it;
+// nPlayer identifies the original command stream, not that forwarding client.
+struct SMPRecoveryCommand
+{
+	int nPlayer = -1;
+	int nSegment = -1;
+	CPtr<CNetPacket> pPacket;
+
+	int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nPlayer );
+		f.Add( 3, &nSegment );
+		f.Add( 4, &pPacket );
+		return 0;
+	}
+};
+
+class CB2DepartureRecoveryPacket : public CNetPacket
+{
+	OBJECT_NOCOPY_METHODS( CB2DepartureRecoveryPacket );
+
+public:
+	enum EPhase
+	{
+		REQUEST,
+		SNAPSHOT,
+		COMMIT
+	};
+
+	int nGameID = -1;
+	EPhase ePhase = REQUEST;
+	// Slots never rejoin a running match. Growing this mask fences old rounds,
+	// including a coordinator's partially delivered commit when it also dies.
+	uint32_t dwDeparted = 0;
+	int nCommonSegment = 0;
+	std::vector<int> cutoffs;
+	std::vector<SMPRecoveryCommand> commands;
+
+	int operator&( IBinSaver &f ) override
+	{
+		f.Add( 2, &nGameID );
+		f.Add( 3, &ePhase );
+		f.Add( 4, &dwDeparted );
+		f.Add( 5, &nCommonSegment );
+		f.Add( 6, &cutoffs );
+		f.Add( 7, &commands );
+		return 0;
 	}
 };

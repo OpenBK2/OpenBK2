@@ -173,18 +173,24 @@ public:
 		pManager->pClient = pClient;
 		pManager->pTransceiver = pTransceiver;
 		pManager->nOwnSlot = nOwnSlot;
+		pManager->nGameID = 968;
 		pManager->nHostClientID = DEPARTING_HOST;
 		pManager->nSlotsUsed = 6;
 		pManager->dwLaggers = 0;
 		pManager->dwLaggersOld = 0;
 		pManager->dwNetworkLaggers = 0;
 		pManager->dwUserPausedPlayers = 0;
-		pManager->dwInitialPlayers = 0x3f;
+		// Slot 1 is unused in this fixture, so it is not a recovery participant.
+		pManager->dwInitialPlayers = 0x3d;
 		pManager->bInitialLoadInProgress = false;
 		pManager->bWaitWindowShown = false;
 		pManager->bOutcomeKnown = false;
 		pManager->bWinOnGameEnd = false;
 		pManager->bWinFromPlayerDrops = false;
+		pManager->dwRecoveryRound = 0;
+		pManager->dwCompletedRecovery = 0;
+		pManager->recoveryReports.clear();
+		pManager->pRecoveryCommit = nullptr;
 		pManager->slots.resize( 6 );
 		pManager->lags.resize( 6 );
 		pManager->playerDrops.resize( 6 );
@@ -259,6 +265,7 @@ public:
 		pManager->updateChannels.bUpdating = false;
 		pManager->lagsUpdate.bUpdating = false;
 		pManager->bOutcomeKnown = true;
+		pManager->dwInitialPlayers = dwParticipants;
 		pManager->dwLaggers = 1UL << 3;
 		pManager->dwLaggersOld = pManager->dwLaggers;
 		pManager->dwNetworkLaggers = pManager->dwLaggers;
@@ -417,6 +424,34 @@ protected:
 		return nCount;
 	}
 
+	int CountRecoveryRequests( uint32_t dwDeparted ) const
+	{
+		int nCount = 0;
+		for ( const auto &packet : client->sent )
+		{
+			const auto *pRelay = dynamic_cast<const CDirectPacketToClient *>( packet.GetPtr() );
+			const auto *pRecovery =
+					pRelay ? dynamic_cast<const CB2DepartureRecoveryPacket *>( pRelay->pPacket.GetPtr() ) : nullptr;
+			if ( pRecovery && pRecovery->ePhase == CB2DepartureRecoveryPacket::REQUEST &&
+			     pRecovery->dwDeparted == dwDeparted && pRecovery->nGameID == 968 )
+			{
+				++nCount;
+			}
+		}
+		return nCount;
+	}
+
+	void CheckTimeoutRecovery( uint32_t dwDeparted = 1u << 3 )
+	{
+		// Consensus starts a repair barrier. No local-clock cutoff is chosen
+		// until the other survivors have supplied their frozen command tails.
+		EXPECT_TRUE( transceiver->IsRecoveringDeparture() );
+		EXPECT_TRUE( timer->HasPause( PAUSE_TYPE_MP_DEPARTURE_RECOVERY ) );
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+		EXPECT_GT( CountRecoveryRequests( dwDeparted ), 0 );
+		EXPECT_TRUE( history->GetCommandsHistory().empty() );
+	}
+
 	void FinishAt( int nSegment )
 	{
 		// The real loop commits final-boundary removals even with no timer tick due.
@@ -439,30 +474,31 @@ protected:
 	}
 };
 
-TEST_F( MPHostHandoff, BackendFirstAcceptsAndRelaysDepartingHostsEarlierBoundary )
+TEST_F( MPHostHandoff, BackendRemovalFreezesBeforeChoosingAHostOrRemovalBoundary )
 {
 	DispatchBackendRemoval();
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetHost( manager ), REPLACEMENT_HOST );
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), 7782 );
-	EXPECT_EQ( CountRelays( 7780 ), 4 );
-	CMPPlayerDropTestAccess::SetBoundary( transceiver, 7781 );
-	DispatchDrop( DEPARTING_HOST, 7779 );
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), 7781 );
-	EXPECT_EQ( CountRelays( 7779 ), 4 );
+	EXPECT_TRUE( transceiver->IsRecoveringDeparture() );
+	EXPECT_TRUE( timer->HasPause( PAUSE_TYPE_MP_DEPARTURE_RECOVERY ) );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetHost( manager ), DEPARTING_HOST );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), -1 );
+	EXPECT_EQ( CountRelays( 7780 ), 0 );
+	EXPECT_EQ( CountRecoveryRequests( 1u ), 4 );
 	EXPECT_TRUE( history->GetCommandsHistory().empty() );
-	// Neither duplicates nor the successor's superseded cutoff can relay again.
-	DispatchDrop( DEPARTING_HOST, 7779 );
-	DispatchDrop( REPLACEMENT_HOST, 7780 );
-	EXPECT_EQ( CountRelays( 7779 ), 4 );
-	EXPECT_EQ( CountRelays( 7780 ), 4 );
-	FinishAt( 7781 );
-	CheckSingleRecordedRemoval();
+	// Duplicate backend notices cannot restart this round or bypass its freeze.
+	DispatchBackendRemoval();
+	EXPECT_EQ( CountRecoveryRequests( 1u ), 4 );
+	ITransceiver *pSimulation = transceiver;
+	pSimulation->DoSegments();
+	EXPECT_EQ( transceiver->GetCurrentCommonSegment(), 7780 );
+	EXPECT_TRUE( scenario->IsPlayerPresent( 0 ) );
+	EXPECT_FALSE( transceiver->HasPlayerDropError() );
 }
 
 TEST_F( MPHostHandoff, AnnouncementFirstRetainsTheSameBoundaryAfterBackendRemoval )
 {
 	DispatchDrop( DEPARTING_HOST, 7779 );
 	DispatchBackendRemoval();
+	EXPECT_FALSE( transceiver->IsRecoveringDeparture() );
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetHost( manager ), REPLACEMENT_HOST );
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), 7781 );
 	EXPECT_EQ( CountRelays( 7779 ), 4 );
@@ -479,7 +515,14 @@ TEST_F( MPHostHandoff, ThirdPeerAcceptsSuccessorsCorrectionWithoutTheOriginalAnn
 	CMPPlayerDropTestAccess::SetBoundary( transceiver, 7781 );
 	DispatchDrop( REPLACEMENT_HOST, 7779 );
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), 7781 );
-	EXPECT_TRUE( client->sent.empty() );
+	EXPECT_EQ( CountRelays( 7780 ), 0 );
+	EXPECT_EQ( CountRelays( 7779 ), 0 );
+	// Every survivor refreshes room keepalive on handoff. Only the replacement
+	// host may relay a drop, so this observer sends just that server heartbeat.
+	ASSERT_EQ( client->sent.size(), 1u );
+	const auto *pHeartbeat = dynamic_cast<const CGameHeartBeatPacket *>( client->sent.front().GetPtr() );
+	ASSERT_NE( pHeartbeat, nullptr );
+	EXPECT_EQ( pHeartbeat->nGameID, 968 );
 	FinishAt( 7781 );
 	CheckSingleRecordedRemoval();
 }
@@ -520,7 +563,8 @@ TEST_F( MPHostHandoff, SuccessorsCorrectionBeforeItsDepartureRecordsTheSameBound
 
 TEST_F( MPHostHandoff, EarlierLastOpponentDropCorrectsThePendingVictoryBoundary )
 {
-	DispatchBackendRemoval();
+	// Start with an announced boundary; abrupt removal now needs recovery.
+	DispatchDrop( REPLACEMENT_HOST, 7780 );
 	CMPPlayerDropTestAccess::SetPendingVictory( manager, transceiver, true );
 	CMPPlayerDropTestAccess::SetBoundary( transceiver, 7781 );
 	DispatchDrop( DEPARTING_HOST, 7779 );
@@ -532,7 +576,7 @@ TEST_F( MPHostHandoff, EarlierLastOpponentDropCorrectsThePendingVictoryBoundary 
 
 TEST_F( MPHostHandoff, DropCorrectionDoesNotRescheduleAnUnrelatedVictory )
 {
-	DispatchBackendRemoval();
+	DispatchDrop( REPLACEMENT_HOST, 7780 );
 	CMPPlayerDropTestAccess::SetPendingVictory( manager, transceiver, false );
 	CMPPlayerDropTestAccess::SetBoundary( transceiver, 7781 );
 	DispatchDrop( DEPARTING_HOST, 7779 );
@@ -574,7 +618,7 @@ TEST_F( MPHostHandoff, DepartedVoterDoesNotBlockAnotherPlayersTimeout )
 	ASSERT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0x35u );
 	DispatchDrop( REPLACEMENT_HOST, 7780, 0 );
 	StepManager();
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+	CheckTimeoutRecovery( 0x09 );
 }
 
 TEST_F( MPHostHandoff, LaggingVotersExtraApprovalDoesNotVetoEligibleVoters )
@@ -588,7 +632,7 @@ TEST_F( MPHostHandoff, LaggingVotersExtraApprovalDoesNotVetoEligibleVoters )
 	}
 	StepManager();
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 0 ), -1 );
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+	CheckTimeoutRecovery();
 }
 
 TEST_F( MPHostHandoff, ContinuousObserverRenewsVoteAfterHostsLocalRecovery )
@@ -619,6 +663,7 @@ TEST_F( MPHostHandoff, ContinuousObserverRenewsVoteAfterHostsLocalRecovery )
 	StepManager();
 	StepManager();
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+	EXPECT_FALSE( transceiver->IsRecoveringDeparture() );
 
 	timer->Update( 1999 );
 	ASSERT_EQ( timer->GetAbsTime(), 999u );
@@ -637,7 +682,7 @@ TEST_F( MPHostHandoff, ContinuousObserverRenewsVoteAfterHostsLocalRecovery )
 	// The ordinary manager loop drains this newly generated packet before its
 	// timeout decision. No manual re-delivery of the original vote is needed.
 	StepManager();
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+	CheckTimeoutRecovery();
 }
 
 TEST_F( MPHostHandoff, ExpiredApprovalCannotCompleteTimeoutConsensus )
@@ -652,9 +697,10 @@ TEST_F( MPHostHandoff, ExpiredApprovalCannotCompleteTimeoutConsensus )
 	StepManager();
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetVotes( manager ), 0x24u );
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+	EXPECT_FALSE( transceiver->IsRecoveringDeparture() );
 	DispatchVote( 266043 );
 	StepManager();
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+	CheckTimeoutRecovery();
 }
 
 TEST_F( MPHostHandoff, RenewedApprovalRefreshesItsReceiptLifetime )
@@ -667,7 +713,7 @@ TEST_F( MPHostHandoff, RenewedApprovalRefreshesItsReceiptLifetime )
 	timer->Update( 5000 );
 	DispatchVote( THIRD_PLAYER );
 	StepManager();
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+	CheckTimeoutRecovery();
 }
 
 TEST_F( MPHostHandoff, ZeroBudgetRecoveryWithdrawsTheSendersApproval )
@@ -681,9 +727,10 @@ TEST_F( MPHostHandoff, ZeroBudgetRecoveryWithdrawsTheSendersApproval )
 	DispatchVote( THIRD_PLAYER );
 	StepManager();
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+	EXPECT_FALSE( transceiver->IsRecoveringDeparture() );
 	DispatchVote( 266043 );
 	StepManager();
-	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), 7782 );
+	CheckTimeoutRecovery();
 }
 
 TEST_F( MPHostHandoff, ApprovalArrivingWhileTargetIsHealthyDoesNotSurviveIntoNextWait )
@@ -697,6 +744,7 @@ TEST_F( MPHostHandoff, ApprovalArrivingWhileTargetIsHealthyDoesNotSurviveIntoNex
 	StepManager();
 	StepManager();
 	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver, 3 ), -1 );
+	EXPECT_FALSE( transceiver->IsRecoveringDeparture() );
 }
 
 TEST_F( MPHostHandoff, RecoveringObserverStopsRenewingItsApproval )

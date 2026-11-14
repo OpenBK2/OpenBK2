@@ -138,6 +138,11 @@ protected:
 	CLaggerList lags;
 	SAutoUpdate lagsUpdate;
 	std::vector<NMPPlayerDrop::SPlayerDrop> playerDrops;
+	uint32_t dwRecoveryRound = 0;
+	uint32_t dwCompletedRecovery = 0;
+	std::vector<CPtr<class CB2DepartureRecoveryPacket>> recoveryReports;
+	// Keep accepted decisions and repair input across coordinator failure.
+	CPtr<class CB2DepartureRecoveryPacket> pRecoveryCommit;
 
 	std::list<int> pendingClients; // NEW_CLIENT-s that are received when we do not have our slot number yet
 
@@ -193,6 +198,7 @@ private:
 	bool OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegmentPacket *pPacket );
 	bool OnB2GameLostPacket( class CB2GameLostPacket *pPacket );
 	bool OnPingPacket( class CPingPacket *pPacket );
+	bool OnDepartureRecoveryPacket( class CB2DepartureRecoveryPacket *pPacket );
 	//}
 
 protected:
@@ -219,6 +225,12 @@ protected:
 	bool ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
 	void ApplyScheduledSlotDrops();
 	void ResolvePendingHostDrops();
+	void BeginDepartureRecovery( uint32_t dwDeparted );
+	void UpdateDepartureRecovery();
+	bool AcceptDepartureRecovery( class CB2DepartureRecoveryPacket *pPacket );
+	uint32_t GetKnownDepartures() const;
+	int GetRecoveryCoordinator( uint32_t dwDeparted ) const;
+	bool IsDepartureRecoveryActive() const;
 	bool IsGameControlHost();
 	int GetReplacementHostClientID( int nRemovedClientID );
 	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );

@@ -85,6 +85,24 @@ void CMPManagerMode::SendLagInfo()
 	{
 		return;
 	}
+	if ( IsDepartureRecoveryActive() )
+	{
+		// Recovery is a network barrier, not a manually resumable user pause.
+		CPtr<SMPUILagInfoMessage> pInfo = new SMPUILagInfoMessage( false );
+		for ( size_t i = 0; i < slots.size(); ++i )
+		{
+			if ( ( dwRecoveryRound & ( uint32_t( 1 ) << i ) ) != 0 &&
+			     ( i >= playerDrops.size() || playerDrops[i].GetSegment() < 0 ) )
+			{
+				SMPUILagInfoMessage::SLagItem item;
+				item.szName = slots[i].szName;
+				item.nSecondsLeft = -1;
+				pInfo->lags.push_back( item );
+			}
+		}
+		PushMessage( pInfo );
+		return;
+	}
 
 	bool bOwnLag = ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0;
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
@@ -196,7 +214,8 @@ int CMPManagerMode::GetReplacementHostClientID( int nRemovedClientID )
 		// A received drop stops lockstep waiting immediately, but the slot can
 		// remain visible until its announced segment. Never elect that leaver.
 		const bool bDropScheduled = i < playerDrops.size() && playerDrops[i].GetSegment() >= 0;
-		if ( slot.bPresent && !bDropScheduled && nClientID >= 0 && nClientID != nRemovedClientID )
+		if ( slot.bPresent && !bDropScheduled && ( dwRecoveryRound & ( uint32_t( 1 ) << i ) ) == 0 && nClientID >= 0 &&
+		     nClientID != nRemovedClientID )
 		{
 			return nClientID;
 		}
@@ -341,7 +360,7 @@ bool CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 		// A removed player is no longer a voter for any other pending timeout.
 		lag.dwHatedBy &= ~( 1UL << nSlot );
 	}
-	if ( dwLaggers == 0 )
+	if ( dwLaggers == 0 && !IsDepartureRecoveryActive() )
 	{
 		ShowWaitWindow( false );
 	}
@@ -499,6 +518,13 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 				// Retain a disconnect observed before this client becomes control host.
 				// A later handoff must not elect it and wait for a second notification.
 				playerDrops[i].RememberDisconnect();
+				if ( GetMode() == ENM_NIVAL_NET && playerDrops[i].GetSegment() < 0 )
+				{
+					// An abrupt exit supplies no final packet frontier. Freeze and
+					// recover it from survivors instead of guessing from our local tick.
+					BeginDepartureRecovery( uint32_t( 1 ) << i );
+					return;
+				}
 
 				// Schedule by lockstep membership, not slot UI state.
 				// Slot presence can already be false here while transceiver still waits for this player.

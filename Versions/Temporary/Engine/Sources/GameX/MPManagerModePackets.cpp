@@ -390,6 +390,12 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 	{
 		return true;
 	}
+	if ( pPacket->nSlotToDrop < 32 && ( dwRecoveryRound & ( uint32_t( 1 ) << pPacket->nSlotToDrop ) ) != 0 )
+	{
+		// Recovery snapshots are immutable. A delayed graceful/legacy cutoff
+		// cannot introduce an unreported decision during or after that recovery.
+		return true;
+	}
 	const int nPreviousHostClientID = nHostClientID;
 
 	NGameX::MatchPacketTrace_Log(
@@ -431,6 +437,12 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 	// Waiting is stopped immediately by SchedulePlayerRemoval. Keep the host's
 	// simulation boundary unchanged even if this client is currently behind it.
 	const bool bChanged = ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, pPacket->nSegment );
+	if ( bChanged && IsDepartureRecoveryActive() )
+	{
+		// A different player surrendered while recovery was collecting snapshots.
+		// Grow the cohort exclusion and fence every report from the older round.
+		BeginDepartureRecovery( uint32_t( 1 ) << pPacket->nSlotToDrop );
+	}
 	if ( ( bChanged || nHostClientID != nPreviousHostClientID ) && IsGameControlHost() )
 	{
 		// A backend removal may have promoted us before the old host's announcement

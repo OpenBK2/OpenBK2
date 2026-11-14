@@ -62,6 +62,7 @@ CMPManagerMode::CMPManagerMode()
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2DropPlayerAtSegmentPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2GameLostPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnPingPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnDepartureRecoveryPacket );
 
 	pClient = new CEmptyServerClient;
 	szMPName = NStr::ToMBCS( NGlobal::GetVar( "profile_name", "Player" ) );
@@ -139,6 +140,14 @@ bool CMPManagerMode::Segment()
 
 	if ( IsGameRunning() )
 	{
+		UpdateDepartureRecovery();
+		if ( IsDepartureRecoveryActive() )
+		{
+			// Network packets and server heartbeats keep flowing while simulation,
+			// victory decisions and ordinary lag voting wait for the repair commit.
+			ShowWaitWindow( true );
+			return true;
+		}
 		// Consecutive hosts can leave before their announcements reach this peer.
 		// Resolve deferred self-announcements in authority order before simulation.
 		ResolvePendingHostDrops();
