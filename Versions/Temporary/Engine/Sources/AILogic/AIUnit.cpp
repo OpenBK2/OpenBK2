@@ -62,6 +62,7 @@
 
 #include "AILogic_export.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 
@@ -291,6 +292,11 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl,
 	const float fDist2 = fabs2( vUnitCenter - vExplCoord2D );
 	const float fZDiff = std::fabs( GetVisZ() - vExplCoord3D.z );
 	const uint64_t nRngBefore = NAsyncExplosionDebug::GetRandomCallCounter();
+	const IAILogic *pLogic = Singleton<IAILogic>();
+	const NDb::SAIGameConsts *pConsts = pLogic ? pLogic->GetAIConsts() : nullptr;
+	const bool bResistanceBased = pConsts && pConsts->eAreaDamageSystem == NDb::SAIGameConsts::ResistanceBased;
+	// New-mode infantry uses Area2 directly, without a second attempt after a failed resistance or cover roll.
+	const float fDamageRadius = bResistanceBased && GetStats()->IsInfantry() ? fRadius : fSmallRadius;
 
 	bool bPreconditionsPassed = false;
 	bool bCoverCalled = false;
@@ -308,20 +314,31 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl,
 		if ( !bSavedByCover )
 		{
 			SRect unitRect = GetUnitRect();
-			// Splash uses the same crack test; its radius and armor threshold remain unchanged.
+			// Both systems retain cover and AABB cracking before their own splash damage gate.
 			if ( nArmorDir != 1 && !NHitProtection::CracksAABB( pExpl->GetShellStats(), *GetStats() ) )
 			{
 				unitRect.Compress( GetRemissiveCoeff() );
 			}
 
-			bCircleHit = unitRect.IsIntersectCircle( vExplCoord2D, fSmallRadius );
+			bCircleHit = unitRect.IsIntersectCircle( vExplCoord2D, fDamageRadius );
 			if ( bCircleHit )
 			{
-				bArmorPassed =
-						GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect ) <= SConsts::ARMOR_FOR_AREA_DAMAGE;
+				// The trace's armor-pass flag records the selected system's gate; Legacy consumes its original rolls.
+				bArmorPassed = bResistanceBased ? NHitProtection::CracksAreaResistance( pExpl->GetShellStats(), *GetStats() )
+				                                : GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect ) <=
+				                                      SConsts::ARMOR_FOR_AREA_DAMAGE;
 				if ( bArmorPassed )
 				{
-					TakeDamage( pExpl->GetRandomDamage() * SConsts::AREA_DAMAGE_COEFF,
+					float fDamageCoeff = SConsts::AREA_DAMAGE_COEFF;
+					if ( bResistanceBased )
+					{
+						// Measure from the explosion to the same combat box used above, including AABB compression.
+						const float fDistance = std::sqrt( unitRect.GetDistanceToPoint2( vExplCoord2D ) );
+						const float x = fDamageRadius > 0.0f ? std::clamp( fDistance / fDamageRadius, 0.0f, 1.0f ) : 1.0f;
+						const auto &falloff = pConsts->areaDamageFalloff;
+						fDamageCoeff = std::clamp( falloff.fa * x * x + falloff.fb * x + falloff.fc, 0.0f, 1.0f );
+					}
+					TakeDamage( pExpl->GetRandomDamage() * fDamageCoeff,
 					            &pExpl->GetShellStats(),
 					            pExpl->GetPlayerOfShoot(),
 					            pExpl->GetWhoFire() );

@@ -3670,6 +3670,8 @@ struct MISC_EXPORT SRect
 
 	// границы прямоугольника не принадлежат ему
 	bool IsPointInside( const CVec2 &point ) const;
+	// Squared distance to the nearest point of the rotated rectangle; zero inside it.
+	float GetDistanceToPoint2( const CVec2 &point ) const;
 	bool IsIntersectCircle( const CVec2 &circleCenter, const float r ) const;
 
 	bool IsIntersectCircle( const CCircle &circle ) const

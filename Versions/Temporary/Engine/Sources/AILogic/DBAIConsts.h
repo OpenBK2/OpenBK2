@@ -624,6 +624,37 @@ namespace NDb
 		float fFOWSoundDistance;
 		float fFOWSoundMinBasePercentage;
 
+		enum EAreaDamageSystem : int
+		{
+			Legacy = 0,
+			ResistanceBased = 1,
+		};
+
+		struct SAreaDamageFalloff
+		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
+			float fa;
+			float fb;
+			float fc;
+
+			SAreaDamageFalloff() :
+				__dwCheckSum( 0 ),
+				fa( -1.0000f ),
+				fb( 0.0000f ),
+				fc( 1.0000f )
+			{ }
+			//
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+			//
+			int operator&( IBinSaver &saver );
+			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
+		};
+		EAreaDamageSystem eAreaDamageSystem;
+		SAreaDamageFalloff areaDamageFalloff;
+
 		SAIGameConsts() :
 			__dwCheckSum( 0 ),
 			nRemoveParachuteTime( 0 ),
@@ -631,7 +662,8 @@ namespace NDb
 			bInfantryFormationModifiersApplyInTrenches( true ),
 			bDisableEntrenchmentReloadSlowdown( false ),
 			fFOWSoundDistance( -1.0000f ),
-			fFOWSoundMinBasePercentage( 0.1000f )
+			fFOWSoundMinBasePercentage( 0.1000f ),
+			eAreaDamageSystem( Legacy )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }
@@ -643,3 +675,17 @@ namespace NDb
 		uint32_t CalcCheckSum() const override;
 	};
 }
+
+namespace NDb
+{
+	std::string EnumToString( NDb::SAIGameConsts::EAreaDamageSystem eValue );
+	SAIGameConsts::EAreaDamageSystem StringToEnum_NDb_SAIGameConsts_EAreaDamageSystem( const std::string &szValue );
+}
+
+template <>
+struct SKnownEnum<NDb::SAIGameConsts::EAreaDamageSystem>
+{
+	enum { isKnown = 1 };
+	static std::string ToString( NDb::SAIGameConsts::EAreaDamageSystem eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SAIGameConsts::EAreaDamageSystem ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SAIGameConsts_EAreaDamageSystem( szValue ); }
+};

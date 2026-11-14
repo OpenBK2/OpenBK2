@@ -53,4 +53,10 @@ bool CracksCover( const NDb::SWeaponRPGStats::SShell &shell, const NDb::SUnitBas
 	return CracksProtection(
 			shell.fCoverCrackBase, shell.fCoverCrackRandom, target.fCoverStrengthMin, target.fCoverStrengthMax );
 }
+
+bool CracksAreaResistance( const NDb::SWeaponRPGStats::SShell &shell, const NDb::SUnitBaseRPGStats &target )
+{
+	return CracksProtection(
+			shell.fAreaCrackingBase, shell.fAreaCrackingRandom, target.fAreaDmgResistanceMin, target.fAreaDmgResistanceMax );
+}
 } // namespace NHitProtection

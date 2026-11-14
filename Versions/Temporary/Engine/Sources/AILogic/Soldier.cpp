@@ -1364,6 +1364,13 @@ bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl,
 
 	if ( !IsInBuilding() && !IsInSolidPlace() && fZDiff <= GetStats()->vAABBHalfSize.y )
 	{
+		const IAILogic *pLogic = Singleton<IAILogic>();
+		const NDb::SAIGameConsts *pConsts = pLogic ? pLogic->GetAIConsts() : nullptr;
+		if ( pConsts && pConsts->eAreaDamageSystem == NDb::SAIGameConsts::ResistanceBased )
+		{
+			// Area2 is the infantry radius in the new system. Never retry a failed resistance/cover check.
+			return CAIUnit::ProcessAreaDamage( pExpl, nArmorDir, fRadius, fSmallRadius );
+		}
 		if ( !CAIUnit::ProcessAreaDamage( pExpl, nArmorDir, fRadius, fSmallRadius ) )
 		{
 			const bool bCanUseFallback = IsFree() && !IsLying();

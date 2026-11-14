@@ -1622,6 +1622,8 @@ void SWeaponRPGStats::SShell::ReportMetaInfo( const std::string &szAddName, uint
 	NMetaInfo::ReportMetaInfo( szAddName + "AABBCrackRandom", (uint8_t*)&fAABBCrackRandom - pThis, sizeof(fAABBCrackRandom), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "CoverCrackBase", (uint8_t*)&fCoverCrackBase - pThis, sizeof(fCoverCrackBase), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "CoverCrackRandom", (uint8_t*)&fCoverCrackRandom - pThis, sizeof(fCoverCrackRandom), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AreaCrackingBase", (uint8_t*)&fAreaCrackingBase - pThis, sizeof(fAreaCrackingBase), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AreaCrackingRandom", (uint8_t*)&fAreaCrackingRandom - pThis, sizeof(fAreaCrackingRandom), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
@@ -1660,6 +1662,8 @@ int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
 	saver.Add( "AABBCrackRandom", &fAABBCrackRandom );
 	saver.Add( "CoverCrackBase", &fCoverCrackBase );
 	saver.Add( "CoverCrackRandom", &fCoverCrackRandom );
+	saver.Add( "AreaCrackingBase", &fAreaCrackingBase );
+	saver.Add( "AreaCrackingRandom", &fAreaCrackingRandom );
 
 	return 0;
 }
@@ -1700,6 +1704,14 @@ int SWeaponRPGStats::SShell::operator&( IBinSaver &saver )
 	saver.Add( 33, &fAABBCrackRandom );
 	saver.Add( 34, &fCoverCrackBase );
 	saver.Add( 35, &fCoverCrackRandom );
+	if ( !saver.IsReading() || saver.HasChunk( 36 ) )
+	{
+		saver.Add( 36, &fAreaCrackingBase );
+	}
+	if ( !saver.IsReading() || saver.HasChunk( 37 ) )
+	{
+		saver.Add( 37, &fAreaCrackingRandom );
+	}
 
 	return 0;
 }
@@ -1712,7 +1724,7 @@ uint32_t SWeaponRPGStats::SShell::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << eDamageType << nPiercing << nDamageRandom << fDamagePower << nPiercingRandom << fArea << fArea2 << fSpeed << fTraceSpeedCoeff << fTraceProbability << fTraceLength << fTraceWidth << etrajectory << fBrokeTrackProbability << szFireSound << fFireRate << fRelaxTime << pMissleParams << fAABBCrackBase << fAABBCrackRandom << fCoverCrackBase << fCoverCrackRandom;
+	checkSum << eDamageType << nPiercing << nDamageRandom << fDamagePower << nPiercingRandom << fArea << fArea2 << fSpeed << fTraceSpeedCoeff << fTraceProbability << fTraceLength << fTraceWidth << etrajectory << fBrokeTrackProbability << szFireSound << fFireRate << fRelaxTime << pMissleParams << fAABBCrackBase << fAABBCrackRandom << fCoverCrackBase << fCoverCrackRandom << fAreaCrackingBase << fAreaCrackingRandom;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -4376,6 +4388,8 @@ void SUnitBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "CoverStrengthMin", (uint8_t*)&fCoverStrengthMin - pThis, sizeof(fCoverStrengthMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "CoverStrengthMax", (uint8_t*)&fCoverStrengthMax - pThis, sizeof(fCoverStrengthMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "SpyDiscoveryRange", (uint8_t*)&fSpyDiscoveryRange - pThis, sizeof(fSpyDiscoveryRange), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "AreaDmgResistanceMin", (uint8_t*)&fAreaDmgResistanceMin - pThis, sizeof(fAreaDmgResistanceMin), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "AreaDmgResistanceMax", (uint8_t*)&fAreaDmgResistanceMax - pThis, sizeof(fAreaDmgResistanceMax), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
 int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
@@ -4420,6 +4434,8 @@ int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "CoverStrengthMin", &fCoverStrengthMin );
 	saver.Add( "CoverStrengthMax", &fCoverStrengthMax );
 	saver.Add( "SpyDiscoveryRange", &fSpyDiscoveryRange );
+	saver.Add( "AreaDmgResistanceMin", &fAreaDmgResistanceMin );
+	saver.Add( "AreaDmgResistanceMax", &fAreaDmgResistanceMax );
 
 	return 0;
 }
@@ -4481,6 +4497,11 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 	{
 		saver.Add( 40, &fSpyDiscoveryRange );
 	}
+	saver.Add( 41, &fAreaDmgResistanceMin );
+	if ( !saver.IsReading() || saver.HasChunk( 42 ) )
+	{
+		saver.Add( 42, &fAreaDmgResistanceMax );
+	}
 
 	return 0;
 }
@@ -4493,7 +4514,7 @@ uint32_t SUnitBaseRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fReverseSpeedModifier << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice << fAABBStrengthMin << fAABBStrengthMax << fCoverStrengthMin << fCoverStrengthMax << fSpyDiscoveryRange;
+	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fReverseSpeedModifier << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice << fAABBStrengthMin << fAABBStrengthMax << fCoverStrengthMin << fCoverStrengthMax << fSpyDiscoveryRange << fAreaDmgResistanceMin << fAreaDmgResistanceMax;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

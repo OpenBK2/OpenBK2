@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- AreaDamageSystem selects unit splash only; static objects retain their separate
+  resolver. ResistanceBased infantry uses Area2 directly, while Legacy first
+  tries Area then its standing-only Area2 fallback. Falloff distance uses the
+  nearest point of the same compressed/cracked combat rectangle as intersection.
+- Mistake: a tank splash RNG test counted only cover, armor and damage. Virtual
+  TakeDamage also rolls track breakage, even with probability zero. Inspect the
+  concrete target's damage override before asserting a resolver's RNG count.
+
 - Unit placement updates are suspended in fog. Movement audio needs its own
   client position at visibility refreshes; calling mechanical AIUpdatePlacement
   just for sound can also update tracks and particles. Keep firing/impact effects
