@@ -441,8 +441,11 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 	{
 		if ( GetGun( nGun )->GetGun().nPriority == 0 )
 		{
+			// Match the estimator's grouping: different weapons must aim and fire independently.
 			int j = 0;
-			while ( j < nGun && ( GetGun( j )->GetGun().nPriority != 0 || GetGun( j )->IsCommonEqual( GetGun( nGun ) ) ) )
+			while ( j < nGun && ( GetGun( j )->GetGun().nPriority != 0 || GetGun( j )->IsCommonEqual( GetGun( nGun ) ) ||
+			                      GetGun( j )->GetWeapon() != GetGun( nGun )->GetWeapon() ||
+			                      GetGun( j )->GetShellType() != GetGun( nGun )->GetShellType() ) )
 			{
 				++j;
 			}

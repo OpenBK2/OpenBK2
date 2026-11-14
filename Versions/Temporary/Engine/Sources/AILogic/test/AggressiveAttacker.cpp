@@ -6,16 +6,20 @@
 #include "../Aviation.h"
 #include "../B2AI.h"
 #include "../Commands.h"
+#include "../DBAIConsts.h"
 #include "../Diplomacy.h"
 #include "../Formation.h"
 #include "../GlobalWarFog.h"
 #include "../GroupLogic.h"
 #include "../Guns.h"
 #include "../ShootEstimator.h"
+#include "../ShootEstimatorInternal.h"
 #include "../Soldier.h"
 #include "../StatesFactory.h"
 #include "../StaticMembers.h"
 #include "../Technics.h"
+#include "../Turret.h"
+#include "../UnitCreation.h"
 #include "../UnitGuns.h"
 #include "../Units.h"
 #include "../UnitStates.h"
@@ -67,6 +71,7 @@ class AggressiveAttacker : public testing::Test
 	CDBPtr<NDb::SInfantryRPGStats> infantryStats;
 
 protected:
+	std::vector<CObj<CTurret>> ownerTurrets;
 	NDb::SExtendedStats *extended = nullptr;
 	NDb::SWeaponRPGStats *weapon = nullptr;
 	CPtr<CAIUnit> owner;
@@ -125,6 +130,12 @@ protected:
 		return dynamic_cast<T *>( record->GetObject() );
 	}
 
+	void KeepObject( CObjectBase *object )
+	{
+		objects.push_back( object );
+		external.emplace_back( int( external.size() + 1 ), object );
+	}
+
 	template <class T>
 	T *MakeObject( int type )
 	{
@@ -132,8 +143,7 @@ protected:
 		EXPECT_NE( object, nullptr );
 		if ( object )
 		{
-			objects.push_back( object );
-			external.emplace_back( int( external.size() + 1 ), object );
+			KeepObject( object );
 		}
 		return object;
 	}
@@ -229,6 +239,10 @@ protected:
 													saver.Add( 1, &ai );
 													saver.Add( 2, &unitStats );
 													saver.Add( 3, &unitGuns );
+													if ( unit == owner )
+													{
+														saver.Add( 4, &ownerTurrets );
+													}
 												} };
 		if ( dynamic_cast<CSoldier *>( unit ) )
 		{
@@ -915,6 +929,159 @@ TEST_F( MechArtilleryEngagement, SecondaryMachineGunContinuesAlongsideCannon )
 	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
 	EXPECT_TRUE( gun->IsCommonGunFiring() );
 	EXPECT_TRUE( machineGun->IsCommonGunFiring() );
+}
+
+// Exercise real gun grouping and estimator construction, which serialized selection fixtures bypass.
+class MechMixedPriorityZeroWeapons : public MechFlamethrower
+{
+	CObj<IShootEstimator> initializedEstimator;
+
+protected:
+	void InitializeWeapons( bool machineGunFirst = true, bool matchingWeapons = false )
+	{
+		auto *stats =
+				const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+		// Marder's hull MG and turret cannon both have stats-local gun number zero and priority zero.
+		stats->platforms.resize( 2 );
+		for ( auto &platform : stats->platforms )
+		{
+			platform.guns.resize( 1 );
+			auto &mount = platform.guns[0];
+			mount.nPriority = 0;
+			mount.nAmmo = 100;
+		}
+		stats->platforms[0].guns[0].pWeapon = machineGunFirst ? machineGunWeapon : weapon;
+		stats->platforms[1].guns[0].pWeapon =
+				matchingWeapons ? stats->platforms[0].guns[0].pWeapon : ( machineGunFirst ? weapon : machineGunWeapon );
+		owner->GetGuns()->Init( owner );
+		for ( int i = 0; i < owner->GetNGuns(); ++i )
+		{
+			KeepObject( owner->GetGun( i ) );
+		}
+		machineGun = owner->GetGun( machineGunFirst ? 0 : 1 );
+		gun = owner->GetGun( machineGunFirst ? 1 : 0 );
+		initializedEstimator = new CTankShootEstimator( owner );
+		estimator = initializedEstimator.GetPtr();
+		KeepObject( estimator );
+	}
+
+	void SetUp() override
+	{
+		MechFlamethrower::SetUp();
+		auto *constants = MakeRecord<NDb::SAIGameConsts>( "AIGameConsts" );
+		constants->common.pMosinStats = dynamic_cast<const NDb::SInfantryRPGStats *>( enemy->GetStats() );
+		theUnitCreation.SetConsts( constants );
+		weapon->nAmmoPerBurst = 1;
+		weapon->shells[0].etrajectory = NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
+		weapon->shells[0].fDamagePower = 105;
+		weapon->shells[0].nPiercing = 128;
+		weapon->shells[0].nPiercingRandom = 12;
+		weapon->shells[0].fArea = 0;
+		weapon->shells[0].fArea2 = 0;
+		enemy = MakeObject<CAIUnit>( AI_TANK );
+		PlaceUnit( enemy, 100 );
+		auto *stats =
+				const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( enemy->GetStats() ) );
+		stats->etype = NDb::RPG_TYPE_SPG_ANTITANK;
+		stats->nMinArmor = 40;
+		stats->nMaxArmor = 50;
+		stats->armors.resize( 6 );
+		for ( auto &armor : stats->armors )
+		{
+			armor.fMin = 40;
+			armor.fMax = 50;
+		}
+		CPtr<CTurret> turret = MakeObject<CTurret>( 0x1108D4B3 );
+		int platform = 1;
+		SAIAngle constraint( 32768 );
+		bool canRotate = true;
+		LoadFields( turret,
+		            [&]( IBinSaver &saver )
+		            {
+									saver.Add( 2, &owner );
+									saver.Add( 3, &platform );
+									saver.Add( 4, &constraint );
+									saver.Add( 5, &constraint );
+									saver.Add( 7, &canRotate );
+								} );
+		ownerTurrets.push_back( turret.GetPtr() );
+		PlaceUnit( owner, 0, true, 0 );
+		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
+		InitializeWeapons();
+	}
+
+	void TearDown() override
+	{
+		initializedEstimator = nullptr;
+		theUnitCreation.SetConsts( nullptr );
+		MechFlamethrower::TearDown();
+	}
+};
+
+TEST_F( MechMixedPriorityZeroWeapons, SelectsCannonWhenMachineGunCannotPierceInEitherOrder )
+{
+	for ( bool machineGunFirst : { true, false } )
+	{
+		InitializeWeapons( machineGunFirst );
+		ASSERT_FALSE( machineGun->CanShootToUnit( enemy ) );
+		ASSERT_TRUE( gun->CanShootToUnit( enemy ) );
+		ExpectGun( gun );
+		estimator->Reset( nullptr, false, 0 );
+		estimator->AddUnit( enemy );
+		EXPECT_EQ( estimator->GetBestGun(), gun.GetPtr() );
+		EXPECT_EQ( estimator->GetBestUnit(), enemy.GetPtr() );
+	}
+}
+
+TEST_F( MechMixedPriorityZeroWeapons, KeepsDifferentWeaponsIndependentButMatchingBarrelsTogether )
+{
+	CAIUnit *infantry = MakeInfantry( 100 );
+	machineGun->StartEnemyBurst( infantry, true );
+	EXPECT_TRUE( machineGun->IsCommonGunFiring() );
+	EXPECT_FALSE( gun->IsCommonGunFiring() );
+	InitializeWeapons( true, true );
+	machineGun->StartEnemyBurst( infantry, true );
+	EXPECT_TRUE( machineGun->IsCommonGunFiring() );
+	EXPECT_TRUE( gun->IsCommonGunFiring() );
+}
+
+TEST_F( MechMixedPriorityZeroWeapons, RespectsEmptyAndForbiddenCannon )
+{
+	ExpectGun( nullptr, 2 );
+	owner->ChangeAmmo( 1, -100 );
+	ExpectGun( nullptr );
+	enemy = MakeInfantry( 100 );
+	ExpectGun( machineGun );
+}
+
+TEST_F( MechMixedPriorityZeroWeapons, StartsCannonAttackAfterSaveLoad )
+{
+	RoundTrip( owner->GetGuns() );
+	RoundTrip( estimator );
+	machineGun = owner->GetGun( 0 );
+	gun = owner->GetGun( 1 );
+	weapon->shells[0].nRelaxTime = 0;
+	IUnitState *attack = StartAutomaticAttack( false );
+	ASSERT_NE( attack, nullptr );
+	// The first segment selects the weapon; the next enters the firing phase.
+	attack->Segment();
+	attack->Segment();
+	EXPECT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
+	EXPECT_TRUE( gun->IsCommonGunFiring() );
+	EXPECT_FALSE( machineGun->IsCommonGunFiring() );
+}
+
+TEST_F( MechMixedPriorityZeroWeapons, MatchingBarrelsKeepShellAlternativesSeparate )
+{
+	// Each physical barrel has weak and strong ammunition sharing one ammo pool.
+	machineGunWeapon->shells.push_back( weapon->shells[0] );
+	InitializeWeapons( true, true );
+	ASSERT_EQ( owner->GetNGuns(), 4 );
+	CBasicGun *strongShell = owner->GetGun( 1 );
+	ExpectGun( strongShell );
+	strongShell->StartEnemyBurst( enemy, true );
+	EXPECT_TRUE( owner->GetGun( 3 )->IsFiring() );
+	EXPECT_FALSE( owner->GetGun( 2 )->IsFiring() );
 }
 
 TEST_F( AggressiveAttacker, DefaultsAndSupportedClasses )

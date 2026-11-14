@@ -3,6 +3,17 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Priority-zero weapons need the vehicle to stop; they are not necessarily matching
+  barrels. The installed Marder III H lists its hull MG before its turret Pak 40,
+  both at priority zero. Grouping all such weapons in CMechUnitGuns::Init and the
+  CTankShootEstimator constructor makes the cannon depend on the MG's penetration.
+  Match weapon records and shell indices in both places, preserving separate
+  common-ammo identities. Serialized estimator fixtures bypass constructor masks;
+  cover real initialization as well as selection and attack-state firing.
+- Headless attack fixtures select a missing gun in one Segment and fire in the next.
+  Register constructed guns as external fixture objects before reading state pointers,
+  or the reader creates copies and pointer comparisons do not inspect the live gun.
+
 - Do not validate UTF-8 by round-tripping through wchar_t. Linux iconv can
   preserve values above U+10FFFF that Windows rejects. Validate shortest UTF-8
   encodings and Unicode scalar ranges explicitly, with boundary tests for

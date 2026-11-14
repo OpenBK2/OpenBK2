@@ -70,9 +70,12 @@ CTankShootEstimator::CTankShootEstimator( CAIUnit *_pOwner )
 	{
 		if ( pOwner->GetGun( i )->GetGun().nPriority == 0 )
 		{
+			// Only matching barrels share target selection. Priority zero alone also includes independent MGs.
 			int j = 0;
 			while ( j < i && ( pOwner->GetGun( j )->GetGun().nPriority != 0 ||
-			                   pOwner->GetGun( j )->IsCommonEqual( pOwner->GetGun( i ) ) ) )
+			                   pOwner->GetGun( j )->IsCommonEqual( pOwner->GetGun( i ) ) ||
+			                   pOwner->GetGun( j )->GetWeapon() != pOwner->GetGun( i )->GetWeapon() ||
+			                   pOwner->GetGun( j )->GetShellType() != pOwner->GetGun( i )->GetShellType() ) )
 			{
 				++j;
 			}

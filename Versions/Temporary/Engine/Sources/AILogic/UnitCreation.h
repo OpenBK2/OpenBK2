@@ -2,6 +2,8 @@
 
 #include "Mine.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -152,7 +154,7 @@ public:
 	// для редактора
 	void Init();
 	// для игры
-	void SetConsts( const NDb::SAIGameConsts *pConsts );
+	AILOGIC_EXPORT void SetConsts( const NDb::SAIGameConsts *pConsts );
 	void Init( const NDb::SMapInfo *pMapInfo, ICollisionsCollector *pCollisionsCollector );
 	void Clear();
 
@@ -238,3 +240,5 @@ public:
 
 	void ApplyWeatherModifier( const bool bForward );
 };
+
+extern AILOGIC_EXPORT CUnitCreation theUnitCreation;

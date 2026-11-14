@@ -3,6 +3,8 @@
 #include "Obstacle.h"
 #include "ShootEstimator.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +67,7 @@ public:
 	{
 	}
 
-	explicit CTankShootEstimator( class CAIUnit *pOwner );
+	AILOGIC_EXPORT explicit CTankShootEstimator( class CAIUnit *pOwner );
 
 	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden ) override;
 	void AddUnit( class CAIUnit *pEnemy ) override;
