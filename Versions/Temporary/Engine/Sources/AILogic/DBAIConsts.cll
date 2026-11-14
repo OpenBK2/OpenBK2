@@ -475,5 +475,27 @@ class SAIGameConsts
 	// Minimum audible movement volume (0..1), scaled linearly to full volume near visible terrain.
 	[preserveDefault]
 	float _FOWSoundMinBasePercentage = 0.1;
+
+	enum EAreaDamageSystem
+	{
+		Legacy,
+		ResistanceBased
+	};
+	struct SAreaDamageFalloff
+	{
+		// Quadratic coefficient in clamp(a*x*x + b*x + c, 0, 1); x is normalized splash distance.
+		[preserveDefault]
+		float _a = -1.0;
+		// Linear coefficient of the resistance-based splash damage multiplier.
+		float _b = 0.0;
+		// Constant coefficient of the resistance-based splash damage multiplier.
+		[preserveDefault]
+		float _c = 1.0;
+	};
+	// Legacy uses the armor threshold and constant damage; ResistanceBased uses unit resistance and distance falloff.
+	EAreaDamageSystem _AreaDamageSystem = Legacy;
+	// Resistance-based splash multiplier coefficients; older records retain the default 1 - x*x curve.
+	[preserveDefault]
+	SAreaDamageFalloff _AreaDamageFalloff;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

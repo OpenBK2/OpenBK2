@@ -305,8 +305,13 @@ bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 	{
 		return true;
 	}
+	return GetDistanceToPoint2( circleCenter ) <= sqr( r );
+}
 
-	const CVec2 vNewCenter = circleCenter - center;
+float SRect::GetDistanceToPoint2( const CVec2 &point ) const
+{
+	// Use the same local-space distances for splash intersection and its damage falloff.
+	const CVec2 vNewCenter = point - center;
 	const CVec2 vLocalCoordCenter( vNewCenter.x * dir.x + vNewCenter.y * dir.y,
 	                               -vNewCenter.x * dir.y + vNewCenter.y * dir.x );
 
@@ -330,7 +335,7 @@ bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 		fDist += sqr( vLocalCoordCenter.y - width );
 	}
 
-	return fDist <= sqr( r );
+	return fDist;
 }
 
 bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVec2 &vTr3 ) const

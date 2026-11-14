@@ -1,7 +1,8 @@
 # Hit processing, armor, cover, and damage
 
 Originally investigated on 2026-11-08 at commit `0c6712bcf`, and updated for the
-AABB/cover strength, shell-crack, and data-backed AI property implementations.
+AABB/cover strength, shell-crack, data-backed AI properties, and optional
+resistance-based area damage.
 This describes the current implementation, including its exceptions. Values
 from a running mod/profile can differ from the defaults and checked-in profiles.
 
@@ -29,10 +30,12 @@ increase damage. A miss of the smaller rectangle is `EHT_MISS`; failed penetrati
 or a cover save is `EHT_REFLECT`. The latter is a result/effect classification, not
 a simulated ricochet trajectory.
 
-Explosive splash is a separate path. It does **not** compare shell piercing with
-armor and does **not** apply a continuous distance falloff. It tests a radius,
-uses a fixed armor threshold, and multiplies a fresh damage roll by a constant.
-Infantry and static objects have additional rules described below.
+Explosive splash is a separate path. `AIGameConsts.AreaDamageSystem` defaults to
+`Legacy`, which tests a radius, uses a fixed armor threshold, and multiplies a
+fresh damage roll by a constant. `ResistanceBased` replaces that armor threshold
+with a shell-cracking-versus-unit-resistance check and uses quadratic distance
+falloff. Neither splash system uses shell piercing. Infantry and static objects
+have additional rules described below.
 
 ## Where the work happens
 
@@ -400,10 +403,11 @@ armor, and cover outcome but still requires the initial full-box/height gates.
 
 Source: [AIUnit.cpp](../Versions/Temporary/Engine/Sources/AILogic/AIUnit.cpp#L167).
 
-## 6. Splash: `Area` and `Area2` are not a falloff curve
+## 6. Splash systems and their radii
 
 `CBurstExpl::Explode` queries unit candidates using effective `Area2`, then calls
-each target's direct-first burst handler. The ordinary unit splash fallback is:
+each target's direct-first burst handler. This direct-first behavior applies in
+both systems. The ordinary unit splash fallback in **Legacy** mode is:
 
 ```text
 GenericUnitSplash(target, explosion):
@@ -456,7 +460,79 @@ Sources: [Shell.cpp](../Versions/Temporary/Engine/Sources/AILogic/Shell.cpp#L809
 [weapon conversion](../Versions/Temporary/Engine/Sources/Stats_B2_M1/include_WeaponRPGStats.h),
 [shell conversion](../Versions/Temporary/Engine/Sources/Stats_B2_M1/include_WeaponRPGStats_Shell.h).
 
-### Infantry's outer-radius fallback
+### Resistance-based unit splash
+
+Set `AIGameConsts.AreaDamageSystem` to `ResistanceBased` to opt in. Omitted values
+retain `Legacy`, including its random draw order. Configure the following fields:
+
+| Owner | Field | Default |
+|---|---|---:|
+| `SUnitBaseRPGStats` (all units) | `AreaDmgResistanceMin` | `0.0` |
+| `SUnitBaseRPGStats` (all units) | `AreaDmgResistanceMax` | `1.0` |
+| `SWeaponRPGStats.SShell` | `AreaCrackingBase` | `0.5` |
+| `SWeaponRPGStats.SShell` | `AreaCrackingRandom` | `0.5` |
+| `AIGameConsts.AreaDamageFalloff` | `a` | `-1.0` |
+| `AIGameConsts.AreaDamageFalloff` | `b` | `0.0` |
+| `AIGameConsts.AreaDamageFalloff` | `c` | `1.0` |
+
+All resistance, cracking, and falloff fields are floats. After the existing
+shelter, height, cover, and combat-box checks:
+
+```text
+radius = infantry ? effectiveArea2 : effectiveArea
+if not combatRect.IntersectsCircle(explosion.xy, radius):
+	return false
+
+crack = AreaCrackingBase + RandomFloat(-AreaCrackingRandom, AreaCrackingRandom)
+resistance = RandomFloat(AreaDmgResistanceMin, AreaDmgResistanceMax)
+if crack < resistance:
+	return false
+
+distance = distance from explosion.xy to the nearest point of combatRect
+x = radius > 0 ? clamp(distance / radius, 0, 1) : 1
+multiplier = clamp(a*x*x + b*x + c, 0, 1)
+target.TakeDamage(explosion.RollDamage() * multiplier)
+```
+
+Distance is horizontal and uses the same rotated, possibly compressed rectangle
+as the collision test. It is zero when the explosion lies inside that rectangle.
+The default curve is `1 - x*x`: full damage at distance zero, 75% halfway to the
+radius, and zero at the edge. A zero-radius circle uses `x = 1`, even when it lies
+inside the box. Coefficients are not clamped, only the normalized distance and
+formula output. Damage retains the existing shot-time and target durability
+modifiers. A successful gate can still produce zero damage at the edge.
+
+Cracking uses the same deterministic helper as AABB and cover cracking: impossible
+and certain outcomes need no draws; otherwise resistance is rolled first, then
+crack variation. Constant ranges need no draw. Negative variation becomes zero,
+and reversed resistance bounds use the minimum endpoint as a constant. Equality
+passes. The default uncertain comparison consumes two simulation RNG draws per
+eligible target. The legacy armor roll and constant multiplier are not used.
+
+Infantry uses **only `Area2`** in this mode, for both collision and falloff,
+whether standing or lying. It retains its building/solid-place and height
+exclusions, plus the normal cover and combat-box rules. A failed resistance or
+cover check does not get another attempt through the legacy outer-radius
+fallback. Other units use `Area`. Candidate enumeration still uses `Area2`, so
+author it large enough to include the intended `Area` candidates.
+
+For example, merge these fields into the active constants record:
+
+```xml
+<AreaDamageSystem>ResistanceBased</AreaDamageSystem>
+<AreaDamageFalloff>
+	<a>-1.0</a>
+	<b>0.0</b>
+	<c>1.0</c>
+</AreaDamageFalloff>
+```
+
+Existing field chunk IDs are retained. The new fields participate in XML and
+binary serialization, editor metadata, and checksums; omitted fields in older
+data retain their defaults. Multiplayer participants need matching builds and
+data. Direct hits and static-object splash keep their existing mechanics.
+
+### Legacy infantry's outer-radius fallback
 
 `CSoldier::ProcessAreaDamage` first requires the soldier outside a building and a
 solid place, and `abs(GetVisZ() - explosion.z) <= stats.AABBHalfSize.y`. The use of
@@ -483,7 +559,8 @@ Source: [Soldier.cpp](../Versions/Temporary/Engine/Sources/AILogic/Soldier.cpp#L
 
 ### Static objects and buildings
 
-These do not use the unit cover/combat-rectangle algorithm:
+These do not use the unit cover/combat-rectangle algorithm and retain this
+behavior under either `AreaDamageSystem` setting:
 
 - `CExistingObject::ProcessCumulativeExpl` accepts a footprint hit **or** an attack
   center within effective `Area`. It has its own height gate, rolls armor then

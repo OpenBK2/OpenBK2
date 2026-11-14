@@ -808,6 +808,8 @@ namespace NDb
 			float fAABBCrackRandom;
 			float fCoverCrackBase;
 			float fCoverCrackRandom;
+			float fAreaCrackingBase;
+			float fAreaCrackingRandom;
 
 			#include "include_WeaponRPGStats_Shell.h"
 
@@ -833,7 +835,9 @@ namespace NDb
 				fAABBCrackBase( 0.0000f ),
 				fAABBCrackRandom( 0.0000f ),
 				fCoverCrackBase( 0.0000f ),
-				fCoverCrackRandom( 0.0000f )
+				fCoverCrackRandom( 0.0000f ),
+				fAreaCrackingBase( 0.5000f ),
+				fAreaCrackingRandom( 0.5000f )
 			{ }
 			//
 			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
@@ -2103,6 +2107,8 @@ namespace NDb
 		float fCoverStrengthMin;
 		float fCoverStrengthMax;
 		float fSpyDiscoveryRange;
+		float fAreaDmgResistanceMin;
+		float fAreaDmgResistanceMax;
 
 		#include "include_UnitBaseRPGStats.h"
 
@@ -2135,7 +2141,9 @@ namespace NDb
 			fAABBStrengthMax( 1.0000f ),
 			fCoverStrengthMin( 1.0000f ),
 			fCoverStrengthMax( 1.0000f ),
-			fSpyDiscoveryRange( -1.0000f )
+			fSpyDiscoveryRange( -1.0000f ),
+			fAreaDmgResistanceMin( 0.0000f ),
+			fAreaDmgResistanceMax( 1.0000f )
 		{ }
 		//
 		void ReportMetaInfo() const;

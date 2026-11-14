@@ -974,6 +974,77 @@ uint32_t SAIGameConsts::SCommonScriptEntry::CalcCheckSum() const
 }
 
 
+std::string EnumToString( NDb::SAIGameConsts::EAreaDamageSystem eValue )
+{
+	switch ( eValue )
+	{
+	case NDb::SAIGameConsts::Legacy:
+		return "Legacy";
+	case NDb::SAIGameConsts::ResistanceBased:
+		return "ResistanceBased";
+	default:
+		return "Legacy";
+	}
+}
+
+NDb::SAIGameConsts::EAreaDamageSystem StringToEnum_NDb_SAIGameConsts_EAreaDamageSystem( const std::string &szValue )
+{
+	if ( szValue == "Legacy" )
+		return NDb::SAIGameConsts::Legacy;
+	if ( szValue == "ResistanceBased" )
+		return NDb::SAIGameConsts::ResistanceBased;
+	return NDb::SAIGameConsts::Legacy;
+}
+
+
+void SAIGameConsts::SAreaDamageFalloff::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+	NMetaInfo::ReportMetaInfo( szAddName + "a", (uint8_t*)&fa - pThis, sizeof(fa), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "b", (uint8_t*)&fb - pThis, sizeof(fb), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "c", (uint8_t*)&fc - pThis, sizeof(fc), NTypeDef::TYPE_TYPE_FLOAT );
+}
+
+int SAIGameConsts::SAreaDamageFalloff::operator&( IXmlSaver &saver )
+{
+	saver.Add( "a", &fa );
+	saver.Add( "b", &fb );
+	saver.Add( "c", &fc );
+
+	return 0;
+}
+
+int SAIGameConsts::SAreaDamageFalloff::operator&( IBinSaver &saver )
+{
+	if ( !saver.IsReading() || saver.HasChunk( 2 ) )
+	{
+		saver.Add( 2, &fa );
+	}
+	saver.Add( 3, &fb );
+	if ( !saver.IsReading() || saver.HasChunk( 4 ) )
+	{
+		saver.Add( 4, &fc );
+	}
+
+	return 0;
+}
+
+uint32_t SAIGameConsts::SAreaDamageFalloff::CalcCheckSum() const
+{
+	CCheckSumScope scope( __dwCheckSum );
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << fa << fb << fc;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
 
 void SAIGameConsts::ReportMetaInfo() const
 {
@@ -1001,6 +1072,8 @@ void SAIGameConsts::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DisableEntrenchmentReloadSlowdown", (uint8_t*)&bDisableEntrenchmentReloadSlowdown - pThis, sizeof(bDisableEntrenchmentReloadSlowdown), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "FOWSoundDistance", (uint8_t*)&fFOWSoundDistance - pThis, sizeof(fFOWSoundDistance), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "FOWSoundMinBasePercentage", (uint8_t*)&fFOWSoundMinBasePercentage - pThis, sizeof(fFOWSoundMinBasePercentage), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "AreaDamageSystem", (uint8_t*)&eAreaDamageSystem - pThis, sizeof(eAreaDamageSystem), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportStructMetaInfo( "AreaDamageFalloff", &areaDamageFalloff, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1028,6 +1101,8 @@ int SAIGameConsts::operator&( IXmlSaver &saver )
 	saver.Add( "DisableEntrenchmentReloadSlowdown", &bDisableEntrenchmentReloadSlowdown );
 	saver.Add( "FOWSoundDistance", &fFOWSoundDistance );
 	saver.Add( "FOWSoundMinBasePercentage", &fFOWSoundMinBasePercentage );
+	saver.Add( "AreaDamageSystem", &eAreaDamageSystem );
+	saver.Add( "AreaDamageFalloff", &areaDamageFalloff );
 
 	return 0;
 }
@@ -1064,6 +1139,11 @@ int SAIGameConsts::operator&( IBinSaver &saver )
 	{
 		saver.Add( 22, &fFOWSoundMinBasePercentage );
 	}
+	saver.Add( 23, &eAreaDamageSystem );
+	if ( !saver.IsReading() || saver.HasChunk( 24 ) )
+	{
+		saver.Add( 24, &areaDamageFalloff );
+	}
 
 	return 0;
 }
@@ -1076,7 +1156,7 @@ uint32_t SAIGameConsts::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts << bDisableEntrenchmentReloadSlowdown << fFOWSoundDistance << fFOWSoundMinBasePercentage;
+	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts << bDisableEntrenchmentReloadSlowdown << fFOWSoundDistance << fFOWSoundMinBasePercentage << eAreaDamageSystem << areaDamageFalloff;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
