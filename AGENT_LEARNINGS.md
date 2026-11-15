@@ -595,6 +595,14 @@ context. Read `git diff` of every touched file before building.
 
 ## Cooperative merge regression coverage
 
+- Editor-managed arrays retain per-element reflection values alongside the C++
+  vector. Resize them through IObjMan in fixtures; shrinking players directly
+  left stale metadata and crashed MPCoopRules during teardown in Windows Debug.
+  Assert the actual size too: SetValueArraySize used the removal count as the
+  starting index, so shrinking six elements to one retained five instead.
+- MSVC STL assertions can fast-fail without reaching the test signal handlers.
+  A temporary debug CRT report hook can capture the stack before termination;
+  it distinguished database cleanup from lobby validation in this failure.
 - Scripted reinforcements notify strategic AI per unit and again for the whole
   batch. Worker deduplication alone does not deduplicate force balance. Track
   owned-unit balance registration in SP as well as COOP, and test removal and
