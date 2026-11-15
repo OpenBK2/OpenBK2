@@ -213,7 +213,8 @@ namespace NMetaInfo
 		}
 		if ( nDesiredSize < nSize )
 		{
-			return data.pArray->Remove( nSize - nDesiredSize, -1, *this, pThis );
+			// Remove the suffix starting at the requested size, preserving the retained prefix.
+			return data.pArray->Remove( nDesiredSize, -1, *this, pThis );
 		}
 		return true;
 	}

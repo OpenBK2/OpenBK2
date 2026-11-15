@@ -26,6 +26,7 @@ protected:
 	std::vector<CObj<NDb::IObjMan>> records;
 	NDb::SMultiplayerMap *map = nullptr;
 	NDb::SMapInfo *mission = nullptr;
+	NDb::IObjMan *missionRecord = nullptr;
 	NDb::SMultiplayerConsts *constants = nullptr;
 	NDb::SPartyDependentInfo *party = nullptr;
 	SB2GameSpecificData game;
@@ -57,16 +58,18 @@ protected:
 		ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), NDb::DATABASE_MODE_EDITOR ) );
 		map = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
 		mission = CreateRecord<NDb::SMapInfo>( "MapInfo" );
+		ASSERT_NE( mission, nullptr );
+		missionRecord = records.back().GetPtr();
 		constants = CreateRecord<NDb::SMultiplayerConsts>( "MultiplayerConsts" );
 		party = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
 		ASSERT_NE( map, nullptr );
-		ASSERT_NE( mission, nullptr );
 		ASSERT_NE( constants, nullptr );
 		ASSERT_NE( party, nullptr );
 		map->pMap = mission;
 		map->eGameType = NDb::COOP;
 		map->nPlayers = 3;
-		mission->players.resize( 6 );
+		// Resize through the editor binding so its per-element metadata follows the C++ array.
+		ASSERT_TRUE( missionRecord->SetValue( "Players", 6 ) );
 		for ( int i = 0; i < 5; ++i )
 		{
 			const bool bBot = i == 0 || i == 2;
@@ -287,7 +290,7 @@ TEST_F( MPCoopRules, RejectsInvalidRolesNeutralPlacementAndMaskOverflow )
 	mission->players[2].nDiplomacySide = 2;
 	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
 	mission->players[2].nDiplomacySide = 1;
-	mission->players.resize( 17 );
+	ASSERT_TRUE( missionRecord->SetValue( "Players", 17 ) );
 	mission->players.back().nDiplomacySide = 2;
 	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
 }
@@ -424,7 +427,9 @@ TEST_F( MPCoopRules, ClassicLockedNationsKeepRandomPlacementAndUseDestinationMap
 	slots[0].nCountry = 1;
 	slots[1].nCountry = 2;
 	EXPECT_FALSE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) );
-	mission->players.resize( 1 );
+	ASSERT_TRUE( missionRecord->SetValue( "Players", 1 ) );
+	ASSERT_EQ( mission->players.size(), 1 );
 	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
+	EXPECT_EQ( error, "<val MP_RULE_INVALID_PLAYER_ASSIGNMENT>" );
 }
 } // namespace

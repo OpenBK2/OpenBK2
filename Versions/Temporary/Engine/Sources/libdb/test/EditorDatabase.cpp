@@ -454,6 +454,29 @@ TEST_F( CEditorDatabase, SimpleArraysInsertAndRemove )
 	}
 }
 
+TEST_F( CEditorDatabase, ArrayResizePreservesRequestedPrefix )
+{
+	for ( const SArrayValues &array : SimpleArrays() )
+	{
+		SCOPED_TRACE( array.pszName );
+		ASSERT_TRUE( pMan->SetValue( array.pszName, 5 ) );
+		for ( int i = 0; i < 5; ++i )
+		{
+			ASSERT_TRUE( pMan->SetValue( Element( array.pszName, i ), array.values[i] ) );
+		}
+		// Unequal retained/removed counts distinguish a new size from a removal offset.
+		for ( int nSize : { 4, 1, 1, 0 } )
+		{
+			ASSERT_TRUE( pMan->SetValue( array.pszName, nSize ) );
+			ASSERT_EQ( GetSize( array.pszName ), nSize );
+			for ( int i = 0; i < nSize; ++i )
+			{
+				ExpectValue( Element( array.pszName, i ), array.values[i] );
+			}
+		}
+	}
+}
+
 // The fields of one Struct1, with every field distinct across the five.
 std::vector<std::pair<std::string, CVariant>> Struct1Fields( int nValue )
 {
