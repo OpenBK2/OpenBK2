@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- Editor property descriptors were cached by schema field address across database
+  reopen. Reused addresses could classify resource links as structs, losing undo
+  snapshots or builder dependencies. Clear that cache before loading an editor
+  schema, not during static teardown. Windows x86 Debug reproduced this with
+  shuffled VisObjBuilder tests (seed 98255) when normal-order runs passed.
+- Check reinforcement links after each delete/undo, not only after a final clear;
+  otherwise the final assertion cannot locate the operation that lost the data.
+
 - AreaDamageSystem selects unit splash only; static objects retain their separate
   resolver. ResistanceBased infantry uses Area2 directly, while Legacy first
   tries Area then its standing-only Area2 fallback. Falloff distance uses the
