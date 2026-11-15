@@ -2,7 +2,10 @@
 #pragma once
 #include "ListsSet.h"
 
-extern NTimer::STime curTime;
+#include "AILogic_export.h"
+
+// Shared simulation time must also be accessible to headless gun/state tests on Windows.
+extern AILOGIC_EXPORT NTimer::STime curTime;
 
 namespace NSegmObjs
 {

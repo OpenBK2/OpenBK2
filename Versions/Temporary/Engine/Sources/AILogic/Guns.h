@@ -281,7 +281,7 @@ public:
 	virtual void StartPointBurst( const CVec3 &target, bool bReAim );
 	virtual void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true );
 	virtual void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim );
-	void Segment();
+	AILOGIC_EXPORT void Segment();
 	void SetAntiAviationTarget( class CAIUnit *pTarget );
 
 	bool IsWaitForReload() const

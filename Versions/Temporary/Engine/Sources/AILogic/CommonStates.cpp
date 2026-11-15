@@ -225,7 +225,7 @@ CMechAttackUnitState::CMechAttackUnitState(
 	, eAttackType( EAT_POOR_PROB )
 	, nBestSide( 0 )
 	, state( ESAS_ESTIMATING )
-	, bAllowMove( !_bStationaryAutoAttack &&
+	, bAllowMove( !_bStationaryAutoAttack && !_pOwner->IsInTankPit() &&
                 ( g_bAgressiveMovement || theDipl.IsAIPlayer( _pOwner->GetPlayer() ) || bSwarmAttack ) )
 	, bStationaryAutoAttack( _bStationaryAutoAttack )
 {
@@ -743,6 +743,17 @@ void CMechAttackUnitState::FinishState()
 
 void CMechAttackUnitState::Segment()
 {
+	if ( pUnit->IsInTankPit() )
+	{
+		// Cover also constrains explicit orders and movement phases restored from a saved game.
+		bAllowMove = false;
+		state = ESAS_SIMPLE_FIRING;
+		if ( pGun && ( pGun->GetNAmmo() <= 0 || !pGun->CanShootToUnitWOMove( pEnemy ) ) )
+		{
+			StartAgain();
+		}
+	}
+
 	if ( bStationaryAutoAttack )
 	{
 		// An autonomous shot never follows last-known positions or moves to improve its firing solution.
@@ -777,15 +788,13 @@ void CMechAttackUnitState::Segment()
 				return;
 			}
 			const EUnitAckType eReject = pUnit->GetGunsRejectReason();
-			//CRAP{ VOT ZAPLATKA TAK ZAPLATKA. if being told to attack unit out of range, being
-			// in tankpit - leave tankpit and repeat
-			if ( !pUnit->GetCurCmd()->IsFromAI() && pUnit->IsInTankPit() && ( eReject == ACK_NOT_IN_FIRE_RANGE ) )
+			if ( !pGun && pUnit->IsInTankPit() )
 			{
-				// Existing cover must be escapable without the public dig-in ability.
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
+				// An attack order cannot implicitly leave cover or pursue the target's crew.
+				pUnit->SendAcknowledgement( eReject );
+				FinishState();
 				return;
 			}
-			//CRAP}
 			if ( pGun == 0 )
 			{
 				if ( pEnemy->GetStats()->IsArtillery() )

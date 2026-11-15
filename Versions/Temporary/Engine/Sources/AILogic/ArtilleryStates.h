@@ -4,6 +4,7 @@
 #include "StatusUpdatesHelper.h"
 
 #include <cstdint>
+#include <vector>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIUnit;
 class CStaticObject;
@@ -182,6 +183,10 @@ class CArtilleryBombardmentState : public IUnitAttackingState, public CStatusUpd
 	int nShotCount = {};
 	bool bFlamethrowerOnly = {};
 	bool bBurstStarted = {};
+	std::vector<CPtr<class CBasicGun>> salvoGuns;
+
+	bool IsSalvoBursting() const;
+	void SegmentSalvo();
 
 	class CBasicGun *ChoosePointFireGun( bool *pCanShootWOMove, bool *pNeedTurn ) const;
 	bool IsFlamethrowerGun( const class CBasicGun *pGun ) const;
@@ -202,12 +207,14 @@ public:
 		f.Add( 7, &nShotCount );
 		f.Add( 8, &bFlamethrowerOnly );
 		f.Add( 9, &bBurstStarted );
+		f.Add( 11, &salvoGuns );
 		return 0;
 	}
 
 public:
 	static IUnitState *
 	Instance( class CAIUnit *pUnit, const CVec2 &point, const int nShotCount, const bool bFlamethrowerOnly = false );
+	static IUnitState *InstanceForSalvo( class CAIUnit *pUnit, const CVec2 &point );
 
 	CArtilleryBombardmentState()
 		: pUnit( 0 )

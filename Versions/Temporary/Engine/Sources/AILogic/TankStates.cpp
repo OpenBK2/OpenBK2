@@ -259,7 +259,7 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 
 				if ( pTarget->IsAlive() )
 				{
-					if ( !pCommand->IsStationaryAutoAttack() && pTarget->GetStats()->IsInfantry() &&
+					if ( !pUnit->IsInTankPit() && !pCommand->IsStationaryAutoAttack() && pTarget->GetStats()->IsInfantry() &&
 					     checked_cast<CSoldier *>( pTarget )->IsInBuilding() )
 					{
 						pResult = CSoldierAttackUnitInBuildingState::Instance(
@@ -398,20 +398,25 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 
 		break;*/
 		case ACTION_COMMAND_ART_BOMBARDMENT:
-		case ACTION_COMMAND_FIRE_ROCKETS:
 			if ( pUnit->GetFirstArtilleryGun() != 0 )
 			{
 				if ( pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
 				{
-					// FIRE_ROCKETS is deliberately finite even for non-rocket artillery weapons.
-					const int nBurstCount = cmd.nCmdType == ACTION_COMMAND_FIRE_ROCKETS ? 1 : int( cmd.fNumber );
-					pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
+					pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, int( cmd.fNumber ) );
 				}
 				else
 				{
 					pUnit->SendAcknowledgement(
 							pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
 				}
+			}
+
+			break;
+		case ACTION_COMMAND_FIRE_ROCKETS:
+			// Vehicle salvos may have several independent launchers, as on the H-39 Stuka.
+			if ( pUnit->GetFirstArtilleryGun() != 0 )
+			{
+				pResult = CArtilleryBombardmentState::InstanceForSalvo( pUnit, cmd.vPos );
 			}
 
 			break;

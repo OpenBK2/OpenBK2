@@ -802,6 +802,79 @@ CArtilleryBombardmentState::CArtilleryBombardmentState( CAIUnit *_pUnit,
 	}
 }
 
+IUnitState *CArtilleryBombardmentState::InstanceForSalvo( CAIUnit *pUnit, const CVec2 &point )
+{
+	CArtilleryBombardmentState *pState = new CArtilleryBombardmentState( pUnit, point, 1, false );
+	if ( CBasicGun *pFirstGun = pUnit->GetFirstArtilleryGun() )
+	{
+		// Mod launchers can use GRENADE or HOWITZER trajectories. Keep the selected
+		// artillery shell's projectile, trajectory and damage type, including its authored aiming.
+		const auto &shell = pFirstGun->GetShell();
+		for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+		{
+			CBasicGun *pGun = pUnit->GetGun( i );
+			if ( pGun->GetShell().pvisProjectile == shell.pvisProjectile &&
+			     pGun->GetShell().etrajectory == shell.etrajectory && pGun->GetShell().eDamageType == shell.eDamageType &&
+			     pGun->GetNAmmo() > 0 && pGun->CanShootToPointWOMove( point, 0.0f ) )
+			{
+				pState->salvoGuns.push_back( pGun );
+			}
+		}
+		// A single original launcher retains the original bombardment lifecycle.
+		if ( pState->salvoGuns.size() == 1 && pState->salvoGuns.front() == pFirstGun )
+		{
+			pState->salvoGuns.clear();
+		}
+	}
+	return pState;
+}
+
+bool CArtilleryBombardmentState::IsSalvoBursting() const
+{
+	for ( const auto &pGun : salvoGuns )
+	{
+		if ( pGun->IsBursting() )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void CArtilleryBombardmentState::SegmentSalvo()
+{
+	if ( bStop && !IsSalvoBursting() )
+	{
+		TryInterruptState( 0 );
+	}
+	else if ( pUnit->CanShoot() )
+	{
+		if ( !bBurstStarted )
+		{
+			bBurstStarted = true;
+			for ( const auto &pGun : salvoGuns )
+			{
+				if ( pGun->GetNAmmo() > 0 && pGun->CanShootToPointWOMove( point, 0.0f ) )
+				{
+					// Each launcher keeps its own aim time; do not restart linked barrels twice.
+					pGun->StartPointBurst( point, true, false );
+				}
+			}
+		}
+		else
+		{
+			for ( const auto &pGun : salvoGuns )
+			{
+				if ( pGun->IsFiring() )
+				{
+					return;
+				}
+			}
+			TryInterruptState( 0 );
+		}
+	}
+}
+
 bool CArtilleryBombardmentState::IsFlamethrowerGun( const CBasicGun *pGun ) const
 {
 	return pGun && pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER;
@@ -814,7 +887,7 @@ CBasicGun *CArtilleryBombardmentState::ChoosePointFireGun( bool *pCanShootWOMove
 
 	if ( !bFlamethrowerOnly )
 	{
-		CBasicGun *pGun = pUnit->GetFirstArtilleryGun();
+		CBasicGun *pGun = salvoGuns.empty() ? pUnit->GetFirstArtilleryGun() : salvoGuns.front().GetPtr();
 		if ( !pGun )
 		{
 			return 0;
@@ -997,6 +1070,11 @@ void CArtilleryBombardmentState::Segment()
 
 				break;
 			case EABS_FIRING:
+				if ( !salvoGuns.empty() )
+				{
+					SegmentSalvo();
+					break;
+				}
 				if ( bFlamethrowerOnly )
 				{
 					if ( bStop && !IsAnyFlamethrowerGunBursting() )
@@ -1072,6 +1150,21 @@ void CArtilleryBombardmentState::Segment()
 
 ETryStateInterruptResult CArtilleryBombardmentState::TryInterruptState( CAICommand *pCommand )
 {
+	if ( !salvoGuns.empty() )
+	{
+		if ( pCommand == 0 || !IsSalvoBursting() )
+		{
+			for ( const auto &pGun : salvoGuns )
+			{
+				pGun->StopFire();
+			}
+			pUnit->SetCommandFinished();
+			return TSIR_YES_IMMIDIATELY;
+		}
+		bStop = true;
+		return TSIR_YES_WAIT;
+	}
+
 	if ( bFlamethrowerOnly )
 	{
 		if ( pCommand == 0 || !IsAnyFlamethrowerGunBursting() )

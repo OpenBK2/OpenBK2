@@ -89,7 +89,7 @@ extern CUnits units;
 extern CEventUpdater updater;
 extern CStaticObjects theStatObjs;
 extern CExecutorContainer theExecutorContainer;
-NTimer::STime curTime;
+AILOGIC_EXPORT NTimer::STime curTime;
 extern CHitsStore theHitsStore;
 extern CDiplomacy theDipl;
 extern CGlobalWarFog theWarFog;

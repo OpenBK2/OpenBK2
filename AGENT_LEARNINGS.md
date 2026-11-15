@@ -3,6 +3,21 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Mistake: equating the Fire Rockets ability with TRAJECTORY_ROCKET broke mod
+  launchers. MOD18 H-39 uses GRENADE; Type 4, Nebelwerfer, GMC and BM-13 use
+  HOWITZER for damage, while GMC/BM-13 smoke uses ROCKET. Inspect the actual
+  installed mod records before choosing a filter. Preserve native artillery
+  aiming, installation and projectile paths; extend only the missing multi-gun
+  vehicle salvo. Match the selected launcher's projectile, trajectory and damage
+  type, and let each gun finish its own aim/burst in stable gun order.
+- Tests that only assert IsFiring can pass with wrong projectile types and no
+  functioning shots. Initialize guns through the real factory, advance the
+  simulation clock, and verify ammo consumption and moving ballistic shells.
+- Entrenched tanks already reject movement through `CanMoveCritical`, but the
+  mech attack state used to queue an explicit trench exit after range rejection.
+  Fix the order transition as well as firing constraints. A test cannot create
+  an active tank path after setting its entrenched flag: `SendAlongPath` rejects it.
+
 - Priority-zero weapons need the vehicle to stop; they are not necessarily matching
   barrels. The installed Marder III H lists its hull MG before its turret Pak 40,
   both at priority zero. Grouping all such weapons in CMechUnitGuns::Init and the

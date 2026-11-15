@@ -5,6 +5,8 @@
 // only forward declares the class
 #include "StaticObject.h"
 
+#include "AILogic_export.h"
+
 //
 // Итераторы, не cэйвятся!
 //
@@ -150,7 +152,7 @@ CStObjIter<bOnlyContainers>::CStObjIter( const int downX, const int upX, const i
 	Init( downX, upX, downY, upY );
 }
 
-extern NTimer::STime curTime;
+extern AILOGIC_EXPORT NTimer::STime curTime;
 
 template <bool bOnlyContainers>
 void CStObjIter<bOnlyContainers>::Init( const int _downX, const int _upX, const int _downY, const int _upY )

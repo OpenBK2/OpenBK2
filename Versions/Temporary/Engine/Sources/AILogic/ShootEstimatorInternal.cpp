@@ -265,7 +265,8 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 	const bool bMovingOwner = pOwner->CanRotate() && pOwner->CanMove() && !pOwner->NeedDeinstall();
 
 	const bool bArtilleryMech = pOwner->GetFirstArtilleryGun() != 0;
-	const bool bStationaryAutoAttack = IsStationaryTarget( pEnemy );
+	// Entrenched orders must choose a usable shot before scoring weapons that would require an approach.
+	const bool bShootWithoutMoving = IsStationaryTarget( pEnemy ) || pOwner->IsInTankPit();
 
 	const SRect enemyRect = pEnemy->GetUnitRect();
 	// площать combat rect
@@ -286,7 +287,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 
 		if ( ( dwForbidden & ( 1UL << i ) ) == 0 && pGun->GetNAmmo() > 0 &&
 		     shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
-		     ( !bStationaryAutoAttack || pGun->CanShootToUnitWOMove( pEnemy ) ) )
+		     ( !bShootWithoutMoving || pGun->CanShootToUnitWOMove( pEnemy ) ) )
 		{
 			/*
 			// либо за горизонт, либо миномёт, либо прямой наводкой

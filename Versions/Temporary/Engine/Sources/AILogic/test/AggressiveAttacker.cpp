@@ -9,9 +9,11 @@
 #include "../DBAIConsts.h"
 #include "../Diplomacy.h"
 #include "../Formation.h"
+#include "../GlobalObjects.h"
 #include "../GlobalWarFog.h"
 #include "../GroupLogic.h"
 #include "../Guns.h"
+#include "../Shell.h"
 #include "../ShootEstimator.h"
 #include "../ShootEstimatorInternal.h"
 #include "../Soldier.h"
@@ -81,6 +83,7 @@ protected:
 	CPtr<IShootEstimator> estimator;
 	std::list<CPtr<CAIUnit>> cachedTargets;
 	NTimer::STime cacheDuration = 10000;
+	bool ownerEntrenched = false;
 
 	virtual int GetOwnerType() const
 	{
@@ -134,6 +137,11 @@ protected:
 	{
 		objects.push_back( object );
 		external.emplace_back( int( external.size() + 1 ), object );
+	}
+
+	const std::vector<SBinSaverExternalObject> &GetExternalObjects() const
+	{
+		return external;
 	}
 
 	template <class T>
@@ -203,6 +211,7 @@ protected:
 		uint8_t visibilityIndex = visible ? 1 : 0;
 		CPtr<CUnitGuns> unitGuns = unit == owner ? guns : emptyGuns;
 		CPtr<IAnimUnit> unitAnimation = unit == owner ? animation : nullptr;
+		bool entrenched = unit == owner && ownerEntrenched;
 		SFields path{ [&]( IBinSaver &saver )
 		              {
 										saver.Add( 3, &direction );
@@ -233,6 +242,7 @@ protected:
 									saver.Add( 58, &modifierPointer );
 									saver.Add( 71, &cachedTargets );
 									saver.Add( 73, &cacheDuration );
+									saver.Add( 74, &entrenched );
 								} };
 		SFields mechanical{ [&]( IBinSaver &saver )
 		                    {
@@ -440,12 +450,23 @@ protected:
 		EXPECT_EQ( estimator->GetBestGun(), target ? gun.GetPtr() : nullptr );
 	}
 
-	IUnitState *StartAutomaticAttack( bool stationary = true )
+	void InitializeAuthoredGuns()
+	{
+		guns = MakeObject<CUnitGuns>( 0x1108D4C7 );
+		PlaceUnit( owner, 0, true, 0 );
+		guns->Init( owner );
+		for ( int i = 0; i < guns->GetNGuns(); ++i )
+		{
+			KeepObject( guns->GetGun( i ) );
+		}
+	}
+
+	IUnitState *StartAutomaticAttack( bool stationary = true, bool fromAI = true )
 	{
 		CPtr<CAICommand> command = MakeObject<CAICommand>( 0x1108D44D );
 		command->ToUnitCmd().nCmdType = ACTION_COMMAND_ATTACK_UNIT;
 		command->ToUnitCmd().nObjectID = 123;
-		command->SetFromAI( true );
+		command->SetFromAI( fromAI );
 		if ( stationary )
 		{
 			command->SetStationaryAutoAttack();
@@ -528,6 +549,187 @@ protected:
 };
 
 std::filesystem::path AggressiveAttacker::directory;
+
+class VehicleRocketSalvo : public AggressiveAttacker
+{
+protected:
+	CPtr<CAICommand> command;
+	NTimer::STime previousTime = 0;
+	CVec2 target;
+
+	void SetUp() override
+	{
+		AggressiveAttacker::SetUp();
+		previousTime = curTime;
+		curTime = 1000;
+		theWarFog.Init( 256, 256, 32, 2.0f );
+		extended->bAggressiveAttacker = false;
+		auto *stats =
+				const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+		stats->platforms[0].guns.resize( 6 );
+		// MOD18 H-39: four distinct grenade-trajectory rocket records, one round each,
+		// with authored aim times 2, 3, 3.5 and 2.5 seconds. The cannon/MG must stay idle.
+		const int aimTimes[] = { 2000, 3000, 3500, 2500 };
+		for ( int i = 0; i < 6; ++i )
+		{
+			auto *launcher = MakeRecord<NDb::SWeaponRPGStats>( "WeaponRPGStats" );
+			launcher->eWeaponType = NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON;
+			launcher->nAimingTime = i < 4 ? aimTimes[i] : 1000;
+			launcher->nAmmoPerBurst = 1;
+			launcher->fRangeMin = ( i == 0 ? 40 : 20 ) * 32;
+			launcher->fRangeMax = ( i == 0 ? 110 : 124 ) * 32;
+			launcher->wDeltaAngle = 1820; // Ten degrees, as in the mod.
+			launcher->shells.resize( i == 0 ? 2 : 1 );
+			auto &shell = launcher->shells[0];
+			shell.etrajectory =
+					i < 4 ? NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE : NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
+			shell.eDamageType = NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
+			shell.fSpeed = 40 * 32 / 1000.0f;
+			shell.fDamagePower = 420;
+			shell.fArea = 3 * 32;
+			shell.fArea2 = 5 * 32;
+			shell.nFireRate = 500;
+			shell.nRelaxTime = i == 0 ? 18000 : 16000;
+			if ( i == 0 )
+			{
+				// Also guard against the previous bug: an alternate smoke shell must not join.
+				launcher->shells[1] = shell;
+				launcher->shells[1].eDamageType = NDb::SWeaponRPGStats::SShell::DAMAGE_FOG;
+			}
+			auto &mount = stats->platforms[0].guns[i];
+			mount.pWeapon = launcher;
+			mount.nAmmo = i < 4 ? 1 : 20;
+			mount.nPriority = 0;
+			mount.wDirection = 0;
+		}
+		InitializeAuthoredGuns();
+		command = MakeObject<CAICommand>( 0x1108D44D );
+		command->ToUnitCmd().nCmdType = ACTION_COMMAND_FIRE_ROCKETS;
+		PlaceUnit( owner, 0, true, 0, command );
+		// The lightweight unit loader omits this field; real units default to one shell per shot.
+		owner->SetMultiShot( 1 );
+		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
+		target = owner->GetCenterPlain() + CVec2( 0, 70 * 32 );
+	}
+
+	IUnitState *StartSalvo()
+	{
+		EXPECT_TRUE( owner->IsOperable() );
+		EXPECT_TRUE( owner->CanShoot() );
+		EXPECT_EQ( owner->GetFrontDirection(), 0 );
+		command->ToUnitCmd().vPos = target;
+		IUnitState *state = owner->GetStatesFactory()->ProduceState( owner, command );
+		EXPECT_NE( state, nullptr );
+		if ( state )
+		{
+			KeepObject( state );
+			owner->SetCurState( state );
+			state->Segment();
+			state->Segment();
+			EXPECT_TRUE( owner->GetGun( 2 )->IsFiring() || owner->GetGun( 0 )->IsFiring() )
+					<< "reject=" << owner->GetGun( 2 )->GetRejectReason();
+		}
+		return state;
+	}
+
+	void Advance( IUnitState *state, NTimer::STime until )
+	{
+		for ( ; curTime < until; curTime += 50 )
+		{
+			for ( int i = 0; i < owner->GetNGuns(); ++i )
+			{
+				owner->GetGun( i )->Segment();
+			}
+			state->Segment();
+		}
+	}
+
+	void ExpectProjectiles( int count )
+	{
+		// Inspect the shells produced by real gun Segment calls, including their real trajectories.
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, GetExternalObjects() );
+			NGlobalObjects::Serialize( 1, *saver );
+		}
+		stream.Seek( 0 );
+		CVisShellList shells;
+		SFields store{ [&]( IBinSaver &saver ) { saver.Add( 3, &shells ); } };
+		SFields globals{ [&]( IBinSaver &saver ) { saver.Add( 12, &store ); } };
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, GetExternalObjects() );
+		loader->Add( 1, &globals );
+		ASSERT_EQ( shells.size(), count );
+		for ( const auto &shell : shells )
+		{
+			CPtr<CBallisticTraj> trajectory;
+			ReadFields( shell, [&]( IBinSaver &saver ) { saver.Add( 2, &trajectory ); } );
+			ASSERT_NE( trajectory, nullptr );
+			const CVec3 start = trajectory->GetCoordinatesAtTime( trajectory->GetStartTime() );
+			const CVec3 later = trajectory->GetCoordinatesAtTime( trajectory->GetStartTime() + 100 );
+			EXPECT_GT( later.y, start.y );
+			EXPECT_GT( later.z, start.z );
+			EXPECT_NEAR( trajectory->GetCoordinatesAtTime( trajectory->GetExplTime() ).y, target.y, 2 );
+		}
+	}
+
+	void TearDown() override
+	{
+		NGlobalObjects::Clear();
+		curTime = previousTime;
+		AggressiveAttacker::TearDown();
+	}
+};
+
+TEST_F( VehicleRocketSalvo, FiresAllFourAuthoredLaunchersAndWaitsForLastAim )
+{
+	IUnitState *state = StartSalvo();
+	ASSERT_NE( state, nullptr );
+	Advance( state, 2500 );
+	EXPECT_EQ( owner->GetNAmmo( 0 ), 1 );
+	EXPECT_FALSE( owner->GetGun( 1 )->IsCommonGunFiring() && owner->GetGun( 1 )->IsFiring() );
+	Advance( state, 3500 );
+	EXPECT_EQ( owner->GetNAmmo( 0 ), 0 );
+	EXPECT_EQ( owner->GetNAmmo( 2 ), 1 );
+	EXPECT_TRUE( owner->GetGun( 3 )->IsFiring() ); // The longest aim survives the first launcher's completion.
+	Advance( state, 6000 );
+	for ( int i = 0; i < 4; ++i )
+	{
+		EXPECT_EQ( owner->GetNAmmo( i ), 0 ) << i;
+	}
+	EXPECT_EQ( owner->GetNAmmo( 4 ), 20 );
+	EXPECT_EQ( owner->GetNAmmo( 5 ), 20 );
+	ExpectProjectiles( 4 );
+}
+
+TEST_F( VehicleRocketSalvo, UsesRemainingLaunchersOutsideFirstLaunchersRangeAfterSaveLoad )
+{
+	target = owner->GetCenterPlain() + CVec2( 0, 120 * 32 );
+	IUnitState *state = StartSalvo();
+	ASSERT_NE( state, nullptr );
+	RoundTrip( state );
+	Advance( state, 6500 );
+	EXPECT_EQ( owner->GetNAmmo( 0 ), 1 );
+	for ( int i = 1; i < 4; ++i )
+	{
+		EXPECT_EQ( owner->GetNAmmo( i ), 0 ) << i;
+	}
+	ExpectProjectiles( 3 );
+}
+
+TEST_F( VehicleRocketSalvo, OrdinaryBombardmentRetainsOriginalSingleLauncherBehavior )
+{
+	command->ToUnitCmd().nCmdType = ACTION_COMMAND_ART_BOMBARDMENT;
+	command->ToUnitCmd().fNumber = 1;
+	IUnitState *state = StartSalvo();
+	ASSERT_NE( state, nullptr );
+	Advance( state, 6000 );
+	EXPECT_EQ( owner->GetNAmmo( 0 ), 0 );
+	for ( int i = 1; i < 4; ++i )
+	{
+		EXPECT_EQ( owner->GetNAmmo( i ), 1 ) << i;
+	}
+	ExpectProjectiles( 1 );
+}
 
 // Reuse the real mech/weapon fixture for infantry engagements with independent flame and MG mounts.
 class MechFlamethrower : public AggressiveAttacker
@@ -1082,6 +1284,79 @@ TEST_F( MechMixedPriorityZeroWeapons, MatchingBarrelsKeepShellAlternativesSepara
 	strongShell->StartEnemyBurst( enemy, true );
 	EXPECT_TRUE( owner->GetGun( 3 )->IsFiring() );
 	EXPECT_FALSE( owner->GetGun( 2 )->IsFiring() );
+}
+
+class EntrenchedTankAttack : public MechMixedPriorityZeroWeapons
+{
+protected:
+	IUnitState *StartEntrenchedAttack()
+	{
+		PrepareGuard();
+		ownerEntrenched = true;
+		IUnitState *attack = StartAutomaticAttack( false, false );
+		owner->nUniqueID = 1;
+		owner->CBasePathUnit::Init( owner->GetCenter(), 0, GetAIMap(), nullptr, nullptr );
+		return attack;
+	}
+};
+
+TEST_F( EntrenchedTankAttack, RejectsOutOfRangeWithoutQueuingAnExit )
+{
+	PlaceUnit( enemy, 400 );
+	IUnitState *attack = StartEntrenchedAttack();
+	ASSERT_NE( attack, nullptr );
+	attack->Segment();
+	EXPECT_TRUE( owner->IsCurCmdFinished() );
+	EXPECT_EQ( owner->GetNextCommand(), nullptr );
+	EXPECT_EQ( gun->GetRejectReason(), ACK_NOT_IN_FIRE_RANGE );
+	EXPECT_TRUE( owner->IsInTankPit() );
+	EXPECT_TRUE( owner->IsIdle() );
+}
+
+TEST_F( EntrenchedTankAttack, AimsTurretWithoutTurningHullAndStopsWhenTargetLeavesRange )
+{
+	weapon->wDeltaAngle = 0;
+	weapon->shells[0].nRelaxTime = 0;
+	IUnitState *attack = StartEntrenchedAttack();
+	ASSERT_NE( attack, nullptr );
+	ownerTurrets[0]->CTurret::TurnHor( 30000, true );
+	const CVec2 position = owner->GetCenterPlain();
+	const uint16_t direction = owner->GetFrontDirection();
+	attack->Segment();
+	RoundTrip( attack );
+	attack->Segment();
+	ASSERT_EQ( ReadSelectedGun( attack ), gun.GetPtr() );
+	ASSERT_TRUE( gun->IsFiring() );
+	gun->Segment();
+	EXPECT_EQ( owner->GetCenterPlain(), position );
+	EXPECT_EQ( owner->GetFrontDirection(), direction );
+	EXPECT_TRUE( owner->IsIdle() );
+	EXPECT_NE( ownerTurrets[0]->GetHorFinalAngle(), 30000 );
+	EXPECT_TRUE( owner->IsInTankPit() );
+	PlaceUnit( enemy, 400 );
+	// Refresh the gun's per-segment target cache before reevaluating the active order.
+	gun->Segment();
+	attack->Segment();
+	EXPECT_TRUE( owner->IsCurCmdFinished() );
+	EXPECT_EQ( owner->GetNextCommand(), nullptr );
+	EXPECT_FALSE( gun->IsFiring() );
+}
+
+TEST_F( EntrenchedTankAttack, RejectsHullGunOutsideItsArc )
+{
+	InitializeWeapons( false );
+	weapon->wDeltaAngle = 0;
+	// Put the cannon on the hull facing away from the target; the turret MG cannot pierce it.
+	auto *stats =
+			const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+	stats->platforms[0].guns[0].wDirection = 32768;
+	IUnitState *attack = StartEntrenchedAttack();
+	ASSERT_NE( attack, nullptr );
+	attack->Segment();
+	EXPECT_TRUE( owner->IsCurCmdFinished() );
+	EXPECT_EQ( gun->GetRejectReason(), ACK_NOT_IN_ATTACK_ANGLE );
+	EXPECT_TRUE( owner->IsIdle() );
+	EXPECT_EQ( owner->GetNextCommand(), nullptr );
 }
 
 TEST_F( AggressiveAttacker, DefaultsAndSupportedClasses )

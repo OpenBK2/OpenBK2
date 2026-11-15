@@ -1295,7 +1295,7 @@ bool CBasicGun::CanShootToUnit( CAIUnit *pEnemy )
 		return false;
 	}
 
-	if ( !pOwner->CanMove() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) )
+	if ( pOwner->IsInTankPit() || !pOwner->CanMove() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) )
 	{
 		return CanShootToUnitWOMove( pEnemy );
 	}
@@ -1485,8 +1485,9 @@ bool CBasicGun::CanShootToPointWOMove(
 		return false;
 	}
 
-	// нельзя вращать базу
-	if ( !pOwner->CanRotate() && !pOwner->CanMove() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) )
+	// Entrenchment permits turret traverse, but never hull assistance to reach a firing angle.
+	if ( pOwner->IsInTankPit() || !pOwner->CanRotate() && !pOwner->CanMove() || pOwner->NeedDeinstall() ||
+	     pOwner->IsLocked( this ) )
 	{
 		if ( !IsOnTurret() || IsOnTurret() && GetTurret()->IsLocked( this ) ) // нельзя вращать turret, или gun на базе
 		{
@@ -2211,7 +2212,8 @@ bool CTurretGun::TurnByBestWay( const uint16_t wDirToEnemy )
 bool CTurretGun::TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff )
 {
 	// пушка
-	if ( pOwner->NeedDeinstall() || pOwner->IsLocked( this ) || !pOwner->CanRotate() || pOwner->CanShootInMovement() )
+	if ( pOwner->IsInTankPit() || pOwner->NeedDeinstall() || pOwner->IsLocked( this ) || !pOwner->CanRotate() ||
+	     pOwner->CanShootInMovement() )
 	{
 		StopTracing();
 
@@ -2483,7 +2485,8 @@ bool CBaseGun::AnalyzeTurning()
 	{
 		return true;
 	}
-	else if ( pOwner->IsLocked( this ) || pOwner->GetStats()->IsAviation() || !pOwner->CanRotate() )
+	else if ( pOwner->IsInTankPit() || pOwner->IsLocked( this ) || pOwner->GetStats()->IsAviation() ||
+	          !pOwner->CanRotate() )
 	{
 		StopFire();
 	}
