@@ -282,13 +282,12 @@ void CMPManagerMode::SendStartGamePacket()
 	}
 
 	CPtr<CB2GameRoomStartGamePacket> pStartPkt = new CB2GameRoomStartGamePacket( 0 );
-	pStartPkt->slots.resize( slots.size() );
 	CreateRehash( &( pStartPkt->slotRehash ) );
 	RehashSlots( pStartPkt->slotRehash );
-	for ( int i = 0; i < slots.size(); ++i )
+	for ( const SMPSlot &slot : slots )
 	{
-		pStartPkt->slots[i].nCountry = slots[i].nCountry;
-		pStartPkt->slots[i].nTeam = slots[i].nTeam;
+		// Copy construction includes client IDs; SMPSlot::operator= deliberately omits them.
+		pStartPkt->slots.push_back( slot );
 	}
 	pClient->SendGamePacket( pStartPkt, true );
 }

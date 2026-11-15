@@ -15,6 +15,16 @@ if(WIN32)
     set_property(TARGET MPConnectionSettings_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:GameX>)
 endif()
 add_unit_test(MPCoopRules GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+# Exercise authoritative lobby-start packets through the real manager without loading a map.
+add_unit_test(MPStartRoster GameX libdb System Misc Main AILogic Stats_B2_M1 Server_Client_Common zlib gr2
+    SOURCES ../MultiplayerCommandProcessor.cpp)
+target_compile_definitions(MPStartRoster_test PRIVATE
+    MP_START_ROSTER_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+if(WIN32)
+    set_tests_properties(MPStartRoster_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET MPStartRoster_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:GameX>)
+endif()
 add_unit_test(MessageParts GameX UISpecificB2 UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 # Exercise persistent objective controls and the real Lua-to-client feedback queue without a graphics device.
 # The texture fixture's dynamic_cast needs 3Dmotor's RTTI directly on the Linux link line.

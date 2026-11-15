@@ -180,8 +180,8 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 {
 	NI_VERIFY( IsInGameRoom() && !IsGameHost(), "PRG: StartGame received by not a client", return true );
 
-	if ( pPacket->nClientID != nHostClientID || pPacket->slots.size() != slots.size() ||
-	     pPacket->slotRehash.size() != slots.size() )
+	if ( pPacket->nClientID != nHostClientID || nOwnSlot < 0 || nOwnSlot >= slots.size() ||
+	     pPacket->slots.size() != slots.size() || pPacket->slotRehash.size() != slots.size() )
 	{
 		return true;
 	}
@@ -195,23 +195,42 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 		}
 		used[nTarget] = true;
 	}
-	RehashSlots( pPacket->slotRehash );
-	for ( int i = 0; i < slots.size(); ++i )
+	// Validate the complete host snapshot before changing local slot placement.
+	// Other peers' colour, presence and ready updates may still be in flight.
+	std::vector<SMPSlot> startSlots( pPacket->slots );
+	const int nNewOwnSlot = pPacket->slotRehash[nOwnSlot];
+	if ( !startSlots[nNewOwnSlot].bPresent || startSlots[nNewOwnSlot].nClientID != GetOwnClientID() )
 	{
-		slots[i].nCountry = pPacket->slots[i].nCountry;
-		slots[i].nTeam = pPacket->slots[i].nTeam;
+		return true;
 	}
-	std::string szError;
-	// The host checked readiness before broadcasting. A peer's separate ready
-	// packet may still be in flight, so it is not part of start authorization here.
-	std::vector<SMPSlot> startSlots = slots;
-	for ( auto &slot : startSlots )
+	bool bHostPresent = false;
+	for ( int i = 0; i < startSlots.size(); ++i )
 	{
-		if ( slot.bPresent )
+		SMPSlot &slot = startSlots[i];
+		if ( !slot.bPresent )
 		{
-			slot.bAccept = true;
+			// Empty and map-controlled slots never own a network connection.
+			slot.nClientID = -1;
+			continue;
+		}
+		if ( slot.nClientID < 0 )
+		{
+			return true;
+		}
+		bHostPresent |= slot.nClientID == nHostClientID;
+		for ( int j = 0; j < i; ++j )
+		{
+			if ( startSlots[j].bPresent && startSlots[j].nClientID == slot.nClientID )
+			{
+				return true;
+			}
 		}
 	}
+	if ( !bHostPresent )
+	{
+		return true;
+	}
+	std::string szError;
 	if ( !NGameX::ValidateMultiplayerLobby( gameDesc, startSlots, &szError ) )
 	{
 		auto *pFailure = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
@@ -220,6 +239,9 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 		OnLeaveGame();
 		return true;
 	}
+	// Swap preserves every authoritative client ID without SMPSlot's partial assignment.
+	slots.swap( startSlots );
+	nOwnSlot = nNewOwnSlot;
 	nSlotsUsed = NGameX::GetPresentMultiplayerPlayerCount( slots );
 	StartGame();
 

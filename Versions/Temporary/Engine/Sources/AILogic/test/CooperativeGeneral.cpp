@@ -590,6 +590,84 @@ TEST_F( CooperativeGeneral, MultiBotUpdatesAndRandomStateIgnoreInsertionOrderAnd
 	}
 }
 
+TEST_F( CooperativeGeneral, RepeatedOwnedUnitRegistrationKeepsBalanceAcrossSaveAndDeath )
+{
+	// Load the real reinforcement matrix used by the General's force balance.
+	aiConsts->reinfExpediency.resize( int( NDb::_RT_NONE ) - 1 );
+	for ( auto &row : aiConsts->reinfExpediency )
+	{
+		row.expediency.assign( int( NDb::_RT_NONE ) - 1, 0.5f );
+	}
+	CDBPtr<NDb::SAIGameConsts> constants = aiConsts;
+	SFields initialize{ [&]( IBinSaver &saver ) { saver.Add( 20, &constants ); } };
+	Copy( &initialize, logic.GetPtr() );
+	SetAIMap( aiMap );
+
+	for ( const auto mode : { IAIScenarioTracker::EGT_SINGLE, IAIScenarioTracker::EGT_MULTI_COOP } )
+	{
+		SCOPED_TRACE( mode );
+		SetMode( mode );
+		theReinfArray.clear();
+		theReinfArray.InitPlayerReinforcementArray( map, aiConsts );
+		CGeneral *general = MakeGeneral( 3 );
+		general->Init( map->players[3].general );
+		TGenerals generals;
+		generals[3] = general;
+		CSupremeBeing supreme;
+		InstallGenerals( &supreme, &generals );
+		CAIUnitInfoForGeneral *info = MakeEnemyInfo( 120 + int( mode ) );
+		CAIUnit *unit = info->GetOwner();
+		unit->SetPlayer( 3 );
+		const auto SetAlive = [&]( bool alive )
+		{
+			bool aliveSet = true;
+			SFields fields{ [&]( IBinSaver &saver )
+			                {
+												saver.Add( 2, &alive );
+												saver.Add( 3, &aliveSet );
+											} };
+			SFields base{ [&]( IBinSaver &saver ) { unit->CUpdatableObj::operator&( saver ); } };
+			Copy( &fields, &base );
+		};
+		const auto Balance = [&]()
+		{
+			std::vector<float> balance;
+			SFields fields{ [&]( IBinSaver &saver ) { saver.Add( 13, &balance ); } };
+			Copy( general, &fields );
+			return balance;
+		};
+		SetAlive( true );
+		ASSERT_TRUE( unit->IsAlive() );
+
+		// Individual spawn notifications and the completed batch reach the same intake path.
+		supreme.GiveNewUnitsToGenerals( { unit } );
+		const auto once = Balance();
+		ASSERT_FALSE( once.empty() );
+		ASSERT_LT( once.front(), 0.0f );
+		supreme.GiveNewUnitsToGenerals( { unit } );
+		EXPECT_EQ( Balance(), once );
+
+		// A save must retain registration as well as the already accumulated force balance.
+		Copy( general, general );
+		supreme.GiveNewUnitsToGenerals( { unit } );
+		EXPECT_EQ( Balance(), once );
+
+		SetAlive( false );
+		ASSERT_FALSE( unit->IsAlive() );
+		general->UnitDied( info );
+		const std::vector<float> emptyBalance( once.size(), 0.0f );
+		EXPECT_EQ( Balance(), emptyBalance );
+		general->UnitDied( info );
+		EXPECT_EQ( Balance(), emptyBalance );
+
+		// Removal releases the registration so a later handoff can add this identity again.
+		SetAlive( true );
+		supreme.GiveNewUnitsToGenerals( { unit } );
+		EXPECT_EQ( Balance(), once );
+		supreme.Clear();
+	}
+}
+
 TEST_F( CooperativeGeneral, RememberedEnemyScanContinuesAtSavedCursorAndSeed )
 {
 	TEnemies enemies;

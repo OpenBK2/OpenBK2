@@ -548,7 +548,7 @@ public:
 	static int IsImmobilized( struct lua_State *pState );
 	static int EnablePlayerReinforcement( struct lua_State *pState );
 	static int EnablePlayerSuperWeapon( struct lua_State *pState );
-	static int GiveReinforcementCalls( struct lua_State *pState );
+	AILOGIC_EXPORT static int GiveReinforcementCalls( struct lua_State *pState );
 	static int RemoveAllUnitsTmp( struct lua_State *pState );
 	static int ReturnAllUnits( struct lua_State *pState );
 	// debug

@@ -592,3 +592,22 @@ context. Read `git diff` of every touched file before building.
 - Test helpers can gain different meanings for the same positional bool on each
   branch. In AggressiveAttacker, preserve entrenchment and command origin as
   independent inputs, and adapt incoming ReadFields calls to InspectFields.
+
+## Cooperative merge regression coverage
+
+- Scripted reinforcements notify strategic AI per unit and again for the whole
+  batch. Worker deduplication alone does not deduplicate force balance. Track
+  owned-unit balance registration in SP as well as COOP, and test removal and
+  same-build save/load alongside repeated intake.
+- Testing the reinforcement credit store directly misses the Lua entry point's
+  game-mode guard. Exercise the real GiveReinforcementCalls callback with timed
+  income both enabled and disabled, including removals and numeric boundaries.
+- A multiplayer tracker switched to SINGLE still retains its mission's flag
+  economy. Use a no-flag mission when testing explicit SP credit removal; a
+  flag mission intentionally ignores that removal. Aggregate CPtr members need
+  an explicit CObj.GetPtr() initializer on MSVC.
+- A host's start packet can arrive before another peer's final slot update.
+  Send the complete finalized roster and validate it before applying it.
+  SMPSlot assignment deliberately omits client IDs: use copy construction and
+  swap when adopting an authoritative roster, and test the serialized packet
+  through the actual handler with stale local fields and shuffled slots.
