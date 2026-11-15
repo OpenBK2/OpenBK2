@@ -176,12 +176,12 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 	{
 		return;
 	}
-	if ( theDipl.IsNetGame() )
+	const bool bOwnUnit = eAction == BA_ADD_OWN || eAction == BA_REMOVE_OWN;
+	if ( bOwnUnit || theDipl.IsNetGame() )
 	{
-		// Visibility changes and formation callbacks may report a soldier more than once.
-		// Each registered unit contributes to the COOP balance exactly once until removal.
-		det_set<int> &registered =
-				( eAction == BA_ADD_OWN || eAction == BA_REMOVE_OWN ) ? balanceOwnUnits : balanceEnemyUnits;
+		// Scripted reinforcements notify us individually and as a completed batch in SP too.
+		// Count each owned unit once until removal; keep the existing SP enemy-sighting policy.
+		det_set<int> &registered = bOwnUnit ? balanceOwnUnits : balanceEnemyUnits;
 		const bool bAdding = eAction == BA_ADD_OWN || eAction == BA_ADD_ENEMY;
 		if ( bAdding ? !registered.insert( pUnit->GetUniqueId() ).second : !registered.erase( pUnit->GetUniqueId() ) )
 		{

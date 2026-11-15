@@ -5537,27 +5537,46 @@ int CScripts::GiveReinforcementCalls( struct lua_State *pState )
 	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "GiveReinforcementCalls: parameter 1 isn't a player number", script );
 	CHECK_ERROR(
 			script.GetObject( 2 ).IsNumber(), "GiveReinforcementCalls: parameter 2 isn't a number of calls", script );
-	const int nPlayer = int( script.GetObject( 1 ).GetNumber() );
-	const int nCalls = int( script.GetObject( 2 ).GetNumber() );
-
-	if ( Singleton<IAIScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+	IAIScenarioTracker *pTracker = Singleton<IAIScenarioTracker>();
+	const bool bCooperative = pTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_COOP;
+	if ( pTracker->GetGameType() != IAIScenarioTracker::EGT_SINGLE && !bCooperative )
 	{
 		return 0;
 	}
 
+	const double fPlayer = script.GetObject( 1 ).GetNumber();
+	const double fCalls = script.GetObject( 2 ).GetNumber();
+	if ( bCooperative )
+	{
+		// Mission scripts grant credits in COOP independently of timed income.
+		// Validate the new multiplayer path before potentially undefined int casts.
+		CHECK_ERROR( std::isfinite( fPlayer ) && std::floor( fPlayer ) == fPlayer && fPlayer >= 0 &&
+		                 fPlayer < pTracker->GetNPlayers(),
+		             "GiveReinforcementCalls: player number is out of range",
+		             script );
+		CHECK_ERROR( std::isfinite( fCalls ) && std::floor( fCalls ) == fCalls &&
+		                 fCalls >= ( std::numeric_limits<int>::min )() && fCalls <= ( std::numeric_limits<int>::max )(),
+		             "GiveReinforcementCalls: number of calls must be an integer within range",
+		             script );
+	}
+	const int nPlayer = int( fPlayer );
+	const int nCalls = int( fCalls );
+
 	if ( nCalls > 0 )
 	{
-		Singleton<IAIScenarioTracker>()->IncreaseReinforcementCallsLeft( nPlayer, nCalls );
+		pTracker->IncreaseReinforcementCallsLeft( nPlayer, nCalls );
 	}
 	else if ( nCalls < 0 )
 	{
-		Singleton<IAIScenarioTracker>()->DecreaseReinforcementCallsLeft( nPlayer, -nCalls );
+		// INT_MIN cannot be negated; INT_MAX already removes every available credit.
+		const int nMaxCalls = ( std::numeric_limits<int>::max )();
+		pTracker->DecreaseReinforcementCallsLeft( nPlayer, -(std::max)( nCalls, -nMaxCalls ) );
 	}
 
 	if ( nPlayer == theDipl.GetMyNumber() )
 	{
 		CPtr<SAIAvailableReinfUpdate> pUpdate = new SAIAvailableReinfUpdate;
-		pUpdate->nReinforcementCallsLeft = Singleton<IAIScenarioTracker>()->GetReinforcementCallsLeft( nPlayer );
+		pUpdate->nReinforcementCallsLeft = pTracker->GetReinforcementCallsLeft( nPlayer );
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_AVAIL_REINF, 0, -1 );
 	}
 

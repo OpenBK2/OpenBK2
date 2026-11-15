@@ -55,27 +55,15 @@ class CB2GameRoomStartGamePacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2GameRoomStartGamePacket );
 
 public:
-	struct SShortSlotInfo
-	{
-		ZDATA
-		uint8_t nCountry = {};
-		uint8_t nTeam = {};
-
-		ZEND int operator&( IBinSaver &f )
-		{
-			f.Add( 2, &nCountry );
-			f.Add( 3, &nTeam );
-			return 0;
-		}
-	};
-
 	ZDATA
-	std::vector<SShortSlotInfo> slots;
+	// The host's final roster can overtake slot updates sent by another peer.
+	std::vector<SMPSlot> slots;
 	std::vector<uint8_t> slotRehash;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
-		f.Add( 2, &slots );
+		// Chunk 2 held only country/team. A legacy payload must not look like a complete roster.
+		f.Add( 4, &slots );
 		f.Add( 3, &slotRehash );
 		return 0;
 	}

@@ -7,6 +7,7 @@
 #include "../KeyBuildingBonusSystem.h"
 #include "../NewUpdater.h"
 #include "../PlayerReinforcement.h"
+#include "../Scripts.h"
 #include "../Units.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "GameX/DBConsts.h"
@@ -16,6 +17,7 @@
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "Main/GameTimer.h"
+#include "Script/ScriptWrapper.h"
 #include "Stats_B2_M1/ReinfUpdates.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
@@ -54,6 +56,17 @@ struct SQueuedReinforcementUpdates
 	}
 };
 
+struct SReinforcementScriptVM
+{
+	CPtr<IScriptWrapper> vm;
+
+	int operator&( IBinSaver &saver )
+	{
+		saver.Add( 2, &vm );
+		return 0;
+	}
+};
+
 using TTimerPolicy = std::tuple<IAIScenarioTracker::EGameType, bool>;
 
 class ReinforcementTimer : public testing::TestWithParam<TTimerPolicy>
@@ -65,6 +78,8 @@ protected:
 	CObj<IGameTimer> timer;
 	CObj<IAILogic> logic;
 	CObj<CAIMap> aiMap;
+	CScripts scripts;
+	CObj<IScriptWrapper> vm;
 	NDb::SMapInfo *map = nullptr;
 	NDb::SAIGameConsts *aiConsts = nullptr;
 	NDb::SMultiplayerConsts *multiplayerConsts = nullptr;
@@ -159,6 +174,8 @@ protected:
 	{
 		// Notifications hold database references, so release them before closing this fixture's database.
 		ResetUpdates();
+		scripts.Clear();
+		vm = nullptr;
 		theReinfArray.clear();
 		NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
 		logic = nullptr;
@@ -179,6 +196,32 @@ protected:
 	bool TimerEnabled() const
 	{
 		return std::get<1>( GetParam() );
+	}
+
+	void RunReinforcementScript( const char *code )
+	{
+		if ( !vm )
+		{
+			const SRegFunction functions[] = { { "GiveReinforcementCalls", CScripts::GiveReinforcementCalls },
+			                                   { nullptr, nullptr } };
+			vm = CreateScriptWrapper();
+			vm->Init();
+			vm->AddRegFunctions( functions );
+			// Attach the real VM to a script container through its save representation,
+			// so malformed arguments use the normal mission script error handler too.
+			SReinforcementScriptVM fields{ vm.GetPtr() };
+			const std::vector<SBinSaverExternalObject> external{ SBinSaverExternalObject( 1, vm ) };
+			CMemoryStream stream;
+			{
+				CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, external );
+				saver->Add( 1, &fields );
+			}
+			stream.Seek( 0 );
+			CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, external );
+			loader->Add( 1, &scripts );
+		}
+		ASSERT_EQ( vm->RunScript( code ), 1 );
+		vm->Segment();
 	}
 
 	float Countdown() const
@@ -241,6 +284,89 @@ TEST_P( ReinforcementTimer, InitializationAndExplicitGrantsRespectTimerPolicy )
 	controller.Segment();
 	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 6 );
 	EXPECT_FLOAT_EQ( Countdown(), TimerEnabled() ? 4.0f : 19.0f );
+}
+
+TEST_P( ReinforcementTimer, LuaGrantsAndRemovalsRespectModeWithoutResettingTimer )
+{
+	CPlayerReinforcement controller;
+	controller.InitPlayerReinforcement( 0, map, aiConsts );
+	const float beforeCountdown = Countdown();
+	const bool cooperative = tracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_COOP;
+	RunReinforcementScript( "GiveReinforcementCalls(0, 3);" );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), cooperative ? 8 : 5 );
+	RunReinforcementScript( "GiveReinforcementCalls(0, -2); GiveReinforcementCalls(0, 0);" );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), cooperative ? 6 : 5 );
+	RunReinforcementScript( "GiveReinforcementCalls(0, -99);" );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), cooperative ? 0 : 5 );
+	EXPECT_FLOAT_EQ( Countdown(), beforeCountdown );
+	EXPECT_EQ( tracker->GetStatistics( 0, IScenarioTracker::ESK_REINFORCEMENTS_CALLED ), 0 );
+
+	// Credits belong to the specified player, regardless of the local player or side.
+	tracker->AddPlayer( 1 );
+	tracker->SetPlayerSide( 1, 1 );
+	RunReinforcementScript( "GiveReinforcementCalls(1, 4); GiveReinforcementCalls(1, -1);" );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 1 ), cooperative ? 3 : 0 );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), cooperative ? 0 : 5 );
+}
+
+TEST_P( ReinforcementTimer, LuaGrantsKeepSinglePlayerBehavior )
+{
+	const auto gameType = tracker->GetGameType();
+	// A mission without flags keeps the tracker's credits finite in SINGLE mode,
+	// including its debit path. Flag missions treat single-player credits as infinite.
+	map->playerBonusObjects.clear();
+	tracker->MissionStart( map, 0 );
+	tracker->AddPlayer( 0 );
+	tracker->SetPlayerSide( 0, 0 );
+	tracker->SetGameType( IAIScenarioTracker::EGT_SINGLE );
+	RunReinforcementScript( "GiveReinforcementCalls(0, 3); GiveReinforcementCalls(0, -2);" );
+	tracker->SetGameType( gameType );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 6 );
+}
+
+TEST_P( ReinforcementTimer, CooperativeLuaGrantsRejectInvalidArguments )
+{
+	if ( tracker->GetGameType() != IAIScenarioTracker::EGT_MULTI_COOP )
+	{
+		GTEST_SKIP();
+	}
+	for ( const char *code : { "GiveReinforcementCalls('bad', 3);",
+	                           "GiveReinforcementCalls(-1, 3);",
+	                           "GiveReinforcementCalls(2, 3);",
+	                           "GiveReinforcementCalls(0.5, 3);",
+	                           "GiveReinforcementCalls(1e100, 3);",
+	                           "GiveReinforcementCalls(1/0, 3);",
+	                           "GiveReinforcementCalls(0/0, 3);",
+	                           "GiveReinforcementCalls(0, 'bad');",
+	                           "GiveReinforcementCalls(0, 0.5);",
+	                           "GiveReinforcementCalls(0, 2147483648);",
+	                           "GiveReinforcementCalls(0, -2147483649);",
+	                           "GiveReinforcementCalls(0, 1/0);",
+	                           "GiveReinforcementCalls(0, -1/0);",
+	                           "GiveReinforcementCalls(0, 0/0);" } )
+	{
+		SCOPED_TRACE( code );
+		RunReinforcementScript( code );
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 5 );
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 1 ), 0 );
+		EXPECT_EQ( tracker->GetReinforcementCallsLeft( 2 ), 0 );
+	}
+}
+
+TEST_P( ReinforcementTimer, CooperativeLuaGrantsSaturateAtIntegerLimits )
+{
+	if ( tracker->GetGameType() != IAIScenarioTracker::EGT_MULTI_COOP )
+	{
+		GTEST_SKIP();
+	}
+	const float beforeCountdown = Countdown();
+	RunReinforcementScript( "GiveReinforcementCalls(0, 2147483647);" );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), ( std::numeric_limits<int>::max )() );
+	RunReinforcementScript( "GiveReinforcementCalls(0, 1);" );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), ( std::numeric_limits<int>::max )() );
+	RunReinforcementScript( "GiveReinforcementCalls(0, -2147483648);" );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 0 );
+	EXPECT_FLOAT_EQ( Countdown(), beforeCountdown );
 }
 
 TEST_P( ReinforcementTimer, BaseOwnershipUsesSignedMapBonusesForEveryTeammate )

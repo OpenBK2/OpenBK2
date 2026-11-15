@@ -131,7 +131,7 @@ if(WIN32)
 endif()
 
 # Exercise real timed reinforcement income and explicit grants in both multiplayer modes.
-add_unit_test(ReinforcementTimer AILogic Common_RTS_AI Stats_B2_M1 GameX libdb System Misc Main zlib gr2)
+add_unit_test(ReinforcementTimer AILogic Common_RTS_AI Stats_B2_M1 GameX libdb Script System Misc Main zlib gr2)
 target_compile_definitions(ReinforcementTimer_test PRIVATE
     REINFORCEMENT_TIMER_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 set_tests_properties(ReinforcementTimer_test PROPERTIES TIMEOUT 60)
