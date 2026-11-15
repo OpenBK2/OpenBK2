@@ -3,6 +3,9 @@
 #include "ObjMan.h"
 #include "ObjManIterator.h"
 
+// Field addresses are only valid cache keys within one loaded database schema.
+void ClearPropertyDescCache();
+
 /**
 Класс управляющий полями объекта финального типа
 */

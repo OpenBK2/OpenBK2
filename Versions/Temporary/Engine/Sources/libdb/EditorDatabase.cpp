@@ -16,6 +16,7 @@
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
 #include "System/XMLReader.h"
+#include "Wrapper/ObjectManipulator.h"
 
 #include "libdb_export.h"
 
@@ -220,6 +221,10 @@ CBasicDatabase *CreateEditorDatabase()
 
 bool CEditorDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFileCreator )
 {
+	// A reloaded schema can reuse an old field's address for a different type.
+	// Discard editor descriptors before loading it, or undo may skip resource links
+	// that a previous database described as structs. Reset here, not at static teardown.
+	ClearPropertyDescCache();
 	SetFileSystem( _pVFS, _pFileCreator );
 	//
 	bool bRet = NMetaInfo::CreateFullMetaInfoCopy( &metaInfoMap );

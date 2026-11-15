@@ -549,17 +549,33 @@ TEST_F( EditorViews, RepeatedTechLevelDeletionAndUndoRebuildsSelectedRows )
 	{
 		ASSERT_TRUE( object->SetValue( reinforcements + ".[" + std::to_string( i ) + "]", CDBID( "reinf.xdb" ) ) );
 	}
+	// Check each round trip, so a later clear cannot hide which undo first lost a link.
+	const auto checkReferences = [&]()
+	{
+		int count = 0;
+		ASSERT_TRUE( CManipulatorManager::GetValue( &count, object, reinforcements ) );
+		ASSERT_EQ( count, 5 );
+		for ( int i = 0; i < count; ++i )
+		{
+			CVariant reference;
+			ASSERT_TRUE( object->GetValue( reinforcements + ".[" + std::to_string( i ) + "]", &reference ) );
+			ASSERT_EQ( reference.GetDBID(), CDBID( "reinf.xdb" ) ) << "element " << i;
+		}
+	};
+	ASSERT_NO_FATAL_FAILURE( checkReferences() );
 	std::unique_ptr<NPropertyPane::IGrid> grid( NPropertyPane::CreateGridWx( frame.get(), nullptr, nullptr, "test" ) );
 	SObjectSet objects;
 	objects.szObjectTypeName = "MultiplayerConsts";
 	InsertHashSetElement( &objects.objectNameSet, CDBID( "mp.xdb" ) );
 	grid->GetView()->SetViewManipulator( object, objects, "" );
 	grid->BuildTree();
+	ASSERT_NO_FATAL_FAILURE( checkReferences() );
 	auto *manager = static_cast<wxPropertyGridManager *>( grid->GetWindow() );
 	for ( const char *array : arrays )
 	{
 		for ( int i = 0; i < 15; ++i )
 		{
+			SCOPED_TRACE( std::string( array ) + " undo " + std::to_string( i ) );
 			const std::string selected = std::string( array ) + ".[1]";
 			ASSERT_NE( manager->GetPropertyByName( selected ), nullptr );
 			manager->SelectProperty( manager->GetPropertyByName( selected ) );
@@ -570,6 +586,7 @@ TEST_F( EditorViews, RepeatedTechLevelDeletionAndUndoRebuildsSelectedRows )
 			ASSERT_TRUE( controller->Undo( true, true, nullptr ) );
 			wxTheApp->ProcessPendingEvents();
 			EXPECT_NE( manager->GetPropertyByName( selected ), nullptr );
+			ASSERT_NO_FATAL_FAILURE( checkReferences() );
 		}
 	}
 	// Clearing and restoring a link array must restore its count and every DBID.
@@ -577,15 +594,7 @@ TEST_F( EditorViews, RepeatedTechLevelDeletionAndUndoRebuildsSelectedRows )
 	ASSERT_TRUE( clear->AddRemoveOperation( reinforcements, NODE_REMOVEALL_INDEX, object ) );
 	ASSERT_TRUE( clear->Redo( false, true, nullptr ) );
 	ASSERT_TRUE( clear->Undo( true, true, nullptr ) );
-	int count = 0;
-	ASSERT_TRUE( CManipulatorManager::GetValue( &count, object, reinforcements ) );
-	ASSERT_EQ( count, 5 );
-	for ( int i = 0; i < count; ++i )
-	{
-		CVariant reference;
-		ASSERT_TRUE( object->GetValue( reinforcements + ".[" + std::to_string( i ) + "]", &reference ) );
-		EXPECT_EQ( reference.GetDBID(), CDBID( "reinf.xdb" ) );
-	}
+	ASSERT_NO_FATAL_FAILURE( checkReferences() );
 }
 
 TEST_F( EditorViews, BuilderWarningsRefreshAfterEditsAndUndo )

@@ -195,6 +195,11 @@ IManipulatorIterator *CObjectManipulatorWrapper::Iterate( bool bShowHidden, ECac
 typedef std::unordered_map<void *, SPropertyDesc> CPropertyDescMap;
 static CPropertyDescMap s_propertyDescMap;
 
+void ClearPropertyDescCache()
+{
+	s_propertyDescMap.clear();
+}
+
 const SPropertyDesc *GetPropertyDesc( const STypeStructBase::SField *pField )
 {
 	CPropertyDescMap::const_iterator pos = s_propertyDescMap.find( (void *)pField );
