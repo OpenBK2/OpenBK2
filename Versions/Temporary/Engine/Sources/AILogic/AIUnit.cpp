@@ -1207,6 +1207,37 @@ const float CAIUnit::GetSightRadius() const
 	return GetStatsModifier()->sightRange.Get( GetStats()->fSight ) * SConsts::TILE_SIZE;
 }
 
+void CAIUnit::SetStatsModifier( const std::string &szSource, const NDb::SUnitStatsModifier *pModifier )
+{
+	const auto previous = GetStatsModifier()->weaponRelaxTime;
+	statsModifiers.Set( szSource, pModifier );
+	const auto &current = GetStatsModifier()->weaponRelaxTime;
+	if ( previous.fAddBonus == current.fAddBonus && previous.fMultBonus == current.fMultBonus &&
+	     previous.nZeroCount == current.nZeroCount )
+	{
+		return;
+	}
+	// The HUD animates a snapshot. Refresh it when bonuses change during a cooldown,
+	// including removal, rather than waiting for another shot to publish the new duration.
+	if ( GetGuns() )
+	{
+		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
+		for ( int i = 0; i < GetNGuns(); ++i )
+		{
+			const CBasicGun *pGun = GetGun( i );
+			if ( pGun && pGun->GetOwner() == this )
+			{
+				if ( CBuilding *pBuilding = pGun->GetMountBuilding() )
+				{
+					// A mounted weapon is displayed on its building, using its soldier's bonuses.
+					updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, pBuilding, -1 );
+					break;
+				}
+			}
+		}
+	}
+}
+
 void CAIUnit::SetAbilityStatsModifier( NDb::EUnitSpecialAbility eAbility, bool bActive )
 {
 	// Removal depends only on the source, even if its ability descriptor is no longer available.

@@ -1,13 +1,17 @@
 #include "../stdafx.h"
 
 #include "../AIClassesID.h"
+#include "../B2AI.h"
 #include "../Building.h"
 #include "../Diplomacy.h"
+#include "../GlobalWarFog.h"
 #include "../Guns.h"
+#include "../NewUpdater.h"
 #include "../Soldier.h"
 #include "../Technics.h"
 #include "../Turret.h"
 #include "../UnitGuns.h"
+#include "Common_RTS_AI/AIMap.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
@@ -18,6 +22,7 @@
 #include <chrono>
 #include <filesystem>
 #include <functional>
+#include <list>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -45,6 +50,9 @@ class BuildingWeapons : public testing::Test
 	std::vector<CObj<CTurret>> turrets;
 	NDb::SBuildingRPGStats *stats = nullptr;
 	CPtr<CAIUnit> soldier;
+	CMemoryStream updaterState;
+	CObj<CAIMap> map;
+	CPtr<IAILogic> logic;
 
 protected:
 	CPtr<CBuilding> building;
@@ -118,6 +126,10 @@ protected:
 
 	void SetUp() override
 	{
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &updaterState, SAVER_MODE_WRITE );
+			saver->Add( 1, &updater );
+		}
 		theDipl.SetNPlayers( 2 );
 		building = MakeObject<CBuilding>( 0x1108D450 );
 		soldier = MakeObject<CAIUnit>( AI_INFANTRY );
@@ -134,6 +146,97 @@ protected:
 		slots.resize( stats->aiSlots.size() );
 		turrets.resize( slots.size() );
 		LoadBuilding( 100 );
+	}
+
+	void ResetUpdates()
+	{
+		updaterState.Seek( 0 );
+		CPtr<IBinSaver> saver = CreateBinSaver( &updaterState, SAVER_MODE_READ );
+		saver->Add( 1, &updater );
+	}
+
+	void TearDown() override
+	{
+		// Release queued presentation references before the fixture's units and records.
+		ResetUpdates();
+		if ( map )
+		{
+			theWarFog.Clear();
+			SetAIMap( nullptr );
+		}
+		if ( logic )
+		{
+			NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
+		}
+	}
+
+	void AttachOwnerGuns( int slot )
+	{
+		logic = MakeObject<IAILogic>( 0x1108D441 );
+		NSingleton::RegisterSingleton( logic, IAILogic::tidTypeID );
+		// Building RPG notifications use real terrain visibility, unlike the unit notification.
+		map = new CAIMap( 64, 64, 32, 2, 16 );
+		SetAIMap( map );
+		theWarFog.Init( 64, 64, 32, 2.0f );
+		CArray2D<std::list<CPtr<CEventUpdater::CUpdateData>>> suspended( 64, 64 );
+		CMemoryStream gridStream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &gridStream, SAVER_MODE_WRITE );
+			saver->Add( 1, &suspended );
+		}
+		gridStream.Seek( 0 );
+		{
+			CPtr<IBinSaver> loader = CreateBinSaver( &gridStream, SAVER_MODE_READ );
+			updater.operator&( *loader );
+		}
+		SWarFogUnitInfo observer;
+		observer.vPos = SVector( 1, 1 );
+		observer.nRadius = 4;
+		observer.bPlane = true;
+		theWarFog.AddUnit( 123, observer, 0 );
+		theWarFog.Segment();
+		ASSERT_TRUE( building->IsVisible( 0 ) );
+		CDBPtr<NDb::SInfantryRPGStats> infantry = dynamic_cast<const NDb::SInfantryRPGStats *>( soldier->GetStats() );
+		SFields fields{ [&]( IBinSaver &saver )
+		                {
+											saver.Add( 4, &infantry );
+											saver.Add( 6, &slots[slot] );
+										} };
+		LoadFields( soldier, [&]( IBinSaver &saver ) { saver.Add( 1, &fields ); } );
+	}
+
+	std::list<CPtr<CEventUpdater::CUpdateData>> PendingUpdates()
+	{
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, external );
+			saver->Add( 1, &updater );
+		}
+		stream.Seek( 0 );
+		std::list<CPtr<CEventUpdater::CUpdateData>> pending;
+		SFields fields{ [&]( IBinSaver &saver ) { saver.Add( 2, &pending ); } };
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ, external );
+		loader->Add( 1, &fields );
+		return pending;
+	}
+
+	void CheckReloadUpdates( float duration )
+	{
+		const auto pending = PendingUpdates();
+		ASSERT_EQ( pending.size(), 2 );
+		EXPECT_EQ( pending.front()->pObj, soldier );
+		EXPECT_EQ( pending.back()->pObj, building );
+		CObj<CEventUpdater::CUpdateData::IUpdateTransformer> transformer =
+				MakeObject<CEventUpdater::CUpdateData::IUpdateTransformer>( 0x120B3342 );
+		for ( const auto &update : pending )
+		{
+			ASSERT_EQ( update->eUpdateType, ACTION_NOTIFY_RPG_CHANGED );
+			CPtr<SAIBasicUpdate> client = transformer->Transform( update, 0 );
+			auto *rpg = dynamic_cast<SAIRPGUpdate *>( client.GetPtr() );
+			ASSERT_NE( rpg, nullptr );
+			ASSERT_EQ( rpg->info.ammo.size(), 1 );
+			EXPECT_FLOAT_EQ( rpg->info.ammo[0].reload.fDuration, duration );
+		}
 	}
 
 	void LoadBuilding( float hp )
@@ -302,6 +405,40 @@ TEST_F( BuildingWeapons, FreshGunIsReadyAndReloadUsesCurrentModifiers )
 	mounted[0]->GetOwner()->SetStatsModifier( "test.reload", modifier );
 	pools[0]->lastShoot = 10000;
 	EXPECT_FLOAT_EQ( ReportAmmo()[0].reload.fDuration, 1250 );
+}
+
+TEST_F( BuildingWeapons, ReloadModifierChangesPublishFreshUnitAndMountedWeaponDurations )
+{
+	AddWeapon( 0, 100 );
+	AttachOwnerGuns( 0 );
+	pools[0]->lastShoot = 10000;
+	auto *modifier = Record<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
+	modifier->weaponRelaxTime.fMultBonus = 0.5f;
+	const uint64_t randomCalls = NRandom::GetRandomCallsCounter();
+	CAIUnit *owner = mounted[0]->GetOwner();
+	owner->SetStatsModifier( "test.reload", modifier );
+	CheckReloadUpdates( 1250 );
+	ResetUpdates();
+	owner->SetStatsModifier( "test.reload", modifier );
+	EXPECT_TRUE( PendingUpdates().empty() );
+	owner->RemoveStatsModifier( "test.reload" );
+	CheckReloadUpdates( 2500 );
+	ResetUpdates();
+	modifier->weaponRelaxTime.nZeroCount = 1;
+	owner->SetStatsModifier( "test.reload", modifier );
+	CheckReloadUpdates( 0 );
+	ResetUpdates();
+	owner->SetStatsModifier( "test.reload", nullptr );
+	CheckReloadUpdates( 2500 );
+	ResetUpdates();
+	owner->RemoveStatsModifier( "test.absent" );
+	auto *unrelated = Record<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
+	unrelated->speed.fMultBonus = 2;
+	owner->SetStatsModifier( "test.speed", unrelated );
+	EXPECT_TRUE( PendingUpdates().empty() );
+	EXPECT_EQ( NRandom::GetRandomCallsCounter(), randomCalls );
+	EXPECT_EQ( pools[0]->lastShoot, 10000 );
+	EXPECT_EQ( pools[0]->nAmmo, 100 );
 }
 
 TEST_F( BuildingWeapons, ReloadIsHiddenBetweenBurstShotsAndReturnsAfterTheFinalShot )

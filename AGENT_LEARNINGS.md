@@ -1,6 +1,15 @@
 
 # AGENT LEARNINGS
 
+- Reload HUD durations already use `GetRelaxTime()` and its stored random factor,
+  but the client animates a snapshot. Modifier changes need an RPG notification
+  for the owner and any mounted building; testing `GetReloadInfo()` alone misses
+  stale client data. Exercise queued updates through the RPG transformer.
+- Headless reload-notification tests initially crashed because direct ammo queries
+  need less setup than client updates. Mounted notifications need the AI map,
+  visible fog and the updater's suspended grid; unit RPG transforms also need
+  the CAILogic singleton even when no scenario tracker is installed.
+
 - `IsBursting()` includes the animation's action-point wait. For reload HUD
   suppression, check actual shooting with shots and ammunition remaining.
   Final shots already notify RPG changes, but interrupted bursts need a refresh
