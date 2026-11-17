@@ -1,6 +1,11 @@
 
 # AGENT LEARNINGS
 
+- `CAIUnit::UpdateEnableAblitiy` publishes auto-use as false. Apply an ability's
+  auto-use default after that update through its activation event, so the executor,
+  stat modifier and final UI state agree. Keep defaults in ability initialization,
+  not the executor's recurring segment, so manual toggles and saved choices persist.
+
 - Editor property descriptors were cached by schema field address across database
   reopen. Reused addresses could classify resource links as structs, losing undo
   snapshots or builder dependencies. Clear that cache before loading an editor

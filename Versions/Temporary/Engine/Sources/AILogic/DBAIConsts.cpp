@@ -1074,6 +1074,7 @@ void SAIGameConsts::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "FOWSoundMinBasePercentage", (uint8_t*)&fFOWSoundMinBasePercentage - pThis, sizeof(fFOWSoundMinBasePercentage), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "AreaDamageSystem", (uint8_t*)&eAreaDamageSystem - pThis, sizeof(eAreaDamageSystem), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructMetaInfo( "AreaDamageFalloff", &areaDamageFalloff, pThis );
+	NMetaInfo::ReportMetaInfo( "AutoEnableExactShot", (uint8_t*)&bAutoEnableExactShot - pThis, sizeof(bAutoEnableExactShot), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1103,6 +1104,7 @@ int SAIGameConsts::operator&( IXmlSaver &saver )
 	saver.Add( "FOWSoundMinBasePercentage", &fFOWSoundMinBasePercentage );
 	saver.Add( "AreaDamageSystem", &eAreaDamageSystem );
 	saver.Add( "AreaDamageFalloff", &areaDamageFalloff );
+	saver.Add( "AutoEnableExactShot", &bAutoEnableExactShot );
 
 	return 0;
 }
@@ -1144,6 +1146,7 @@ int SAIGameConsts::operator&( IBinSaver &saver )
 	{
 		saver.Add( 24, &areaDamageFalloff );
 	}
+	saver.Add( 25, &bAutoEnableExactShot );
 
 	return 0;
 }
@@ -1156,7 +1159,7 @@ uint32_t SAIGameConsts::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts << bDisableEntrenchmentReloadSlowdown << fFOWSoundDistance << fFOWSoundMinBasePercentage << eAreaDamageSystem << areaDamageFalloff;
+	checkSum << tankPits << foxHoles << common << planeManuvers << warFog << commonScriptFileRefs << reinforcementTypes << reinfExpediency << unitTypesPriorities << nRemoveParachuteTime << reinforcementRecycleTime << pAviationGroundCrashExplosion << pFlamethrowerDeathExplotion << nGroundCrashPlaneSize << typedTemplates << bInfantryFormationModifiersApplyInTrenches << pAIPropertyConsts << bDisableEntrenchmentReloadSlowdown << fFOWSoundDistance << fFOWSoundMinBasePercentage << eAreaDamageSystem << areaDamageFalloff << bAutoEnableExactShot;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

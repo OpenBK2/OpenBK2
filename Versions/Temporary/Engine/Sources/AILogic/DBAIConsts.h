@@ -654,6 +654,7 @@ namespace NDb
 		};
 		EAreaDamageSystem eAreaDamageSystem;
 		SAreaDamageFalloff areaDamageFalloff;
+		bool bAutoEnableExactShot;
 
 		SAIGameConsts() :
 			__dwCheckSum( 0 ),
@@ -663,7 +664,8 @@ namespace NDb
 			bDisableEntrenchmentReloadSlowdown( false ),
 			fFOWSoundDistance( -1.0000f ),
 			fFOWSoundMinBasePercentage( 0.1000f ),
-			eAreaDamageSystem( Legacy )
+			eAreaDamageSystem( Legacy ),
+			bAutoEnableExactShot( false )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

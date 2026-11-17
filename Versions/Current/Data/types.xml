@@ -901,6 +901,21 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>cf010000</Type>
+					<Name>AutoEnableExactShot</Name>
+					<ChunkID>25</ChunkID>
+					<Description>Enable Exact Shot auto-use when a unit gains the ability; players can still toggle it off.</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>false</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>285691072</TypeID>
 		</Item>

@@ -497,5 +497,7 @@ class SAIGameConsts
 	// Resistance-based splash multiplier coefficients; older records retain the default 1 - x*x curve.
 	[preserveDefault]
 	SAreaDamageFalloff _AreaDamageFalloff;
+	// Enable Exact Shot auto-use when a unit gains the ability; players can still toggle it off.
+	bool _AutoEnableExactShot = false;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
