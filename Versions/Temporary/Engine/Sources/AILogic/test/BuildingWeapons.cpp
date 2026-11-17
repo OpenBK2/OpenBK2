@@ -153,12 +153,13 @@ protected:
 		static_cast<CExistingObject *>( building.GetPtr() )->CExistingObject::SetHitPoints( hp );
 	}
 
-	void AddWeapon( int slot, int ammo, int shells = 1, int shootState = 4 )
+	void AddWeapon( int slot, int ammo, int shells = 1, int shootState = 4, int ammoPerBurst = 1, int shotsLeft = 1 )
 	{
 		auto *weapon = Record<NDb::SWeaponRPGStats>( "WeaponRPGStats" );
 		ASSERT_NE( weapon, nullptr );
 		weapon->shells.resize( shells );
 		weapon->nAimingTime = 9000;
+		weapon->nAmmoPerBurst = ammoPerBurst;
 		for ( int i = 0; i < shells; ++i )
 		{
 			weapon->shells[i].nFireRate = 1000;
@@ -178,7 +179,6 @@ protected:
 			CBasicGun *gun = MakeObject<CBasicGun>( 0x1108D4B6 );
 			CDBPtr<NDb::SWeaponRPGStats> weaponPointer = weapon;
 			SFields weaponFields{ [&]( IBinSaver &saver ) { saver.Add( 2, &weaponPointer ); } };
-			int shotsLeft = 1;
 			float relaxRandom = 1.25f;
 			uint8_t shellIndex = shell;
 			SFields basic{ [&]( IBinSaver &saver )
@@ -302,6 +302,33 @@ TEST_F( BuildingWeapons, FreshGunIsReadyAndReloadUsesCurrentModifiers )
 	mounted[0]->GetOwner()->SetStatsModifier( "test.reload", modifier );
 	pools[0]->lastShoot = 10000;
 	EXPECT_FLOAT_EQ( ReportAmmo()[0].reload.fDuration, 1250 );
+}
+
+TEST_F( BuildingWeapons, ReloadIsHiddenBetweenBurstShotsAndReturnsAfterTheFinalShot )
+{
+	// Both snapshots use the shooting phase; only the last one's burst counter is exhausted.
+	AddWeapon( 2, 98, 2, 3, 4, 2 );
+	AddWeapon( 5, 96, 1, 3, 4, 0 );
+	pools[0]->lastShoot = 10000;
+	pools[0]->nLastShellType = 1;
+	pools[1]->lastShoot = 12000;
+	const auto ammo = ReportAmmo();
+	ASSERT_EQ( ammo.size(), 2 );
+	EXPECT_FLOAT_EQ( ammo[0].reload.fDuration, 0 );
+	EXPECT_EQ( ammo[1].reload.nStartTime, 12000 );
+	EXPECT_FLOAT_EQ( ammo[1].reload.fDuration, 2500 );
+}
+
+TEST_F( BuildingWeapons, SingleShotsAndBurstsThatRunOutOfAmmoStillShowReload )
+{
+	AddWeapon( 2, 98, 1, 3, 1, 1 );
+	AddWeapon( 5, 0, 1, 3, 4, 2 );
+	pools[0]->lastShoot = 10000;
+	pools[1]->lastShoot = 10000;
+	const auto ammo = ReportAmmo();
+	ASSERT_EQ( ammo.size(), 2 );
+	EXPECT_FLOAT_EQ( ammo[0].reload.fDuration, 2500 );
+	EXPECT_FLOAT_EQ( ammo[1].reload.fDuration, 2500 );
 }
 
 TEST_F( BuildingWeapons, DestroyedBuildingStopsAnOccupantsPendingBurst )

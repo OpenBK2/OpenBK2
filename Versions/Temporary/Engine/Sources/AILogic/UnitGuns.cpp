@@ -336,7 +336,7 @@ SWeaponReloadInfo CUnitGuns::GetReloadInfo( int nCommonGun ) const
 	const int nShell =
 			pCommon->nLastShellType >= 0 && pCommon->nLastShellType < nEnd - nBegin ? pCommon->nLastShellType : 0;
 	const CBasicGun *pGun = guns[nBegin + nShell];
-	if ( pGun )
+	if ( pGun && !pGun->IsBurstInProgress() )
 	{
 		// Read the existing randomized, modified cooldown without rolling RNG or adding aiming time.
 		info.nStartTime = pCommon->lastShoot;
