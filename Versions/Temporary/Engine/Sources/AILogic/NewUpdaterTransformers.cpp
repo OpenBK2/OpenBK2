@@ -138,6 +138,10 @@ SAIBasicUpdate *CEventUpdater::CUpdateData::CRPGUpdateTransformer::Transform( CU
 {
 	SAIRPGUpdate *pData = new SAIRPGUpdate;
 	pUpdate->pObj->GetRPGStats( &( pData->info ) );
+	for ( auto &ammo : pData->info.ammo )
+	{
+		CAITimer::ToClientTime( &ammo.reload.nStartTime );
+	}
 	pData->eUpdateType = pUpdate->eUpdateType;
 	pData->nUpdateTime = pUpdate->nUpdateTime;
 	pData->info.time = pUpdate->nUpdateTime;

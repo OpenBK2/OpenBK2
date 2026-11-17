@@ -374,11 +374,26 @@ void CMOBuilding::GetStatus( SObjectStatus *pStatus ) const
 			weapon.nDamage = pShell->fDamagePower;
 			weapon.nPenetration = pShell->nPiercing;
 			weapon.nMaxAmmo = gun.nAmmo;
-			weapon.nAmmo = nCurrentAmmo;
+			weapon.nAmmo = 0;
 
 			pStatus->AddWeapon( weapon );
-
-			break;
+		}
+	}
+	for ( auto &weapon : pStatus->weapons )
+	{
+		for ( const auto &ammo : weaponAmmo )
+		{
+			if ( ammo.pStats == weapon.pWeaponID )
+			{
+				weapon.nAmmo += ammo.nAmmo;
+				weapon.reloads.push_back( ammo.reload );
+			}
+		}
+		// Reserve a clear strip for mounts that have no reported cooldown yet.
+		weapon.reloads.resize( weapon.nCount );
+		if ( weaponAmmo.empty() )
+		{
+			weapon.nAmmo = (std::min)( nCurrentAmmo, weapon.nMaxAmmo );
 		}
 	}
 }
@@ -461,6 +476,7 @@ IClientUpdatableProcess *CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 	// Create, higher up this file, sums gun.nAmmo over every slot into the same
 	// member with the same zero-and-add-up shape, so a building showed its total
 	// ammo until the first stats update arrived and then dropped to one weapon's.
+	weaponAmmo = stats.ammo;
 	nCurrentAmmo = 0;
 	for ( std::vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end();
 	      ++it )
@@ -1061,6 +1077,7 @@ int CMOBuilding::operator&( IBinSaver &saver )
 	saver.Add( 17, &fCapturingProgress );
 	saver.Add( 18, &nCapturingColorIndex );
 	saver.Add( 19, &bCanEnter );
+	saver.Add( 20, &weaponAmmo );
 
 	return 0;
 }

@@ -447,10 +447,13 @@ namespace NDb
 		std::vector< CDBPtr< STexture > > chapterMapArrows;
 		NFile::CFilePath szForbiddenWordsFileRef;
 		CDBPtr< SMessageParts > pMessageParts;
+		int nWeaponReloadColor;
 
 		#include "include_UIConstsB2.h"
 
-		SUIConstsB2() { }
+		SUIConstsB2() :
+			nWeaponReloadColor( -2143272896 )
+		{ }
 		//
 		int GetTypeID() const override { return typeID; }
 		//

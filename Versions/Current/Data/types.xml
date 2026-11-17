@@ -40309,6 +40309,41 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>ca010000</Type>
+					<Name>WeaponReloadColor</Name>
+					<ChunkID>14</ChunkID>
+					<Description>ARGB tint covering the remaining weapon reload time; zero alpha falls back to translucent dark grey.</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>editorControl</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>int_color_with_alpha</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>preserveDefault</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>-2143272896</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>285852480</TypeID>
 		</Item>

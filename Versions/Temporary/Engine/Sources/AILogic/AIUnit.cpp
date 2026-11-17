@@ -1157,6 +1157,7 @@ void CAIUnit::GetRPGStats( SAINotifyRPGStats *pStats )
 		SAINotifyRPGStats::SWeaponAmmo ammo;
 		ammo.pStats = pGunStats.pWeapon;
 		ammo.nAmmo = GetNAmmo( i );
+		ammo.reload = GetGuns()->GetReloadInfo( i );
 		pStats->ammo.push_back( ammo );
 	}
 

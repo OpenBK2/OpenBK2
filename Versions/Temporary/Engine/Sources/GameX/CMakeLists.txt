@@ -28,6 +28,7 @@ set(SOURCES
     DummyInterface.cpp
     GameRoomData.cpp
     MessageParts.cpp
+    WeaponReloadBackground.cpp
     Initialization.cpp
     InterfaceArmyBranchDlg.cpp
     InterfaceArmyScreen.cpp

@@ -1,3 +1,11 @@
+# Check reload geometry, clock behavior, grouping and saved HUD backgrounds without a GPU.
+add_unit_test(WeaponReload GameX B2_M1_World UISpecificB2 UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+if(WIN32)
+    set_tests_properties(WeaponReload_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET WeaponReload_test APPEND PROPERTY LINK_DEPENDS
+        $<TARGET_FILE:GameX> $<TARGET_FILE:B2_M1_World>)
+endif()
 # Exercise the real standard-library trace writer without loading game modules.
 add_unit_test(MPPacketTraceLog SOURCES ../MPPacketTraceLog.cpp)
 # Exercise host handoff and removal boundaries without loading game modules.

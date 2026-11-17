@@ -2268,6 +2268,7 @@ void CBuilding::GetRPGStats( struct SAINotifyRPGStats *pStats )
 			SAINotifyRPGStats::SWeaponAmmo ammo;
 			ammo.pStats = pGun->GetWeapon();
 			ammo.nAmmo = pGun->GetNAmmo();
+			ammo.reload = guns[n]->GetReloadInfo( n );
 			pStats->ammo.push_back( ammo );
 		}
 	}

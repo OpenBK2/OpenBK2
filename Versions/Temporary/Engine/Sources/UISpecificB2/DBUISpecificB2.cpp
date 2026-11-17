@@ -779,6 +779,7 @@ void SUIConstsB2::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ChapterMapArrows", &chapterMapArrows, pThis );
 	NMetaInfo::ReportMetaInfo( "ForbiddenWordsFileRef", (uint8_t*)&szForbiddenWordsFileRef - pThis, sizeof(szForbiddenWordsFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "MessageParts", (uint8_t*)&pMessageParts - pThis, sizeof(pMessageParts), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "WeaponReloadColor", (uint8_t*)&nWeaponReloadColor - pThis, sizeof(nWeaponReloadColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -798,6 +799,7 @@ int SUIConstsB2::operator&( IXmlSaver &saver )
 	saver.Add( "ChapterMapArrows", &chapterMapArrows );
 	saver.Add( "ForbiddenWordsFileRef", &szForbiddenWordsFileRef );
 	saver.Add( "MessageParts", &pMessageParts );
+	saver.Add( "WeaponReloadColor", &nWeaponReloadColor );
 
 	return 0;
 }
@@ -817,6 +819,10 @@ int SUIConstsB2::operator&( IBinSaver &saver )
 	saver.Add( 11, &chapterMapArrows );
 	saver.Add( 12, &szForbiddenWordsFileRef );
 	saver.Add( 13, &pMessageParts );
+	if ( !saver.IsReading() || saver.HasChunk( 14 ) )
+	{
+		saver.Add( 14, &nWeaponReloadColor );
+	}
 
 	return 0;
 }

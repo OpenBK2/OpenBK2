@@ -604,6 +604,7 @@ void CBasicGun::Shooting()
 		--nShotsLast;
 
 		pCommonGunInfo->lastShoot += GetFireRate();
+		pCommonGunInfo->nLastShellType = nShellType;
 
 		// Subtract appropriate number of shells
 		pCommonGunInfo->nAmmo -= (std::min)( pCommonGunInfo->nAmmo, GetOwner()->GetMultiShot() );

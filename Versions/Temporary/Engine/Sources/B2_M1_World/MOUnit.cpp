@@ -51,6 +51,18 @@ bool CMOUnit::CreateSceneObject( const int nUniqueID,
 	return true;
 }
 
+std::vector<SWeaponReloadInfo> CMOUnit::GetWeaponReloads( const NDb::SWeaponRPGStats *pWeapon ) const
+{
+	for ( const SAmmo &ammo : ammos )
+	{
+		if ( ammo.pWeapon == pWeapon )
+		{
+			return ammo.reloads;
+		}
+	}
+	return {};
+}
+
 void CMOUnit::GetStatus( SObjectStatus *pStatus ) const
 {
 	IMOUnit::GetStatus( pStatus );
@@ -234,6 +246,7 @@ CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckMana
 			ammo.pWeapon = updateAmmo.pStats;
 			ammo.nWeaponCount = 1;
 			ammo.nAmmo = updateAmmo.nAmmo;
+			ammo.reloads.push_back( updateAmmo.reload );
 			ammos.push_back( ammo );
 		}
 		else
@@ -241,6 +254,7 @@ CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckMana
 			SAmmo &ammo = *iAmmo;
 			++ammo.nWeaponCount;
 			ammo.nAmmo += updateAmmo.nAmmo;
+			ammo.reloads.push_back( updateAmmo.reload );
 		}
 	}
 

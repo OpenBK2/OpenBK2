@@ -1,6 +1,15 @@
 
 # AGENT LEARNINGS
 
+- Gun collections contain a `CBasicGun` per shell type, while `SCommonGunInfo`
+  represents the physical gun and its shared last-shot time. Group HUD cooldowns
+  by the latter and retain the fired shell for its randomized reload duration.
+  Animate client timestamps with the game clock so pause and speed apply.
+- A factory-created database record without a DBID will not survive a CDBPtr
+  save/load round trip. Use a real database fixture for resource serialization,
+  or retain the original background as an external object when testing only a
+  UI decorator's saved state. Check the simulation RNG, not the visual RNG.
+
 - `CAIUnit::UpdateEnableAblitiy` publishes auto-use as false. Apply an ability's
   auto-use default after that update through its activation event, so the executor,
   stat modifier and final UI state agree. Keep defaults in ability initialization,
