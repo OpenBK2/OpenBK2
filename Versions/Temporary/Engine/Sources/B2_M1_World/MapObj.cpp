@@ -69,9 +69,11 @@ void SObjectStatus::AddWeapon( const SWeapon &weapon )
 	if ( it != weapons.end() )
 	{
 		SWeapon &current = *it;
-		++current.nCount;
+		// Squad members may already represent several identical physical guns.
+		current.nCount += weapon.nCount;
 		current.nAmmo += weapon.nAmmo;
 		current.nMaxAmmo += weapon.nMaxAmmo;
+		current.reloads.insert( current.reloads.end(), weapon.reloads.begin(), weapon.reloads.end() );
 	}
 	else
 	{

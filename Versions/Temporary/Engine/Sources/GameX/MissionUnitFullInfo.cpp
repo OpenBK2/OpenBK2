@@ -3,10 +3,14 @@
 #include "B2_M1_World/MOBuilding.h"
 #include "B2_M1_World/MOUnitMechanical.h"
 #include "InterfaceMissionInternal.h"
+#include "InterfaceState.h"
 #include "Misc/StrProc.h"
 #include "MissionUnitFullInfo.h"
 #include "ScenarioTracker.h"
 #include "System/Text.h"
+#include "UI/Window.h"
+#include "UISpecificB2/DBUISpecificB2.h"
+#include "WeaponReloadBackground.h"
 
 #include "GameX_export.h"
 
@@ -715,6 +719,7 @@ void CMissionUnitFullInfo::MakeWeapons( const SObjectStatus &status, bool bSquad
 		weapon.nPenetration = statusWeapon.nPenetration;
 		weapon.nAmmo = statusWeapon.nAmmo;
 		weapon.nMaxAmmo = statusWeapon.nMaxAmmo;
+		weapon.reloads = statusWeapon.reloads;
 
 		weapons.push_back( weapon );
 	}
@@ -724,12 +729,18 @@ void CMissionUnitFullInfo::MakeWeapons( const SObjectStatus &status, bool bSquad
 
 void CMissionUnitFullInfo::UpdateWeaponsAmmo( const struct SObjectStatus &status )
 {
-	for ( int i = 0; i < status.weapons.size(); ++i )
+	for ( NUnitFullInfo::SWeapon &weapon : weapons )
 	{
-		const SObjectStatus::SWeapon &statusWeapon = status.weapons[i];
-		NUnitFullInfo::SWeapon &weapon = weapons[i];
-
-		weapon.nAmmo = statusWeapon.nAmmo;
+		// The HUD sorts its icons independently of the world's weapon list.
+		for ( const SObjectStatus::SWeapon &statusWeapon : status.weapons )
+		{
+			if ( weapon.pWeapon == statusWeapon.pWeaponID )
+			{
+				weapon.nAmmo = statusWeapon.nAmmo;
+				weapon.reloads = statusWeapon.reloads;
+				break;
+			}
+		}
 	}
 }
 
@@ -739,13 +750,19 @@ bool CMissionUnitFullInfo::IsSameWeapons( const struct SObjectStatus &status ) c
 	{
 		return false;
 	}
-	for ( int i = 0; i < weapons.size(); ++i )
+	for ( const NUnitFullInfo::SWeapon &weapon : weapons )
 	{
-		if ( weapons[i].pWeapon != status.weapons[i].pWeaponID )
+		// Compare groups by identity, retaining the selected icon when display sorting differs.
+		bool bFound = false;
+		for ( const SObjectStatus::SWeapon &statusWeapon : status.weapons )
 		{
-			return false;
+			if ( weapon.pWeapon == statusWeapon.pWeaponID && weapon.nCount == statusWeapon.nCount )
+			{
+				bFound = true;
+				break;
+			}
 		}
-		if ( weapons[i].nCount != status.weapons[i].nCount )
+		if ( !bFound )
 		{
 			return false;
 		}
@@ -861,6 +878,21 @@ void CMissionUnitFullInfo::ShowWeapons()
 		}
 		if ( weaponItems[i].pIcon )
 		{
+			if ( eType == ET_OBJECT )
+			{
+				// Attach at runtime, so retail and mod HUD layouts need no new child controls or assets.
+				if ( CWindow *pIcon = dynamic_cast<CWindow *>( weaponItems[i].pIcon.GetPtr() ) )
+				{
+					CWeaponReloadBackground *pReload = dynamic_cast<CWeaponReloadBackground *>( pIcon->GetBackground() );
+					if ( !pReload )
+					{
+						pReload = new CWeaponReloadBackground( pIcon->GetBackground() );
+						pIcon->SetBackground( pReload );
+					}
+					const NDb::SUIConstsB2 *pConsts = InterfaceState()->GetUIConsts();
+					pReload->SetReloads( weapons[i].reloads, pConsts ? pConsts->nWeaponReloadColor : 0 );
+				}
+			}
 			if ( weapons[i].pWeapon )
 			{
 				weaponItems[i].pIcon->SetTexture( weapons[i].pWeapon->pWeaponTypeTexture );

@@ -318,6 +318,33 @@ int CUnitGuns::GetNAmmo( const int nCommonGun ) const
 	return commonGunsInfo[nCommonGun]->nAmmo;
 }
 
+SWeaponReloadInfo CUnitGuns::GetReloadInfo( int nCommonGun ) const
+{
+	SWeaponReloadInfo info;
+	if ( nCommonGun < 0 || nCommonGun >= commonGunsInfo.size() || !commonGunsInfo[nCommonGun] ||
+	     nCommonGun + 1 >= gunsBegins.size() )
+	{
+		return info;
+	}
+	const SCommonGunInfo *pCommon = commonGunsInfo[nCommonGun];
+	const int nBegin = gunsBegins[nCommonGun];
+	const int nEnd = gunsBegins[nCommonGun + 1];
+	if ( pCommon->lastShoot == 0 || nBegin < 0 || nBegin >= nEnd || nEnd > guns.size() )
+	{
+		return info;
+	}
+	const int nShell =
+			pCommon->nLastShellType >= 0 && pCommon->nLastShellType < nEnd - nBegin ? pCommon->nLastShellType : 0;
+	const CBasicGun *pGun = guns[nBegin + nShell];
+	if ( pGun )
+	{
+		// Read the existing randomized, modified cooldown without rolling RNG or adding aiming time.
+		info.nStartTime = pCommon->lastShoot;
+		info.fDuration = pGun->GetRelaxTime();
+	}
+	return info;
+}
+
 // nAmmo со знаком
 void CUnitGuns::ChangeAmmo( const int nCommonGun, const int nAmmo )
 {

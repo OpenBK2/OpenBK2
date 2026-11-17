@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Guns.h"
+#include "Stats_B2_M1/WeaponReloadInfo.h"
 
 #include <cstdint>
 
@@ -115,6 +116,7 @@ public:
 	int GetCommonGunIndex( const CBasicGun *pGun ) const;
 	const SBaseGunRPGStats &GetCommonGunStats( const int nCommonGun ) const;
 	int GetNAmmo( const int nCommonGun ) const;
+	AILOGIC_EXPORT SWeaponReloadInfo GetReloadInfo( int nCommonGun ) const;
 	// nAmmo со знаком
 	void ChangeAmmo( const int nCommonGun, const int nAmmo );
 

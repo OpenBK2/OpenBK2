@@ -174,6 +174,8 @@ void CMOUnitInfantry::GetStatus( SObjectStatus *pStatus ) const
 		SObjectStatus::SWeapon &weapon = pStatus->weapons[i];
 
 		weapon.nAmmo = GetWeaponAmmo( weapon.pWeaponID );
+		weapon.reloads = GetWeaponReloads( weapon.pWeaponID );
+		weapon.reloads.resize( weapon.nCount );
 	}
 }
 

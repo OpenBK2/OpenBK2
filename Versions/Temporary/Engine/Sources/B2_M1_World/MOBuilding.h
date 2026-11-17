@@ -37,6 +37,7 @@ class B2_M1_WORLD_EXPORT CMOBuilding : public IMOContainer
 	std::unordered_set<int> projectilesAlreadyHit;
 	int nOldModelStage = 0;
 	int nCurrentAmmo = 0;
+	std::vector<SAINotifyRPGStats::SWeaponAmmo> weaponAmmo;
 	float fCapturingProgress = 0.0f;
 	int nCapturingColorIndex = 0;
 	bool bCanEnter = false;

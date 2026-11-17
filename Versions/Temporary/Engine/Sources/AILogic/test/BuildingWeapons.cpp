@@ -11,6 +11,7 @@
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
+#include "System/RandomGen.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
@@ -157,9 +158,11 @@ protected:
 		auto *weapon = Record<NDb::SWeaponRPGStats>( "WeaponRPGStats" );
 		ASSERT_NE( weapon, nullptr );
 		weapon->shells.resize( shells );
-		for ( auto &shell : weapon->shells )
+		weapon->nAimingTime = 9000;
+		for ( int i = 0; i < shells; ++i )
 		{
-			shell.nFireRate = 1000;
+			weapon->shells[i].nFireRate = 1000;
+			weapon->shells[i].nRelaxTime = 2000 * ( i + 1 );
 		}
 		stats->aiSlots[slot].gun.pWeapon = weapon;
 		stats->aiSlots[slot].gun.nAmmo = ammo;
@@ -176,12 +179,14 @@ protected:
 			CDBPtr<NDb::SWeaponRPGStats> weaponPointer = weapon;
 			SFields weaponFields{ [&]( IBinSaver &saver ) { saver.Add( 2, &weaponPointer ); } };
 			int shotsLeft = 1;
+			float relaxRandom = 1.25f;
 			uint8_t shellIndex = shell;
 			SFields basic{ [&]( IBinSaver &saver )
 			               {
 											 saver.Add( 1, &weaponFields );
 											 saver.Add( 3, &shootState );
 											 saver.Add( 6, &shotsLeft );
+											 saver.Add( 11, &relaxRandom );
 											 saver.Add( 12, &shellIndex );
 											 saver.Add( 13, &soldier );
 											 saver.Add( 15, &pool );
@@ -260,6 +265,43 @@ TEST_F( BuildingWeapons, EveryArmedSlotIsReportedOnceAcrossShellTypes )
 	EXPECT_EQ( ammo[0].nAmmo, 40 );
 	EXPECT_EQ( ammo[1].nAmmo, 100 );
 	EXPECT_EQ( ammo[2].nAmmo, 70 );
+}
+
+TEST_F( BuildingWeapons, ReloadReportsPhysicalGunsAndLastShellWithoutAimingOrRandomDraws )
+{
+	AddWeapon( 2, 100, 3 );
+	AddWeapon( 5, 70 );
+	pools[0]->lastShoot = 10000;
+	pools[0]->nLastShellType = 2;
+	pools[1]->lastShoot = 11000;
+	const uint64_t randomCalls = NRandom::GetRandomCallsCounter();
+	for ( int query = 0; query < 3; ++query )
+	{
+		const auto ammo = ReportAmmo();
+		ASSERT_EQ( ammo.size(), 2 );
+		EXPECT_EQ( ammo[0].reload.nStartTime, 10000 );
+		// Third shell: 6000 ms with the existing 1.25 random factor. Aiming adds nothing.
+		EXPECT_FLOAT_EQ( ammo[0].reload.fDuration, 7500 );
+		EXPECT_EQ( ammo[1].reload.nStartTime, 11000 );
+		EXPECT_FLOAT_EQ( ammo[1].reload.fDuration, 2500 );
+		EXPECT_EQ( ammo[0].nAmmo, 100 );
+		EXPECT_EQ( ammo[1].nAmmo, 70 );
+	}
+	EXPECT_EQ( NRandom::GetRandomCallsCounter(), randomCalls );
+	EXPECT_EQ( pools[0]->lastShoot, 10000 );
+	EXPECT_EQ( pools[0]->nLastShellType, 2 );
+}
+
+TEST_F( BuildingWeapons, FreshGunIsReadyAndReloadUsesCurrentModifiers )
+{
+	AddWeapon( 2, 100 );
+	ASSERT_EQ( ReportAmmo().size(), 1 );
+	EXPECT_FLOAT_EQ( ReportAmmo()[0].reload.fDuration, 0 );
+	auto *modifier = Record<NDb::SUnitStatsModifier>( "UnitStatsModifier" );
+	modifier->weaponRelaxTime.fMultBonus = 0.5f;
+	mounted[0]->GetOwner()->SetStatsModifier( "test.reload", modifier );
+	pools[0]->lastShoot = 10000;
+	EXPECT_FLOAT_EQ( ReportAmmo()[0].reload.fDuration, 1250 );
 }
 
 TEST_F( BuildingWeapons, DestroyedBuildingStopsAnOccupantsPendingBurst )

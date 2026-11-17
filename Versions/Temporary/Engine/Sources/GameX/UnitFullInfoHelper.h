@@ -1,5 +1,11 @@
 #pragma once
 
+#include "Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/WeaponReloadInfo.h"
+
+#include <string>
+#include <vector>
+
 namespace NDb
 {
 struct SWeaponRPGStats;
@@ -52,6 +58,7 @@ struct SWeapon
 	int nPenetration;
 	int nAmmo;
 	int nMaxAmmo;
+	std::vector<SWeaponReloadInfo> reloads;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -63,6 +70,7 @@ struct SWeapon
 		f.Add( 7, &nPenetration );
 		f.Add( 8, &nAmmo );
 		f.Add( 9, &nMaxAmmo );
+		f.Add( 10, &reloads );
 		return 0;
 	}
 

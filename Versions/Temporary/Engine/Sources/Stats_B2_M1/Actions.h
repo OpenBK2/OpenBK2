@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AITypes.h"
+#include "WeaponReloadInfo.h"
 
 #include <cstdint>
 
@@ -118,11 +119,13 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 		ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pStats;
 		int nAmmo = {};
+		SWeaponReloadInfo reload;
 
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pStats );
 			f.Add( 3, &nAmmo );
+			f.Add( 4, &reload );
 			return 0;
 		}
 	};

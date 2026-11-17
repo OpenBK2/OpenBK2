@@ -19,12 +19,14 @@ class CMOUnit : public IMOUnit
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;
 		int nWeaponCount = 0;
 		int nAmmo = 0;
+		std::vector<SWeaponReloadInfo> reloads;
 
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWeapon );
 			f.Add( 3, &nWeaponCount );
 			f.Add( 4, &nAmmo );
+			f.Add( 5, &reloads );
 			return 0;
 		}
 	};
@@ -76,6 +78,8 @@ public:
 	};
 
 protected:
+	std::vector<SWeaponReloadInfo> GetWeaponReloads( const NDb::SWeaponRPGStats *pWeapon ) const;
+
 	struct SChooseAttachedByDefault : public IChooseAttached
 	{
 		OBJECT_NOCOPY_METHODS( SChooseAttachedByDefault )

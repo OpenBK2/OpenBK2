@@ -11,6 +11,7 @@
 #include "Stats_B2_M1/DBVisObj.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/SpecialAbilities.h"
+#include "Stats_B2_M1/WeaponReloadInfo.h"
 #include "UpdatableProcess.h"
 
 #include "B2_M1_World_export.h"
@@ -76,6 +77,7 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 		int nPenetration = 0;
 		int nAmmo = 0;
 		int nMaxAmmo = 0;
+		std::vector<SWeaponReloadInfo> reloads;
 
 		ZEND int operator&( IBinSaver &f )
 		{
@@ -87,6 +89,7 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 			f.Add( 7, &nPenetration );
 			f.Add( 8, &nAmmo );
 			f.Add( 9, &nMaxAmmo );
+			f.Add( 10, &reloads );
 			return 0;
 		}
 

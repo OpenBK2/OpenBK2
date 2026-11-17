@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Selected units' weapon icons now show reload cooldown as a translucent shade that clears from bottom to top. Identical guns share the icon in equal-width strips, each reloading independently. Aiming time is excluded. Existing HUD layouts and artwork work unchanged; optional `UIConstsB2.WeaponReloadColor` sets the ARGB tint (default `0x80404040`, also used for zero-alpha values).
+
 - Added `AIGameConsts.AutoEnableExactShot` (default `false`). Set it to `true` to enable Exact Shot auto-use when units gain the ability, including newly created units. Players can still toggle auto-use off, and saves retain their choice.
 
 - Added optional resistance-based unit splash damage. Set `AIGameConsts.AreaDamageSystem` to `ResistanceBased` to compare shell `AreaCrackingBase`/`AreaCrackingRandom` against unit `AreaDmgResistanceMin`/`AreaDmgResistanceMax`, then apply the clamped quadratic in `AreaDamageFalloff` (`a=-1`, `b=0`, `c=1`). Distance is measured to the nearest point of the combat box, using `Area2` for infantry and `Area` for other units. The default `Legacy` mode and static-object splash retain existing behavior. See `docs/hit-processing.md` for configuration and formulas.

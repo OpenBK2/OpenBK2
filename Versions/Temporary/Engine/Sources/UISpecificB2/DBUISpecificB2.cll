@@ -217,6 +217,9 @@ class SUIConstsB2 : public SUIGameConsts
 	TextFileRef _ForbiddenWordsFileRef;
 	// Localized message values, with general Tags and English backups when absent.
 	SMessageParts *_MessageParts;
+	// ARGB tint covering the remaining weapon reload time; zero alpha falls back to translucent dark grey.
+	[preserveDefault]
+	Color _WeaponReloadColor = 0x80404040;
 	
 
 	#include "include_UIConstsB2.h"

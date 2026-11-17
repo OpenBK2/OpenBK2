@@ -30,6 +30,8 @@ public:
 	NTimer::STime lastShoot = {};
 	int nGun = {};
 	int nPlatform = {};
+	// Remember which shell supplied the cooldown; alternate shells share lastShoot.
+	int nLastShellType = 0;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -38,6 +40,7 @@ public:
 		f.Add( 4, &lastShoot );
 		f.Add( 5, &nGun );
 		f.Add( 6, &nPlatform );
+		f.Add( 7, &nLastShellType );
 		return 0;
 	}
 
