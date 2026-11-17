@@ -166,8 +166,11 @@ TEST_F( AIPropertyConsts, ExactShotAutocastAuthoredValueSurvivesBinaryAndChanges
 	const auto *authored = NDb::Get<NDb::SAIGameConsts>( CDBID( "auto-exact-shot.xdb" ) );
 	ASSERT_NE( authored, nullptr );
 	ASSERT_TRUE( authored->bAutoEnableExactShot );
-	auto *loaded = Record<NDb::SAIGameConsts>( "AIGameConsts" );
-	ASSERT_NE( loaded, nullptr );
+	// Binary loading replaces arrays without updating editor bindings. Keep its target
+	// detached from the editor database so cleanup cannot visit stale array elements.
+	CObj<NDb::SAIGameConsts> loaded =
+			dynamic_cast<NDb::SAIGameConsts *>( NObjectFactory::MakeObject( NDb::SAIGameConsts::typeID ) );
+	ASSERT_NE( loaded.GetPtr(), nullptr );
 	CMemoryStream stream;
 	{
 		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
