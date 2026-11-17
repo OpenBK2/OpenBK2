@@ -310,8 +310,23 @@ bool CBasicGun::TooCloseToFire( const CVec3 &vPoint ) const
 	}
 }
 
+void CBasicGun::NotifyInterruptedBurst()
+{
+	if ( IsBurstInProgress() )
+	{
+		// A completed burst already publishes its final shot. An interrupted burst must
+		// also refresh the HUD, restoring any cooldown remaining since the last shot.
+		if ( CBuilding *pBuilding = GetMountBuilding() )
+		{
+			updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, pBuilding, -1 );
+		}
+		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, GetOwner(), -1 );
+	}
+}
+
 void CBasicGun::ToRestStateWOParallel()
 {
+	NotifyInterruptedBurst();
 	shootState = EST_REST;
 	lastCheck = curTime;
 	pCommonGunInfo->bFiring = false;
@@ -334,6 +349,7 @@ void CBasicGun::ToRestStateWOParallel()
 
 void CBasicGun::ToRestState()
 {
+	NotifyInterruptedBurst();
 	shootState = EST_REST;
 	lastCheck = curTime;
 	pCommonGunInfo->bFiring = false;
@@ -536,6 +552,7 @@ void CBasicGun::Shooting()
 
 	if ( pEnemy && ( !IsValidObj( pEnemy ) || !pEnemy->IsAlive() ) )
 	{
+		NotifyInterruptedBurst();
 		shootState = EST_REST;
 		lastCheck = curTime;
 		pCommonGunInfo->bFiring = false;

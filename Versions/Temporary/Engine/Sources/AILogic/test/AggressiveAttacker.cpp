@@ -412,7 +412,7 @@ protected:
 		LoadFields( gun, [&]( IBinSaver &saver ) { saver.Add( 1, &basicGun ); } );
 		std::vector<CObj<CBasicGun>> gunArray{ gun.GetPtr() };
 		std::vector<CPtr<SCommonGunInfo>> commonGuns{ ammo };
-		std::vector<int> beginnings{ 0 };
+		std::vector<int> beginnings{ 0, 1 };
 		int count = 1;
 		bool antiAircraft = weapon->nCeiling > 0;
 		SFields gunCollection{ [&]( IBinSaver &saver )
@@ -746,6 +746,39 @@ TEST_F( VehicleRocketSalvo, OrdinaryBombardmentRetainsOriginalSingleLauncherBeha
 		EXPECT_EQ( owner->GetNAmmo( i ), 1 ) << i;
 	}
 	ExpectProjectiles( 1 );
+}
+
+TEST_F( AggressiveAttacker, InterruptedBurstRestoresTheLastShotsRemainingReload )
+{
+	weapon->nAmmoPerBurst = 4;
+	weapon->shells[0].nRelaxTime = 2500;
+	ammo->lastShoot = 10000;
+	ammo->bFiring = true;
+	int phase = 3; // CBasicGun::EST_SHOOTING, with two shots still pending.
+	int shotsLeft = 2;
+	float randomFactor = 1;
+	CDBPtr<NDb::SWeaponRPGStats> weaponPointer = weapon;
+	SFields stats{ [&]( IBinSaver &saver ) { saver.Add( 2, &weaponPointer ); } };
+	SFields basic{ [&]( IBinSaver &saver )
+	               {
+									 saver.Add( 1, &stats );
+									 saver.Add( 3, &phase );
+									 saver.Add( 6, &shotsLeft );
+									 saver.Add( 11, &randomFactor );
+									 saver.Add( 13, &owner );
+									 saver.Add( 15, &ammo );
+								 } };
+	LoadFields( gun, [&]( IBinSaver &saver ) { saver.Add( 1, &basic ); } );
+	ASSERT_FLOAT_EQ( owner->GetGuns()->GetReloadInfo( 0 ).fDuration, 0 );
+	RoundTrip( gun );
+	ASSERT_FLOAT_EQ( owner->GetGuns()->GetReloadInfo( 0 ).fDuration, 0 );
+	// Use the fixture with a real map: cancelling fire now also queues a client update.
+	gun->StopFire();
+	const SWeaponReloadInfo reload = owner->GetGuns()->GetReloadInfo( 0 );
+	EXPECT_EQ( reload.nStartTime, 10000 );
+	EXPECT_FLOAT_EQ( reload.fDuration, 2500 );
+	EXPECT_FLOAT_EQ( reload.GetRemainingFraction( 11250 ), 0.5f );
+	EXPECT_EQ( ammo->nAmmo, 10 );
 }
 
 class EntrenchmentReload : public AggressiveAttacker

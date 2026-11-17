@@ -212,6 +212,7 @@ private:
 	void OnAimState();
 
 	bool CanShotBecauseOfObstacles( const CVec2 &point, const float fZ );
+	void NotifyInterruptedBurst();
 	void ToRestStateWOParallel();
 
 protected:
@@ -305,6 +306,13 @@ public:
 	bool IsBursting() const
 	{
 		return shootState == WAIT_FOR_ACTION_POINT || shootState == EST_SHOOTING;
+	}
+
+	bool IsBurstInProgress() const
+	{
+		// The intervals within a barrage are not the reload cooldown shown in the HUD.
+		return pWeapon && pWeapon->nAmmoPerBurst > 1 && shootState == EST_SHOOTING && nShotsLast > 0 && pCommonGunInfo &&
+		       pCommonGunInfo->nAmmo > 0;
 	}
 
 	virtual const SBaseGunRPGStats &GetGun() const;
