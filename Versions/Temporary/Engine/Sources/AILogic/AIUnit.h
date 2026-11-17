@@ -412,14 +412,11 @@ public:
 	}
 
 	// Each source has one active modifier; setting it again replaces that source's contribution.
-	void SetStatsModifier( const std::string &szSource, const NDb::SUnitStatsModifier *pModifier )
-	{
-		statsModifiers.Set( szSource, pModifier );
-	}
+	AILOGIC_EXPORT void SetStatsModifier( const std::string &szSource, const NDb::SUnitStatsModifier *pModifier );
 
 	void RemoveStatsModifier( const std::string &szSource )
 	{
-		statsModifiers.Remove( szSource );
+		SetStatsModifier( szSource, nullptr );
 	}
 
 	const NDb::SUnitStatsModifier *FindStatsModifier( const std::string &szSource ) const

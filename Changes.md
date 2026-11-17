@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Weapon reload shading now refreshes when reload bonuses change or expire during a cooldown, including mounted building weapons. It continues to use the gun's modified reload duration and existing random delay factor.
+
 - Weapon reload shading stays hidden during an active barrage (`AmmoPerBurst > 1`), then returns for the cooldown after its final shot. Interrupted barrages also refresh the remaining cooldown.
 
 - Selected units' weapon icons now show reload cooldown as a translucent shade that clears from bottom to top. Identical guns share the icon in equal-width strips, each reloading independently. Aiming time is excluded. Existing HUD layouts and artwork work unchanged; optional `UIConstsB2.WeaponReloadColor` sets the ARGB tint (default `0x80404040`, also used for zero-alpha values).
