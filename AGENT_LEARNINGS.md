@@ -1,6 +1,11 @@
 
 # AGENT LEARNINGS
 
+- `IsBursting()` includes the animation's action-point wait. For reload HUD
+  suppression, check actual shooting with shots and ammunition remaining.
+  Final shots already notify RPG changes, but interrupted bursts need a refresh
+  too, or a suppressed cooldown can remain hidden after firing stops.
+
 - Gun collections contain a `CBasicGun` per shell type, while `SCommonGunInfo`
   represents the physical gun and its shared last-shot time. Group HUD cooldowns
   by the latter and retain the fired shell for its randomized reload duration.
