@@ -3428,6 +3428,15 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			theExecutorContainer.Add( pEx );
 			pEx->RegisterOnEvents( &theExecutorContainer );
 			UpdateEnableAblitiy( nAbility );
+			const IAILogic *pAI = Singleton<IAILogic>();
+			const NDb::SAIGameConsts *pConsts = pAI ? pAI->GetAIConsts() : nullptr;
+			if ( pConsts && pConsts->bAutoEnableExactShot )
+			{
+				// Apply the default once through the normal toggle, including its UI update and saved state.
+				SExecutorEventParam par( EID_ABILITY_ACTIVATE_AUTOCAST, 0, GetUniqueId() );
+				CExecutorEventSpecialAbility event( par, nAbility );
+				pTheExecutorsContainer->RaiseEvent( event );
+			}
 		}
 		break;
 		case NDb::ABILITY_COVER_FIRE:

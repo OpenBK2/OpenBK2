@@ -54,13 +54,15 @@ protected:
 		std::filesystem::copy_file( AI_PROPERTIES_TYPES_FILE, directory / "types.xml" );
 		std::filesystem::copy_file( AI_PROPERTIES_EXAMPLE_FILE, directory / "properties.xdb" );
 		std::ofstream( directory / "legacy.xdb" ) << "<AIGameConsts/>";
+		std::ofstream( directory / "auto-exact-shot.xdb" )
+				<< "<AIGameConsts><AutoEnableExactShot>true</AutoEnableExactShot></AIGameConsts>";
 		std::ofstream( directory / "partial.xdb" )
 				<< "<AIPropertyConsts><CommonAreaDamageCoeff>0.75</CommonAreaDamageCoeff></AIPropertyConsts>";
 		const std::string root = directory.generic_string() + "/";
 		NVFS::SetMainVFS( NVFS::CreateWinVFS( root ) );
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( root ) );
 		ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), NDb::DATABASE_MODE_EDITOR ) );
-		for ( const char *name : { "properties.xdb", "legacy.xdb", "partial.xdb" } )
+		for ( const char *name : { "properties.xdb", "legacy.xdb", "partial.xdb", "auto-exact-shot.xdb" } )
 		{
 			ASSERT_TRUE( NDb::RegisterResourceFile( name ) );
 		}
@@ -143,6 +145,44 @@ TEST_F( AIPropertyConsts, SchemaDefaultsMatchAllRuntimeInitialValues )
 	ASSERT_NE( legacy, nullptr );
 	EXPECT_EQ( legacy->pAIPropertyConsts.GetPtr(), nullptr );
 	EXPECT_FALSE( SConsts::UsesPropertyConsts() );
+}
+
+TEST_F( AIPropertyConsts, ExactShotAutocastDefaultsOffInOldXmlAndBinaryRecords )
+{
+	const auto *legacy = NDb::Get<NDb::SAIGameConsts>( CDBID( "legacy.xdb" ) );
+	ASSERT_NE( legacy, nullptr );
+	EXPECT_FALSE( legacy->bAutoEnableExactShot );
+	auto *constants = Record<NDb::SAIGameConsts>( "AIGameConsts" );
+	ASSERT_NE( constants, nullptr );
+	EXPECT_FALSE( constants->bAutoEnableExactShot );
+	constants->bAutoEnableExactShot = true;
+	// Older packed records have no chunk for the opt-in flag and must restore false.
+	LoadFields( constants, []( IBinSaver & ) {} );
+	EXPECT_FALSE( constants->bAutoEnableExactShot );
+}
+
+TEST_F( AIPropertyConsts, ExactShotAutocastAuthoredValueSurvivesBinaryAndChangesChecksum )
+{
+	const auto *authored = NDb::Get<NDb::SAIGameConsts>( CDBID( "auto-exact-shot.xdb" ) );
+	ASSERT_NE( authored, nullptr );
+	ASSERT_TRUE( authored->bAutoEnableExactShot );
+	auto *loaded = Record<NDb::SAIGameConsts>( "AIGameConsts" );
+	ASSERT_NE( loaded, nullptr );
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->AddPolymorphicBase( 1, const_cast<NDb::SAIGameConsts *>( authored ) );
+	}
+	stream.Seek( 0 );
+	{
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		loader->AddPolymorphicBase( 1, loaded );
+	}
+	EXPECT_TRUE( loaded->bAutoEnableExactShot );
+	EXPECT_EQ( loaded->CalcCheckSum(), authored->CalcCheckSum() );
+	const uint32_t enabledChecksum = loaded->CalcCheckSum();
+	loaded->bAutoEnableExactShot = false;
+	EXPECT_NE( loaded->CalcCheckSum(), enabledChecksum );
 }
 
 TEST_F( AIPropertyConsts, ExampleOverridesEveryScalarAndRevealEntry )
