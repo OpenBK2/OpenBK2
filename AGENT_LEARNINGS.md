@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- The Exact Shot binary round-trip test loaded a sparse XML resource into an
+  editor-created record with schema-sized arrays. Binary loading replaced those
+  arrays without updating bindings, so database cleanup indexed stale elements
+  and fast-failed on both Windows Debug architectures. Use a detached CObj for
+  binary deserialization targets that do not need a database identity. Create
+  SAIGameConsts through NObjectFactory: its virtual methods are not exported
+  for direct construction by a Windows test executable.
+
 - Reload HUD durations already use `GetRelaxTime()` and its stored random factor,
   but the client animates a snapshot. Modifier changes need an RPG notification
   for the owner and any mounted building; testing `GetReloadInfo()` alone misses
