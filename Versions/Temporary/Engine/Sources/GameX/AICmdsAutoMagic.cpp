@@ -20,7 +20,8 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CUnitCommand ) ) );
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CControlSumCheckCommand ) ) );
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CControlSumHistoryCommand ) ) ); // Test?
-	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CDropPlayerCommand ) ) );
+	// Reserve the old wire ID. Only agreed match control and replay may apply a player removal.
+	byte2msg.push_back( -1 );
 	// Network type IDs are separate from save/replay registration. Append to preserve existing wire IDs.
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CTransferUnitsCommand ) ) );
 
@@ -28,7 +29,10 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 
 	for ( int i = 0; i < byte2msg.size(); ++i )
 	{
-		msg2byte[byte2msg[i]] = i;
+		if ( byte2msg[i] >= 0 )
+		{
+			msg2byte[byte2msg[i]] = i;
+		}
 	}
 }
 
@@ -46,7 +50,7 @@ int CAICmdsAutomagic::GetCommandID( CObjectBase *p )
 
 CObjectBase *CAICmdsAutomagic::MakeCommand( int nID )
 {
-	if ( nID < 0 || nID >= byte2msg.size() )
+	if ( nID < 0 || nID >= byte2msg.size() || byte2msg[nID] < 0 )
 	{
 		return nullptr;
 	}

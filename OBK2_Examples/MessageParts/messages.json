@@ -2,6 +2,8 @@
   "MP_CHAT_TEAM_SUFFIX": " (Team)",
   "MP_GAME_TYPE_CLASSIC": "CLASSIC",
   "MP_GAME_TYPE_COOP": "COOP",
+  "MP_CHEATER_DETECTED": "Cheater detected:",
+  "MP_REINFORCEMENT_DESYNC": "The match ended because reinforcement balances could not be verified.",
   "REINFORCEMENT_TIMER_NEVER": "never",
   "AI_PLAYER_NAME_PREFIX": "AI ",
   "PLAYER_NAME_PREFIX": "Player ",

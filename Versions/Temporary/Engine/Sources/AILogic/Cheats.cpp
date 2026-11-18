@@ -90,6 +90,11 @@ void SCheats::SetTurnOffWarFog( bool _bTurnOffWarFog )
 
 bool SCheats::GetTurnOffWarFog() const
 {
+	// Unit visibility is used by simulation for both active matches and MP replays.
+	if ( theDipl.IsNetGame() )
+	{
+		return false;
+	}
 #ifdef _FINALRELEASE
 	return bTurnOffWarFog;
 #else

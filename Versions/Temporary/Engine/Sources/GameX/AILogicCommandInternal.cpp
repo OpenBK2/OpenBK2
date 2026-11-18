@@ -96,6 +96,16 @@ void CUnitCommand::Execute()
 	Singleton<IAILogic>()->UnitCommand( &command, wID, nPlayer );
 }
 
+void CUnitCommand::ExecuteFromPlayer( int nIssuingPlayer )
+{
+	if ( command.nCmdType == ACTION_COMMAND_ORDER )
+	{
+		// Record the same verified actor we execute locally, including in recovery and replays.
+		nPlayer = nIssuingPlayer;
+	}
+	Execute();
+}
+
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C0, CRegisterGroupCommand )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C1, CUnregisterGroupCommand )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C2, CB2GroupCommand )

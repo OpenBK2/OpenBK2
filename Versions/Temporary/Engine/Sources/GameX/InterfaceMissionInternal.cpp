@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AICmdsAutoMagic.h"
+#include "AILogic/AIDebugInfo.h"
 #include "AILogic/B2AI.h"
 #include "GameXClassIDs.h"
 #include "InterfaceMisc.h"
@@ -64,9 +65,12 @@
 
 #include <fmt/format.h>
 
-static int WARFOG_HARD_RECT_WIDTH = 2;
-static int WARFOG_MIN_VALUE = 128;
-static int WARFOG_UPDATE_PERIOD = 1000;
+static constexpr int DEFAULT_WARFOG_HARD_RECT_WIDTH = 2;
+static constexpr int DEFAULT_WARFOG_MIN_VALUE = 128;
+static constexpr int DEFAULT_WARFOG_UPDATE_PERIOD = 1000;
+static int WARFOG_HARD_RECT_WIDTH = DEFAULT_WARFOG_HARD_RECT_WIDTH;
+static int WARFOG_MIN_VALUE = DEFAULT_WARFOG_MIN_VALUE;
+static int WARFOG_UPDATE_PERIOD = DEFAULT_WARFOG_UPDATE_PERIOD;
 
 static int CHAT_MESSAGE_VISIBLE_TIME = 5000;
 static int CHAT_MESSAGE_MAX_VISIBLE_TIME = 15000;
@@ -488,6 +492,11 @@ CInterfaceMission::~CInterfaceMission()
 	Singleton<IMusicSystem>()->Clear();
 	Singleton<IClientAckManager>()->Clear();
 	GameTimer()->SetSpeed( 0 );
+	// Discard any last diagnostics after the world and AI are torn down.
+	if ( IScene *pScene = Scene() )
+	{
+		pScene->SetLiveMultiplayer( false );
+	}
 }
 
 bool CInterfaceMission::Init()
@@ -1479,7 +1488,8 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			{
 				pMiniMap->LoadMap( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
 				                   pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-				                   Singleton<IAILogic>()->VIS_POWER() + 1 );
+				                   Singleton<IAILogic>()->VIS_POWER() + 1,
+				                   Scene()->IsLiveMultiplayer() );
 				pMiniMap->SetMaterial( pMapInfo->pMiniMap );
 				pMiniMap->ShowWindow( true );
 			}
@@ -2068,6 +2078,10 @@ void CInterfaceMission::MsgTestCommand( const SGameMessage &msg )
 
 void CInterfaceMission::SetWarForVisibility( const bool _bShowWarFog )
 {
+	if ( !_bShowWarFog && Scene()->IsLiveMultiplayer() )
+	{
+		return;
+	}
 	if ( _bShowWarFog != bShowWarFog )
 	{
 		bShowWarFog = _bShowWarFog;
@@ -2203,11 +2217,16 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 	bool bWarFogUpdated = false;
 	if ( bShowWarFog )
 	{
+		// A local intensity of 255 removes terrain fog even when the AI keeps units concealed.
+		const bool bLive = Scene()->IsLiveMultiplayer();
+		const int nMinValue = bLive ? DEFAULT_WARFOG_MIN_VALUE : WARFOG_MIN_VALUE;
+		const int nBorderWidth = bLive ? DEFAULT_WARFOG_HARD_RECT_WIDTH : WARFOG_HARD_RECT_WIDTH;
+		const int nUpdatePeriod = bLive ? DEFAULT_WARFOG_UPDATE_PERIOD : WARFOG_UPDATE_PERIOD;
 		NTimer::STime timeCurrent = GameTimer()->GetGameTime();
 
 		float fBlend = 0;
 
-		if ( bFirst || bForced || timeCurrent > timeLastWarFogUpdate + WARFOG_UPDATE_PERIOD )
+		if ( bFirst || bForced || timeCurrent > timeLastWarFogUpdate + nUpdatePeriod )
 		{
 			bWarFogUpdated = Singleton<IAILogic>()->GetMiniMapWarForInfo( &pWarFogInfo, bNeedWarFogRecalc || bFirst );
 			if ( bWarFogUpdated )
@@ -2238,18 +2257,17 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 
 		if ( !bWarFogUpdated && !bFirst )
 		{
-			fBlend = Clamp( 1.0f * ( timeCurrent - timeLastWarFogUpdate ) / WARFOG_UPDATE_PERIOD, 0.0f, 1.0f );
+			fBlend = Clamp( 1.0f * ( timeCurrent - timeLastWarFogUpdate ) / nUpdatePeriod, 0.0f, 1.0f );
 		}
 		else
 		{
 			const int nWarFogX = 0;
 			const int nWarFogY = 0;
 
-			const int nWarFogDefault = WARFOG_MIN_VALUE;
 			CArray2D<uint8_t> sceneWarFogInfo;
 			sceneWarFogInfo.SetSizes( nWarFogSize + 1, nWarFogSize + 1 );
 			// зальем всю карту
-			sceneWarFogInfo.FillEvery( nWarFogDefault );
+			sceneWarFogInfo.FillEvery( nMinValue );
 			// заполним игровой участок
 			if ( bFirst )
 			{
@@ -2263,7 +2281,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 					for ( int y = 0; y < pWarFogInfo->GetSizeY(); ++y )
 					{
 						sceneWarFogInfo[y + nWarFogY][x + nWarFogX] =
-								WARFOG_MIN_VALUE + ( 255 - WARFOG_MIN_VALUE ) * ( *pWarFogInfo )[y][x] / nVisPower;
+								nMinValue + ( 255 - nMinValue ) * ( *pWarFogInfo )[y][x] / nVisPower;
 					}
 				}
 			}
@@ -2274,9 +2292,9 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 
 			// заполним бордюр
 			int nDensity = 0;
-			for ( int i = 0; i < WARFOG_HARD_RECT_WIDTH; ++i )
+			for ( int i = 0; i < nBorderWidth; ++i )
 			{
-				nDensity = WARFOG_MIN_VALUE * i / ( WARFOG_HARD_RECT_WIDTH - 1 );
+				nDensity = nMinValue * i / ( nBorderWidth - 1 );
 				for ( int x = i; x <= nMapSizeX - i; ++x )
 				{
 					sceneWarFogInfo[i][x] = nDensity;
@@ -5254,6 +5272,12 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 	{
 		pAIScenarioTracker->SetLocalPlayer( nPlayerForWarFog );
 	}
+	// The mission command knows whether it actually loaded a replay; local config cannot change this decision.
+	Scene()->SetLiveMultiplayer( pAIScenarioTracker->IsMultiplayer() && !bReplay );
+	if ( Scene()->IsLiveMultiplayer() )
+	{
+		NAIVisInfo::ClearLockProfiles();
+	}
 	pTrans->StartMission( pMap, Singleton<IAILogic>() );
 	pInterface->NewMission( pMap, pTrans, Singleton<IScenarioTracker>(), nPlayerForWarFog );
 	if ( bReplay )
@@ -5640,9 +5664,15 @@ REGISTER_VAR_EX( "chat_message_speed", NGlobal::VarIntHandler, &CHAT_MESSAGE_SPE
 REGISTER_VAR_EX( "chat_message_max_speed", NGlobal::VarIntHandler, &CHAT_MESSAGE_MAX_SPEED, 60, STORAGE_NONE );
 REGISTER_VAR_EX( "chat_message_interval", NGlobal::VarIntHandler, &CHAT_MESSAGE_INTERVAL, 5, STORAGE_NONE );
 
-REGISTER_VAR_EX( "warfog_update_period", NGlobal::VarIntHandler, &WARFOG_UPDATE_PERIOD, 1000, STORAGE_NONE );
-REGISTER_VAR_EX( "warfog_border_width", NGlobal::VarIntHandler, &WARFOG_HARD_RECT_WIDTH, 2, STORAGE_NONE );
-REGISTER_VAR_EX( "warfog_min_value", NGlobal::VarIntHandler, &WARFOG_MIN_VALUE, 128, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"warfog_update_period", NGlobal::VarIntHandler, &WARFOG_UPDATE_PERIOD, DEFAULT_WARFOG_UPDATE_PERIOD, STORAGE_NONE );
+REGISTER_VAR_EX( "warfog_border_width",
+                 NGlobal::VarIntHandler,
+                 &WARFOG_HARD_RECT_WIDTH,
+                 DEFAULT_WARFOG_HARD_RECT_WIDTH,
+                 STORAGE_NONE );
+REGISTER_VAR_EX(
+		"warfog_min_value", NGlobal::VarIntHandler, &WARFOG_MIN_VALUE, DEFAULT_WARFOG_MIN_VALUE, STORAGE_NONE );
 
 REGISTER_VAR_EX( "mission_buttons_bind_section",
                  NGlobal::VarWStrHandler,

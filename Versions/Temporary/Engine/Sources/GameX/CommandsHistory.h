@@ -181,6 +181,9 @@ struct SMultiplayerReplayInfo
 	// Snapshot of the multiplayer map rules used when the recorded mission started.
 	bool bSpawnStartingUnits = true;
 	bool bAddReinfsWithTimer = true;
+	// -1 marks an old recording whose base bonuses were taken from the playback profile.
+	int nBaseReinforcementBonuses = -1;
+	bool bValidatePlayerReinforcements = false;
 	bool bDisableReinforcementOverride = false;
 	int nOnBaseCaptureReinfPointsGain = 1;
 	int nOnBaseLostReinfPointsLoss = -1;
@@ -255,6 +258,16 @@ struct SMultiplayerReplayInfo
 		// Older recordings used the selected nation/tech reinforcement catalogue.
 		f.Add( 27, &bDisableReinforcementOverride );
 		f.Add( 28, &version );
+		if ( f.IsReading() && !f.HasChunk( 29 ) )
+		{
+			nBaseReinforcementBonuses = -1;
+			bValidatePlayerReinforcements = false;
+		}
+		else
+		{
+			f.Add( 29, &nBaseReinforcementBonuses );
+			f.Add( 30, &bValidatePlayerReinforcements );
+		}
 		return 0;
 	}
 
@@ -298,6 +311,8 @@ struct SMultiplayerReplayInfo
 		bCoopPlayersRecorded = src.bCoopPlayersRecorded;
 		bSpawnStartingUnits = src.bSpawnStartingUnits;
 		bAddReinfsWithTimer = src.bAddReinfsWithTimer;
+		nBaseReinforcementBonuses = src.nBaseReinforcementBonuses;
+		bValidatePlayerReinforcements = src.bValidatePlayerReinforcements;
 		bDisableReinforcementOverride = src.bDisableReinforcementOverride;
 		nOnBaseCaptureReinfPointsGain = src.nOnBaseCaptureReinfPointsGain;
 		nOnBaseLostReinfPointsLoss = src.nOnBaseLostReinfPointsLoss;

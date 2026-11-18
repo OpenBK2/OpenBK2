@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "3Dmotor/GAnimation.hpp"
+#include "AILogic/ScenarioTracker.h"
 #include "ClientAckManager.h"
 #include "Input/Bind.h"
 #include "Main/GameTimer.h"
@@ -565,7 +566,9 @@ void CMOUnit::SetUnitLevel( int _nLevel, bool _bShowUnitRank )
 	nLevel = _nLevel;
 	bShowUnitRank = true; //_bShowUnitRank;
 #ifndef _FINALRELEASE
-	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
+	// This level selects available player commands as well as the unit's rank icon.
+	const IAIScenarioTracker *pTracker = Singleton<IAIScenarioTracker>();
+	if ( ( !pTracker || !pTracker->GetValidatePlayerReinforcements() ) && NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 	{
 		nLevel = 3;
 	}

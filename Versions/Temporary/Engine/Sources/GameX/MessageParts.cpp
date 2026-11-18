@@ -58,6 +58,8 @@ const std::wstring &GetMessagePart( const NDb::SUIConstsB2 *pConsts, const std::
 		{ L"MP_CHAT_TEAM_SUFFIX", L" (Team)" },
 		{ L"MP_GAME_TYPE_CLASSIC", L"CLASSIC" },
 		{ L"MP_GAME_TYPE_COOP", L"COOP" },
+		{ L"MP_CHEATER_DETECTED", L"Cheater detected:" },
+		{ L"MP_REINFORCEMENT_DESYNC", L"The match ended because reinforcement balances could not be verified." },
 		{ L"MP_DIFFICULTY_DEFAULT", L"Default" },
 		{ L"REINFORCEMENT_TIMER_NEVER", L"never" },
 		{ L"AI_PLAYER_NAME_PREFIX", L"AI " },

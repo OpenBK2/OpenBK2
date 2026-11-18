@@ -192,6 +192,7 @@ public:
 	CUnitCommand( const struct SAIUnitCmd *pCommand, const uint16_t wID, const int nPlayer );
 	//
 	void Execute() override;
+	void ExecuteFromPlayer( int nIssuingPlayer ) override;
 
 	//
 	bool NeedToBeStored() const override

@@ -601,6 +601,35 @@ void CPlayerReinforcement::CallSuperWeapon()
 	}
 }
 
+bool CPlayerReinforcement::CanExecutePlayerOrder( const SCallReinforcementCommand &command ) const
+{
+	const IAIScenarioTracker *pTracker = GetScenarioTracker();
+	if ( !pTracker->IsMissionActive() || !pTracker->IsPlayerPresent( nPlayer ) ||
+	     pTracker->GetPlayerSide( nPlayer ) == 2 || theDipl.IsAIPlayer( nPlayer ) || !CanCallNow() )
+	{
+		return false;
+	}
+
+	const auto pos = reinforcementInfos.find( command.eType );
+	if ( pos == reinforcementInfos.end() || !pos->second )
+	{
+		return false;
+	}
+	const NDb::SReinforcement *pReinf = pos->second;
+	const CAIMap *pMap = GetAIMap();
+	// Check coordinates in world units before range calculations or conversion to integer tiles.
+	if ( !pMap || !pMap->IsPointInside( command.vPoint ) )
+	{
+		return false;
+	}
+	if ( command.eType == NDb::RT_SUPER_WEAPON &&
+	     ( superWeaponState != SWS_WAIT_FOR_CALL || pReinf->entries.empty() || !pReinf->entries[0].pMechUnit ) )
+	{
+		return false;
+	}
+	return !pReinf->IsAviation() || theWeather.CanCallAviation( nPlayer, command.eType );
+}
+
 void CPlayerReinforcement::Segment()
 {
 	// Reinforcement counter recycle
@@ -626,6 +655,12 @@ void CPlayerReinforcement::Segment()
 
 	for ( int i = 0; i < commands.size(); ++i )
 	{
+		// Check each order immediately before execution: an earlier order in the same segment can spend the last call.
+		if ( !commands[i].bGeneralCall && pScenarioTracker->GetValidatePlayerReinforcements() &&
+		     !CanExecutePlayerOrder( commands[i] ) )
+		{
+			continue;
+		}
 		// Weather can change after the General queues a call and before this tick creates it.
 		// Its support request remains pending for a later retry; explicit player/script calls are unchanged.
 		if ( commands[i].bGeneralCall && !theWeather.CanCallAviation( nPlayer, commands[i].eType ) )
@@ -937,7 +972,7 @@ void CPlayerReinforcement::GiveReinforcementCalls( int nCalls, bool bResetCounte
 		return;
 	}
 
-	if ( NGlobal::GetVar( "multiplayer_flag_calls_bonus", 0 ) != 1 )
+	if ( !pScenarioTracker->GetBaseReinforcementBonuses() )
 	{
 		return;
 	}
@@ -979,9 +1014,15 @@ void CPlayerReinforcement::CheckReinfButton()
 
 	if ( bNoReinfs || bNoPositions )
 	{
-		if ( bReinfButtonEnabled || timeReinfButtonEnable > 0 )
+		// A temporary lack of credits or entry points must not cancel an outstanding player call cooldown.
+		const bool bClearCooldown =
+				!GetScenarioTracker()->GetValidatePlayerReinforcements() || theDipl.IsAIPlayer( nPlayer );
+		if ( bReinfButtonEnabled || ( bClearCooldown && timeReinfButtonEnable > 0 ) )
 		{
-			timeReinfButtonEnable = 0;
+			if ( bClearCooldown )
+			{
+				timeReinfButtonEnable = 0;
+			}
 			UpdateReinfButtonState( false, 0, 0.0f );
 		}
 		return;

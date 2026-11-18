@@ -48,10 +48,19 @@ void RoundTrip( CScriptCommandQueue *queue )
 	loader->Add( 1, queue );
 }
 
+int nLocalPipeCalls = 0;
+
+int RecordLocalPipeCall( lua_State * )
+{
+	++nLocalPipeCalls;
+	return 0;
+}
+
 const SRegFunction commandFunctions[] = { { "Cmd", CScripts::GiveCommand },
                                           { "QCmd", CScripts::GiveQCommand },
                                           { "UnitCmd", CScripts::GiveUnitCommand },
                                           { "UnitQCmd", CScripts::GiveUnitQCommand },
+                                          { "RecordLocalPipeCall", RecordLocalPipeCall },
                                           { nullptr, nullptr } };
 
 struct SScriptFields
@@ -342,6 +351,22 @@ TEST_F( CooperativeScriptCommands, LocalPipeCannotScheduleLaterGameplayOrders )
 	scripts.Segment();
 	EXPECT_TRUE( Pending().empty() );
 	EXPECT_EQ( units.front()->GetNextCommand(), nullptr );
+}
+
+TEST_F( CooperativeScriptCommands, FlagControlDiscardsLocalPipeBeforeReturningToSinglePlayer )
+{
+	// An authored script can still run, but a client-only command must be consumed without running.
+	nLocalPipeCalls = 0;
+	tracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
+	WriteToPipe( PIPE_SCRIPT_CMDS, "RecordLocalPipeCall()" );
+	scripts.Segment();
+	EXPECT_EQ( nLocalPipeCalls, 0 );
+	tracker->SetGameType( IAIScenarioTracker::EGT_SINGLE );
+	scripts.Segment();
+	EXPECT_EQ( nLocalPipeCalls, 0 );
+	WriteToPipe( PIPE_SCRIPT_CMDS, "RecordLocalPipeCall()" );
+	scripts.Segment();
+	EXPECT_EQ( nLocalPipeCalls, 1 );
 }
 
 TEST_F( CooperativeScriptCommands, PendingOrdersAffectLightChecksumBeforeTheyExecute )

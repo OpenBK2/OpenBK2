@@ -93,7 +93,13 @@ void CScenarioTrackerMultiplayer::DecreaseReinforcementCallsLeft( int nPlayer, i
 
 	if ( bNoKeyBuildings || IsMultiplayer() )
 	{
-		players[nPlayer].nReinforcementCallsLeft = (std::max)( players[nPlayer].nReinforcementCallsLeft - nActualCalls, 0 );
+		int &nLeft = players[nPlayer].nReinforcementCallsLeft;
+		// Unlimited players still record calls used, but grants and spends must preserve the sentinel.
+		if ( GetValidatePlayerReinforcements() && nLeft == IAIScenarioTracker::INFINITE_CALLS )
+		{
+			return;
+		}
+		nLeft = (std::max)( nLeft, nActualCalls ) - nActualCalls;
 	}
 }
 
@@ -137,6 +143,8 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 	nMultiplayerDifficulty = 0;
 	bSpawnStartingUnits = true;
 	bAddReinfsWithTimer = true;
+	bBaseReinforcementBonuses = true;
+	bValidatePlayerReinforcements = true;
 	bDisableReinforcementOverride = false;
 	nOnBaseCaptureReinfPointsGain = 1;
 	nOnBaseLostReinfPointsLoss = -1;
@@ -690,7 +698,8 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 		return N_MAX_XP_LEVEL;
 	}
 #ifndef _FINALRELEASE
-	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
+	// Weather eligibility and newly created units must use the same earned levels on every peer.
+	if ( !GetValidatePlayerReinforcements() && NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 	{
 		return N_MAX_XP_LEVEL;
 	}
@@ -1193,6 +1202,11 @@ void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, i
 	}
 
 	// A large authored base bonus must leave subsequent timer grants safe as well.
+	if ( GetValidatePlayerReinforcements() &&
+	     players[nPlayer].nReinforcementCallsLeft == IAIScenarioTracker::INFINITE_CALLS )
+	{
+		return;
+	}
 	const int nCapacity = ( std::numeric_limits<int>::max )() - (std::max)( players[nPlayer].nReinforcementCallsLeft, 0 );
 	players[nPlayer].nReinforcementCallsLeft += (std::min)( nCalls, nCapacity );
 	const auto message = fmt::format( "Player {} reinf qty increase", nPlayer );

@@ -91,6 +91,21 @@ struct IAIScenarioTracker : public CObjectBase
 		return true;
 	}
 
+	virtual void SetBaseReinforcementBonuses( bool bEnabled ) {}
+
+	virtual bool GetBaseReinforcementBonuses() const
+	{
+		return true;
+	}
+
+	// Recordings made before player orders were checked retain their original command semantics.
+	virtual void SetValidatePlayerReinforcements( bool bValidate ) {}
+
+	virtual bool GetValidatePlayerReinforcements() const
+	{
+		return false;
+	}
+
 	// Multiplayer maps can keep their authored recipes instead of nation/tech catalogue replacements.
 	virtual void SetDisableReinforcementOverride( bool bDisable ) {}
 

@@ -482,6 +482,7 @@ class CScene : public IScene
 
 	typedef std::unordered_map<int, CPtr<NAIVisInfo::CDebugObject>> CDebugInfoObjects;
 	CDebugInfoObjects debugInfoObjects;
+	bool bLiveMultiplayer = false;
 
 	ZDATA
 	std::vector<CObj<SSceneData>> data;
@@ -653,6 +654,12 @@ public:
 	void SwitchSceneAfterLoad( const EScene eScene ) override;
 
 	bool SetupMode( ESceneMode eMode, bool bEditorMode ) override;
+	void SetLiveMultiplayer( bool bLive ) override;
+
+	bool IsLiveMultiplayer() const override
+	{
+		return bLiveMultiplayer;
+	}
 
 	bool IsEditorMode() override
 	{

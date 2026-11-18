@@ -126,6 +126,7 @@ private:
 	void UpdateButtonsAfterCall( const NDb::EReinforcementType eType );
 	void UpdateReinfButtonState( bool bEnable, NTimer::STime timeWhenEnabled, float fPercentComplete );
 	void CheckReinfButton();
+	bool CanExecutePlayerOrder( const SCallReinforcementCommand &command ) const;
 	void UpdateAddPosition( int nID, const NDb::SReinforcementPosition &point ) const;
 	void UpdateDeletePosition( int nUniqueID ) const;
 	void AddPosition( const NDb::SReinforcementPosition &point, int nID, bool bEnabled );

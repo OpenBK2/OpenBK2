@@ -34,6 +34,11 @@ if(WIN32)
     set_property(TARGET MPStartRoster_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:GameX>)
 endif()
 add_unit_test(MessageParts GameX UISpecificB2 UI libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
+add_unit_test(MiniMapWarFog UISpecificB2 UI 3Dmotor libdb System Misc Stats_B2_M1 zlib gr2)
+if(WIN32)
+    set_tests_properties(MiniMapWarFog_test PROPERTIES ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET MiniMapWarFog_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:UISpecificB2>)
+endif()
 # Exercise persistent objective controls and the real Lua-to-client feedback queue without a graphics device.
 # The texture fixture's dynamic_cast needs 3Dmotor's RTTI directly on the Linux link line.
 add_unit_test(ObjectiveNotifications GameX UISpecificB2 UI 3Dmotor SceneB2 B2_M1_World Common_RTS_AI Script libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)

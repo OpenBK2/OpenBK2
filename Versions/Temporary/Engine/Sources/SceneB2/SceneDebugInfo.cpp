@@ -151,7 +151,8 @@ void CScene::ProcessDebugInfoUpdates()
 	do
 	{
 		const NDebugInfo::SDebugInfoUpdate *pDebugInfoUpdate = pDebugInfoManager->GetUpdate();
-		if ( pDebugInfoUpdate )
+		// Retain the queue's normal lifetime while suppressing unfiltered simulation diagnostics.
+		if ( pDebugInfoUpdate && !bLiveMultiplayer )
 		{
 			switch ( pDebugInfoUpdate->GetDebugInfoUpdateID() )
 			{

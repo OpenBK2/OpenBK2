@@ -241,6 +241,7 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 	}
 	// Swap preserves every authoritative client ID without SMPSlot's partial assignment.
 	slots.swap( startSlots );
+	bBaseReinforcementBonuses = pPacket->bBaseReinforcementBonuses;
 	nOwnSlot = nNewOwnSlot;
 	nSlotsUsed = NGameX::GetPresentMultiplayerPlayerCount( slots );
 	StartGame();

@@ -41,6 +41,12 @@ void RemoveProfile( const int nID )
 	profiles.erase( nID );
 }
 
+void ClearLockProfiles()
+{
+	profiles.clear();
+	bShow = false;
+}
+
 void ToggleLockProfiles()
 {
 	bShow = !bShow;

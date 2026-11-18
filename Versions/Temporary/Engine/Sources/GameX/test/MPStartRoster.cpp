@@ -426,10 +426,12 @@ protected:
 TEST_F( MPStartRoster, WireSnapshotPreservesEveryStartFieldAndClientIdentity )
 {
 	auto outgoing = MakeStart( { 2, 0, 1 } );
+	outgoing->bBaseReinforcementBonuses = false;
 	outgoing->slots[1].bRandomCountry = true;
 	auto incoming = RoundTrip( outgoing );
 	ASSERT_EQ( incoming->slots.size(), 3u );
 	EXPECT_EQ( incoming->slotRehash, outgoing->slotRehash );
+	EXPECT_FALSE( incoming->bBaseReinforcementBonuses );
 	for ( int i = 0; i < 3; ++i )
 	{
 		const auto &sent = outgoing->slots[i];

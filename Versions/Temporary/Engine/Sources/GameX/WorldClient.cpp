@@ -2647,7 +2647,10 @@ void CWorldClient::UpdateSpecialGroups( int nID, CMapObj *pMO )
 
 void CWorldClient::ToggleLockProfiles( const SGameMessage &msg )
 {
-	NAIVisInfo::ToggleLockProfiles();
+	if ( !Scene()->IsLiveMultiplayer() )
+	{
+		NAIVisInfo::ToggleLockProfiles();
+	}
 }
 
 void CWorldClient::PlayAllAnimations( const SGameMessage &msg )
@@ -3762,6 +3765,11 @@ static void CommandDumpMaxes( const std::string &szID, const std::vector<std::ws
 
 static void CommandPassMarker( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
+	IScene *pScene = Scene();
+	if ( !pScene || pScene->IsLiveMultiplayer() )
+	{
+		return;
+	}
 	if ( paramsSet.size() < 2 || paramsSet.size() > 4 )
 	{
 		csSystem << "usage: " << szID << "marker_color ai_class [free_class] [radius]" << endl;
@@ -3875,7 +3883,7 @@ static void CommandPassMarker( const std::string &szID, const std::vector<std::w
 		}
 	}
 
-	Scene()->GetTerraManager()->GetAIObserver()->SetPassMarkers(
+	pScene->GetTerraManager()->GetAIObserver()->SetPassMarkers(
 			(int)color, (int)aiClass, (int)freeClass, nBoundTileRadius );
 }
 

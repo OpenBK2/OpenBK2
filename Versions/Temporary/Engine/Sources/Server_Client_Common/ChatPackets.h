@@ -11,7 +11,7 @@ public:
 	std::wstring wszMessage;
 	//  To/From Nick
 	std::string szNick;
-	//  To ID
+	// Recipient on a client request, authenticated author on a server delivery.
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nID = {};
 	bool bIsBroadcast = {};
