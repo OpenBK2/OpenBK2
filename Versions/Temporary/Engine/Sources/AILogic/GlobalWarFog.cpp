@@ -128,6 +128,7 @@ void CGlobalWarFog::OnSerialize( IBinSaver &saver )
 
 void CGlobalWarFog::ReInit()
 {
+	RebuildVisibilityHierarchies();
 	miniMapWarFog.SetSizes( GetSizeX(), GetSizeY() );
 	miniMapWarFog.FillZero();
 	//miniMapSmoothTiles.clear();
@@ -198,6 +199,8 @@ void CGlobalWarFog::Init( const int _nSizeX, const int _nSizeY, const int _nMaxR
 
 void CGlobalWarFog::Clear()
 {
+	visibilityHierarchies.clear();
+	scriptVisibilityHierarchy.Clear();
 	spiral.clear();
 	spiralCoords.Clear();
 	lengths.clear();
@@ -416,6 +419,8 @@ const CArray1Bit &CGlobalWarFog::GetVisibleInfoForTile( const SVector &tile )
 
 void CGlobalWarFog::OnTileChangeVisibility( const SVector &vTile, const bool bVisible, const int nParty )
 {
+	// Overlapping observers change this summary only on the real tile's zero/nonzero transition.
+	visibilityHierarchies[nParty].UpdateTile( vTile.x, vTile.y, bVisible );
 	if ( bVisible )
 	{
 		updater.TileBecameVisibleFromWarFog( vTile, nParty );
@@ -580,6 +585,44 @@ void CGlobalWarFog::Segment()
 	nAreasCalced = 0;
 }
 
+void CGlobalWarFog::RebuildVisibilityHierarchies()
+{
+	// Keep old saves compatible: summaries are derived, not serialized or checksummed state.
+	visibilityHierarchies.resize( warFog.size() );
+	for ( int party = 0; party < warFog.size(); ++party )
+	{
+		auto &hierarchy = visibilityHierarchies[party];
+		hierarchy.Init( GetSizeX(), GetSizeY() );
+		for ( int y = 0; y < GetSizeY(); ++y )
+		{
+			for ( int x = 0; x < GetSizeX(); ++x )
+			{
+				if ( warFog[party][y][x].nVisible != 0 )
+				{
+					hierarchy.UpdateTile( x, y, true );
+				}
+			}
+		}
+	}
+	scriptVisibilityHierarchy.Init( areasOpenTiles.GetSizeX(), areasOpenTiles.GetSizeY() );
+	for ( int y = 0; y < areasOpenTiles.GetSizeY(); ++y )
+	{
+		for ( int x = 0; x < areasOpenTiles.GetSizeX(); ++x )
+		{
+			if ( IsOpenBySriptArea( x, y ) )
+			{
+				scriptVisibilityHierarchy.UpdateTile( x, y, true );
+			}
+		}
+	}
+}
+
+bool CGlobalWarFog::AreScriptAreasVisible( const int nParty ) const
+{
+	// Preserve the existing single-player reveal scope; multiplayer never reads the local party.
+	return !theDipl.IsNetGame() && theDipl.GetMyParty() == nParty;
+}
+
 bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 {
 	if ( theCheats.GetTurnOffWarFog() )
@@ -590,7 +633,7 @@ bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 	{
 		return false;
 	}
-	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && theDipl.GetMyParty() == nParty )
+	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && AreScriptAreasVisible( nParty ) )
 	{
 		return true;
 	}
@@ -608,7 +651,7 @@ bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool b
 	{
 		return false;
 	}
-	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && theDipl.GetMyParty() == nParty )
+	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && AreScriptAreasVisible( nParty ) )
 	{
 		return true;
 	}
@@ -634,52 +677,33 @@ float CGlobalWarFog::GetNormalizedDistanceToVisibleTerrain( const CVec2 &vPositi
 		return 1.0f;
 	}
 
-	// Script reveals can cover just one AI tile inside a normal two-by-two fog cell.
-	// Reuse IsTileVisible so the existing single-player reveal and fog-off rules stay consistent.
-	const int nTileStep = !theDipl.IsNetGame() && !scriptAreas.empty() ? 1 : AI_TILES_IN_VIS_TILE;
-	const int nTileSize = nTileStep * AI_TILE_SIZE;
-	const int nWidth = GetSizeX() * AI_TILES_IN_VIS_TILE / nTileStep;
-	const int nHeight = GetSizeY() * AI_TILES_IN_VIS_TILE / nTileStep;
+	const int nTileSize = AI_TILES_IN_VIS_TILE * AI_TILE_SIZE;
 	const double fX = vPosition.x;
 	const double fY = vPosition.y;
-	if ( fX >= 0 && fY >= 0 && fX < double( nWidth ) * nTileSize && fY < double( nHeight ) * nTileSize &&
+	if ( fX >= 0 && fY >= 0 && fX < double( GetSizeX() ) * nTileSize && fY < double( GetSizeY() ) * nTileSize &&
 	     IsTileVisible( SVector( int( fX / AI_TILE_SIZE ), int( fY / AI_TILE_SIZE ) ), nParty ) )
 	{
 		return 0.0f;
 	}
 
-	// Clip in double before converting to tile indices, including for very large limits/outside positions.
-	// Include cells touching the lower boundary, even if a tiny limit rounds away from the position.
-	const double fMinX = (std::max)( 0.0, std::ceil( ( fX - fDistanceLimit ) / nTileSize ) - 1.0 );
-	const double fMinY = (std::max)( 0.0, std::ceil( ( fY - fDistanceLimit ) / nTileSize ) - 1.0 );
-	const double fMaxX = (std::min)( double( nWidth - 1 ), std::floor( ( fX + fDistanceLimit ) / nTileSize ) );
-	const double fMaxY = (std::min)( double( nHeight - 1 ), std::floor( ( fY + fDistanceLimit ) / nTileSize ) );
-	if ( fMinX > fMaxX || fMinY > fMaxY )
+	double fBestDistanceSquared;
+	if ( theCheats.GetTurnOffWarFog() )
 	{
-		return 1.0f;
+		// Fog-off exposes the whole map, including its boundary for outside-map queries.
+		const double fDX = fX - std::clamp( fX, 0.0, double( GetSizeX() ) * nTileSize );
+		const double fDY = fY - std::clamp( fY, 0.0, double( GetSizeY() ) * nTileSize );
+		fBestDistanceSquared = fDX * fDX + fDY * fDY;
 	}
-
-	double fBestDistanceSquared = double( fDistanceLimit ) * fDistanceLimit;
-	for ( int y = int( fMinY ); y <= int( fMaxY ); ++y )
+	else
 	{
-		const double fDY = fY - std::clamp( fY, double( y ) * nTileSize, double( y + 1 ) * nTileSize );
-		const double fDYSquared = fDY * fDY;
-		if ( fDYSquared >= fBestDistanceSquared )
+		fBestDistanceSquared = visibilityHierarchies[nParty].FindDistanceSquared(
+				fX, fY, fDistanceLimit, nTileSize, [&]( int x, int y ) { return warFog[nParty][y][x].nVisible != 0; } );
+		if ( fBestDistanceSquared > 0.0 && !scriptAreas.empty() && AreScriptAreasVisible( nParty ) )
 		{
-			continue;
-		}
-		for ( int x = int( fMinX ); x <= int( fMaxX ); ++x )
-		{
-			const double fDX = fX - std::clamp( fX, double( x ) * nTileSize, double( x + 1 ) * nTileSize );
-			const double fDistanceSquared = fDX * fDX + fDYSquared;
-			if ( fDistanceSquared < fBestDistanceSquared && IsTileVisible( SVector( x * nTileStep, y * nTileStep ), nParty ) )
-			{
-				fBestDistanceSquared = fDistanceSquared;
-				if ( fBestDistanceSquared == 0.0 )
-				{
-					return 0.0f;
-				}
-			}
+			// Script reveals have their own finer grid. The nearest point of a union is the nearer result.
+			const double fScriptDistanceSquared = scriptVisibilityHierarchy.FindDistanceSquared(
+					fX, fY, fDistanceLimit, AI_TILE_SIZE, [&]( int x, int y ) { return IsOpenBySriptArea( x, y ); } );
+			fBestDistanceSquared = (std::min)( fBestDistanceSquared, fScriptDistanceSquared );
 		}
 	}
 
@@ -732,14 +756,22 @@ void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &script
 		{
 			for ( std::vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 			{
-				areasOpenTiles.SetData( it->x, it->y );
+				if ( !IsOpenBySriptArea( *it ) )
+				{
+					areasOpenTiles.SetData( it->x, it->y );
+					scriptVisibilityHierarchy.UpdateTile( it->x, it->y, true );
+				}
 			}
 		}
 		else
 		{
 			for ( std::vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 			{
-				areasOpenTiles.RemoveData( it->x, it->y );
+				if ( IsOpenBySriptArea( *it ) )
+				{
+					areasOpenTiles.RemoveData( it->x, it->y );
+					scriptVisibilityHierarchy.UpdateTile( it->x, it->y, false );
+				}
 			}
 		}
 	}

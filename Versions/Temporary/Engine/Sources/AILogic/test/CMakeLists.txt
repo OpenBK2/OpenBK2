@@ -51,6 +51,7 @@ if(WIN32)
 endif()
 
 # Exercise bounded distance queries against real party fog and script reveals.
+add_unit_test(WarFogVisibilityHierarchy)
 add_unit_test(VisibleTerrainDistance AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
 set_tests_properties(VisibleTerrainDistance_test PROPERTIES TIMEOUT 60)
 if(WIN32)
