@@ -236,6 +236,8 @@ class CPlaneRestState : public CPlanePatrolState, public CPlaneDeffensiveFire
 		return 0;
 	}
 
+	void StartPatrolLeg();
+
 public:
 	CPlaneRestState() {}
 

@@ -672,3 +672,7 @@ context. Read `git diff` of every touched file before building.
   SMPSlot assignment deliberately omits client IDs: use copy construction and
   swap when adopting an authoritative roster, and test the serialized packet
   through the actual handler with stale local fields and shuffled slots.
+- Plane maneuver completion describes the formation's last advance. Test a new
+  order on the tick the old maneuver ends. The command queue still holds the
+  outgoing state while constructing idle flight, and its waypoint already
+  includes the aircraft's group offset.

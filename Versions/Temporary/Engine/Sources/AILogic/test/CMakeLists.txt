@@ -150,6 +150,13 @@ if(WIN32)
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
 endif()
 
+add_unit_test(ReconFlight AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
+if(WIN32)
+    set_tests_properties(ReconFlight_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+    set_property(TARGET ReconFlight_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:AILogic>)
+endif()
+
 add_unit_test(ResupplyTarget AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
 set_tests_properties(ResupplyTarget_test PROPERTIES TIMEOUT 60)
 if(WIN32)
