@@ -365,16 +365,12 @@ CPlaneSwarmToState::CPlaneSwarmToState( CAviation *pUnit, const CVec2 &_vPoint, 
 
 void CPlaneSwarmToState::Segment()
 {
-	switch ( eState )
+	// On a scout's first tick the completion flag can still belong to its previous maneuver.
+	const bool bStartingScoutLeg = eState == PSTS_ESTIMATING && pPlane->GetStats()->etype == RPG_TYPE_AVIA_SCOUT;
+	if ( eState == PSTS_ESTIMATING )
 	{
-		case PSTS_ESTIMATING:
-			//CRAP{ TEST
-			InitPathToPoint( CVec3( GetPoint(), pPlane->GetCenter().z ), true, false );
-			//CRAP}
-			eState = PSTS_MOVING;
-			break;
-		case PSTS_MOVING:
-			break;
+		InitPathToPoint( CVec3( GetPoint(), pPlane->GetCenter().z ), true, false );
+		eState = PSTS_MOVING;
 	}
 
 	if ( bScanForTarget )
@@ -382,7 +378,7 @@ void CPlaneSwarmToState::Segment()
 		TargetScan();
 	}
 
-	if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
+	if ( !bStartingScoutLeg && pPlane->GetPlanesFormation()->IsManuverFinished() )
 	{
 		TryInterruptState( 0 );
 	}
@@ -826,12 +822,31 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 			Normalize( &vSpeed );
 		}
 
+		const bool bScout = pUnit->GetStats()->etype == RPG_TYPE_AVIA_SCOUT;
 		CVec2 vPos( pUnit->GetPosB2().x, pUnit->GetPosB2().y );
-		// ensure thant vPos2 is inside map
-		vPos.x = Clamp( vPos.x, 0.0f, 1.0f * GetAIMap()->GetSizeX() * SConsts::TILE_SIZE );
-		vPos.y = Clamp( vPos.y, 0.0f, 1.0f * GetAIMap()->GetSizeY() * SConsts::TILE_SIZE );
-
-		const float fTriangleLength = pref.GetR( pref.GetMaxSpeed() );
+		float fTriangleLength = pref.GetR( pref.GetMaxSpeed() );
+		CVec2 vMapLimit( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE, GetAIMap()->GetSizeY() * SConsts::TILE_SIZE );
+		float fMargin = 0.0f;
+		if ( bScout )
+		{
+			// The queue still owns the completed order's state here. Its destination already includes formation spacing.
+			const IUnitState *pPrevious = pUnit->GetState();
+			if ( dynamic_cast<const CPlaneSwarmToState *>( pPrevious ) ||
+			     dynamic_cast<const CPlaneScoutState *>( pPrevious ) )
+			{
+				vPos = pPrevious->GetPurposePoint();
+			}
+			else if ( !pPrevious )
+			{
+				vPos = pUnit->GetAppearPoint();
+			}
+			// The upper map bounds are exclusive. Keep the whole scout circuit inside them.
+			vMapLimit -= CVec2( 1.0f, 1.0f );
+			fTriangleLength = (std::min)( fTriangleLength, 0.5f * (std::min)( vMapLimit.x, vMapLimit.y ) );
+			fMargin = fTriangleLength;
+		}
+		vPos.x = Clamp( vPos.x, fMargin, vMapLimit.x - fMargin );
+		vPos.y = Clamp( vPos.y, fMargin, vMapLimit.y - fMargin );
 		const CVec2 vPoint1( vPos + vSpeed * fTriangleLength );
 		const int nRot = NRandom::Random( 0, 1 ) == 0 ? 1 : -1;
 		RecordRandomCall();
@@ -841,9 +856,18 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 		                     fTriangleLength *
 		                         ( -( std::sqrt( 3.0f ) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
 
-		AddPoint( vPoint2 );
-		AddPoint( vPoint3 );
-		AddPoint( vPoint1 );
+		if ( bScout )
+		{
+			vPatrolPoints = { vPoint2, vPoint3, vPoint1 };
+			// Start circling now, before the straight-ahead continuation takes the scout away from its station.
+			StartPatrolLeg();
+		}
+		else
+		{
+			AddPoint( vPoint2 );
+			AddPoint( vPoint3 );
+			AddPoint( vPoint1 );
+		}
 #ifndef _FINALRELEASE
 		if ( NGlobal::GetVar( "plane_rest_state_markers", 0 ) )
 		{
@@ -863,8 +887,21 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 			DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::WHITE );
 		}
 #endif
-		// let plane finish current manuver
-		// InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
+	}
+}
+
+void CPlaneRestState::StartPatrolLeg()
+{
+	const CVec3 vPoint( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() );
+	if ( pPlane->GetStats()->etype == RPG_TYPE_AVIA_SCOUT )
+	{
+		// These waypoints describe a fixed circuit. Extending a short turn would move its endpoint off station.
+		pPlane->GetPlanesFormation()->CreatePointManuver( vPoint, true );
+		bEconomyMode = true;
+	}
+	else
+	{
+		InitPathToPoint( vPoint, true, true );
 	}
 }
 
@@ -879,7 +916,7 @@ void CPlaneRestState::Segment()
 		if ( pFormation->IsManuverFinished() )
 		{
 			ToNextPoint();
-			InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
+			StartPatrolLeg();
 		}
 		PathSegment();
 	}
