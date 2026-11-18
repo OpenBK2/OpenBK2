@@ -307,6 +307,23 @@ TEST_F( CoopScenario, DisabledOverrideKeepsMapRecipesAcrossNationChangesInBothMo
 	}
 }
 
+TEST_F( CoopScenario, CheckedReinforcementsUseEarnedLevelsWithADebugProfile )
+{
+	NGlobal::SetVar( "multiplayer_unit_experience", 1 );
+	NGlobal::SetVar( "debug_unit_levels", 1 );
+	for ( const auto mode : { IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL, IAIScenarioTracker::EGT_MULTI_COOP } )
+	{
+		tracker->SetGameType( mode );
+		EXPECT_EQ( tracker->GetReinforcementXPLevel( 0, NDb::RT_GROUND_ATTACK_PLANES ), 0 );
+	}
+#ifndef _FINALRELEASE
+	tracker->SetValidatePlayerReinforcements( false );
+	EXPECT_GT( tracker->GetReinforcementXPLevel( 0, NDb::RT_GROUND_ATTACK_PLANES ), 0 );
+#endif
+	NGlobal::RemoveVar( "debug_unit_levels" );
+	NGlobal::RemoveVar( "multiplayer_unit_experience" );
+}
+
 TEST_F( CoopScenario, TimedCallPolicyPreservesExplicitGrantsAndMissionDefaults )
 {
 	for ( const auto mode : { IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL, IAIScenarioTracker::EGT_MULTI_COOP } )
@@ -332,6 +349,7 @@ TEST_F( CoopScenario, TimedCallPolicyPreservesExplicitGrantsAndMissionDefaults )
 
 TEST_F( CoopScenario, OlderTrackerSaveRestoresArmyAndTimedCallDefaultsOnAReusedObject )
 {
+	NGlobal::SetVar( "multiplayer_flag_calls_bonus", 0 );
 	CObj<IScenarioTracker> restored = CreateScenarioTrackerMultiplayer();
 	ASSERT_NE( restored, nullptr );
 	EXPECT_TRUE( restored->GetSpawnStartingUnits() );
@@ -360,10 +378,14 @@ TEST_F( CoopScenario, OlderTrackerSaveRestoresArmyAndTimedCallDefaultsOnAReusedO
 	EXPECT_FALSE( restored->GetDisableReinforcementOverride() );
 	EXPECT_EQ( restored->GetOnBaseCaptureReinfPointsGain(), 1 );
 	EXPECT_EQ( restored->GetOnBaseLostReinfPointsLoss(), -1 );
+	EXPECT_FALSE( restored->GetBaseReinforcementBonuses() );
+	EXPECT_FALSE( restored->GetValidatePlayerReinforcements() );
+	NGlobal::RemoveVar( "multiplayer_flag_calls_bonus" );
 }
 
 TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 {
+	tracker->SetBaseReinforcementBonuses( false );
 	tracker->SetMultiplayerDifficulty( 4 );
 	tracker->SetScriptOutcome( 1 );
 	tracker->SetSpawnStartingUnits( false );
@@ -383,6 +405,8 @@ TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 		saver->AddPolymorphicBase( 1, restored.GetPtr() );
 	}
 	EXPECT_TRUE( restored->IsCooperative() );
+	EXPECT_FALSE( restored->GetBaseReinforcementBonuses() );
+	EXPECT_TRUE( restored->GetValidatePlayerReinforcements() );
 	EXPECT_EQ( restored->GetDifficultyLevel(), 4 );
 	EXPECT_EQ( restored->GetScriptOutcome(), 1 );
 	EXPECT_FALSE( restored->GetSpawnStartingUnits() );
@@ -827,6 +851,8 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	original.nScriptResult = 2;
 	original.bSpawnStartingUnits = false;
 	original.bAddReinfsWithTimer = false;
+	original.nBaseReinforcementBonuses = 0;
+	original.bValidatePlayerReinforcements = true;
 	original.bDisableReinforcementOverride = true;
 	original.nOnBaseCaptureReinfPointsGain = 3;
 	original.nOnBaseLostReinfPointsLoss = 0;
@@ -850,6 +876,8 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	EXPECT_EQ( restored.nScriptResult, 2 );
 	EXPECT_FALSE( restored.bSpawnStartingUnits );
 	EXPECT_FALSE( restored.bAddReinfsWithTimer );
+	EXPECT_EQ( restored.nBaseReinforcementBonuses, 0 );
+	EXPECT_TRUE( restored.bValidatePlayerReinforcements );
 	EXPECT_TRUE( restored.bDisableReinforcementOverride );
 	EXPECT_EQ( restored.nOnBaseCaptureReinfPointsGain, 3 );
 	EXPECT_EQ( restored.nOnBaseLostReinfPointsLoss, 0 );
@@ -862,6 +890,8 @@ TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 	copied = restored;
 	EXPECT_FALSE( copied.bSpawnStartingUnits );
 	EXPECT_FALSE( copied.bAddReinfsWithTimer );
+	EXPECT_EQ( copied.nBaseReinforcementBonuses, 0 );
+	EXPECT_TRUE( copied.bValidatePlayerReinforcements );
 	EXPECT_TRUE( copied.bDisableReinforcementOverride );
 	EXPECT_EQ( copied.nOnBaseCaptureReinfPointsGain, 3 );
 	EXPECT_EQ( copied.nOnBaseLostReinfPointsLoss, 0 );
@@ -887,6 +917,8 @@ TEST( CoopReplay, MissingOutcomeAndArmyPolicyChunksKeepLegacyDefaults )
 	restored.nScriptResult = 2;
 	restored.bSpawnStartingUnits = false;
 	restored.bAddReinfsWithTimer = false;
+	restored.nBaseReinforcementBonuses = 0;
+	restored.bValidatePlayerReinforcements = true;
 	restored.bDisableReinforcementOverride = true;
 	restored.nOnBaseCaptureReinfPointsGain = 3;
 	restored.nOnBaseLostReinfPointsLoss = 0;
@@ -897,6 +929,8 @@ TEST( CoopReplay, MissingOutcomeAndArmyPolicyChunksKeepLegacyDefaults )
 	}
 	EXPECT_EQ( restored.nMultiplayerMode, 1 );
 	EXPECT_EQ( restored.nScriptResult, 0 );
+	EXPECT_EQ( restored.nBaseReinforcementBonuses, -1 );
+	EXPECT_FALSE( restored.bValidatePlayerReinforcements );
 	EXPECT_TRUE( restored.bSpawnStartingUnits );
 	EXPECT_TRUE( restored.bAddReinfsWithTimer );
 	EXPECT_FALSE( restored.bDisableReinforcementOverride );

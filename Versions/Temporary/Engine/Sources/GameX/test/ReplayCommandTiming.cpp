@@ -1,6 +1,7 @@
 #include "../stdafx.h"
 
 #include "../AICmdsAutoMagic.h"
+#include "../AILogicCommandInternal.h"
 #include "../Transceiver.h"
 #include "AILogic/B2AI.h"
 #include "GameX/ScenarioTracker.h"
@@ -16,6 +17,7 @@ struct SClockObservations
 	std::vector<int> historySegments;
 	std::vector<int> commandSegments;
 	std::vector<NTimer::STime> commandTimes;
+	std::vector<int> unitCommandPlayers;
 	std::vector<NTimer::STime> simulationTimes;
 	std::vector<int> reportedOutcomes;
 	int nFinalBoundary = -1;
@@ -213,7 +215,10 @@ public:
 
 	void GroupCommand( SAIUnitCmd *, const uint16_t, bool ) override {}
 
-	void UnitCommand( SAIUnitCmd *, const uint16_t, const int ) override {}
+	void UnitCommand( SAIUnitCmd *, const uint16_t, const int nPlayer ) override
+	{
+		observations.unitCommandPlayers.push_back( nPlayer );
+	}
 
 	void TransferUnits( const std::vector<int> &, int, int ) override {}
 
@@ -414,6 +419,37 @@ protected:
 		transceiver->DoSegments();
 	}
 };
+
+TEST_F( ReplayCommandTiming, ReinforcementRecordsTheIssuingSlotForPlayback )
+{
+	CObj<IAICmdsAutoMagic> registry = CreateAICmdsAutoMagic();
+	CObj<IAILogicCommandB2> live = dynamic_cast<IAILogicCommandB2 *>( registry->MakeCommand( 3 ) );
+	auto *pUnit = dynamic_cast<CUnitCommand *>( live.GetPtr() );
+	ASSERT_NE( pUnit, nullptr );
+	pUnit->GetCommand()->nCmdType = ACTION_COMMAND_ORDER;
+	CObj<IAILogic> ai = new CClockAI;
+	NSingleton::RegisterSingleton( ai, IAILogic::tidTypeID );
+
+	// The live issuer comes from the roster. Replay has only the canonicalized stored command.
+	live->ExecuteFromPlayer( 2 );
+	CMemoryStream stream;
+	{
+		CObj<IBinSaver> writer = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		writer->Add( 1, &live );
+	}
+	stream.Seek( 0 );
+	CObj<IAILogicCommandB2> replay;
+	{
+		CObj<IBinSaver> reader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		reader->Add( 1, &replay );
+	}
+	if ( replay )
+	{
+		replay->Execute();
+	}
+	NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
+	EXPECT_EQ( observations.unitCommandPlayers, ( std::vector<int>{ 2, 2 } ) );
+}
 
 TEST_F( ReplayCommandTiming, DoesNotDispatchBeforeATickIsDue )
 {

@@ -133,6 +133,8 @@ protected:
 	uint32_t dwLaggersOld;         // Union whose elapsed time is currently being accounted
 	uint32_t dwUserPausedPlayers;  // Players that explicitly toggled MP pause
 	uint32_t dwInitialPlayers;
+	uint32_t dwDisqualifiedPlayers = 0;
+	bool bBaseReinforcementBonuses = true;
 	bool bInitialLoadInProgress;
 	bool bWaitWindowShown;
 	CLaggerList lags;
@@ -199,6 +201,7 @@ private:
 	bool OnB2GameLostPacket( class CB2GameLostPacket *pPacket );
 	bool OnPingPacket( class CPingPacket *pPacket );
 	bool OnDepartureRecoveryPacket( class CB2DepartureRecoveryPacket *pPacket );
+	bool IsPacketFromDisqualifiedPlayer( const CNetPacket *pPacket ) const;
 	//}
 
 protected:
@@ -223,6 +226,7 @@ protected:
 	int GetSlotByClientID( int nClientID ) const;
 	int GetSlotClientID( int nSlot );
 	bool ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment );
+	bool HandleReinforcementMismatch();
 	void ApplyScheduledSlotDrops();
 	void ResolvePendingHostDrops();
 	void BeginDepartureRecovery( uint32_t dwDeparted );
@@ -291,6 +295,7 @@ public:
 	virtual const ENetMode GetMode() const = 0;
 
 	//{ CPacketProcessor
+	bool ProcessPacket( CNetPacket *pPacket ) override;
 	bool Segment() override;
 	//}
 

@@ -78,7 +78,7 @@ TEST_F( MessageParts, ArchiveLoadsAllEnglishTextsAndMatchesBackups )
 {
 	const auto *record = NDb::Get<NDb::SMessageParts>( CDBID( "Other/Text/Game/Messages/MessageParts.xdb" ) );
 	ASSERT_NE( record, nullptr );
-	ASSERT_EQ( record->parts.size(), 29 );
+	ASSERT_EQ( record->parts.size(), 31 );
 	constants->pMessageParts = record;
 	std::set<std::string> names;
 	for ( const auto &part : record->parts )
@@ -92,6 +92,7 @@ TEST_F( MessageParts, ArchiveLoadsAllEnglishTextsAndMatchesBackups )
 		EXPECT_EQ( NGameX::GetMessagePart( nullptr, name ), text );
 	}
 	EXPECT_EQ( NGameX::GetMessagePart( constants, L"AI_PLAYER_NAME_PREFIX" ), L"AI " );
+	EXPECT_EQ( NGameX::GetMessagePart( constants, L"MP_CHEATER_DETECTED" ), L"Cheater detected:" );
 	EXPECT_EQ( NGameX::GetMessagePart( constants, L"TIME_MINUTES_SUFFIX" ), L" min" );
 }
 

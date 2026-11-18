@@ -1294,9 +1294,9 @@ void CScripts::Segment()
 		while ( ReadFromPipe( PIPE_SCRIPT_CMDS, &szCommand, 0 ) )
 		{
 			// Console and rendered-camera callbacks arrive at client-specific times.
-			// Do not let them mutate the COOP VM, even by scheduling a later Lua thread.
+			// All multiplayer VMs, including playback, must use only synchronized inputs.
 			const IAIScenarioTracker *pTracker = GetScenarioTracker();
-			if ( !pTracker || !pTracker->IsCooperative() )
+			if ( !pTracker || !pTracker->IsMultiplayer() )
 			{
 				CallScriptFunction( szCommand.c_str() );
 			}

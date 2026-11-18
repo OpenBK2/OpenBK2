@@ -234,6 +234,16 @@ public:
 		return pManager->nHostClientID;
 	}
 
+	static void SetConfirmedHostMismatch( CMPManagerMode *pManager, CMPTransceiver *pTransceiver )
+	{
+		// Restore the verdict produced by the checkpoint, then run the manager and replay paths normally.
+		pManager->nHostClientID = DEPARTING_HOST;
+		pManager->slots[0].szName = "Player<One>";
+		pTransceiver->nReinforcementMismatchSegment = pTransceiver->nCommonSegment - 2 * pTransceiver->nLatency;
+		pTransceiver->wReinforcementOutliers = 1;
+		pTransceiver->wReinforcementVoters = pTransceiver->wWaitMask;
+	}
+
 	static int GetRemoval( const CMPTransceiver *pTransceiver, int nSlot = 0 )
 	{
 		return pTransceiver->playerRemovals[nSlot].GetRemovalSegment( pTransceiver->nLatency );
@@ -252,6 +262,11 @@ public:
 	static int GetFinalSegment( const CMPTransceiver *pTransceiver )
 	{
 		return pTransceiver->nFinalSegment;
+	}
+
+	static bool SawBackendRemoval( const CMPManagerMode *pManager, int nSlot )
+	{
+		return pManager->playerDrops[nSlot].IsDisconnected();
 	}
 
 	static void
@@ -473,6 +488,54 @@ protected:
 		EXPECT_FALSE( transceiver->HasPlayerDropError() );
 	}
 };
+
+TEST_F( MPHostHandoff, ConfirmedBalanceOutlierUsesTheMissionFeedAndReplayDropBoundary )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver, 0x3d );
+	CMPPlayerDropTestAccess::SetConfirmedHostMismatch( manager, transceiver );
+	const int nVerdictSegment = transceiver->GetCurrentCommonSegment();
+	StepManager();
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetHost( manager ), REPLACEMENT_HOST );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), nVerdictSegment );
+	EXPECT_EQ( transceiver->GetReinforcementMismatchSegment(), -1 );
+	std::wstring wszFeed;
+	uint32_t dwColor = 0;
+	ASSERT_TRUE( ReadFromPipe( PIPE_CHAT, &wszFeed, &dwColor ) );
+	EXPECT_EQ( wszFeed, L"<val MP_CHEATER_DETECTED> Player[One]" );
+	EXPECT_FALSE( ReadFromPipe( PIPE_CHAT, &wszFeed, &dwColor ) );
+	FinishAt( nVerdictSegment );
+	EXPECT_FALSE( scenario->IsPlayerPresent( 0 ) );
+	EXPECT_EQ( history->GetCommandsHistory().count( nVerdictSegment ), 1u );
+}
+
+TEST_F( MPHostHandoff, DisqualifiedHostCannotChangeTheResultOrUseItsFormerAuthority )
+{
+	CMPPlayerDropTestAccess::ConfigureLagVoting( manager, transceiver, 0x3d );
+	CMPPlayerDropTestAccess::SetPendingVictory( manager, transceiver, false );
+	CMPPlayerDropTestAccess::SetConfirmedHostMismatch( manager, transceiver );
+	// The outcome arrives before the manager observes the simulation's verdict.
+	client->received.push_back( new CB2GameLostPacket( DEPARTING_HOST, 968, 7775 ) );
+	StepManager();
+	ASSERT_EQ( CMPPlayerDropTestAccess::GetHost( manager ), REPLACEMENT_HOST );
+	ASSERT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), 7780 );
+	for ( int i = 0; i < 2; ++i )
+	{
+		// The first batch precedes the visible slot removal, the second follows it.
+		client->received.push_back( new CB2DropPlayerAtSegmentPacket( DEPARTING_HOST, 0, 7777 ) );
+		client->received.push_back( new CB2GameLostPacket( DEPARTING_HOST, 968, 7775 ) );
+		client->received.push_back( new CChatPacket( DEPARTING_HOST, L"late", "Other", REPLACEMENT_HOST, true ) );
+		client->received.push_back( new CChatPacket( 0, L"whisper", "Renamed", DEPARTING_HOST, false ) );
+		client->received.push_back( new CChatPacket( 0, L"older server", "Player<One>", 0, false ) );
+		StepManager();
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetFinalSegment( transceiver ), 7782 );
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetRemoval( transceiver ), 7780 );
+		EXPECT_FALSE( transceiver->HasPlayerDropError() );
+	}
+	// A backend notice names the departed client but was not authored by it.
+	DispatchBackendRemoval();
+	EXPECT_TRUE( CMPPlayerDropTestAccess::SawBackendRemoval( manager, 0 ) );
+	EXPECT_FALSE( transceiver->IsRecoveringDeparture() );
+}
 
 TEST_F( MPHostHandoff, BackendRemovalFreezesBeforeChoosingAHostOrRemovalBoundary )
 {

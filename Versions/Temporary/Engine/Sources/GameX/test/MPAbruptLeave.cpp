@@ -14,6 +14,7 @@
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/NetSaver.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "System/ConsoleBuffer.h"
 
 #include <algorithm>
@@ -132,9 +133,11 @@ public:
 struct SPlayerPresence
 {
 	bool bPresent = true;
+	int nCalls = 0;
 
 	int operator&( IBinSaver &saver )
 	{
+		saver.Add( 3, &nCalls );
 		saver.Add( 4, &bPresent );
 		return 0;
 	}
@@ -143,10 +146,12 @@ struct SPlayerPresence
 struct SScenarioPlayers
 {
 	std::vector<SPlayerPresence> players = std::vector<SPlayerPresence>( PLAYER_COUNT );
+	bool bNoKeyBuildings = false;
 
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 3, &players );
+		saver.Add( 6, &bNoKeyBuildings );
 		return 0;
 	}
 };
@@ -407,6 +412,34 @@ public:
 		return pTransceiver->players[nPlayer].nLastReceivedSegment;
 	}
 
+	static void SetMatchMap( CMPTransceiver *pTransceiver, const NDb::SMapInfo *pMap )
+	{
+		pTransceiver->pMapInfo = pMap;
+	}
+
+	static void SetDuelRoster( CMPManagerModeNivalNet *pManager, CMPTransceiver *pTransceiver )
+	{
+		// Only slots zero and one have a network participant from match start.
+		pManager->slots.resize( 2 );
+		pManager->lags.resize( 2 );
+		pManager->playerDrops.resize( 2 );
+		pManager->nSlotsUsed = 2;
+		pManager->dwInitialPlayers = 0x3;
+		pTransceiver->wMask = 0x3;
+		pTransceiver->wWaitMask = 0x3;
+	}
+
+	static void ForgetAuditPacket( CMPTransceiver *pTransceiver, int nPlayer, int nSegment )
+	{
+		auto &packets = nPlayer == pTransceiver->nMyLogicID ? pTransceiver->departurePackets
+		                                                    : pTransceiver->players[nPlayer].recoveryPackets;
+		auto it = std::find_if( packets.begin(),
+		                        packets.end(),
+		                        [nSegment]( const auto &packet ) { return ReadSegment( packet ).nSegment == nSegment; } );
+		ASSERT_NE( it, packets.end() );
+		packets.erase( it );
+	}
+
 	static int Removal( const CMPTransceiver *pTransceiver, int nPlayer )
 	{
 		return pTransceiver->playerRemovals[nPlayer].GetRemovalSegment( pTransceiver->nLatency );
@@ -472,6 +505,7 @@ protected:
 	CObj<CTailCommandPacker> packer;
 	CObj<IConsoleBuffer> console;
 	CObj<CDispatchingUI> ui;
+	CObj<NDb::SMapInfo> auditMap;
 	std::deque<SDelivery> pending;
 	std::deque<SDelivery> held;
 	std::vector<SDelivery> delivered;
@@ -650,7 +684,7 @@ protected:
 		FAIL() << "Protocol did not quiesce after 128 delivery rounds";
 	}
 
-	void Frame()
+	void Frame( bool bDeliver = true )
 	{
 		for ( int i = 0; i < PLAYER_COUNT; ++i )
 		{
@@ -674,7 +708,29 @@ protected:
 			ITransceiver *pSimulation = peer.transceiver;
 			pSimulation->DoSegments();
 		}
-		Pump();
+		if ( bDeliver )
+		{
+			Pump();
+		}
+	}
+
+	void EnableReinforcementAudit( const std::array<int, PLAYER_COUNT> &balances )
+	{
+		auditMap = dynamic_cast<NDb::SMapInfo *>( NObjectFactory::MakeObject( 0x10071C00 ) );
+		ASSERT_NE( auditMap, nullptr );
+		auditMap->players.resize( PLAYER_COUNT + 1 ); // The final map player is neutral.
+		for ( int i = 0; i < PLAYER_COUNT; ++i )
+		{
+			SScenarioPlayers state;
+			state.bNoKeyBuildings = true;
+			state.players.resize( auditMap->players.size() );
+			// Cover a non-reporting map slot. Its balance must participate, while
+			// the outlier always identifies a network peer.
+			state.players.back().nCalls = balances[i];
+			RestoreState( peers[i].scenario, state );
+			peers[i].scenario->SetLocalPlayer( i );
+			CMPPlayerDropTestAccess::SetMatchMap( peers[i].transceiver, auditMap );
+		}
 	}
 
 	void Frames( int nCount )
@@ -873,6 +929,115 @@ TEST_F( MPAbruptLeave, RoutedPeersProduceReceiveAndExecuteIdenticalCommandsFromS
 	EXPECT_TRUE( held.empty() );
 }
 
+TEST_F( MPAbruptLeave, ReinforcementReportsIdentifyTheReportingPeerBeforeOrdersAtTheSameTick )
+{
+	EnableReinforcementAudit( { 8, 8, 8, 9 } );
+	Frames( 4 );
+	Frame( false ); // Inspect the verdict before the manager acts on it.
+	for ( const SPeer &peer : peers )
+	{
+		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), 4 );
+		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), 0 );
+		EXPECT_EQ( peer.transceiver->GetReinforcementVoters(), ALL_PLAYERS );
+		EXPECT_EQ( peer.transceiver->GetReinforcementOutliers(), 1u << 3 );
+	}
+
+	// The survivors already have the ballots. They must complete the ejection
+	// even if its target sends no more input and never processes the verdict.
+	peers[3].bOnline = false;
+	Pump();
+	AdvanceSurvivorsPast( 20 );
+	CheckEqualSurvivorHistories( 1u << 3 );
+	for ( int i : { 0, 1, 2 } )
+	{
+		EXPECT_EQ( CMPPlayerDropTestAccess::Removal( peers[i].transceiver, 3 ), 4 );
+		EXPECT_EQ( peers[i].transceiver->GetReinforcementMismatchSegment(), -1 );
+		EXPECT_EQ( std::count( peers[i].executed.begin(), peers[i].executed.end(), 300001 ), 0 );
+	}
+}
+
+TEST_F( MPAbruptLeave, SplitReinforcementReportsFreezeWithoutNamingEitherSide )
+{
+	EnableReinforcementAudit( { 4, 5, 4, 5 } );
+	Frames( 4 );
+	Frame( false );
+	for ( const SPeer &peer : peers )
+	{
+		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), 4 );
+		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), 0 );
+		EXPECT_EQ( peer.transceiver->GetReinforcementOutliers(), 0u );
+	}
+}
+
+TEST_F( MPAbruptLeave, OneAgainstOneReinforcementDisagreementCannotIdentifyAnOutlier )
+{
+	EnableReinforcementAudit( { 4, 5, 0, 0 } );
+	peers[2].bOnline = false;
+	peers[3].bOnline = false;
+	for ( int i : { 0, 1 } )
+	{
+		CMPPlayerDropTestAccess::SetDuelRoster( peers[i].manager, peers[i].transceiver );
+	}
+	Frames( 4 );
+	Frame( false );
+	for ( int i : { 0, 1 } )
+	{
+		EXPECT_EQ( peers[i].transceiver->GetCurrentCommonSegment(), 4 );
+		EXPECT_EQ( peers[i].transceiver->GetReinforcementMismatchSegment(), 0 );
+		EXPECT_EQ( peers[i].transceiver->GetReinforcementVoters(), 0x3u );
+		EXPECT_EQ( peers[i].transceiver->GetReinforcementOutliers(), 0u );
+	}
+}
+
+TEST_F( MPAbruptLeave, ACompleteNegativeBalanceReportStillIdentifiesItsSender )
+{
+	EnableReinforcementAudit( { 4, 4, -99, 4 } );
+	Frames( 4 );
+	for ( const SPeer &peer : peers )
+	{
+		// Peers have the complete report, but cannot use the accused reporter's ballot.
+		CMPPlayerDropTestAccess::ForgetAuditPacket( peer.transceiver, 2, 2 );
+	}
+	Frame( false );
+	for ( const SPeer &peer : peers )
+	{
+		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), 0 );
+		EXPECT_EQ( peer.transceiver->GetReinforcementOutliers(), 1u << 2 );
+	}
+	// The departing client saves its own replay as soon as the manager closes the match.
+	RunManager( 2 );
+	EXPECT_TRUE( peers[2].transceiver->IsGameEnded() );
+	const auto recorded = peers[2].history->GetOrderedCommands();
+	EXPECT_EQ( std::count( recorded.begin(), recorded.end(), std::make_pair( 4, std::string( "DropPlayer 2" ) ) ), 1 );
+}
+
+TEST_F( MPAbruptLeave, MissingConfirmationFromASurvivorPreventsAttribution )
+{
+	EnableReinforcementAudit( { 4, 4, 4, 5 } );
+	Frames( 4 );
+	for ( const SPeer &peer : peers )
+	{
+		CMPPlayerDropTestAccess::ForgetAuditPacket( peer.transceiver, 1, 2 );
+	}
+	Frame( false );
+	for ( const SPeer &peer : peers )
+	{
+		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), 0 );
+		EXPECT_EQ( peer.transceiver->GetReinforcementOutliers(), 0u );
+	}
+}
+
+TEST_F( MPAbruptLeave, EqualReinforcementReportsContinueAcrossPacketRingWrap )
+{
+	EnableReinforcementAudit( { -10, -10, -10, -10 } );
+	Frames( 20 );
+	for ( const SPeer &peer : peers )
+	{
+		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), 20 );
+		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), -1 );
+	}
+}
+
 TEST_F( MPAbruptLeave, HeldOrderedStreamsProduceUnevenPrefixesWithoutRestoringReceiptState )
 {
 	CreateUnevenPrefixes( 3 );
@@ -909,6 +1074,9 @@ TEST_F( MPAbruptLeave, CrashBeforeAnyCommandPacketRequiresNoInventedStartupInput
 
 TEST_F( MPAbruptLeave, UnevenSurvivorPrefixesRecoverAllAcceptedCommandsBeforeOneRemoval )
 {
+	// Exercise the balance vote while peers learn about the same departure at
+	// different ticks, repair the command prefix and resume with a smaller roster.
+	EnableReinforcementAudit( { 8, 8, 8, 8 } );
 	CreateUnevenPrefixes( 3 );
 	Crash( 3 );
 	Pump();

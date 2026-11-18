@@ -102,6 +102,8 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		// Preserve map rules even if the resource changes before saving or playback.
 		replayInfo.bSpawnStartingUnits = !pTracker || pTracker->GetSpawnStartingUnits();
 		replayInfo.bAddReinfsWithTimer = !pTracker || pTracker->GetAddReinfsWithTimer();
+		replayInfo.nBaseReinforcementBonuses = pTracker && pTracker->GetBaseReinforcementBonuses() ? 1 : 0;
+		replayInfo.bValidatePlayerReinforcements = pTracker && pTracker->GetValidatePlayerReinforcements();
 		replayInfo.bDisableReinforcementOverride = pTracker && pTracker->GetDisableReinforcementOverride();
 		replayInfo.nOnBaseCaptureReinfPointsGain = pTracker ? pTracker->GetOnBaseCaptureReinfPointsGain() : 1;
 		replayInfo.nOnBaseLostReinfPointsLoss = pTracker ? pTracker->GetOnBaseLostReinfPointsLoss() : -1;
@@ -433,6 +435,11 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	pScenarioTracker->SetMultiplayerDifficulty( replayInfo.nDifficulty );
 	pScenarioTracker->SetSpawnStartingUnits( replayInfo.bSpawnStartingUnits );
 	pScenarioTracker->SetAddReinfsWithTimer( replayInfo.bAddReinfsWithTimer );
+	const bool bHasReinforcementRules = replayInfo.nBaseReinforcementBonuses >= 0;
+	pScenarioTracker->SetValidatePlayerReinforcements( replayInfo.bValidatePlayerReinforcements );
+	pScenarioTracker->SetBaseReinforcementBonuses( bHasReinforcementRules
+	                                                   ? replayInfo.nBaseReinforcementBonuses != 0
+	                                                   : NGlobal::GetVar( "multiplayer_flag_calls_bonus", 0 ) == 1 );
 	pScenarioTracker->SetDisableReinforcementOverride( replayInfo.bDisableReinforcementOverride );
 	pScenarioTracker->SetOnBaseCaptureReinfPointsGain( replayInfo.nOnBaseCaptureReinfPointsGain );
 	pScenarioTracker->SetOnBaseLostReinfPointsLoss( replayInfo.nOnBaseLostReinfPointsLoss );

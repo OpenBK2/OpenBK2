@@ -27,6 +27,11 @@ TEST( UnitTransferCommand, MultiplayerTablePreservesOldIDsAndRejectsUnknownComma
 	EXPECT_EQ( registry->GetCommandID( nullptr ), -1 );
 	EXPECT_EQ( registry->MakeCommand( -1 ), nullptr );
 	EXPECT_EQ( registry->MakeCommand( 256 ), nullptr );
+	// Replay still needs the saved removal type, but a peer's normal order stream cannot carry it.
+	CObj<CObjectBase> removal = NObjectFactory::MakeObject( 0x300A73C6 );
+	ASSERT_NE( removal, nullptr );
+	EXPECT_EQ( registry->GetCommandID( removal ), -1 );
+	EXPECT_EQ( registry->MakeCommand( 6 ), nullptr );
 }
 
 TEST( UnitTransferCommand, MultiplayerWireFormatRecreatesTransferOnEachRemoteClient )

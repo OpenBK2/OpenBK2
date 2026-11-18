@@ -381,7 +381,9 @@ void CChatLobby::SendChatPacket( const int nClientID,
 {
 	if ( !pClients->InIgnoreFriendList( nClientID, szFromNick, IGNORE_LIST ) )
 	{
-		PushPacket( new CChatPacket( nClientID, wszMessage, szFromNick, 0, bIsBroadcast ) );
+		// The incoming connection supplies the author's ID. A recipient can
+		// enforce match membership even when a lobby whisper arrives by name.
+		PushPacket( new CChatPacket( nClientID, wszMessage, szFromNick, nFromID, bIsBroadcast ) );
 		if ( clientChannel.find( nClientID ) == clientChannel.end() )
 		{
 			std::string szToNick;

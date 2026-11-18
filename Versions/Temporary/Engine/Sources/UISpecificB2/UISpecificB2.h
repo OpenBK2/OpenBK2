@@ -78,7 +78,7 @@ struct IMiniMap : virtual public IWindow
 		}
 	};
 
-	virtual void LoadMap( const int nWidth, const int nHeight, const int nWarFogLevel ) = 0;
+	virtual void LoadMap( const int nWidth, const int nHeight, const int nWarFogLevel, bool bLiveMultiplayer ) = 0;
 	// Set some initial params for loading screen
 	virtual void SetLoadingMapParams( int nWidth, int nHeight ) = 0;
 	virtual CVec2 GetAIToScreen( const CVec2 &vPos ) const = 0;

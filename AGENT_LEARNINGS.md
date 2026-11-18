@@ -676,3 +676,6 @@ context. Read `git diff` of every touched file before building.
   order on the tick the old maneuver ends. The command queue still holds the
   outgoing state while constructing idle flight, and its waypoint already
   includes the aircraft's group offset.
+- Multiplayer packets use a sequential NetSaver. `HasChunk` cannot detect
+  optional fields there, and short reads are zero-filled. For a required
+  report, check a trailing nonzero format tag and test it with `CreateNetSaver`.

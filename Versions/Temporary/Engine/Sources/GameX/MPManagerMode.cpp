@@ -10,6 +10,8 @@
 #include "MPManagerMode.h"
 #include "MPTransceiver.h"
 #include "MultiplayerTestNet.h"
+#include "Server_Client_Common/ChatPackets.h"
+#include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/Commands.h"
@@ -95,6 +97,52 @@ void CMPManagerMode::BroadcastGameControlPacket( CNetPacket *pPacket )
 	pClient->SendGamePacket( pPacket, true );
 }
 
+bool CMPManagerMode::IsPacketFromDisqualifiedPlayer( const CNetPacket *pPacket ) const
+{
+	const uint32_t dwBlocked = dwDisqualifiedPlayers | pTransceiver->GetReinforcementOutliers();
+	if ( dwBlocked == 0 || dynamic_cast<const CGameClientRemoved *>( pPacket ) ||
+	     dynamic_cast<const CNetRemoveClient *>( pPacket ) )
+	{
+		// These transport notices name the disconnected client in nClientID.
+		// Applying a real disconnect remains idempotent after its scheduled drop.
+		return false;
+	}
+	// The lobby stamps forwarded chat with the author's connection ID. Older
+	// servers supply its account name. A peer cannot assert either identity.
+	const auto *pServerChat =
+			GetMode() == ENM_NIVAL_NET && pPacket->nClientID == 0 ? dynamic_cast<const CChatPacket *>( pPacket ) : nullptr;
+	const int nSender = pServerChat ? pServerChat->nID : pPacket->nClientID;
+	for ( int i = 0; i < slots.size() && i < 32; ++i )
+	{
+		if ( ( dwBlocked & ( uint32_t( 1 ) << i ) ) != 0 &&
+		     ( nSender == slots[i].nClientID ||
+		       ( pServerChat && nSender == 0 && pServerChat->szNick == slots[i].szName ) ) )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool CMPManagerMode::ProcessPacket( CNetPacket *pPacket )
+{
+	if ( IsGameRunning() )
+	{
+		NI_VERIFY( pTransceiver, "PRG: Game in progress, but Transceiver not present", return true );
+		// The verdict revokes input, control, chat and former-host authority at
+		// once. Slot visibility can legitimately lag until the simulation boundary.
+		if ( IsPacketFromDisqualifiedPlayer( pPacket ) || pTransceiver->ProcessPacket( pPacket ) )
+		{
+			return true;
+		}
+	}
+	else if ( CMPTransceiver::IsGamePacket( pPacket ) )
+	{
+		return true;
+	}
+	return CPacketProcessorBase::ProcessPacket( pPacket );
+}
+
 bool CMPManagerMode::Segment()
 {
 	if ( !pMPConsts )
@@ -115,27 +163,18 @@ bool CMPManagerMode::Segment()
 		pClient->SendGamePacket( new CPingPacket( 0, nOwnSlot, GameTimer()->GetAbsTime() ), true );
 	}
 
+	// The checkpoint already committed locally before this update. Revoke its
+	// reporting peer before queued chat, outcomes or old-host corrections can run.
+	if ( IsGameRunning() && IsValid( pTransceiver ) && pTransceiver->GetReinforcementMismatchSegment() >= 0 &&
+	     !IsDepartureRecoveryActive() && HandleReinforcementMismatch() )
+	{
+		return true;
+	}
 	// Process queued pause, removal and outcome packets before making timeout or
 	// end-game decisions; those packets may invalidate the previous frame's state.
 	while ( CPtr<CNetPacket> pPacket = pClient->GetPacket() )
 	{
-		if ( IsGameRunning() )
-		{
-			NI_VERIFY( pTransceiver, "PRG: Game in progress, but Transceiver not present", continue );
-			bool bResult = pTransceiver->ProcessPacket( pPacket );
-			//NI_VERIFY( bResult, "PRG: Game packet unhandled by transceiver", continue );
-			if ( bResult )
-			{
-				continue;
-			}
-		}
-		else if ( CMPTransceiver::IsGamePacket( pPacket ) ) // Game packet, but no game, ignore
-		{
-			continue;
-		}
-
-		bool bResult = ProcessPacket( pPacket );
-		//NI_ASSERT( bResult, "PRG: Unhandled general packet" );
+		ProcessPacket( pPacket );
 	}
 
 	if ( IsGameRunning() )
@@ -282,6 +321,9 @@ void CMPManagerMode::SendStartGamePacket()
 	}
 
 	CPtr<CB2GameRoomStartGamePacket> pStartPkt = new CB2GameRoomStartGamePacket( 0 );
+	// Only the host resolves this profile setting, once, for every player in the match.
+	bBaseReinforcementBonuses = NGlobal::GetVar( "multiplayer_flag_calls_bonus", 0 ) == 1;
+	pStartPkt->bBaseReinforcementBonuses = bBaseReinforcementBonuses;
 	CreateRehash( &( pStartPkt->slotRehash ) );
 	RehashSlots( pStartPkt->slotRehash );
 	for ( const SMPSlot &slot : slots )

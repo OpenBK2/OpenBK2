@@ -17,6 +17,7 @@
 #include "port/time.h"
 #include "ScenarioTracker.h"
 #include "SceneB2/Scene.h"
+#include "System/ConsoleBuffer.h"
 #include "System/Text.h"
 
 #include <chrono>
@@ -64,11 +65,13 @@ void CMPManagerMode::StartGame()
 	pScenarioTracker->SetMultiplayerDifficulty( gameDesc.nDifficultyLevel );
 	pScenarioTracker->SetSpawnStartingUnits( gameDesc.pMPMap->bSpawnStartingUnits );
 	pScenarioTracker->SetAddReinfsWithTimer( gameDesc.pMPMap->bAddReinfsWithTimer );
+	pScenarioTracker->SetBaseReinforcementBonuses( bBaseReinforcementBonuses );
 	pScenarioTracker->SetDisableReinforcementOverride( gameDesc.pMPMap->bDisableReinforcementOverride );
 	pScenarioTracker->SetOnBaseCaptureReinfPointsGain( gameDesc.pMPMap->nOnBaseCaptureReinfPointsGain );
 	pScenarioTracker->SetOnBaseLostReinfPointsLoss( gameDesc.pMPMap->nOnBaseLostReinfPointsLoss );
 
 	dwNetworkLaggers = 0;
+	dwDisqualifiedPlayers = 0;
 	dwLaggers = 0;
 	dwLaggersOld = 0;
 	dwUserPausedPlayers = 0;
@@ -198,6 +201,77 @@ void CMPManagerMode::LoseGame()
 	NInput::PostEvent( "multiplayer_loose", 0, 0 );
 	pTransceiver->EndGame();
 	EndGame();
+}
+
+bool CMPManagerMode::HandleReinforcementMismatch()
+{
+	const int nCheckpoint = pTransceiver->GetReinforcementMismatchSegment();
+	if ( nCheckpoint < 0 )
+	{
+		return false;
+	}
+
+	const uint32_t dwOutlier = pTransceiver->GetReinforcementOutliers();
+	const uint32_t dwVoters = pTransceiver->GetReinforcementVoters();
+	// The transceiver holds every participant at this same command boundary until the verdict is applied.
+	const int nCutoff = pTransceiver->GetCurrentCommonSegment() - pTransceiver->GetLatency();
+	for ( int i = 0; i < slots.size() && i < 32; ++i )
+	{
+		if ( dwOutlier != ( uint32_t( 1 ) << i ) )
+		{
+			continue;
+		}
+		if ( !ScheduleSynchronizedPlayerDrop( i, nCutoff ) )
+		{
+			break;
+		}
+		dwDisqualifiedPlayers |= dwOutlier;
+		NGameX::MatchPacketTrace_Log( nCheckpoint,
+		                              "DECISION",
+		                              "ReinforcementOutlier",
+		                              GetOwnClientID(),
+		                              fmt::format( "slot={} cutoff={} voters={:04X}", i, nCutoff, dwVoters ) );
+		// The mission feed interprets markup. A nickname must remain a single line of literal player text.
+		std::wstring wszName = NStr::ToUnicode( slots[i].szName );
+		for ( wchar_t &ch : wszName )
+		{
+			if ( ch == L'<' )
+			{
+				ch = L'[';
+			}
+			else if ( ch == L'>' )
+			{
+				ch = L']';
+			}
+			else if ( ch < L' ' )
+			{
+				ch = L' ';
+			}
+		}
+		WriteToPipe( PIPE_CHAT, L"<val MP_CHEATER_DETECTED> " + wszName, 0xffff4040 );
+		if ( i == nOwnSlot )
+		{
+			// Deliver our final votes before EndGame releases the peer connections.
+			for ( const CPtr<CNetPacket> &pPacket : pTransceiver->GetDeparturePackets() )
+			{
+				BroadcastGameControlPacket( pPacket );
+			}
+			// EndGame saves this client's replay immediately. Commit the same drop the survivors apply at this tick.
+			pTransceiver->ApplyScheduledPlayerRemovals();
+			LoseGame();
+		}
+		else
+		{
+			PromoteGameControlHostAfterRemoval( slots[i].nClientID );
+		}
+		return true;
+	}
+
+	// A tie, missing evidence or an inconsistent cutoff gives no basis for naming a player.
+	NGameX::MatchPacketTrace_Log(
+			nCheckpoint, "DECISION", "ReinforcementDesync", GetOwnClientID(), fmt::format( "voters={:04X}", dwVoters ) );
+	OnCriticalNetworkError( L"<val MP_REINFORCEMENT_DESYNC>" );
+	return true;
 }
 
 void CMPManagerMode::ScheduleWinGame()

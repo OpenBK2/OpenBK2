@@ -4,6 +4,7 @@
 #include "Misc/2Darray.h"
 #include "Misc/HashFuncs.h"
 #include "ScenarioTracker.h"
+#include "System/GlobalVars.h"
 
 #include <cstdint>
 
@@ -557,6 +558,8 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	int nMultiplayerDifficulty = 0;
 	bool bSpawnStartingUnits = true;
 	bool bAddReinfsWithTimer = true;
+	bool bBaseReinforcementBonuses = true;
+	bool bValidatePlayerReinforcements = true;
 	bool bDisableReinforcementOverride = false;
 	int nOnBaseCaptureReinfPointsGain = 1;
 	int nOnBaseLostReinfPointsLoss = -1;
@@ -623,6 +626,17 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		SerializeObjectives( f );
 		// Missing in older saves: retain their nation/tech reinforcement substitution policy.
 		f.Add( 32, &bDisableReinforcementOverride );
+		if ( f.IsReading() && !f.HasChunk( 33 ) )
+		{
+			// Old saves consulted the profile for every capture. Resolve that legacy setting once on load.
+			bBaseReinforcementBonuses = NGlobal::GetVar( "multiplayer_flag_calls_bonus", 0 ) == 1;
+			bValidatePlayerReinforcements = false;
+		}
+		else
+		{
+			f.Add( 33, &bBaseReinforcementBonuses );
+			f.Add( 34, &bValidatePlayerReinforcements );
+		}
 		return 0;
 	}
 
@@ -704,6 +718,26 @@ public:
 	bool GetAddReinfsWithTimer() const override
 	{
 		return bAddReinfsWithTimer;
+	}
+
+	void SetBaseReinforcementBonuses( bool bEnabled ) override
+	{
+		bBaseReinforcementBonuses = bEnabled;
+	}
+
+	bool GetBaseReinforcementBonuses() const override
+	{
+		return bBaseReinforcementBonuses;
+	}
+
+	void SetValidatePlayerReinforcements( bool bValidate ) override
+	{
+		bValidatePlayerReinforcements = bValidate;
+	}
+
+	bool GetValidatePlayerReinforcements() const override
+	{
+		return IsMultiplayer() && bValidatePlayerReinforcements;
 	}
 
 	void SetDisableReinforcementOverride( bool bDisable ) override;

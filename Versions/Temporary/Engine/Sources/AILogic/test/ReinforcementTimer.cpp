@@ -18,6 +18,7 @@
 #include "libdb/ObjMan.h"
 #include "Main/GameTimer.h"
 #include "Script/ScriptWrapper.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 #include "Stats_B2_M1/ReinfUpdates.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
@@ -166,7 +167,7 @@ protected:
 		logic->SetNPlayers( 2 );
 		logic->SetNetGame( true );
 		logic->SetMyDiplomacyInfo( -1, 0 );
-		NGlobal::SetVar( "multiplayer_flag_calls_bonus", 1 );
+		tracker->SetBaseReinforcementBonuses( true );
 		ASSERT_FALSE( theDipl.IsAIPlayer( 0 ) );
 	}
 
@@ -307,6 +308,78 @@ TEST_P( ReinforcementTimer, LuaGrantsAndRemovalsRespectModeWithoutResettingTimer
 	RunReinforcementScript( "GiveReinforcementCalls(1, 4); GiveReinforcementCalls(1, -1);" );
 	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 1 ), cooperative ? 3 : 0 );
 	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), cooperative ? 0 : 5 );
+}
+
+TEST_P( ReinforcementTimer, CaptureBonusesUseMatchRulesIndependentlyOfLocalProfile )
+{
+	CPlayerReinforcement controller;
+	controller.InitPlayerReinforcement( 0, map, aiConsts );
+	NGlobal::SetVar( "multiplayer_flag_calls_bonus", 0 );
+	controller.GiveReinforcementCalls( 2, false );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 7 );
+	tracker->SetBaseReinforcementBonuses( false );
+	NGlobal::SetVar( "multiplayer_flag_calls_bonus", 1 );
+	controller.GiveReinforcementCalls( -3, false );
+	EXPECT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 7 );
+}
+
+TEST_P( ReinforcementTimer, PlayerOrdersRecheckTheLastCreditAndOutstandingCooldown )
+{
+	auto *recipe = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+	auto *ground = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
+	auto *vehicle = CreateRecord<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
+	ASSERT_NE( recipe, nullptr );
+	ASSERT_NE( ground, nullptr );
+	ASSERT_NE( vehicle, nullptr );
+	recipe->eType = NDb::RT_SUPER_WEAPON;
+	recipe->entries.resize( 1 );
+	recipe->entries[0].pMechUnit = vehicle;
+	auto &player = map->players[0];
+	player.reinforcementTypes.push_back( recipe );
+	ground->eType = NDb::RT_TANKS;
+	ground->entries = recipe->entries;
+	player.reinforcementTypes.push_back( ground );
+	player.reinforcementPoints.resize( 1 );
+	player.reinforcementPoints[0].bIsDefault = true;
+	// Delay the projectile so this controller-only fixture can inspect order acceptance before placement.
+	player.superWeapon.eSuperWeaponType = NDb::SUPER_WEAPON_ARTILLERY;
+	player.superWeapon.nCount = 1;
+	player.superWeapon.fFlyTime = 60.0f;
+	player.superWeapon.fRecycleTime = 30.0f;
+	tracker->SetDisableReinforcementOverride( true );
+	tracker->SetAddReinfsWithTimer( false );
+	tracker->DecreaseReinforcementCallsLeft( 0, 5 );
+	theReinfArray.resize( 1 );
+	theReinfArray[0].InitPlayerReinforcement( 0, map, aiConsts );
+	aiMap = new CAIMap( 256, 256, 32, 2, 16 );
+	SetAIMap( aiMap );
+
+	SAIUnitCmd order;
+	order.nCmdType = ACTION_COMMAND_ORDER;
+	order.nNumber = NDb::RT_TANKS;
+	order.vPos = CVec2( 32, 32 );
+	logic->UnitCommand( &order, 0, 0 );
+	theReinfArray[0].Segment();
+	std::vector<int> callsByType;
+	tracker->GetReinforcementCallsInfo( 0, &callsByType );
+	EXPECT_EQ( callsByType[NDb::RT_TANKS], 0 );
+	tracker->IncreaseReinforcementCallsLeft( 0, 1 );
+	order.nNumber = NDb::RT_SUPER_WEAPON;
+	order.vPos = CVec2( -1, 32 );
+	logic->UnitCommand( &order, 0, 0 );
+	theReinfArray[0].Segment();
+	ASSERT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 1 );
+	order.vPos = CVec2( 32, 32 );
+	logic->UnitCommand( &order, 0, 0 );
+	logic->UnitCommand( &order, 0, 0 );
+	theReinfArray[0].Segment();
+	ASSERT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 0 );
+	tracker->GetReinforcementCallsInfo( 0, &callsByType );
+	EXPECT_EQ( callsByType[NDb::RT_SUPER_WEAPON], 1 );
+
+	theReinfArray[0].Segment();
+	tracker->IncreaseReinforcementCallsLeft( 0, 1 );
+	EXPECT_FALSE( theReinfArray[0].CanCallNow() );
 }
 
 TEST_P( ReinforcementTimer, LuaGrantsKeepSinglePlayerBehavior )

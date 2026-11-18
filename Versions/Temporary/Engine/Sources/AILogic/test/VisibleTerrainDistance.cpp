@@ -310,6 +310,15 @@ TEST_F( VisibleTerrainDistance, MultiplayerQueriesUseTheRequestedPartyRegardless
 	}
 }
 
+TEST_F( VisibleTerrainDistance, MultiplayerFogIgnoresTheLocalDebugOverride )
+{
+	const bool bPrevious = NGlobal::GetVar( "dont_show_warfog", 0 ) != 0;
+	NGlobal::SetVar( "dont_show_warfog", 1 );
+	EXPECT_FALSE( theWarFog.IsTileVisible( SVector( 10, 10 ), 1 ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( SVector( 10, 10 ), 1, false ) );
+	NGlobal::SetVar( "dont_show_warfog", bPrevious );
+}
+
 TEST_F( VisibleTerrainDistance, ReflectsObserverMovementTransferAndRemovalAfterFogUpdates )
 {
 	AddObserver();

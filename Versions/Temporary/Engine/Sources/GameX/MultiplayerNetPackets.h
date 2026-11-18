@@ -59,12 +59,14 @@ public:
 	// The host's final roster can overtake slot updates sent by another peer.
 	std::vector<SMPSlot> slots;
 	std::vector<uint8_t> slotRehash;
+	bool bBaseReinforcementBonuses = true;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
 		// Chunk 2 held only country/team. A legacy payload must not look like a complete roster.
 		f.Add( 4, &slots );
 		f.Add( 3, &slotRehash );
+		f.Add( 5, &bBaseReinforcementBonuses );
 		return 0;
 	}
 

@@ -1645,6 +1645,12 @@ void CAILogic::UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const
 	switch ( pCommand->nCmdType )
 	{
 		case ACTION_COMMAND_ORDER:
+			// Reject invalid indices before looking up the player's reinforcement controller.
+			if ( nPlayer < 0 || nPlayer >= theReinfArray.size() || pCommand->nNumber < 0 ||
+			     pCommand->nNumber >= NDb::_RT_NONE )
+			{
+				break;
+			}
 			theReinfArray[nPlayer].AddCallReinforcementCommand( NDb::EReinforcementType( pCommand->nNumber ),
 			                                                    pCommand->vPos );
 			break;

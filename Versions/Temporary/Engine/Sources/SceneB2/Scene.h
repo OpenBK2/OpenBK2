@@ -122,6 +122,9 @@ struct IScene : public CObjectBase
 	//
 	virtual bool SetupMode( ESceneMode eMode, bool bEditorMode ) = 0;
 	virtual bool IsEditorMode() = 0;
+	// Live matches cannot expose data from the unfiltered simulation through scene diagnostics.
+	virtual void SetLiveMultiplayer( bool bLive ) = 0;
+	virtual bool IsLiveMultiplayer() const = 0;
 	//
 	virtual void SetSceneConsts( const NDb::SSceneConsts *pSceneConsts ) = 0;
 	virtual const NDb::SSceneConsts *GetSceneConsts() = 0;

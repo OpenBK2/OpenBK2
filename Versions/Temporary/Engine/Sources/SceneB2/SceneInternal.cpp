@@ -17,6 +17,7 @@
 #include "Common_RTS_AI/TerraAIObserver.h"
 #include "Cursor.h"
 #include "DBSceneConsts.h"
+#include "DebugTools/DebugInfoManagerInternal.h"
 #include "FullScreenFader.h"
 #include "Image/Targa.h"
 #include "Main/GameTimer.h"
@@ -301,8 +302,88 @@ void CScene::SwitchScene( const EScene _eScene )
 	}
 }
 
+static void ShowModelBoxes( SSceneData *pData, bool bShow )
+{
+	for ( const auto &object : pData->visObjects )
+	{
+		if ( SModelVisObjDesc *pModel = dynamic_cast_ptr<SModelVisObjDesc *>( object.second ) )
+		{
+			if ( bShow )
+			{
+				pModel->UpdateBBPolyLine( pData->GetGScene() );
+			}
+			else
+			{
+				pModel->pBBPolyLine = 0;
+			}
+		}
+	}
+}
+
+void CScene::SetLiveMultiplayer( bool bLive )
+{
+	if ( bLive == bLiveMultiplayer )
+	{
+		return;
+	}
+	bLiveMultiplayer = bLive;
+	// Nothing queued by the last world should be drawn by its successor.
+	if ( auto *pDebug = static_cast<CDebugInfoManager *>( DebugInfoManager() ) )
+	{
+		pDebug->Reset();
+	}
+	if ( !bLive )
+	{
+		return;
+	}
+
+	// A binding can already be active in a scene retained from before the match.
+	debugInfoObjects.clear();
+	NGScene::SetWireframe( false );
+	NGlobal::SetVar( "gfx_draw_mip", 0 );
+	for ( const CObj<SSceneData> &pData : data )
+	{
+		if ( !pData )
+		{
+			continue;
+		}
+		pData->eAIGeomMode = SSceneData::EAI_GEOM_NONE;
+		pData->vAIMapMeshes.clear();
+		pData->terrainGrid.clear();
+		pData->polylines.clear();
+		pData->showModes.clear();
+		pData->showModes[SCENE_SHOW_UI] = true;
+		pData->showModes[SCENE_SHOW_TERRAIN] = true;
+		pData->showModes[SCENE_SHOW_SHADOWS] = NGlobal::GetVar( "gfx_noshadows", 0 ) == 0;
+		if ( pData->bEnableStatistics )
+		{
+			pData->bEnableStatistics = false;
+			NGlobal::ProcessCommand( L"Stats 0" );
+		}
+		if ( NGScene::IGameView *pView = pData->GetGScene() )
+		{
+			pView->SetRenderMode( NGScene::SRM_BEST );
+		}
+		ShowModelBoxes( pData, false );
+		if ( pData->pTerraManager )
+		{
+			pData->pTerraManager->HideTerrain( false );
+			ITerraAIObserver *pObserver = pData->pTerraManager->GetAIObserver();
+			if ( pObserver && pObserver->IsPassabilityOn() )
+			{
+				pObserver->ToggleShowPassability();
+			}
+		}
+	}
+}
+
 bool CScene::ToggleShow( ESceneShow eShow )
 {
+	if ( bLiveMultiplayer && ( eShow == SCENE_SHOW_BBOXES || eShow == SCENE_SHOW_AI_GEOM || eShow == SCENE_SHOW_AI_GRID ||
+	                           eShow == SCENE_SHOW_PASS_MARKERS ) )
+	{
+		return false;
+	}
 	data[eScene]->showModes[eShow] = !data[eScene]->showModes[eShow];
 	switch ( eShow )
 	{
@@ -323,22 +404,7 @@ bool CScene::ToggleShow( ESceneShow eShow )
 		//
 		case SCENE_SHOW_BBOXES:
 		{
-			for ( SSceneData::CVisObjectsMap::iterator it = data[eScene]->visObjects.begin();
-			      it != data[eScene]->visObjects.end();
-			      ++it )
-			{
-				if ( SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( it->second ) )
-				{
-					if ( data[eScene]->showModes[eShow] )
-					{
-						pVOD->UpdateBBPolyLine( data[eScene]->GetGScene() );
-					}
-					else
-					{
-						pVOD->pBBPolyLine = 0;
-					}
-				}
-			}
+			ShowModelBoxes( data[eScene], data[eScene]->showModes[eShow] );
 		}
 		break;
 		//
@@ -830,7 +896,7 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 
 		//
 		static NTimer::STime timeLastDrawPassability = 0;
-		if ( DoesTerraManagerExist() )
+		if ( !bLiveMultiplayer && DoesTerraManagerExist() )
 		{
 			if ( ITerraAIObserver *pObserver = GetTerraManager()->GetAIObserver() )
 			{
@@ -1032,7 +1098,8 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	//
 	while ( ToggleShow( SCENE_SHOW_UI ) != false )
 		;
-	//
+	// Live multiplayer screenshots must render the player's current fog, just like an ordinary frame.
+	if ( !bLiveMultiplayer )
 	{
 		CArray2D<uint8_t> whiteWarFog;
 		whiteWarFog.SetSizes( 1, 1 );
@@ -1141,6 +1208,10 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 
 bool CScene::ToggleAIGeometryMode()
 {
+	if ( bLiveMultiplayer )
+	{
+		return false;
+	}
 	int nMode = data[eScene]->eAIGeomMode;
 	if ( nMode == SSceneData::EAI_GEOM_NONE )
 	{

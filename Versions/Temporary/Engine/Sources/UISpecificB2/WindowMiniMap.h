@@ -185,8 +185,6 @@ protected:
 	CVec2 vRotableSize;
 	STransform rotableTransform;
 	CArray2D<uint8_t> warFog;
-	//CVec2 vPrevRotableDir;
-	const CArray2D<uint8_t> *pWarFog;
 
 	float fAdditionalScale;
 	float fPrevRotableAngle;
@@ -236,7 +234,7 @@ protected:
 	//}
 public:
 	CWindowMiniMap();
-	void LoadMap( const int nWidth, const int nHeight, const int nWarFogLevel ) override;
+	void LoadMap( const int nWidth, const int nHeight, const int nWarFogLevel, bool bLiveMultiplayer ) override;
 	void SetLoadingMapParams( int nWidth, int nHeight ) override;
 	CVec2 GetAIToScreen( const CVec2 &vPos ) const override;
 

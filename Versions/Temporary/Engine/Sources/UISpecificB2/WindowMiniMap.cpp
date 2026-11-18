@@ -20,8 +20,10 @@ REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x15099C00, CMiniMapLayer );
 
 const float F_ANGLE_DELTA = 0.001f;
 const float F_BIG_UNIT_RADIUS = 5.0f;
-static int s_nDarkWarFogAlpha = 128;
-static int s_nLightWarFogAlpha = 0;
+static constexpr int DEFAULT_DARK_WARFOG_ALPHA = 128;
+static constexpr int DEFAULT_LIGHT_WARFOG_ALPHA = 0;
+static int s_nDarkWarFogAlpha = DEFAULT_DARK_WARFOG_ALPHA;
+static int s_nLightWarFogAlpha = DEFAULT_LIGHT_WARFOG_ALPHA;
 
 struct SMatrix2
 {
@@ -187,7 +189,7 @@ CWindowMiniMap::CWindowMiniMap()
 	AddObserver( "mission_win_mouse_move_emit", &CWindowMiniMap::MsgMouseMoveEmit );
 }
 
-void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nWarFogLevel )
+void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nWarFogLevel, bool bLiveMultiplayer )
 {
 	bNeedScreenToMapRefresh = true;
 	vOldDir = VNULL2;
@@ -195,11 +197,13 @@ void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nW
 	fMapHeight = nHeight;
 	fAspect = fMapWidth / fMapHeight;
 	const int nWarFogLevel = (std::max)( 2, _nWarFogLevel );
+	// Local opacity preferences must not make unseen terrain appear visible in a live match.
+	const int nDarkAlpha = bLiveMultiplayer ? DEFAULT_DARK_WARFOG_ALPHA : s_nDarkWarFogAlpha;
+	const int nLightAlpha = bLiveMultiplayer ? DEFAULT_LIGHT_WARFOG_ALPHA : s_nLightWarFogAlpha;
 	warFogColors.resize( nWarFogLevel );
 	for ( int i = 0; i < nWarFogLevel; ++i )
 	{
-		warFogColors[i] = NGfx::SPixel8888(
-				0, 0, 0, s_nDarkWarFogAlpha - i * ( s_nDarkWarFogAlpha - s_nLightWarFogAlpha ) / ( nWarFogLevel - 1 ) );
+		warFogColors[i] = NGfx::SPixel8888( 0, 0, 0, nDarkAlpha - i * ( nDarkAlpha - nLightAlpha ) / ( nWarFogLevel - 1 ) );
 	}
 
 	// matrix calculation
@@ -952,16 +956,9 @@ void CWindowMiniMap::SetUnits( const std::vector<SMiniMapUnitInfo> &vUnits )
 
 void CWindowMiniMap::SetWarFog( const CArray2D<uint8_t> *pWarFogInfo )
 {
-	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 1 )
-	{
-		pWarFog = pWarFogInfo;
-		UpdateWarFog();
-	}
-	else
-	{
-		warFog = *pWarFogInfo;
-		UpdateWarFog();
-	}
+	// Viewport rotation redraws the layer after the caller's visibility snapshot can expire.
+	warFog = *pWarFogInfo;
+	UpdateWarFog();
 }
 
 void CWindowMiniMap::SetMarkers( const std::vector<SMarker> &_markers )
@@ -1206,6 +1203,7 @@ void CWindowMiniMap::AfterLoad()
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() != 0 )
 	{
 		MakeMaskMimimap();
+		UpdateWarFog();
 	}
 }
 
@@ -1252,6 +1250,8 @@ int CWindowMiniMap::operator&( IBinSaver &saver )
 	else
 	{
 		saver.Add( 27, &fAdditionalScale );
+		// M1 uses field 27 for the scale. Older saves repopulate visibility on the next mission update.
+		saver.Add( 38, &warFog );
 	}
 
 	saver.Add( 29, &fPrevRotableAngle );
@@ -1280,7 +1280,12 @@ int CWindowMiniMap::operator&( IBinSaver &saver )
 
 START_REGISTER( MiniMapCommands )
 
-REGISTER_VAR_EX( "minimap_dark_warfog_alpha", NGlobal::VarIntHandler, &s_nDarkWarFogAlpha, 128, STORAGE_NONE );
-REGISTER_VAR_EX( "minimap_light_warfog_alpha", NGlobal::VarIntHandler, &s_nLightWarFogAlpha, 0, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"minimap_dark_warfog_alpha", NGlobal::VarIntHandler, &s_nDarkWarFogAlpha, DEFAULT_DARK_WARFOG_ALPHA, STORAGE_NONE );
+REGISTER_VAR_EX( "minimap_light_warfog_alpha",
+                 NGlobal::VarIntHandler,
+                 &s_nLightWarFogAlpha,
+                 DEFAULT_LIGHT_WARFOG_ALPHA,
+                 STORAGE_NONE );
 
 FINISH_REGISTER

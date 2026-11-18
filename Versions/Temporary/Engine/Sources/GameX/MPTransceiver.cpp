@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AICmdsAutoMagic.h"
+#include "AILogic/aiconsts.h"
 #include "AILogic/B2AI.h"
 #include "Client/ServerClientInterface.h"
 #include "CommonCommands.h"
@@ -33,6 +34,7 @@
 #include "GameX_export.h"
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <limits>
@@ -41,6 +43,17 @@
 #include <fmt/format.h>
 
 static int s_nInterruptTimeout = 5000; // No segments for this time before timeout is called
+
+namespace
+{
+enum EReinforcementVote
+{
+	VOTE_MISSING = -3,
+	VOTE_INCONCLUSIVE = -2,
+	VOTE_AGREEMENT = -1
+	// Nonnegative votes identify a reporting player's logic slot.
+};
+} // namespace
 
 class CAISegmentFinishedPacket : public CNetPacket
 {
@@ -54,12 +67,30 @@ public:
 	// the checksum every client compares, and it is serialized into the packet.
 	uint32_t ulCheckSum = {};
 	std::list<CMPTransceiver::SRawCommand> aiCommands;
+	int nBalanceSlots = -1;
+	std::array<int32_t, SAIConsts::MAX_NUM_OF_PLAYERS + 1> balances = {};
+	int nReinforcementVote = VOTE_MISSING;
+	uint16_t wVoters = 0;
+	// Local evidence only. Repeated receipt cannot replace the original report.
+	bool bConflictingReport = false;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSegment );
 		f.Add( 3, &ulCheckSum );
 		f.Add( 4, &aiCommands );
+		f.AddRawData( 6, balances.data(), sizeof( balances ) );
+		f.Add( 7, &nReinforcementVote );
+		f.Add( 8, &wVoters );
+		// NetSaver zero-fills a short read. A tagged size at the end detects a
+		// truncated report even when all balances and the high bytes of its size are zero.
+		constexpr uint32_t format = 0x52464300;
+		uint32_t sizeTag = f.IsReading() ? 0 : format | uint32_t( nBalanceSlots + 1 );
+		f.Add( 5, &sizeTag );
+		if ( f.IsReading() )
+		{
+			nBalanceSlots = ( sizeTag & ~uint32_t( 0xff ) ) == format ? int( sizeTag & 0xff ) - 1 : -1;
+		}
 		return 0;
 	}
 
@@ -146,6 +177,7 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 	const unsigned long ulMaskBefore = wMask;
 	wMask &= ~( 1UL << nPlayer );
 	wWaitMask &= ~( 1UL << nPlayer );
+	nLastMembershipChange = nCommonSegment;
 	NGameX::MatchPacketTrace_RecordDropApplied( nPlayer, nCommonSegment );
 	NGameX::MatchPacketTrace_Log( nCommonSegment,
 	                              "STATE",
@@ -273,13 +305,29 @@ void CMPTransceiver::DoSegments()
 				}
 				SetLagState( nPastSegment, false );
 
+				// Packet P carries balances; P + latency carries every peer's vote on P.
+				// At this fixed boundary everyone has both sets, before applying any more
+				// orders. Give the dedicated verdict priority over the world checksum for P.
+				if ( pMapInfo && nCommonSegment >= 2 * nLatency )
+				{
+					const int nAudited = nCommonSegment - 2 * nLatency;
+					if ( !CheckReinforcementVotes( nAudited ) || IsAsyncDetected( nAudited ) )
+					{
+						return;
+					}
+				}
+
+				// Sample at tick entry, after the previous AI step and before this
+				// tick's orders. Segment zero represents the initialized map.
+				CPtr<CAISegmentFinishedPacket> pPacket = new CAISegmentFinishedPacket;
+				FillReinforcementCheckpoint( pPacket );
 				bCommandsFromHistory = true;
 				pCmdsHistory->ExecuteSegmentCommands( nCommonSegment, this );
 				bCommandsFromHistory = false;
 
 				ExecuteCommands( nPastSegment );
-				FinalizeSegmentPack();
-				if ( IsAsyncDetected( nPastSegment ) )
+				FinalizeSegmentPack( pPacket );
+				if ( !pMapInfo && IsAsyncDetected( nPastSegment ) )
 				{
 					return;
 				}
@@ -373,7 +421,7 @@ void CMPTransceiver::ExecuteCommands( int nFromSegment )
 			for ( CAILogicCommandsList::iterator it = cmds[nFromSegment][i].begin(); it != cmds[nFromSegment][i].end(); ++it )
 			{
 				IAILogicCommandB2 *pCmd = *it;
-				pCmd->Execute();
+				pCmd->ExecuteFromPlayer( i );
 				//DebugTrace( "+++ Executed cmd plr %d: %s", i, pCmd->GetDebugInfo().c_str() );
 				pCmdsHistory->AddCommand( nCommonSegment, pCmd );
 				bHasCommands = true;
@@ -447,14 +495,40 @@ void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulC
 	//DebugTrace( "+++ Player %d segment %d checksum %d", nPlayer, nSegment, ulCheckSum );
 }
 
-void CMPTransceiver::FinalizeSegmentPack()
+void CMPTransceiver::FillReinforcementCheckpoint( CAISegmentFinishedPacket *pPacket ) const
+{
+	if ( !pMapInfo )
+	{
+		return;
+	}
+	// Map slots include neutral and script-controlled players independently of
+	// the human reporting mask. No counter is written back into simulation.
+	IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+	const int nSlots = pMapInfo->players.size();
+	if ( pTracker && nSlots > 0 && nSlots <= pPacket->balances.size() )
+	{
+		pPacket->nBalanceSlots = nSlots;
+		for ( int i = 0; i < nSlots; ++i )
+		{
+			pPacket->balances[i] = pTracker->GetReinforcementCallsLeft( i );
+		}
+	}
+	if ( nCommonSegment >= nLatency )
+	{
+		// The applied roster changes on the agreed simulation tick. Learning
+		// about an upcoming departure earlier cannot change another peer's vote.
+		pPacket->wVoters = wMask;
+		pPacket->nReinforcementVote = VoteOnReinforcements( nCommonSegment - nLatency );
+	}
+}
+
+void CMPTransceiver::FinalizeSegmentPack( CAISegmentFinishedPacket *pPacket )
 {
 	const uint32_t ulCheckSum = pCmdsHistory->GetLastChecksum();
 #ifdef CHECKSUM_LIST_DEBUG
 	myHistoryHashes.push_back( ulCheckSum );
 #endif
 	SetSegmentFinished( nMyLogicID, nSegment, ulCheckSum );
-	CAISegmentFinishedPacket *pPacket = new CAISegmentFinishedPacket();
 	pPacket->nSegment = nCommonSegment;
 	pPacket->ulCheckSum = ulCheckSum;
 	const int nSegmentToExecute = GetSegmentToExecute( nCommonSegment );
@@ -578,7 +652,10 @@ void CMPTransceiver::GetRecoveryCommands( uint32_t dwPlayers, std::vector<SMPRec
 
 static bool HaveSameRecoveryCommands( const CAISegmentFinishedPacket &first, const CAISegmentFinishedPacket &second )
 {
-	if ( first.ulCheckSum != second.ulCheckSum || first.aiCommands.size() != second.aiCommands.size() )
+	if ( first.nSegment != second.nSegment || first.ulCheckSum != second.ulCheckSum ||
+	     first.nBalanceSlots != second.nBalanceSlots || first.balances != second.balances ||
+	     first.nReinforcementVote != second.nReinforcementVote || first.wVoters != second.wVoters ||
+	     first.aiCommands.size() != second.aiCommands.size() )
 	{
 		return false;
 	}
@@ -596,6 +673,125 @@ static bool HaveSameRecoveryCommands( const CAISegmentFinishedPacket &first, con
 		}
 	}
 	return true;
+}
+
+const CAISegmentFinishedPacket *CMPTransceiver::FindSegmentPacket( int nPlayer, int nAbsoluteSegment ) const
+{
+	// These tails already retain more than two latencies of input, including
+	// our own published report. A wrapped ring index is never proof of a tick.
+	const auto &packets = nPlayer == nMyLogicID ? departurePackets : players[nPlayer].recoveryPackets;
+	for ( auto it = packets.rbegin(); it != packets.rend(); ++it )
+	{
+		const auto *pPacket = static_cast<const CAISegmentFinishedPacket *>( it->GetPtr() );
+		if ( pPacket->nSegment == nAbsoluteSegment )
+		{
+			return pPacket;
+		}
+		if ( pPacket->nSegment < nAbsoluteSegment )
+		{
+			break;
+		}
+	}
+	return nullptr;
+}
+
+int CMPTransceiver::VoteOnReinforcements( int nAbsoluteSegment ) const
+{
+	std::array<const CAISegmentFinishedPacket *, SAIConsts::MAX_NUM_OF_PLAYERS> reports = {};
+	int nReporters = 0;
+	const int nSlots = pMapInfo->players.size();
+	for ( int i = 0; i < reports.size(); ++i )
+	{
+		if ( !IsPlayerPresent( i ) )
+		{
+			continue;
+		}
+		const auto *pReport = FindSegmentPacket( i, nAbsoluteSegment );
+		if ( !pReport || pReport->bConflictingReport || nSlots <= 0 || nSlots > pReport->balances.size() ||
+		     pReport->nBalanceSlots != nSlots )
+		{
+			return VOTE_INCONCLUSIVE;
+		}
+		// Compare the signed values exactly. Even an impossible balance is
+		// usable evidence when a complete report came from a known sender.
+		reports[i] = pReport;
+		++nReporters;
+	}
+	for ( const auto *pReference : reports )
+	{
+		if ( !pReference )
+		{
+			continue;
+		}
+		int nDifferent = 0;
+		int nOutlier = -1;
+		for ( int i = 0; i < reports.size(); ++i )
+		{
+			if ( reports[i] && !std::equal( pReference->balances.begin(),
+			                                pReference->balances.begin() + nSlots,
+			                                reports[i]->balances.begin() ) )
+			{
+				++nDifferent;
+				nOutlier = i;
+			}
+		}
+		if ( nDifferent == 0 )
+		{
+			return VOTE_AGREEMENT;
+		}
+		if ( nDifferent == 1 && nReporters >= 3 )
+		{
+			return nOutlier;
+		}
+	}
+	return VOTE_INCONCLUSIVE;
+}
+
+bool CMPTransceiver::CheckReinforcementVotes( int nAbsoluteSegment )
+{
+	if ( nReinforcementMismatchSegment >= 0 )
+	{
+		return false;
+	}
+	// A real departure changes the electorate at a deterministic tick. Complete
+	// a fresh two-round check within the new membership before adjudicating.
+	if ( wWaitMask != wMask || nAbsoluteSegment < nLastMembershipChange )
+	{
+		return true;
+	}
+	const int nProposed = VoteOnReinforcements( nAbsoluteSegment );
+	bool bConfirmed = nProposed != VOTE_INCONCLUSIVE;
+	for ( int i = 0; i < SAIConsts::MAX_NUM_OF_PLAYERS; ++i )
+	{
+		// A confirmed minority reporter cannot veto a unanimous survivor vote
+		// by withholding a valid ballot. Its original balance report is required.
+		if ( !IsPlayerWaitedFor( i ) || i == nProposed )
+		{
+			continue;
+		}
+		const auto *pVote = FindSegmentPacket( i, nAbsoluteSegment + nLatency );
+		if ( !pVote || pVote->bConflictingReport || pVote->nBalanceSlots != pMapInfo->players.size() ||
+		     pVote->wVoters != wWaitMask || pVote->nReinforcementVote < VOTE_INCONCLUSIVE ||
+		     pVote->nReinforcementVote >= SAIConsts::MAX_NUM_OF_PLAYERS ||
+		     ( pVote->nReinforcementVote >= 0 && !IsPlayerWaitedFor( pVote->nReinforcementVote ) ) )
+		{
+			bConfirmed = false;
+			break;
+		}
+		if ( pVote->nReinforcementVote != nProposed )
+		{
+			bConfirmed = false;
+			break;
+		}
+	}
+	if ( bConfirmed && nProposed == VOTE_AGREEMENT )
+	{
+		return true;
+	}
+	nReinforcementMismatchSegment = nAbsoluteSegment;
+	wReinforcementVoters = wWaitMask;
+	wReinforcementOutliers = bConfirmed && nProposed >= 0 ? uint16_t( 1U << nProposed ) : 0;
+	return false;
 }
 
 bool CMPTransceiver::SameRecoveryCommand( const SMPRecoveryCommand &first, const SMPRecoveryCommand &second )
@@ -763,12 +959,34 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	// Otherwise an old packet can reset another peer's receipt or execute twice.
 	if ( pPacket->nSegment < 0 || pPacket->nSegment <= player.nLastReceivedSegment )
 	{
+		if ( pMapInfo && pPacket->nSegment >= 0 )
+		{
+			for ( const auto &pRetained : player.recoveryPackets )
+			{
+				auto *pOriginal = static_cast<CAISegmentFinishedPacket *>( pRetained.GetPtr() );
+				if ( pOriginal->nSegment == pPacket->nSegment && !HaveSameRecoveryCommands( *pOriginal, *pPacket ) )
+				{
+					pOriginal->bConflictingReport = true;
+					break;
+				}
+			}
+		}
 		NGameX::MatchPacketTrace_Log(
 				nCommonSegment,
 				"RX",
 				"AISegmentFinishedIgnored",
 				pPacket->nClientID,
 				fmt::format( "slot={} segment={} last_received={}", nPlayer, pPacket->nSegment, player.nLastReceivedSegment ) );
+		return true;
+	}
+	if ( pMapInfo &&
+	     ( nSegmentsPackSize <= 0 || pPacket->nSegment % nSegmentsPackSize != 0 ||
+	       pPacket->nSegment !=
+	           ( player.nLastReceivedSegment < 0 ? 0 : int64_t( player.nLastReceivedSegment ) + nSegmentsPackSize ) ||
+	       int64_t( pPacket->nSegment ) - nCommonSegment >= pConsts->nMaxLatency ) )
+	{
+		// Reliable input is contiguous. Never let a future absolute tick alias a
+		// live receipt, overwrite votes or enqueue commands in an earlier ring slot.
 		return true;
 	}
 	// StartMission must not discard packets already received during loading.
@@ -864,6 +1082,14 @@ void CMPTransceiver::StopWaitingForPlayer( int nPlayer, int nDropSegment )
 
 	const unsigned long ulWaitMaskBefore = wWaitMask;
 	wWaitMask &= ~( 1UL << nPlayer );
+	if ( nReinforcementMismatchSegment >= 0 )
+	{
+		// A committed membership change supersedes unconsumed evidence from its
+		// old roster; resume adjudication on a full round among the survivors.
+		nReinforcementMismatchSegment = -1;
+		wReinforcementVoters = 0;
+		wReinforcementOutliers = 0;
+	}
 	NGameX::MatchPacketTrace_Log(
 			nCommonSegment,
 			"STATE",
@@ -987,6 +1213,10 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	bIsGameRunning = false;
 	bIsGameEnded = false;
 	bPlayerDropError = false;
+	nLastMembershipChange = -1;
+	nReinforcementMismatchSegment = -1;
+	wReinforcementVoters = 0;
+	wReinforcementOutliers = 0;
 	SetDepartureRecovery( false );
 	departurePackets.clear();
 	nLastSentSegment = -1;
@@ -1092,7 +1322,7 @@ void CMPTransceiver::ReportLags( uint32_t dwLaggers, bool bInitial )
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILagMessage( dwLaggers, bInitial ) );
 }
 
-void CMPTransceiver::ReportAsnycToFile( int segment )
+void CMPTransceiver::ReportAsnycToFile( int segment, const uint32_t *pChecksums )
 {
 	FILE *fl = fopen( "last_async.txt", "w" );
 
@@ -1129,7 +1359,7 @@ void CMPTransceiver::ReportAsnycToFile( int segment )
 		                             players[nPlayerIndex].nClientID,
 		                             playerName.c_str(),
 		                             players[nPlayerIndex].nTeam,
-		                             checkSums[nPlayerIndex][segment] );
+		                             pChecksums[nPlayerIndex] );
 	}
 	fprintf( fl, "%s", checksumsTxt.c_str() );
 	fclose( fl );
@@ -1162,8 +1392,31 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 		return false;
 	}
 
+	std::array<uint32_t, SAIConsts::MAX_NUM_OF_PLAYERS> sums = {};
+	for ( int i = 0; i < sums.size(); ++i )
+	{
+		if ( !IsPlayerWaitedFor( i ) )
+		{
+			continue;
+		}
+		if ( pMapInfo )
+		{
+			// The vote adds one latency to this comparison. A newly received
+			// packet can already occupy the same ring index on small rings.
+			const auto *pPacket = FindSegmentPacket( i, nSegment );
+			if ( !pPacket )
+			{
+				return false;
+			}
+			sums[i] = pPacket->ulCheckSum;
+		}
+		else
+		{
+			sums[i] = checkSums[i][nSegment];
+		}
+	}
 	std::string szCheckSums = fmt::format( "Segment {}: ", nSegment );
-	const uint32_t nMyCheckSum = checkSums[nMyLogicID][nSegment];
+	const uint32_t nMyCheckSum = sums[nMyLogicID];
 	int nOutOfSyncs = 0;
 	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
 	{
@@ -1172,8 +1425,8 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 			continue;
 		}
 
-		szCheckSums += fmt::format( "{},", checkSums[nPlayerIndex][nSegment] );
-		if ( checkSums[nPlayerIndex][nSegment] != nMyCheckSum )
+		szCheckSums += fmt::format( "{},", sums[nPlayerIndex] );
+		if ( sums[nPlayerIndex] != nMyCheckSum )
 		{
 			++nOutOfSyncs;
 		}
@@ -1195,7 +1448,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 			                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", L"ASYNC<br>Save created" ).c_str() );
 			//pAI->DumpAfterAssinc();
 
-			ReportAsnycToFile( nSegment );
+			ReportAsnycToFile( nSegment, sums.data() );
 		}
 
 		if ( NGlobal::GetVar( "pause_on_async", 0 ) != 0 )

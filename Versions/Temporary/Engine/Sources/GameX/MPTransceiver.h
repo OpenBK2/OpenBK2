@@ -149,6 +149,10 @@ private:
 	std::vector<NMPPlayerDrop::SPlayerDrop> playerRemovals;
 	bool bPlayerDropError = false;
 	NTimer::STime timeStartWaitingForRemovedPlayer = {};
+	int nLastMembershipChange = -1;
+	int nReinforcementMismatchSegment = -1;
+	uint16_t wReinforcementVoters = 0;
+	uint16_t wReinforcementOutliers = 0;
 
 private:
 	bool Segment() override
@@ -160,14 +164,18 @@ private:
 	bool IsSegmentFinishedByAll( int nSegment );
 	uint16_t GetMissingSegmentPlayers( int nSegment ) const;
 	void SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulCheckSum );
-	void FinalizeSegmentPack();
+	void FinalizeSegmentPack( class CAISegmentFinishedPacket *pPacket );
+	void FillReinforcementCheckpoint( class CAISegmentFinishedPacket *pPacket ) const;
+	const class CAISegmentFinishedPacket *FindSegmentPacket( int nPlayer, int nAbsoluteSegment ) const;
+	int VoteOnReinforcements( int nAbsoluteSegment ) const;
+	bool CheckReinforcementVotes( int nAbsoluteSegment );
 	void PruneRecoveryCommands();
 	void AdvanceToNextSegment();
 	void ExecuteCommands( int nFromSegment );
 	bool IsAsyncDetected( int nSegment );
 	void SetLagState( int nSegment, bool bOn );
 
-	void ReportAsnycToFile( int segment );
+	void ReportAsnycToFile( int segment, const uint32_t *pChecksums );
 
 	bool OnTransciverCommonPacket( class CTransciverCommonPacket *pPacket );
 	bool OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *pPacket );
@@ -181,7 +189,6 @@ private:
 	bool IsPlayerWaitedFor( int nPlayer ) const;
 	int GetSegmentToExecute( const int nSegment ) const;
 	void StopWaitingForPlayer( int nPlayer, int nDropSegment );
-	void ApplyScheduledPlayerRemovals();
 	void FailPlayerDrop( int nPlayer, int nSegment, const char *szReason );
 
 public:
@@ -197,6 +204,7 @@ public:
 	void EndGame();
 	void PlayerRemoved( int nPlayer );
 	bool SchedulePlayerRemoval( int nPlayer, int nSegment );
+	void ApplyScheduledPlayerRemovals();
 	static const bool IsGamePacket( const CNetPacket *pPacket );
 
 	int operator&( IBinSaver &f ) override
@@ -259,6 +267,23 @@ public:
 	bool HasPlayerDropError() const
 	{
 		return bPlayerDropError;
+	}
+
+	// The manager resolves a confirmed incident before this tick's orders. An empty
+	// outlier mask means the evidence cannot identify a single reporting peer.
+	int GetReinforcementMismatchSegment() const
+	{
+		return nReinforcementMismatchSegment;
+	}
+
+	uint16_t GetReinforcementVoters() const
+	{
+		return wReinforcementVoters;
+	}
+
+	uint16_t GetReinforcementOutliers() const
+	{
+		return wReinforcementOutliers;
 	}
 
 	unsigned long GetPlayerMask() const

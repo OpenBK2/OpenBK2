@@ -14,6 +14,14 @@
 			<ValueTextFileRef href="MP_GAME_TYPE_COOP.txt" />
 		</Item>
 		<Item>
+			<ValName>MP_CHEATER_DETECTED</ValName>
+			<ValueTextFileRef href="MP_CHEATER_DETECTED.txt" />
+		</Item>
+		<Item>
+			<ValName>MP_REINFORCEMENT_DESYNC</ValName>
+			<ValueTextFileRef href="MP_REINFORCEMENT_DESYNC.txt" />
+		</Item>
+		<Item>
 			<ValName>REINFORCEMENT_TIMER_NEVER</ValName>
 			<ValueTextFileRef href="REINFORCEMENT_TIMER_NEVER.txt" />
 		</Item>
