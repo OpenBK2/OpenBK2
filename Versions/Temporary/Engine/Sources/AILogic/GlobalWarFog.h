@@ -3,6 +3,7 @@
 #include "Misc/BitData.h"
 #include "Misc/Geom.h"
 #include "UpdateUnitContainer.h"
+#include "WarFogVisibilityHierarchy.h"
 
 #include "AILogic_export.h"
 
@@ -272,6 +273,9 @@ class AILOGIC_EXPORT CGlobalWarFog : public CAIObjectBase
 	std::vector<SSpiralPoint> spiral; // S(круга) * sizeof( SSpiralPoint ) = S(круга) * 18
 	CArray2D<int> spiralCoords;       // MaxRadius * MaxRadius
 	std::vector<int> lengths;         // MaxRadius * sizeof( int )
+	// Derived from saved tile visibility on Init/load; queries never mutate these summaries.
+	std::vector<CWarFogVisibilityHierarchy> visibilityHierarchies;
+	CWarFogVisibilityHierarchy scriptVisibilityHierarchy;
 	ZDATA
 	int nSizeX = {};
 	int nSizeY = {};
@@ -309,6 +313,8 @@ private:
 	void OnSerialize( IBinSaver &saver );
 	void ReInit();
 	void ReInitDefaults();
+	void RebuildVisibilityHierarchies();
+	bool AreScriptAreasVisible( int nParty ) const;
 
 	const bool IsTileValid( const int x, const int y ) const
 	{

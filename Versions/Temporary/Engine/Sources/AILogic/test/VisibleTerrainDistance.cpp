@@ -371,6 +371,62 @@ TEST_F( VisibleTerrainDistance, ScriptRevealsKeepTheirOneAITilePrecisionAndSingl
 	EXPECT_FLOAT_EQ( Distance( 20.5f * AI_TILE_SIZE, 20.5f * AI_TILE_SIZE, 64, 0 ), 1.0f );
 }
 
+TEST_F( VisibleTerrainDistance, OverlappingObserversDoNotDoubleCountVisibleTiles )
+{
+	AddObserver();
+	AddObserver( 10, 10, 1, 124 );
+	theWarFog.DeleteUnit( 123 );
+	theWarFog.Segment();
+	EXPECT_FLOAT_EQ( Distance( 12 * cellSize + 16, 10.5f * cellSize, 64 ), 0.25f );
+	theWarFog.DeleteUnit( 124 );
+	theWarFog.Segment();
+	EXPECT_FLOAT_EQ( Distance( 12 * cellSize + 16, 10.5f * cellSize, 64 ), 1.0f );
+}
+
+TEST_F( VisibleTerrainDistance, LoadRebuildsSummariesBeforePendingObserverChanges )
+{
+	SetDiplomacy( false );
+	AddObserver();
+	NDb::SScriptArea area = RevealSingleTile();
+	// Save the applied fog while a move is queued. The derived counts must match that snapshot.
+	theWarFog.UpdateUnit( 123, Sight( 24, 24 ) );
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->Add( 1, &theWarFog );
+	}
+	theWarFog.Clear();
+	stream.Seek( 0 );
+	{
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		loader->Add( 1, &theWarFog );
+	}
+	EXPECT_FLOAT_EQ( Distance( 12 * cellSize + 16, 10.5f * cellSize, 64 ), 0.25f );
+	EXPECT_FLOAT_EQ( Distance( 20.5f * AI_TILE_SIZE, 20.5f * AI_TILE_SIZE, 64, 0 ), 0.25f );
+	theWarFog.Segment();
+	EXPECT_FLOAT_EQ( Distance( 12 * cellSize + 16, 10.5f * cellSize, 64 ), 1.0f );
+	EXPECT_FLOAT_EQ( Distance( 26 * cellSize + 16, 24.5f * cellSize, 64 ), 0.25f );
+	theWarFog.ToggleOpenForScriptAreaTiles( area, false );
+	EXPECT_FLOAT_EQ( Distance( 20.5f * AI_TILE_SIZE, 20.5f * AI_TILE_SIZE, 64, 0 ), 1.0f );
+}
+
+TEST_F( VisibleTerrainDistance, OverlappingScriptAreasFollowTheExistingRevealMask )
+{
+	SetDiplomacy( false );
+	NDb::SScriptArea first = RevealSingleTile();
+	NDb::SScriptArea second = first;
+	second.szName = "overlapping-distance-test";
+	theWarFog.ToggleOpenForScriptAreaTiles( second, true );
+	EXPECT_FLOAT_EQ( Distance( 20.5f * AI_TILE_SIZE, 20.5f * AI_TILE_SIZE, 64, 0 ), 0.25f );
+	// The legacy mask clears an overlapping tile when either area closes. Counts must follow the mask.
+	theWarFog.ToggleOpenForScriptAreaTiles( first, false );
+	ASSERT_FALSE( theWarFog.IsTileVisible( SVector( 21, 20 ), 0 ) );
+	EXPECT_FLOAT_EQ( Distance( 20.5f * AI_TILE_SIZE, 20.5f * AI_TILE_SIZE, 64, 0 ), 1.0f );
+	theWarFog.ToggleOpenForScriptAreaTiles( second, false );
+	theWarFog.ToggleOpenForScriptAreaTiles( first, true );
+	EXPECT_FLOAT_EQ( Distance( 20.5f * AI_TILE_SIZE, 20.5f * AI_TILE_SIZE, 64, 0 ), 0.25f );
+}
+
 TEST_F( VisibleTerrainDistance, BoundedSearchMatchesAnExhaustiveAITileReference )
 {
 	AddObserver( 5, 9 );

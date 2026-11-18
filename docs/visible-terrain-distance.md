@@ -67,7 +67,52 @@ The function reads the simulation's current fog and cached unit visibility;
 it does not force an observer update or refresh cached unit visibility. Queries
 therefore inherit the existing update timing. Use an explicit party and a
 consistent simulation phase for deterministic gameplay decisions. No state,
-RNG, minimap data, save fields or query cache is changed.
+RNG, minimap data or saved state is changed by a query.
+
+## Upper fog tiles
+
+Each combat side has a hierarchy of flat arrays summarizing the ordinary fog
+grid. Base blocks cover **8 x 8 fog tiles**. Each higher block covers four lower
+blocks, doubling the width: 16, 32, 64, 128, and so on. Construction stops when
+the top level has at most two blocks along each map axis.
+
+One editor terrain patch contains 16 x 16 fog tiles (32 x 32 AI tiles). Thus a
+1 x 1 patch map has exactly 2 x 2 base blocks, each covering 8 x 8 fog tiles.
+
+| Square map size in terrain patches | Real fog tiles per side | Top block width in fog tiles | Top grid |
+|---|---:|---:|---|
+| 1 x 1 | 16 | 8 | 2 x 2 |
+| 2 x 2 | 32 | 16 | 2 x 2 |
+| 4 x 4 | 64 | 32 | 2 x 2 |
+| 8 x 8 | 128 | 64 | 2 x 2 |
+| 16 x 16 | 256 | 128 | 2 x 2 |
+| 32 x 32 | 512 | 256 | 2 x 2 |
+
+The current editor creation limit is 32 x 32 patches. Hierarchy dimensions are
+derived from the loaded map rather than hard-capped at that limit. Rectangular
+maps and partially occupied edge blocks use their actual extents.
+
+Each block has three derived states: `Invisible`, `PartiallyVisible`, and
+`Visible`. `Visible` means every real tile covered by the block is visible.
+Base blocks count visible real tiles. Higher blocks count nonempty children and
+fully visible children. Each block also records its actual child count, so
+off-map padding does not prevent edge blocks from becoming fully visible.
+
+Counters change immediately when the ordinary fog observer count crosses zero.
+Adding or removing an overlapping observer does not change them while the real
+tile remains visible. A change propagates upward only when the child's state
+changes; changes within a partially visible block stop at that block. Updates
+therefore use the same simulation timing as the underlying fog.
+
+Script reveals maintain a separate hierarchy over one-meter AI tiles, updated
+when their reveal bits change. A query searches the union of ordinary fog and
+eligible script reveals by taking the nearer result. The existing single-player
+scope and overlapping-script-mask behavior remain unchanged. Fog-off queries
+treat the whole map rectangle as visible.
+
+These summaries are derived caches, excluded from saves and checksums. Init and
+load rebuild them from the current fog counts and script mask, including the
+applied visibility of observers with pending updates. Clear discards them.
 
 ## Limits, invalid inputs and cost
 
@@ -81,17 +126,26 @@ Finite positions outside the map can measure distance to visible terrain inside
 the map. Search bounds are clipped before converting to integer indices. Double
 intermediates avoid overflow when squaring large finite float inputs.
 
-Lower limits reduce the maximum search work. For ordinary fog, a query visits at
-most roughly `(2 * distanceLimit / 64 + 2)^2` candidate cells, capped by the map
-size. Halving a sufficiently large limit therefore cuts worst-case candidate
-work to about one quarter. When single-player script reveals are active, the
-cell width is 32 instead. This is an operation bound, not a timing benchmark.
+Already-visible units and positions return immediately. Other queries select a
+hierarchy level whose blocks cover the search diameter, or the top level for
+larger limits. Only blocks intersecting the bounded search square are visited;
+touching boundary blocks are included to preserve exact zero distances for tiny
+limits. Invisible blocks are skipped, fully visible blocks provide an exact
+distance to their rectangle, and partial blocks descend toward real tiles.
+Blocks and tiles that cannot improve the best distance are pruned.
 
-Already-visible units and positions return immediately. The bounded scan skips
-rows and visibility checks that cannot improve the best distance found, uses
-squared distances until one final square root, and allocates no search storage.
-Small limits and occasional queries are the intended use. Many units querying
-large limits every tick may justify a shared distance field after profiling.
+This lets a deep-fog query finish after a few block checks without reading any
+real tiles. An entirely hidden map, even at the largest editor size, needs at
+most four top-block checks for a map-wide query. Mixed visibility can still
+require descent and leaf scans; there is no universal O(1) query guarantee.
+The hierarchy level selection itself also depends on the number of levels.
+
+Lower limits bound the searched region more tightly, but elapsed work no longer
+necessarily scales with its area because whole blocks can be skipped. The worst
+case still grows with the number of tiles within the limit, plus the summaries
+visited. A tile visibility change is constant work when its base block keeps
+the same state, and at worst touches one block at each level. Queries allocate
+no heap storage and use squared distances until the final square root.
 
 ## Tests
 
@@ -107,3 +161,9 @@ multiplayer viewpoint independence, observer movement/transfer/removal, map
 edges, invalid/large inputs, and partial script reveals. A separate exhaustive
 one-meter-tile reference checks bounded search results across both sides and
 multiple limits.
+
+`WarFogVisibilityHierarchy_test` verifies empty/full-block pruning using work
+counts, all three states, transitions back to invisible, partial map edges,
+multiple hierarchy levels, and exhaustive results across changing visibility
+patterns. Integration tests cover overlapping observers, overlapping script
+reveals, and rebuilding summaries from a save with pending fog updates.

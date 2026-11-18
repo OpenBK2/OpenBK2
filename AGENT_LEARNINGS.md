@@ -1,6 +1,12 @@
 
 # AGENT LEARNINGS
 
+- One terrain patch is 16 x 16 fog tiles, so 8 x 8 base summary blocks give a
+  2 x 2 upper grid on the smallest map. Fog hierarchy counters must track real
+  zero/nonzero visibility transitions, not observer counts. Rebuild derived
+  summaries from applied fog and script masks on load before queued updates run;
+  script masks have twice the resolution and their own legacy overlap semantics.
+
 - The Exact Shot binary round-trip test loaded a sparse XML resource into an
   editor-created record with schema-sized arrays. Binary loading replaced those
   arrays without updating bindings, so database cleanup indexed stale elements
