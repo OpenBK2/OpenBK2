@@ -6,7 +6,10 @@
 #include "System/Commands.h"
 #include "System/Streams.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
+#include <string>
 
 #include <zconf.h>
 
@@ -81,6 +84,27 @@ struct SReplayCheckSums
 	bool HasRngCalls() const
 	{
 		return rngCalls.size() == Size() && Size() > 0;
+	}
+};
+
+struct SReplayVersion
+{
+	std::string szGameVersion;
+	uint32_t uDataChecksum = 0;
+
+	static GAMEX_EXPORT SReplayVersion Current();
+
+	bool Matches( const SReplayVersion &other ) const
+	{
+		// An empty version identifies a recording without this metadata. Zero is a valid checksum.
+		return !szGameVersion.empty() && szGameVersion == other.szGameVersion && uDataChecksum == other.uDataChecksum;
+	}
+
+	int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szGameVersion );
+		f.Add( 3, &uDataChecksum );
+		return 0;
 	}
 };
 
@@ -160,6 +184,7 @@ struct SMultiplayerReplayInfo
 	bool bDisableReinforcementOverride = false;
 	int nOnBaseCaptureReinfPointsGain = 1;
 	int nOnBaseLostReinfPointsLoss = -1;
+	SReplayVersion version;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -168,6 +193,8 @@ struct SMultiplayerReplayInfo
 			// A missing vector chunk leaves its old value untouched when reusing a record.
 			coopPlayers.clear();
 			bCoopPlayersRecorded = false;
+			// A legacy replay has no version chunk. Clear any stamp from a previous read.
+			version = {};
 		}
 		f.Add( 2, &pMap );
 		f.Add( 3, &slots );
@@ -227,6 +254,7 @@ struct SMultiplayerReplayInfo
 		}
 		// Older recordings used the selected nation/tech reinforcement catalogue.
 		f.Add( 27, &bDisableReinforcementOverride );
+		f.Add( 28, &version );
 		return 0;
 	}
 
@@ -273,6 +301,7 @@ struct SMultiplayerReplayInfo
 		bDisableReinforcementOverride = src.bDisableReinforcementOverride;
 		nOnBaseCaptureReinfPointsGain = src.nOnBaseCaptureReinfPointsGain;
 		nOnBaseLostReinfPointsLoss = src.nOnBaseLostReinfPointsLoss;
+		version = src.version;
 		return *this;
 	}
 };
@@ -349,6 +378,7 @@ public:
 
 	void StartNewGame( const NDb::SMapInfo *_pMap ) override;
 	bool LoadHistory( const std::string &szFileName );
+	void WarnIfReplayOutdated() const;
 	bool SaveReplay( const std::string &szFileName,
 	                 const SB2GameSpecificData &gameDesc,
 	                 const std::vector<SMPSlot> &slots,

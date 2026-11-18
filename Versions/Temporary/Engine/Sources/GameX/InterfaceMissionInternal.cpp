@@ -5256,6 +5256,14 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 	}
 	pTrans->StartMission( pMap, Singleton<IAILogic>() );
 	pInterface->NewMission( pMap, pTrans, Singleton<IScenarioTracker>(), nPlayerForWarFog );
+	if ( bReplay )
+	{
+		// NewMission clears the previous mission's messages. Show the advisory once the replay HUD is ready.
+		if ( const auto *pHistory = dynamic_cast<const CCommandsHistory *>( pTrans->GetCheckSumLogger() ) )
+		{
+			pHistory->WarnIfReplayOutdated();
+		}
+	}
 
 	NMainLoop::PushInterface( pInterface );
 
