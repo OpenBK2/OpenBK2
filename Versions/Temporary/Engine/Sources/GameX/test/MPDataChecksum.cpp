@@ -1,6 +1,7 @@
 #include "../stdafx.h"
 
 #include "AILogic/DBAIConsts.h"
+#include "GameX/CommandsHistory.h"
 #include "GameX/CoopScriptChecksum.h"
 #include "GameX/DBConsts.h"
 #include "GameX/DBMPConsts.h"
@@ -320,6 +321,51 @@ TEST_F( MPDataChecksum, MenuReadsReuseSnapshotUntilTheNextAttempt )
 	const uint32_t refreshed = pConsts->RecalculateMPDataVersionChecksum();
 	EXPECT_NE( initial, refreshed );
 	EXPECT_EQ( refreshed, pConsts->GetMPDataVersionChecksum() );
+}
+
+TEST_F( MPDataChecksum, ReplayMetadataTracksVersionAndBaseChecksumIndependently )
+{
+	SMultiplayerReplayInfo recorded;
+	recorded.version = SReplayVersion::Current();
+	EXPECT_EQ( recorded.version.szGameVersion, "1.2.3.4" );
+	EXPECT_EQ( recorded.version.uDataChecksum, pConsts->GetMPDataVersionChecksum() );
+
+	CMemoryStream stream;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->Add( 2, &recorded );
+	}
+	stream.Seek( 0 );
+	SMultiplayerReplayInfo loaded;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		saver->Add( 2, &loaded );
+	}
+	SMultiplayerReplayInfo listed;
+	listed = loaded;
+	EXPECT_TRUE( listed.version.Matches( SReplayVersion::Current() ) );
+	NGlobal::SetVar( "code_version_number", "1.2.3.5" );
+	EXPECT_FALSE( listed.version.Matches( SReplayVersion::Current() ) );
+	NGlobal::SetVar( "code_version_number", "1.2.3.4" );
+	++pNet->nMaxLatency;
+	pConsts->RecalculateMPDataVersionChecksum();
+	EXPECT_FALSE( listed.version.Matches( SReplayVersion::Current() ) );
+
+	// The old metadata must still load, even when the destination last held a current recording.
+	CMemoryStream legacy;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &legacy, SAVER_MODE_WRITE );
+		int nLastGameSegment = 127;
+		saver->Add( 9, &nLastGameSegment );
+	}
+	legacy.Seek( 0 );
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &legacy, SAVER_MODE_READ );
+		loaded.operator&( *saver );
+	}
+	EXPECT_EQ( loaded.nLastGameSegment, 127 );
+	EXPECT_TRUE( loaded.version.szGameVersion.empty() );
+	EXPECT_FALSE( loaded.version.Matches( recorded.version ) );
 }
 
 TEST_F( MPDataChecksum, StartupAndModRefreshUseTheCurrentConfig )

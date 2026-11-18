@@ -3,6 +3,7 @@
 #include "AILogic/AILogicCommand.h"
 #include "CommandsHistory.h"
 #include "CoopScriptChecksum.h"
+#include "DBConsts.h"
 #include "GetConsts.h"
 #include "Transceiver.h"
 // IAILogic, for the checksum dump written when a playback diverges. Transceiver.h
@@ -18,6 +19,7 @@
 #include "InterfaceMisc.h"
 #include "Main/MainLoopCommands.h"
 #include "MultiplayerCommandManager.h"
+#include "port/unicode.h"
 #include "SaveLoadHelper.h"
 #include "System/BuildStamp.h"
 #include "System/GlobalVars.h"
@@ -50,6 +52,27 @@ static void ReportReplayLine( const std::string &szLine )
 }
 
 // CCommandsHistory
+
+SReplayVersion SReplayVersion::Current()
+{
+	const NDb::SGameConsts *pConsts = NGameX::GetGameConsts();
+	if ( !pConsts )
+	{
+		return {};
+	}
+	return { WideToUTF8( NGlobal::GetVar( "code_version_number", "0.0.0.0" ).GetString() ),
+	         pConsts->GetMPDataVersionChecksum() };
+}
+
+void CCommandsHistory::WarnIfReplayOutdated() const
+{
+	if ( !replayInfo.version.Matches( SReplayVersion::Current() ) )
+	{
+		const char *pszMessage = "outdated replay";
+		ReportReplayLine( pszMessage );
+		InterfaceState()->WriteToMissionConsole( NStr::ToUnicode( pszMessage ) );
+	}
+}
 
 CCommandsHistory::CCommandsHistory()
 	: bFinishedHistory( false )
@@ -485,6 +508,7 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName,
 	replayInfo.szImageId = NBuildStamp::GetSimulationImageId();
 	replayInfo.szConfiguration = NBuildStamp::GetBuildConfiguration();
 	replayInfo.uMapCheckSum = replayInfo.pMap != 0 ? replayInfo.pMap->CalcCheckSum() : 0;
+	replayInfo.version = SReplayVersion::Current();
 
 	if ( !SerializeHistory( szFileName, false ) )
 	{
