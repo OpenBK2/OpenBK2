@@ -222,13 +222,10 @@ void CInterfaceMPStatistics::MakeInterior()
 
 	if ( pMissionTimeView )
 	{
-		int nTime = Singleton<IScenarioTracker>()->GetStatistics( Singleton<IScenarioTracker>()->GetLocalPlayer(),
-		                                                          IScenarioTracker::ESK_TIME );
-		std::string szText = fmt::format( "{:02d}", nTime % 60 );
-		nTime = nTime / 60;
-		szText = fmt::format( "{:02d}:", nTime % 60 ) + szText;
-		nTime = nTime / 60;
-		szText = std::to_string( nTime ) + szText;
+		const int nTime = Singleton<IScenarioTracker>()->GetStatistics( Singleton<IScenarioTracker>()->GetLocalPlayer(),
+		                                                                IScenarioTracker::ESK_TIME );
+		// Mission statistics store seconds; keep all three fields separated and zero-padded.
+		const std::string szText = fmt::format( "{:02d}:{:02d}:{:02d}", nTime / 3600, nTime / 60 % 60, nTime % 60 );
 		pMissionTimeView->SetText( pMissionTimeView->GetDBText() + NStr::ToUnicode( szText ) );
 	}
 

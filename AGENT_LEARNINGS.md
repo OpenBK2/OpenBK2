@@ -295,6 +295,9 @@ context. Read `git diff` of every touched file before building.
 
 ## Replay disconnects and time labels
 
+- The multiplayer results screen formats `IScenarioTracker::ESK_TIME`, which is
+  elapsed real-time seconds. Keep hours, minutes and seconds in one zero-padded
+  format string; the old concatenation omitted the colon after hours.
 - A report of `s 3895` can mean elapsed seconds, not the command segment. Read the
   replay's checksum times and segment duration before choosing a dump time. This
   multiplayer recording used 200 ms segments, so its 3894-second disconnect was
