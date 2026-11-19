@@ -364,11 +364,20 @@ TEST_P( ReinforcementTimer, PlayerOrdersRecheckTheLastCreditAndOutstandingCooldo
 	tracker->GetReinforcementCallsInfo( 0, &callsByType );
 	EXPECT_EQ( callsByType[NDb::RT_TANKS], 0 );
 	tracker->IncreaseReinforcementCallsLeft( 0, 1 );
+	theReinfArray[0].Segment();
+	ResetUpdates();
 	order.nNumber = NDb::RT_SUPER_WEAPON;
 	order.vPos = CVec2( -1, 32 );
 	logic->UnitCommand( &order, 0, 0 );
+	logic->UnitCommand( &order, 0, 0 );
 	theReinfArray[0].Segment();
 	ASSERT_EQ( tracker->GetReinforcementCallsLeft( 0 ), 1 );
+	// The controller was already enabled. A rejected queued call must still unlock the local controls.
+	const auto updates = ReadUpdates();
+	ASSERT_EQ( updates.pending.size(), 1 );
+	const auto *recycle = dynamic_cast<const SAIReinfRecycleUpdate *>( updates.pending.front()->pData.GetPtr() );
+	ASSERT_NE( recycle, nullptr );
+	EXPECT_TRUE( recycle->bEnabled );
 	order.vPos = CVec2( 32, 32 );
 	logic->UnitCommand( &order, 0, 0 );
 	logic->UnitCommand( &order, 0, 0 );

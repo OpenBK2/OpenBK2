@@ -848,6 +848,28 @@ TEST_F( CooperativeGeneral, WeatherChangeBeforeQueuedCreationPreservesCallsAndRe
 	EXPECT_EQ( commands[0].point, CVec2( 10, 20 ) );
 }
 
+TEST_F( CooperativeGeneral, PlayerAircraftWaitForClearWeatherUnlessEveryPilotCanFly )
+{
+	auto *ordinary = AddAirReinforcement( 0, NDb::RT_FIGHTERS );
+	auto *allWeather = AddAirReinforcement( 0, NDb::RT_BOMBERS, 0 );
+	auto *ground = MakeRecord<NDb::SReinforcement>( "Reinforcement" );
+	ground->eType = NDb::RT_TANKS;
+	InitAirReinforcements();
+	for ( const auto phase : { NDb::EWS_CLEAR, NDb::EWS_FADE_IN, NDb::EWS_BAD, NDb::EWS_FADE_OUT, NDb::EWS_CLEAR } )
+	{
+		SCOPED_TRACE( phase );
+		SetWeather( phase );
+		EXPECT_EQ( theWeather.CanCallPlayerReinforcement( 0, *ordinary ), phase == NDb::EWS_CLEAR );
+		EXPECT_TRUE( theWeather.CanCallPlayerReinforcement( 0, *allWeather ) );
+		EXPECT_TRUE( theWeather.CanCallPlayerReinforcement( 0, *ground ) );
+	}
+
+	// A Master Pilot in one aircraft cannot keep another aircraft from returning during the fade.
+	allWeather->entries.push_back( ordinary->entries[0] );
+	SetWeather( NDb::EWS_FADE_OUT );
+	EXPECT_FALSE( theWeather.CanCallPlayerReinforcement( 0, *allWeather ) );
+}
+
 TEST_F( CooperativeGeneral, MasterPilotUsesAircraftOwnersExperienceInsteadOfViewpointOrParty )
 {
 	NGlobal::SetVar( "multiplayer_unit_experience", 1 );
@@ -902,10 +924,11 @@ TEST_F( CooperativeGeneral, MixedAircraftBatchRequiresEveryFixedWingPilotToBeWea
 	air->Segment();
 	EXPECT_TRUE( QueuedAirCalls( &theReinfArray[3] ).empty() );
 
-	// The second entry is now a helicopter, whose own movement states do not force weather departure.
+	// The General exempts helicopters. Player calls follow the helicopter movement state's weather check.
 	const NDb::SMechUnitRPGStats *ordinaryStats = ordinary->entries[0].pMechUnit;
 	auto *helicopter = const_cast<NDb::SMechUnitRPGStats *>( ordinaryStats );
 	helicopter->etype = NDb::RPG_TYPE_AVIA_HELICOPTER;
+	EXPECT_FALSE( theWeather.CanCallPlayerReinforcement( 3, *reinforcement ) );
 	auto state = AirState( air );
 	state.turn = true;
 	Copy( &state, air );

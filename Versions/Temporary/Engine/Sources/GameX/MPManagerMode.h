@@ -243,6 +243,7 @@ protected:
 
 	bool IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket );
 	virtual void BroadcastGameControlPacket( CNetPacket *pPacket );
+	void BroadcastDeparturePackets( const char *szReason );
 	void BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason );
 	void SendStartGamePacket();
 	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );

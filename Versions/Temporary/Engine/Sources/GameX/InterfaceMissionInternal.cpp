@@ -410,7 +410,6 @@ CInterfaceMission::CInterfaceMission()
 	AddObserver( "reinf_update_minimap_pos", &CInterfaceMission::MsgUpdateMinimapPos );
 	AddObserver( "reinf_mode", &CInterfaceMission::MsgReinfMode );
 	AddObserver( "forced_action_call_no_reinf", &CInterfaceMission::MsgForcedActionCallNoReinf );
-	AddObserver( "bad_weather", &CInterfaceMission::MsgBadWeather );
 	AddObserver( "avia_returns", &CInterfaceMission::MsgAviaReturns );
 
 	// super weapon
@@ -1626,15 +1625,6 @@ void CInterfaceMission::MsgReinfMode( const SGameMessage &msg )
 	else
 	{
 		SetActionMode( EAM_REINF );
-	}
-}
-
-void CInterfaceMission::MsgBadWeather( const SGameMessage &msg )
-{
-	bool bBadWeather = msg.nParam1;
-	if ( pReinf )
-	{
-		pReinf->BadWeather( bBadWeather );
 	}
 }
 

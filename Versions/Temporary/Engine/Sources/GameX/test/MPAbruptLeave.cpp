@@ -30,6 +30,9 @@ namespace
 constexpr int PLAYER_COUNT = 4;
 constexpr int CLIENT_IDS[] = { 271780, 271786, 271789, 271792 };
 constexpr uint16_t ALL_PLAYERS = ( 1u << PLAYER_COUNT ) - 1;
+// The fixture executes each packet after one pack plus two segments of latency.
+constexpr int FIRST_BALLOT_SEGMENT = 3;
+constexpr int FIRST_VERDICT_SEGMENT = 2 * FIRST_BALLOT_SEGMENT;
 std::vector<int> *pExecutedCommands = nullptr;
 
 class CTailCommand : public IAILogicCommandB2
@@ -92,6 +95,7 @@ class CRecordingHistory : public ICommandsHistory
 	OBJECT_NOCOPY_METHODS( CRecordingHistory );
 	CHistory recorded;
 	std::vector<std::pair<int, std::string>> ordered;
+	uint32_t ulLastChecksum = 0;
 
 public:
 	void StartNewGame( const NDb::SMapInfo * ) override {}
@@ -109,14 +113,15 @@ public:
 
 	void ExecuteSegmentCommands( const int, ITransceiver * ) override {}
 
-	bool AddChecksumLog( const int, const uint32_t, const int ) override
+	bool AddChecksumLog( const int, const uint32_t ulChecksum, const int ) override
 	{
+		ulLastChecksum = ulChecksum;
 		return true;
 	}
 
 	const uint32_t GetLastChecksum() const override
 	{
-		return 0;
+		return ulLastChecksum;
 	}
 
 	const std::vector<std::pair<int, std::string>> &GetOrderedCommands() const
@@ -445,6 +450,11 @@ public:
 		return pTransceiver->playerRemovals[nPlayer].GetRemovalSegment( pTransceiver->nLatency );
 	}
 
+	static uint32_t Disqualified( const CMPManagerMode *pManager )
+	{
+		return pManager->dwDisqualifiedPlayers;
+	}
+
 	static int HostClient( const CMPManagerMode *pManager )
 	{
 		return pManager->nHostClientID;
@@ -684,29 +694,33 @@ protected:
 		FAIL() << "Protocol did not quiesce after 128 delivery rounds";
 	}
 
+	void StepPeer( int nPlayer )
+	{
+		SPeer &peer = peers[nPlayer];
+		if ( !peer.bOnline )
+		{
+			return;
+		}
+		SelectPeer( nPlayer );
+		peer.wallTime += 200;
+		peer.timer->Update( peer.wallTime );
+		ITransceiver *pSimulation = peer.transceiver;
+		const int nSegment = peer.transceiver->GetCurrentCommonSegment();
+		if ( peer.nLastQueuedCommand != nSegment )
+		{
+			CPtr<CTailCommand> command = new CTailCommand;
+			command->nValue = nPlayer * 100000 + nSegment;
+			pSimulation->SendCommand( command );
+			peer.nLastQueuedCommand = nSegment;
+		}
+		pSimulation->DoSegments();
+	}
+
 	void Frame( bool bDeliver = true )
 	{
 		for ( int i = 0; i < PLAYER_COUNT; ++i )
 		{
-			SPeer &peer = peers[i];
-			if ( !peer.bOnline )
-			{
-				continue;
-			}
-			SelectPeer( i );
-			peer.wallTime += 200;
-			peer.timer->Update( peer.wallTime );
-			const int nSegment = peer.transceiver->GetCurrentCommonSegment();
-			if ( peer.nLastQueuedCommand != nSegment )
-			{
-				CPtr<CTailCommand> command = new CTailCommand;
-				command->nValue = i * 100000 + nSegment;
-				ITransceiver *pSimulation = peer.transceiver;
-				pSimulation->SendCommand( command );
-				peer.nLastQueuedCommand = nSegment;
-			}
-			ITransceiver *pSimulation = peer.transceiver;
-			pSimulation->DoSegments();
+			StepPeer( i );
 		}
 		if ( bDeliver )
 		{
@@ -900,6 +914,23 @@ protected:
 		}
 	}
 
+	void CheckSurvivorsAfterOutlierLeaves( int nOutlier = 3 )
+	{
+		AdvanceSurvivorsPast( 20 );
+		CheckEqualSurvivorHistories( 1u << nOutlier );
+		for ( const SPeer &peer : peers )
+		{
+			if ( peer.bOnline )
+			{
+				EXPECT_EQ( CMPPlayerDropTestAccess::Disqualified( peer.manager ), 1u << nOutlier );
+				EXPECT_EQ( CMPPlayerDropTestAccess::Removal( peer.transceiver, nOutlier ), FIRST_VERDICT_SEGMENT );
+				EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), -1 );
+				EXPECT_EQ( std::count( peer.executed.begin(), peer.executed.end(), nOutlier * 100000 + 2 ), 1 );
+				EXPECT_EQ( std::count( peer.executed.begin(), peer.executed.end(), nOutlier * 100000 + 3 ), 0 );
+			}
+		}
+	}
+
 	static const CB2DepartureRecoveryPacket *Recovery( const SDelivery &delivery )
 	{
 		return dynamic_cast<const CB2DepartureRecoveryPacket *>( delivery.packet.GetPtr() );
@@ -932,11 +963,13 @@ TEST_F( MPAbruptLeave, RoutedPeersProduceReceiveAndExecuteIdenticalCommandsFromS
 TEST_F( MPAbruptLeave, ReinforcementReportsIdentifyTheReportingPeerBeforeOrdersAtTheSameTick )
 {
 	EnableReinforcementAudit( { 8, 8, 8, 9 } );
-	Frames( 4 );
+	// A divergent balance may also affect the world checksum. Survivors still need the specific verdict.
+	peers[3].history->AddChecksumLog( 0, 123, 0 );
+	Frames( FIRST_VERDICT_SEGMENT );
 	Frame( false ); // Inspect the verdict before the manager acts on it.
 	for ( const SPeer &peer : peers )
 	{
-		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), 4 );
+		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), FIRST_VERDICT_SEGMENT );
 		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), 0 );
 		EXPECT_EQ( peer.transceiver->GetReinforcementVoters(), ALL_PLAYERS );
 		EXPECT_EQ( peer.transceiver->GetReinforcementOutliers(), 1u << 3 );
@@ -946,24 +979,173 @@ TEST_F( MPAbruptLeave, ReinforcementReportsIdentifyTheReportingPeerBeforeOrdersA
 	// even if its target sends no more input and never processes the verdict.
 	peers[3].bOnline = false;
 	Pump();
-	AdvanceSurvivorsPast( 20 );
-	CheckEqualSurvivorHistories( 1u << 3 );
+	CheckSurvivorsAfterOutlierLeaves();
+}
+
+TEST_F( MPAbruptLeave, MatchingBalancesStillDetectAnUnrelatedWorldDesyncAtTheOriginalTick )
+{
+	EnableReinforcementAudit( { 8, 8, 8, 8 } );
+	peers[3].history->AddChecksumLog( 0, 123, 0 );
+	const int nComparisonTick = 2 * peers[0].transceiver->GetLatency();
+	Frames( nComparisonTick );
+	Frame( false );
+	for ( const SPeer &peer : peers )
+	{
+		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), nComparisonTick );
+		EXPECT_TRUE( peer.transceiver->IsGameEnded() );
+		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), -1 );
+	}
+}
+
+TEST_F( MPAbruptLeave, OutlierLeavesBeforeSurvivorsReachItsVerdict )
+{
+	EnableReinforcementAudit( { 8, 8, 8, 9 } );
+	shouldHold = []( const SDelivery &delivery )
+	{ return delivery.nSender == 3 && !delivery.bPersistent && delivery.nSegment >= FIRST_BALLOT_SEGMENT; };
+	Frames( FIRST_VERDICT_SEGMENT - 1 );
+	StepPeer( 3 );
+	StepPeer( 3 );
+	ASSERT_EQ( peers[3].transceiver->GetReinforcementOutliers(), 1u << 3 );
+	RunManager( 3 );
+	ASSERT_TRUE( peers[3].transceiver->IsGameEnded() );
+
+	// Deliver the ejected peer's final persistent messages, then the backend departure.
+	peers[3].bOnline = false;
+	ASSERT_EQ( CMPPlayerDropTestAccess::LastReceived( peers[0].transceiver, 3 ), FIRST_BALLOT_SEGMENT - 1 );
+	Pump();
+	ASSERT_GE( CMPPlayerDropTestAccess::LastReceived( peers[0].transceiver, 3 ), FIRST_BALLOT_SEGMENT );
+	Crash( 3 );
+	Pump();
 	for ( int i : { 0, 1, 2 } )
 	{
-		EXPECT_EQ( CMPPlayerDropTestAccess::Removal( peers[i].transceiver, 3 ), 4 );
-		EXPECT_EQ( peers[i].transceiver->GetReinforcementMismatchSegment(), -1 );
-		EXPECT_EQ( std::count( peers[i].executed.begin(), peers[i].executed.end(), 300001 ), 0 );
+		ASSERT_EQ( peers[i].transceiver->GetCurrentCommonSegment(), FIRST_VERDICT_SEGMENT - 1 );
+	}
+	CheckSurvivorsAfterOutlierLeaves();
+}
+
+TEST_F( MPAbruptLeave, SurvivorAheadOfTheHostKeepsTheVerdictThroughAbruptRecovery )
+{
+	EnableReinforcementAudit( { 8, 8, 8, 9 } );
+	Frames( FIRST_VERDICT_SEGMENT - 1 );
+	StepPeer( 1 );
+	StepPeer( 1 );
+	RunManager( 1 );
+	ASSERT_EQ( CMPPlayerDropTestAccess::Disqualified( peers[1].manager ), 1u << 3 );
+	StepPeer( 1 ); // Its replay already contains the removal when recovery starts.
+	ASSERT_FALSE( peers[1].scenario->IsPlayerPresent( 3 ) );
+	ASSERT_EQ( peers[0].transceiver->GetCurrentCommonSegment(), FIRST_VERDICT_SEGMENT - 1 );
+	ASSERT_EQ( CMPPlayerDropTestAccess::Disqualified( peers[0].manager ), 0u );
+
+	Crash( 3 ); // No graceful announcement or verdict from the outlier.
+	RunManager( 0 );
+	ASSERT_TRUE( peers[0].transceiver->IsRecoveringDeparture() );
+	Pump();
+	CheckSurvivorsAfterOutlierLeaves();
+}
+
+class MPLANVerdict : public MPAbruptLeave, public testing::WithParamInterface<int>
+{
+};
+
+TEST_P( MPLANVerdict, HostCutoffAfterDriverTeardownPreservesTheVerdictWithoutTheOutliersLastPacket )
+{
+	const int nOutlier = GetParam();
+	const int nAuthority = nOutlier == 0 ? 1 : 0;
+	std::array<int, PLAYER_COUNT> balances = { 8, 8, 8, 8 };
+	++balances[nOutlier];
+	EnableReinforcementAudit( balances );
+
+	// A torn-down LAN driver loses the unsent tail and has no persistent lobby channel.
+	shouldHold = [nOutlier]( const SDelivery &delivery )
+	{ return delivery.nSender == nOutlier && ( delivery.bPersistent || delivery.nSegment >= FIRST_BALLOT_SEGMENT ); };
+	Frames( FIRST_VERDICT_SEGMENT - 2 );
+	StepPeer( nOutlier );
+	StepPeer( nOutlier );
+	StepPeer( nOutlier );
+	ASSERT_EQ( peers[nOutlier].transceiver->GetCurrentCommonSegment(), FIRST_VERDICT_SEGMENT );
+	ASSERT_EQ( peers[nOutlier].transceiver->GetReinforcementMismatchSegment(), -1 );
+	ASSERT_EQ( peers[nOutlier].transceiver->GetCurrentMissingPlayers(), ALL_PLAYERS & ~( 1u << nOutlier ) );
+
+	// The outlier cannot reach its verdict until every other peer publishes packet 4.
+	for ( int i = 0; i < PLAYER_COUNT; ++i )
+	{
+		if ( i != nOutlier )
+		{
+			StepPeer( i );
+		}
+	}
+	Pump();
+	StepPeer( nOutlier );
+	ASSERT_EQ( peers[nOutlier].transceiver->GetReinforcementOutliers(), 1u << nOutlier );
+	RunManager( nOutlier );
+	ASSERT_TRUE( peers[nOutlier].transceiver->IsGameEnded() );
+	peers[nOutlier].bOnline = false;
+
+	// LAN announces the current tick of the host (or its successor) as the command cutoff.
+	const int nCutoff = peers[nAuthority].transceiver->GetCurrentCommonSegment();
+	ASSERT_EQ( nCutoff, FIRST_VERDICT_SEGMENT - 1 );
+	CPtr<CNetPacket> departure = new CB2DropPlayerAtSegmentPacket( CLIENT_IDS[nAuthority], nOutlier, nCutoff );
+	peers[nAuthority].client->received.push_back( departure );
+	for ( int i = 0; i < PLAYER_COUNT; ++i )
+	{
+		Queue( nAuthority, i, departure, false );
+	}
+	Pump();
+	for ( const SPeer &peer : peers )
+	{
+		if ( peer.bOnline )
+		{
+			ASSERT_EQ( CMPPlayerDropTestAccess::Removal( peer.transceiver, nOutlier ), nCutoff + 2 );
+			ASSERT_EQ( CMPPlayerDropTestAccess::LastReceived( peer.transceiver, nOutlier ), FIRST_BALLOT_SEGMENT - 1 );
+		}
+	}
+	CheckSurvivorsAfterOutlierLeaves( nOutlier );
+}
+
+INSTANTIATE_TEST_SUITE_P( HostAndClient, MPLANVerdict, testing::Values( 0, 3 ) );
+
+TEST_F( MPAbruptLeave, GracefulDepartureReachingOneSurvivorEarlyPreservesTheVerdict )
+{
+	EnableReinforcementAudit( { 8, 8, 8, 9 } );
+	Frames( FIRST_VERDICT_SEGMENT );
+
+	// Both survivors have the same report and ballot. Only slot 1 has heard slot 2 is leaving.
+	const int nDeparture = peers[2].transceiver->GetDepartureSegment();
+	const int nRemoval = nDeparture + peers[2].transceiver->GetLatency();
+	CPtr<CNetPacket> departure = new CB2DropPlayerAtSegmentPacket( CLIENT_IDS[2], 2, nDeparture );
+	peers[2].bOnline = false;
+	peers[3].bOnline = false;
+	Queue( 2, 1, departure, true );
+	Pump();
+	ASSERT_EQ( CMPPlayerDropTestAccess::Removal( peers[1].transceiver, 2 ), nRemoval );
+	ASSERT_EQ( CMPPlayerDropTestAccess::Removal( peers[0].transceiver, 2 ), -1 );
+	ASSERT_GT( nRemoval, FIRST_VERDICT_SEGMENT );
+	Frame( false );
+	for ( int i : { 0, 1 } )
+	{
+		EXPECT_EQ( peers[i].transceiver->GetReinforcementVoters(), ALL_PLAYERS );
+		EXPECT_EQ( peers[i].transceiver->GetReinforcementOutliers(), 1u << 3 );
+	}
+	Queue( 2, 0, departure, true );
+	Pump();
+	AdvanceSurvivorsPast( 20 );
+	CheckEqualSurvivorHistories( ( 1u << 2 ) | ( 1u << 3 ) );
+	for ( int i : { 0, 1 } )
+	{
+		EXPECT_EQ( CMPPlayerDropTestAccess::Disqualified( peers[i].manager ), 1u << 3 );
+		EXPECT_EQ( CMPPlayerDropTestAccess::Removal( peers[i].transceiver, 2 ), nRemoval );
+		EXPECT_EQ( CMPPlayerDropTestAccess::Removal( peers[i].transceiver, 3 ), FIRST_VERDICT_SEGMENT );
 	}
 }
 
 TEST_F( MPAbruptLeave, SplitReinforcementReportsFreezeWithoutNamingEitherSide )
 {
 	EnableReinforcementAudit( { 4, 5, 4, 5 } );
-	Frames( 4 );
+	Frames( FIRST_VERDICT_SEGMENT );
 	Frame( false );
 	for ( const SPeer &peer : peers )
 	{
-		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), 4 );
+		EXPECT_EQ( peer.transceiver->GetCurrentCommonSegment(), FIRST_VERDICT_SEGMENT );
 		EXPECT_EQ( peer.transceiver->GetReinforcementMismatchSegment(), 0 );
 		EXPECT_EQ( peer.transceiver->GetReinforcementOutliers(), 0u );
 	}
@@ -978,11 +1160,11 @@ TEST_F( MPAbruptLeave, OneAgainstOneReinforcementDisagreementCannotIdentifyAnOut
 	{
 		CMPPlayerDropTestAccess::SetDuelRoster( peers[i].manager, peers[i].transceiver );
 	}
-	Frames( 4 );
+	Frames( FIRST_VERDICT_SEGMENT );
 	Frame( false );
 	for ( int i : { 0, 1 } )
 	{
-		EXPECT_EQ( peers[i].transceiver->GetCurrentCommonSegment(), 4 );
+		EXPECT_EQ( peers[i].transceiver->GetCurrentCommonSegment(), FIRST_VERDICT_SEGMENT );
 		EXPECT_EQ( peers[i].transceiver->GetReinforcementMismatchSegment(), 0 );
 		EXPECT_EQ( peers[i].transceiver->GetReinforcementVoters(), 0x3u );
 		EXPECT_EQ( peers[i].transceiver->GetReinforcementOutliers(), 0u );
@@ -992,11 +1174,11 @@ TEST_F( MPAbruptLeave, OneAgainstOneReinforcementDisagreementCannotIdentifyAnOut
 TEST_F( MPAbruptLeave, ACompleteNegativeBalanceReportStillIdentifiesItsSender )
 {
 	EnableReinforcementAudit( { 4, 4, -99, 4 } );
-	Frames( 4 );
+	Frames( FIRST_VERDICT_SEGMENT );
 	for ( const SPeer &peer : peers )
 	{
 		// Peers have the complete report, but cannot use the accused reporter's ballot.
-		CMPPlayerDropTestAccess::ForgetAuditPacket( peer.transceiver, 2, 2 );
+		CMPPlayerDropTestAccess::ForgetAuditPacket( peer.transceiver, 2, FIRST_BALLOT_SEGMENT );
 	}
 	Frame( false );
 	for ( const SPeer &peer : peers )
@@ -1008,16 +1190,17 @@ TEST_F( MPAbruptLeave, ACompleteNegativeBalanceReportStillIdentifiesItsSender )
 	RunManager( 2 );
 	EXPECT_TRUE( peers[2].transceiver->IsGameEnded() );
 	const auto recorded = peers[2].history->GetOrderedCommands();
-	EXPECT_EQ( std::count( recorded.begin(), recorded.end(), std::make_pair( 4, std::string( "DropPlayer 2" ) ) ), 1 );
+	const auto removal = std::make_pair( FIRST_VERDICT_SEGMENT, std::string( "DropPlayer 2" ) );
+	EXPECT_EQ( std::count( recorded.begin(), recorded.end(), removal ), 1 );
 }
 
 TEST_F( MPAbruptLeave, MissingConfirmationFromASurvivorPreventsAttribution )
 {
 	EnableReinforcementAudit( { 4, 4, 4, 5 } );
-	Frames( 4 );
+	Frames( FIRST_VERDICT_SEGMENT );
 	for ( const SPeer &peer : peers )
 	{
-		CMPPlayerDropTestAccess::ForgetAuditPacket( peer.transceiver, 1, 2 );
+		CMPPlayerDropTestAccess::ForgetAuditPacket( peer.transceiver, 1, FIRST_BALLOT_SEGMENT );
 	}
 	Frame( false );
 	for ( const SPeer &peer : peers )
@@ -1090,8 +1273,31 @@ TEST_F( MPAbruptLeave, UnevenSurvivorPrefixesRecoverAllAcceptedCommandsBeforeOne
 	CheckEqualSurvivorHistories( 1u << 3 );
 	for ( int i : { 0, 1, 2 } )
 	{
+		EXPECT_EQ( CMPPlayerDropTestAccess::Disqualified( peers[i].manager ), 0u );
 		EXPECT_EQ( std::count( peers[i].executed.begin(), peers[i].executed.end(), 300022 ), 1 );
 		EXPECT_EQ( std::count( peers[i].executed.begin(), peers[i].executed.end(), 300023 ), 0 );
+	}
+}
+
+TEST_F( MPAbruptLeave, GracefulDepartureWithEqualReportsNeedsOnlyTheLastPublishedPacket )
+{
+	EnableReinforcementAudit( { 8, 8, 8, 8 } );
+	Frames( FIRST_VERDICT_SEGMENT );
+	const int nDeparture = peers[3].transceiver->GetDepartureSegment();
+	CPtr<CNetPacket> departure = new CB2DropPlayerAtSegmentPacket( CLIENT_IDS[3], 3, nDeparture );
+	peers[3].bOnline = false;
+	for ( int i : { 0, 1, 2 } )
+	{
+		Queue( 3, i, departure, true );
+	}
+	Pump();
+	AdvanceSurvivorsPast( 20 );
+	CheckEqualSurvivorHistories( 1u << 3 );
+	for ( int i : { 0, 1, 2 } )
+	{
+		EXPECT_EQ( CMPPlayerDropTestAccess::Disqualified( peers[i].manager ), 0u );
+		EXPECT_EQ( std::count( peers[i].executed.begin(), peers[i].executed.end(), 300005 ), 1 );
+		EXPECT_EQ( std::count( peers[i].executed.begin(), peers[i].executed.end(), 300006 ), 0 );
 	}
 }
 

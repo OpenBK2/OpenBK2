@@ -239,7 +239,8 @@ public:
 		// Restore the verdict produced by the checkpoint, then run the manager and replay paths normally.
 		pManager->nHostClientID = DEPARTING_HOST;
 		pManager->slots[0].szName = "Player<One>";
-		pTransceiver->nReinforcementMismatchSegment = pTransceiver->nCommonSegment - 2 * pTransceiver->nLatency;
+		const int nRoundDelay = pTransceiver->GetLatency() + pTransceiver->GetSegmentsPackSize();
+		pTransceiver->nReinforcementMismatchSegment = pTransceiver->nCommonSegment - 2 * nRoundDelay;
 		pTransceiver->wReinforcementOutliers = 1;
 		pTransceiver->wReinforcementVoters = pTransceiver->wWaitMask;
 	}

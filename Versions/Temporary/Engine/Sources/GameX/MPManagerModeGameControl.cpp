@@ -221,11 +221,14 @@ bool CMPManagerMode::HandleReinforcementMismatch()
 		{
 			continue;
 		}
-		if ( !ScheduleSynchronizedPlayerDrop( i, nCutoff ) )
+		// A transport departure may already be scheduled when this peer reaches the same vote boundary.
+		if ( !ScheduleSynchronizedPlayerDrop( i, nCutoff ) &&
+		     ( pTransceiver->HasPlayerDropError() || i >= playerDrops.size() || playerDrops[i].GetSegment() != nCutoff ) )
 		{
 			break;
 		}
 		dwDisqualifiedPlayers |= dwOutlier;
+		pTransceiver->AcknowledgeReinforcementDrop( i );
 		NGameX::MatchPacketTrace_Log( nCheckpoint,
 		                              "DECISION",
 		                              "ReinforcementOutlier",
@@ -251,11 +254,7 @@ bool CMPManagerMode::HandleReinforcementMismatch()
 		WriteToPipe( PIPE_CHAT, L"<val MP_CHEATER_DETECTED> " + wszName, 0xffff4040 );
 		if ( i == nOwnSlot )
 		{
-			// Deliver our final votes before EndGame releases the peer connections.
-			for ( const CPtr<CNetPacket> &pPacket : pTransceiver->GetDeparturePackets() )
-			{
-				BroadcastGameControlPacket( pPacket );
-			}
+			BroadcastDeparturePackets( "reinforcement_outlier" );
 			// EndGame saves this client's replay immediately. Commit the same drop the survivors apply at this tick.
 			pTransceiver->ApplyScheduledPlayerRemovals();
 			LoseGame();

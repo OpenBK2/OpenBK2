@@ -126,33 +126,23 @@ bool CWeather::IsActive() const
 	return eState != EWS_CLEAR;
 }
 
-bool CWeather::CanCallAviation( int nPlayer, NDb::EReinforcementType eType ) const
+namespace
 {
-	if ( !IsActive() )
-	{
-		return true;
-	}
-
-	IAIScenarioTracker *pTracker = GetScenarioTracker();
-	const NDb::SReinforcement *pReinforcement = pTracker ? pTracker->GetReinforcement( nPlayer, eType ) : nullptr;
-	if ( !pReinforcement )
-	{
-		return false;
-	}
-
+bool CanFlyInBadWeather( int nPlayer, const NDb::SReinforcement &reinforcement, bool bGeneralCall )
+{
 	// Match newly created aircraft's ability level, including the owning player's leader cap.
 	// Reading the local player here would make COOP decisions depend on the replay/client viewpoint.
-	const int nAbilityLevel = theStatistics.GetAbilityLevel( nPlayer, eType );
+	const int nAbilityLevel = theStatistics.GetAbilityLevel( nPlayer, reinforcement.eType );
 	bool bHasAircraft = false;
-	for ( const NDb::SReinforcementEntry &entry : pReinforcement->entries )
+	for ( const NDb::SReinforcementEntry &entry : reinforcement.entries )
 	{
 		if ( !entry.pMechUnit || !entry.pMechUnit->IsAviation() )
 		{
 			continue;
 		}
 		bHasAircraft = true;
-		// Helicopters do not use the fixed-wing patrol state's weather-forced departure.
-		if ( entry.pMechUnit->etype == NDb::RPG_TYPE_AVIA_HELICOPTER )
+		// Preserve the General's existing helicopter dispatch policy.
+		if ( bGeneralCall && entry.pMechUnit->etype == NDb::RPG_TYPE_AVIA_HELICOPTER )
 		{
 			continue;
 		}
@@ -177,6 +167,24 @@ bool CWeather::CanCallAviation( int nPlayer, NDb::EReinforcementType eType ) con
 		}
 	}
 	return bHasAircraft;
+}
+} // namespace
+
+bool CWeather::RequiresClearWeather( int nPlayer, const NDb::SReinforcement &reinforcement )
+{
+	return reinforcement.IsAviation() && !CanFlyInBadWeather( nPlayer, reinforcement, false );
+}
+
+bool CWeather::CanCallAviation( int nPlayer, NDb::EReinforcementType eType ) const
+{
+	if ( !IsActive() )
+	{
+		return true;
+	}
+
+	IAIScenarioTracker *pTracker = GetScenarioTracker();
+	const NDb::SReinforcement *pReinforcement = pTracker ? pTracker->GetReinforcement( nPlayer, eType ) : nullptr;
+	return pReinforcement && CanFlyInBadWeather( nPlayer, *pReinforcement, true );
 }
 
 void CWeather::Segment()

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "AILogic/Weather.h"
 #include "CommandsSender.h"
 #include "DBWrapReinf.h"
 #include "InterfaceState.h"
@@ -558,74 +559,13 @@ void CMissionReinf::UpdateReinfInfo()
 
 bool CMissionReinf::CanCall( const NDb::EReinforcementType eType ) const
 {
-	if ( !IsEnabled() )
-	{
-		return false;
-	}
-	if ( eType == NDb::_RT_NONE )
-	{
-		return false;
-	}
-	if ( IsAviaAndCanNotFly( eType ) )
-	{
-		return false;
-	}
-	return true;
+	const auto it = reinfInfos.find( eType );
+	return IsEnabled() && it != reinfInfos.end() && it->second.pReinf && !IsBlockedByWeather( *it->second.pReinf );
 }
 
-bool CMissionReinf::IsAvia( const NDb::EReinforcementType eType ) const
+bool CMissionReinf::IsBlockedByWeather( const NDb::SReinforcement &reinforcement ) const
 {
-	switch ( eType )
-	{
-		case NDb::RT_FIGHTERS:
-		case NDb::RT_BOMBERS:
-		case NDb::RT_GROUND_ATTACK_PLANES:
-		case NDb::RT_RECON:
-		case NDb::RT_PARATROOPS:
-		case NDb::RT_EXTRA_AIR_1:
-		case NDb::RT_EXTRA_AIR_2:
-		case NDb::RT_EXTRA_AIR_3:
-		case NDb::RT_EXTRA_AIR_4:
-		case NDb::RT_EXTRA_AIR_5:
-		case NDb::RT_EXTRA_MAXLVL_AIR_1:
-		case NDb::RT_EXTRA_MAXLVL_AIR_2:
-		case NDb::RT_EXTRA_MAXLVL_AIR_3:
-		case NDb::RT_EXTRA_MAXLVL_AIR_4:
-		case NDb::RT_EXTRA_MAXLVL_AIR_5:
-			return true;
-
-		case NDb::RT_ELITE_INFANTRY:
-		case NDb::RT_EXTRA_MIXED_1:
-		case NDb::RT_EXTRA_MIXED_2:
-		case NDb::RT_EXTRA_MIXED_3:
-		case NDb::RT_EXTRA_MIXED_4:
-		case NDb::RT_EXTRA_MIXED_5:
-		case NDb::RT_EXTRA_MAXLVL_MIXED_1:
-		case NDb::RT_EXTRA_MAXLVL_MIXED_2:
-		case NDb::RT_EXTRA_MAXLVL_MIXED_3:
-		case NDb::RT_EXTRA_MAXLVL_MIXED_4:
-		case NDb::RT_EXTRA_MAXLVL_MIXED_5:
-		{
-			IScenarioTracker *pST = Singleton<IScenarioTracker>();
-			const int nLocalPlayer = pST->GetLocalPlayer();
-			const NDb::SReinforcement *pReinf = pST->GetReinforcement( nLocalPlayer, eType );
-			if ( pReinf )
-			{
-				for ( int i = 0; i < pReinf->entries.size(); ++i )
-				{
-					const NDb::SReinforcementEntry &entry = pReinf->entries[i];
-					if ( entry.pMechUnit && entry.pMechUnit->IsAviation() )
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
-		default:
-			return false;
-	};
+	return !theWeather.CanCallPlayerReinforcement( Singleton<IScenarioTracker>()->GetLocalPlayer(), reinforcement );
 }
 
 int CMissionReinf::GetReinfCallsLeft() const
@@ -658,9 +598,15 @@ void CMissionReinf::MouseOverBackward( const std::string &szSender )
 	UpdateReinfInfo();
 }
 
-void CMissionReinf::BadWeather( bool bStart )
+void CMissionReinf::UpdateWeather()
 {
-	bBadWeather = bStart;
+	// The visual fade starts before aircraft can fly again. Refresh the controls on the simulation transition.
+	const bool bActive = theWeather.IsActive();
+	if ( bBadWeather == bActive )
+	{
+		return;
+	}
+	bBadWeather = bActive;
 
 	if ( !bBadWeather )
 	{
@@ -840,10 +786,10 @@ void CMissionReinf::UpdateReinfsVisual()
 	bool bEnabled = IsEnabled();
 	for ( CReinfInfos::iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
 	{
-		NDb::EReinforcementType eType = it->first;
 		SReinfInfo &info = it->second;
-		bool bIsReinf = ( info.pReinf != 0 );
-		bool bCanCall = bEnabled && CanCall( eType );
+		const bool bIsReinf = ( info.pReinf != 0 );
+		const bool bBlockedByWeather = bIsReinf && IsBlockedByWeather( *info.pReinf );
+		const bool bCanCall = bEnabled && bIsReinf && !bBlockedByWeather;
 
 		if ( info.pButton )
 		{
@@ -861,7 +807,7 @@ void CMissionReinf::UpdateReinfsVisual()
 
 		if ( info.pBadWeatherWnd )
 		{
-			info.pBadWeatherWnd->ShowWindow( bIsReinf && IsAviaAndCanNotFly( eType ) );
+			info.pBadWeatherWnd->ShowWindow( bBlockedByWeather );
 		}
 	}
 }
@@ -1247,6 +1193,7 @@ void CMissionReinf::CallNoReinf()
 
 void CMissionReinf::Step()
 {
+	UpdateWeather();
 	UpdateMPReinfsXPAndLevel();
 	UpdateReinfsXPAndLevel();
 
@@ -1330,105 +1277,15 @@ bool CMissionReinf::IsAutoShowReinf() const
 	return s_nAutoShowReinf != 0;
 }
 
-bool CMissionReinf::IsAviaPresents() const
-{
-	for ( CReinfInfos::const_iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
-	{
-		NDb::EReinforcementType eType = it->first;
-		const SReinfInfo &info = it->second;
-
-		if ( IsAvia( eType ) && info.pReinf )
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 bool CMissionReinf::IsNonAllWeatherAviaPresents() const
 {
-	for ( CReinfInfos::const_iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
+	const int nPlayer = Singleton<IScenarioTracker>()->GetLocalPlayer();
+	for ( const auto &entry : reinfInfos )
 	{
-		NDb::EReinforcementType eType = it->first;
-		const SReinfInfo &info = it->second;
-
-		if ( info.pReinf && IsAvia( eType ) && !IsAllWeatherAvia( eType ) )
+		const NDb::SReinforcement *pReinf = entry.second.pReinf;
+		if ( pReinf && CWeather::RequiresClearWeather( nPlayer, *pReinf ) )
 		{
 			return true;
-		}
-	}
-	return false;
-}
-
-bool CMissionReinf::IsAviaAndCanNotFly( const NDb::EReinforcementType eType ) const
-{
-	return bBadWeather && IsAvia( eType ) && !IsAllWeatherAvia( eType );
-}
-
-bool CMissionReinf::IsAllWeatherAvia( const NDb::EReinforcementType eType ) const
-{
-	switch ( eType )
-	{
-		case NDb::RT_FIGHTERS:
-		case NDb::RT_BOMBERS:
-		case NDb::RT_GROUND_ATTACK_PLANES:
-		case NDb::RT_RECON:
-		case NDb::RT_PARATROOPS:
-		case NDb::RT_EXTRA_AIR_1:
-		case NDb::RT_EXTRA_AIR_2:
-		case NDb::RT_EXTRA_AIR_3:
-		case NDb::RT_EXTRA_AIR_4:
-		case NDb::RT_EXTRA_AIR_5:
-		case NDb::RT_EXTRA_MAXLVL_AIR_1:
-		case NDb::RT_EXTRA_MAXLVL_AIR_2:
-		case NDb::RT_EXTRA_MAXLVL_AIR_3:
-		case NDb::RT_EXTRA_MAXLVL_AIR_4:
-		case NDb::RT_EXTRA_MAXLVL_AIR_5:
-		{
-			IScenarioTracker *pST = Singleton<IScenarioTracker>();
-			int nLocalPlayer = pST->GetLocalPlayer();
-			int nLevel = pST->GetReinforcementXPLevel( nLocalPlayer, eType );
-			const NDb::SReinforcement *pReinf = pST->GetReinforcement( nLocalPlayer, eType );
-			bool bAllWeather = HasMasterPilot( pReinf, nLevel );
-			return bAllWeather;
-		}
-
-		default:
-			return false;
-	};
-}
-
-bool CMissionReinf::HasMasterPilot( const NDb::SReinforcement *pReinf, int nLevel ) const
-{
-	if ( !pReinf )
-	{
-		return false;
-	}
-
-	for ( int i = 0; i < pReinf->entries.size(); ++i )
-	{
-		const NDb::SReinforcementEntry &entry = pReinf->entries[i];
-		if ( entry.pMechUnit )
-		{
-			const NDb::SUnitActions *pActions = entry.pMechUnit->pActions;
-			if ( pActions )
-			{
-				for ( int j = 0; j < pActions->specialAbilities.size(); ++j )
-				{
-					if ( j > nLevel )
-					{
-						break;
-					}
-					const NDb::SUnitSpecialAblityDesc *pAbility = pActions->specialAbilities[j];
-					if ( pAbility )
-					{
-						if ( pAbility->eName == NDb::ABILITY_MASTER_PILOT )
-						{
-							return true;
-						}
-					}
-				}
-			}
 		}
 	}
 	return false;

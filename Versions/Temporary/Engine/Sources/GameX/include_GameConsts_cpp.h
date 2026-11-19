@@ -93,8 +93,8 @@ uint32_t SGameConsts::GetMPDataVersionChecksumWithMap( CDBPtr<NDb::SMultiplayerM
 	// per attempt; selecting another map also requires a fresh map checksum.
 	if ( !bMPMapChecksumValid || pMPChecksumMap != map )
 	{
-		// Older peers cannot vote on reinforcement balances. Reject mixed protocols at lobby join.
-		constexpr uint32_t nMatchProtocolVersion = 1;
+		// Peers must vote on the same packet and apply the verdict at the same command boundary.
+		constexpr uint32_t nMatchProtocolVersion = 2;
 		nMPDataVersionChecksumWithMap = CalculateChecksum( base, map->CalcCheckSum(), nMatchProtocolVersion );
 		if ( map->eGameType == NDb::COOP )
 		{

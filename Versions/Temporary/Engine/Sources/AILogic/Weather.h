@@ -8,7 +8,8 @@
 namespace NDb
 {
 enum EReinforcementType : int;
-}
+struct SReinforcement;
+} // namespace NDb
 
 class CWeather
 {
@@ -38,7 +39,14 @@ public:
 
 	void Clear();
 
-	bool IsActive() const;
+	AILOGIC_EXPORT bool IsActive() const;
+	static AILOGIC_EXPORT bool RequiresClearWeather( int nPlayer, const NDb::SReinforcement &reinforcement );
+
+	bool CanCallPlayerReinforcement( int nPlayer, const NDb::SReinforcement &reinforcement ) const
+	{
+		return !IsActive() || !RequiresClearWeather( nPlayer, reinforcement );
+	}
+
 	bool CanCallAviation( int nPlayer, NDb::EReinforcementType eType ) const;
 	void Segment();
 

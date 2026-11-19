@@ -286,6 +286,27 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 	return true;
 }
 
+void CMPManagerMode::BroadcastDeparturePackets( const char *szReason )
+{
+	// Repeat the last actual commands before the departing client tears down its peer connections.
+	for ( const CPtr<CNetPacket> &pPacket : pTransceiver->GetDeparturePackets() )
+	{
+		BroadcastGameControlPacket( pPacket );
+	}
+	const int nDropSegment = pTransceiver->GetDepartureSegment();
+	if ( GetMode() == ENM_NIVAL_NET && nDropSegment >= 0 )
+	{
+		// The online lobby stream delivers the tail and its normal transport cutoff in order, even after EndGame.
+		// A survivor can still shorten this cutoff when it independently verifies a reinforcement verdict.
+		NGameX::MatchPacketTrace_Log( pTransceiver->GetCurrentCommonSegment(),
+		                              "TX",
+		                              "CB2DropPlayerAtSegmentPacket",
+		                              GetOwnClientID(),
+		                              fmt::format( "slot={} target_seg={} reason={}", nOwnSlot, nDropSegment, szReason ) );
+		BroadcastGameControlPacket( new CB2DropPlayerAtSegmentPacket( 0, nOwnSlot, nDropSegment ) );
+	}
+}
+
 bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 {
 	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -297,24 +318,7 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 	{
 		if ( GetMode() == ENM_NIVAL_NET && IsValid( pTransceiver ) && !pTransceiver->HasPlayerDropError() )
 		{
-			const int nDropSegment = pTransceiver->GetDepartureSegment();
-			if ( nDropSegment >= 0 )
-			{
-				// The persistent lobby stream outlives EndGame's peer teardown. Send
-				// actual trailing commands before the cutoff and the server leave;
-				// a remote client's later local tick cannot describe our final input.
-				for ( const CPtr<CNetPacket> &pPacket : pTransceiver->GetDeparturePackets() )
-				{
-					BroadcastGameControlPacket( pPacket );
-				}
-				NGameX::MatchPacketTrace_Log(
-						pTransceiver->GetCurrentCommonSegment(),
-						"TX",
-						"CB2DropPlayerAtSegmentPacket",
-						GetOwnClientID(),
-						fmt::format( "slot={} target_seg={} reason=voluntary_leave", nOwnSlot, nDropSegment ) );
-				BroadcastGameControlPacket( new CB2DropPlayerAtSegmentPacket( 0, nOwnSlot, nDropSegment ) );
-			}
+			BroadcastDeparturePackets( "voluntary_leave" );
 		}
 		else if ( IsGameControlHost() && IsValid( pTransceiver ) )
 		{
