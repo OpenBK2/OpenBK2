@@ -679,3 +679,7 @@ context. Read `git diff` of every touched file before building.
 - Multiplayer packets use a sequential NetSaver. `HasChunk` cannot detect
   optional fields there, and short reads are zero-filled. For a required
   report, check a trailing nonzero format tag and test it with `CreateNetSaver`.
+- A pending departure releases the ordinary packet wait before changing the
+  simulation roster. Base lockstep votes on the applied roster and the packet
+  prefix guaranteed to execute. Test a fast peer leaving while others still
+  need its final packets, and compare their replay commands at the removal tick.

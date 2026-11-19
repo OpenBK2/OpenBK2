@@ -150,6 +150,7 @@ private:
 	bool bPlayerDropError = false;
 	NTimer::STime timeStartWaitingForRemovedPlayer = {};
 	int nLastMembershipChange = -1;
+	int nNextWorldChecksum = 0;
 	int nReinforcementMismatchSegment = -1;
 	uint16_t wReinforcementVoters = 0;
 	uint16_t wReinforcementOutliers = 0;
@@ -161,21 +162,22 @@ private:
 	}
 
 	bool IsSegmentPackFinished();
-	bool IsSegmentFinishedByAll( int nSegment );
 	uint16_t GetMissingSegmentPlayers( int nSegment ) const;
 	void SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulCheckSum );
 	void FinalizeSegmentPack( class CAISegmentFinishedPacket *pPacket );
 	void FillReinforcementCheckpoint( class CAISegmentFinishedPacket *pPacket ) const;
+	int GetAuditInputSegment( int nBoundary ) const;
+	bool CheckWorldChecksums( int nAudited );
 	const class CAISegmentFinishedPacket *FindSegmentPacket( int nPlayer, int nAbsoluteSegment ) const;
 	int VoteOnReinforcements( int nAbsoluteSegment ) const;
-	bool CheckReinforcementVotes( int nAbsoluteSegment );
+	bool CheckReinforcementVotes( int nAbsoluteSegment, uint16_t wMissing = 0 );
 	void PruneRecoveryCommands();
 	void AdvanceToNextSegment();
 	void ExecuteCommands( int nFromSegment );
 	bool IsAsyncDetected( int nSegment );
 	void SetLagState( int nSegment, bool bOn );
 
-	void ReportAsnycToFile( int segment, const uint32_t *pChecksums );
+	void ReportAsnycToFile( int segment, const uint32_t *pChecksums, uint16_t wParticipants );
 
 	bool OnTransciverCommonPacket( class CTransciverCommonPacket *pPacket );
 	bool OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *pPacket );
@@ -285,6 +287,8 @@ public:
 	{
 		return wReinforcementOutliers;
 	}
+
+	void AcknowledgeReinforcementDrop( int nPlayer );
 
 	unsigned long GetPlayerMask() const
 	{

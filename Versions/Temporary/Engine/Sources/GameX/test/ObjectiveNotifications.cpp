@@ -4,6 +4,7 @@
 #include "AILogic/DBAIConsts.h"
 #include "AILogic/NewUpdater.h"
 #include "AILogic/Scripts.h"
+#include "AILogic/Weather.h"
 #include "B2_M1_World/MapObj.h"
 #include "B2_M1_World/MissionObjectiveStates.h"
 #include "Common_RTS_AI/AIMap.h"
@@ -14,6 +15,7 @@
 #include "GameX/InterfaceNotifications.h"
 #include "GameX/InterfaceState.h"
 #include "GameX/MessageParts.h"
+#include "GameX/MissionReinforcements.h"
 #include "GameX/ScenarioTracker.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
@@ -255,6 +257,10 @@ protected:
 		int bottom = 100;
 		std::vector<CDBPtr<NDb::SNotificationEvent>> dbEvents( NDb::NEVT_COUNT );
 		dbEvents[NDb::NEVT_OBJECTIVE_RECEIVED] = objectiveEvent;
+		auto *aviationEvent = Record<NDb::SNotificationEvent>( "NotificationEvent" );
+		ASSERT_NE( aviationEvent, nullptr );
+		aviationEvent->eType = NDb::NEVT_AVIA_AVAILABLE;
+		dbEvents[NDb::NEVT_AVIA_AVAILABLE] = aviationEvent;
 		Hydrate( notifications,
 		         { [&]( IBinSaver &saver )
 		           {
@@ -469,6 +475,54 @@ TEST_F( ObjectiveNotifications, RemembersPostfixAndUpdatesOneExistingControl )
 	EXPECT_EQ( ReadNotifications().events.front()->wszText, L"Objective: Hold the \u017d bridge" );
 	notifications->KeepObjectiveNotified( 0, false );
 	EXPECT_EQ( parent->GetNumChildren(), 0 );
+}
+
+TEST_F( ObjectiveNotifications, ReinforcementPanelAnnouncesAircraftOnlyWhenWeatherHasCleared )
+{
+	CObj<CMissionReinf> panel = MakeObject<CMissionReinf>( 0x17163380 );
+	ASSERT_NE( panel, nullptr );
+	auto *fighters = Record<NDb::SReinforcement>( "Reinforcement" );
+	ASSERT_NE( fighters, nullptr );
+	fighters->eType = NDb::RT_FIGHTERS;
+	auto *plane = Record<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
+	ASSERT_NE( plane, nullptr );
+	plane->etype = NDb::RPG_TYPE_AVIA_FIGHTER;
+	fighters->entries.resize( 1 );
+	fighters->entries[0].pMechUnit = plane;
+	CDBPtr<NDb::SReinforcement> recipe = fighters;
+	std::unordered_map<NDb::EReinforcementType, SFields, SEnumHash> buttons;
+	buttons.emplace( fighters->eType, SFields{ [&]( IBinSaver &saver ) { saver.Add( 3, &recipe ); } } );
+	external.emplace_back( 4, notifications );
+	Hydrate( panel,
+	         { [&]( IBinSaver &saver )
+	           {
+							 saver.Add( 3, &notifications );
+							 saver.Add( 10, &buttons );
+						 } } );
+	tracker->SetLocalPlayer( 0 );
+
+	// The closed panel still announces availability. Drive its production refresh at each simulation transition.
+	const CWeather savedWeather = theWeather;
+	for ( auto phase : { NDb::EWS_BAD, NDb::EWS_FADE_OUT, NDb::EWS_CLEAR, NDb::EWS_CLEAR } )
+	{
+		SCOPED_TRACE( phase );
+		CMemoryStream stream;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->Add( 2, &phase );
+		}
+		stream.Seek( 0 );
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		theWeather.operator&( *loader );
+		panel->UpdateWeather();
+		const auto state = ReadNotifications();
+		EXPECT_EQ( state.events.size(), phase == NDb::EWS_CLEAR ? 1 : 0 );
+		if ( !state.events.empty() )
+		{
+			EXPECT_EQ( state.events.front()->pDBEvent->eType, NDb::NEVT_AVIA_AVAILABLE );
+		}
+	}
+	theWeather = savedWeather;
 }
 
 TEST_F( ObjectiveNotifications, PinnedEntriesSurviveExpiryClicksAndOtherNotificationCleanup )

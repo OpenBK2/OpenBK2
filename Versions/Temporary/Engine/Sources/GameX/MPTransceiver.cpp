@@ -294,7 +294,9 @@ void CMPTransceiver::DoSegments()
 		{
 			// прибавляется MAX_LATENCY, т.к. модуль от отрицательных чисел считается неправильно
 			const int nPastSegment = ( nSegment - nLatency + pConsts->nMaxLatency ) % pConsts->nMaxLatency;
-			if ( nCommonSegment < nLatency || IsSegmentFinishedByAll( nPastSegment ) )
+			const uint16_t wMissing = nCommonSegment < nLatency ? 0 : GetMissingSegmentPlayers( nPastSegment );
+			const int nAudited = GetAuditInputSegment( GetAuditInputSegment( nCommonSegment ) );
+			if ( wMissing == 0 )
 			{
 				// Commit all departures in slot order immediately before this tick's
 				// orders, only once its required command prefix is available.
@@ -305,13 +307,11 @@ void CMPTransceiver::DoSegments()
 				}
 				SetLagState( nPastSegment, false );
 
-				// Packet P carries balances; P + latency carries every peer's vote on P.
-				// At this fixed boundary everyone has both sets, before applying any more
-				// orders. Give the dedicated verdict priority over the world checksum for P.
-				if ( pMapInfo && nCommonSegment >= 2 * nLatency )
+				// Use the same packet prefix as orders. Even a departing player's inputs
+				// through this boundary are guaranteed on every peer, including after recovery.
+				if ( pMapInfo )
 				{
-					const int nAudited = nCommonSegment - 2 * nLatency;
-					if ( !CheckReinforcementVotes( nAudited ) || IsAsyncDetected( nAudited ) )
+					if ( ( nAudited >= 0 && !CheckReinforcementVotes( nAudited ) ) || !CheckWorldChecksums( nAudited ) )
 					{
 						return;
 					}
@@ -336,6 +336,13 @@ void CMPTransceiver::DoSegments()
 			}
 			else
 			{
+				// A LAN departure can lose the packet whose commands would execute on the verdict tick.
+				// Only a verified removal of its sender can discard it. Earlier commands have already run.
+				if ( pMapInfo && nAudited >= 0 && ( wMissing & wWaitMask ) == 0 &&
+				     !CheckReinforcementVotes( nAudited, wMissing ) )
+				{
+					return;
+				}
 				SetLagState( nPastSegment, true );
 				return;
 			}
@@ -439,11 +446,6 @@ void CMPTransceiver::ExecuteCommands( int nFromSegment )
 	}
 }
 
-bool CMPTransceiver::IsSegmentFinishedByAll( int nSegment )
-{
-	return GetMissingSegmentPlayers( nSegment ) == 0;
-}
-
 uint32_t CMPTransceiver::GetCurrentMissingPlayers() const
 {
 	if ( !bIsGameRunning || bIsGameEnded || nCommonSegment < nLatency || nSegmentsPackSize <= 0 ||
@@ -495,6 +497,11 @@ void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulC
 	//DebugTrace( "+++ Player %d segment %d checksum %d", nPlayer, nSegment, ulCheckSum );
 }
 
+int CMPTransceiver::GetAuditInputSegment( int nBoundary ) const
+{
+	return NMPPlayerDrop::GetRequiredCommandPacket( nBoundary, nLatency, nSegmentsPackSize );
+}
+
 void CMPTransceiver::FillReinforcementCheckpoint( CAISegmentFinishedPacket *pPacket ) const
 {
 	if ( !pMapInfo )
@@ -513,12 +520,13 @@ void CMPTransceiver::FillReinforcementCheckpoint( CAISegmentFinishedPacket *pPac
 			pPacket->balances[i] = pTracker->GetReinforcementCallsLeft( i );
 		}
 	}
-	if ( nCommonSegment >= nLatency )
+	const int nReported = GetAuditInputSegment( nCommonSegment );
+	if ( nReported >= 0 )
 	{
 		// The applied roster changes on the agreed simulation tick. Learning
 		// about an upcoming departure earlier cannot change another peer's vote.
 		pPacket->wVoters = wMask;
-		pPacket->nReinforcementVote = VoteOnReinforcements( nCommonSegment - nLatency );
+		pPacket->nReinforcementVote = VoteOnReinforcements( nReported );
 	}
 }
 
@@ -677,8 +685,8 @@ static bool HaveSameRecoveryCommands( const CAISegmentFinishedPacket &first, con
 
 const CAISegmentFinishedPacket *CMPTransceiver::FindSegmentPacket( int nPlayer, int nAbsoluteSegment ) const
 {
-	// These tails already retain more than two latencies of input, including
-	// our own published report. A wrapped ring index is never proof of a tick.
+	// Both tails retain the full two-round audit window, including our own
+	// published report. A wrapped ring index is never proof of a tick.
 	const auto &packets = nPlayer == nMyLogicID ? departurePackets : players[nPlayer].recoveryPackets;
 	for ( auto it = packets.rbegin(); it != packets.rend(); ++it )
 	{
@@ -747,7 +755,7 @@ int CMPTransceiver::VoteOnReinforcements( int nAbsoluteSegment ) const
 	return VOTE_INCONCLUSIVE;
 }
 
-bool CMPTransceiver::CheckReinforcementVotes( int nAbsoluteSegment )
+bool CMPTransceiver::CheckReinforcementVotes( int nAbsoluteSegment, uint16_t wMissing )
 {
 	if ( nReinforcementMismatchSegment >= 0 )
 	{
@@ -755,25 +763,26 @@ bool CMPTransceiver::CheckReinforcementVotes( int nAbsoluteSegment )
 	}
 	// A real departure changes the electorate at a deterministic tick. Complete
 	// a fresh two-round check within the new membership before adjudicating.
-	if ( wWaitMask != wMask || nAbsoluteSegment < nLastMembershipChange )
+	if ( nAbsoluteSegment < nLastMembershipChange )
 	{
 		return true;
 	}
 	const int nProposed = VoteOnReinforcements( nAbsoluteSegment );
+	const int nBallotSegment = GetAuditInputSegment( nCommonSegment );
 	bool bConfirmed = nProposed != VOTE_INCONCLUSIVE;
 	for ( int i = 0; i < SAIConsts::MAX_NUM_OF_PLAYERS; ++i )
 	{
 		// A confirmed minority reporter cannot veto a unanimous survivor vote
 		// by withholding a valid ballot. Its original balance report is required.
-		if ( !IsPlayerWaitedFor( i ) || i == nProposed )
+		if ( !IsPlayerPresent( i ) || i == nProposed )
 		{
 			continue;
 		}
-		const auto *pVote = FindSegmentPacket( i, nAbsoluteSegment + nLatency );
+		const auto *pVote = FindSegmentPacket( i, nBallotSegment );
 		if ( !pVote || pVote->bConflictingReport || pVote->nBalanceSlots != pMapInfo->players.size() ||
-		     pVote->wVoters != wWaitMask || pVote->nReinforcementVote < VOTE_INCONCLUSIVE ||
+		     pVote->wVoters != wMask || pVote->nReinforcementVote < VOTE_INCONCLUSIVE ||
 		     pVote->nReinforcementVote >= SAIConsts::MAX_NUM_OF_PLAYERS ||
-		     ( pVote->nReinforcementVote >= 0 && !IsPlayerWaitedFor( pVote->nReinforcementVote ) ) )
+		     ( pVote->nReinforcementVote >= 0 && !IsPlayerPresent( pVote->nReinforcementVote ) ) )
 		{
 			bConfirmed = false;
 			break;
@@ -784,14 +793,40 @@ bool CMPTransceiver::CheckReinforcementVotes( int nAbsoluteSegment )
 			break;
 		}
 	}
+	if ( wMissing != 0 )
+	{
+		if ( !bConfirmed || nProposed < 0 || wMissing != ( 1U << nProposed ) )
+		{
+			return true;
+		}
+		// On a roster transition the normal path applies due removals before examining the ballots.
+		for ( const auto &removal : playerRemovals )
+		{
+			if ( removal.IsPending() && removal.GetRemovalSegment( nLatency ) <= nCommonSegment )
+			{
+				return true;
+			}
+		}
+	}
 	if ( bConfirmed && nProposed == VOTE_AGREEMENT )
 	{
 		return true;
 	}
 	nReinforcementMismatchSegment = nAbsoluteSegment;
-	wReinforcementVoters = wWaitMask;
+	wReinforcementVoters = wMask;
 	wReinforcementOutliers = bConfirmed && nProposed >= 0 ? uint16_t( 1U << nProposed ) : 0;
 	return false;
+}
+
+void CMPTransceiver::AcknowledgeReinforcementDrop( int nPlayer )
+{
+	// Scheduling an unrelated departure must leave a verdict waiting for its manager.
+	if ( nPlayer >= 0 && nPlayer < SAIConsts::MAX_NUM_OF_PLAYERS && wReinforcementOutliers == ( 1U << nPlayer ) )
+	{
+		nReinforcementMismatchSegment = -1;
+		wReinforcementVoters = 0;
+		wReinforcementOutliers = 0;
+	}
 }
 
 bool CMPTransceiver::SameRecoveryCommand( const SMPRecoveryCommand &first, const SMPRecoveryCommand &second )
@@ -1082,14 +1117,6 @@ void CMPTransceiver::StopWaitingForPlayer( int nPlayer, int nDropSegment )
 
 	const unsigned long ulWaitMaskBefore = wWaitMask;
 	wWaitMask &= ~( 1UL << nPlayer );
-	if ( nReinforcementMismatchSegment >= 0 )
-	{
-		// A committed membership change supersedes unconsumed evidence from its
-		// old roster; resume adjudication on a full round among the survivors.
-		nReinforcementMismatchSegment = -1;
-		wReinforcementVoters = 0;
-		wReinforcementOutliers = 0;
-	}
 	NGameX::MatchPacketTrace_Log(
 			nCommonSegment,
 			"STATE",
@@ -1214,6 +1241,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	bIsGameEnded = false;
 	bPlayerDropError = false;
 	nLastMembershipChange = -1;
+	nNextWorldChecksum = 0;
 	nReinforcementMismatchSegment = -1;
 	wReinforcementVoters = 0;
 	wReinforcementOutliers = 0;
@@ -1322,7 +1350,7 @@ void CMPTransceiver::ReportLags( uint32_t dwLaggers, bool bInitial )
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILagMessage( dwLaggers, bInitial ) );
 }
 
-void CMPTransceiver::ReportAsnycToFile( int segment, const uint32_t *pChecksums )
+void CMPTransceiver::ReportAsnycToFile( int segment, const uint32_t *pChecksums, uint16_t wParticipants )
 {
 	FILE *fl = fopen( "last_async.txt", "w" );
 
@@ -1339,7 +1367,7 @@ void CMPTransceiver::ReportAsnycToFile( int segment, const uint32_t *pChecksums 
 	std::string checksumsTxt = "";
 	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
 	{
-		if ( !IsPlayerWaitedFor( nPlayerIndex ) )
+		if ( ( wParticipants & ( 1U << nPlayerIndex ) ) == 0 )
 		{
 			continue;
 		}
@@ -1385,6 +1413,29 @@ void CMPTransceiver::ReportAsnycToFile( int segment, const uint32_t *pChecksums 
 #endif
 }
 
+bool CMPTransceiver::CheckWorldChecksums( int nAudited )
+{
+	// Keep checking the world at its original pace. Only a disputed checkpoint
+	// needs the second ballot round before the general desync handler can run.
+	const int nLatest = nCommonSegment - 2 * nLatency;
+	for ( ; nNextWorldChecksum <= nLatest; nNextWorldChecksum += nSegmentsPackSize )
+	{
+		if ( nNextWorldChecksum > nAudited )
+		{
+			const auto *pBallot = FindSegmentPacket( nMyLogicID, nNextWorldChecksum + nLatency + nSegmentsPackSize );
+			if ( !pBallot || pBallot->wVoters != wMask || pBallot->nReinforcementVote != VOTE_AGREEMENT )
+			{
+				break;
+			}
+		}
+		if ( IsAsyncDetected( nNextWorldChecksum ) )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 bool CMPTransceiver::IsAsyncDetected( int nSegment )
 {
 	if ( nCommonSegment <= nLatency )
@@ -1393,16 +1444,16 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 	}
 
 	std::array<uint32_t, SAIConsts::MAX_NUM_OF_PLAYERS> sums = {};
+	const uint16_t wParticipants = pMapInfo ? wMask : wWaitMask;
 	for ( int i = 0; i < sums.size(); ++i )
 	{
-		if ( !IsPlayerWaitedFor( i ) )
+		if ( ( wParticipants & ( 1U << i ) ) == 0 )
 		{
 			continue;
 		}
 		if ( pMapInfo )
 		{
-			// The vote adds one latency to this comparison. A newly received
-			// packet can already occupy the same ring index on small rings.
+			// A newer packet can already occupy this ring index by the time voting finishes.
 			const auto *pPacket = FindSegmentPacket( i, nSegment );
 			if ( !pPacket )
 			{
@@ -1420,7 +1471,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 	int nOutOfSyncs = 0;
 	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
 	{
-		if ( !IsPlayerWaitedFor( nPlayerIndex ) )
+		if ( ( wParticipants & ( 1U << nPlayerIndex ) ) == 0 )
 		{
 			continue;
 		}
@@ -1448,7 +1499,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 			                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", L"ASYNC<br>Save created" ).c_str() );
 			//pAI->DumpAfterAssinc();
 
-			ReportAsnycToFile( nSegment, sums.data() );
+			ReportAsnycToFile( nSegment, sums.data(), wParticipants );
 		}
 
 		if ( NGlobal::GetVar( "pause_on_async", 0 ) != 0 )

@@ -87,6 +87,7 @@ void CMPManagerMode::BeginDepartureRecovery( uint32_t dwDeparted )
 	report->nGameID = nGameID;
 	report->ePhase = CB2DepartureRecoveryPacket::SNAPSHOT;
 	report->dwDeparted = dwRecoveryRound;
+	report->dwDisqualified = dwDisqualifiedPlayers & dwRecoveryRound;
 	report->nCommonSegment = pTransceiver->GetCurrentCommonSegment();
 	report->cutoffs.resize( slots.size(), -1 );
 	for ( size_t i = 0; i < playerDrops.size(); ++i )
@@ -189,7 +190,8 @@ bool CMPManagerMode::OnDepartureRecoveryPacket( CB2DepartureRecoveryPacket *pPac
 	                                           pPacket->commands.size() ) );
 	if ( pPacket->ePhase == CB2DepartureRecoveryPacket::SNAPSHOT )
 	{
-		if ( pPacket->nCommonSegment < 0 || pPacket->cutoffs.size() != slots.size() )
+		if ( pPacket->nCommonSegment < 0 || pPacket->cutoffs.size() != slots.size() ||
+		     ( pPacket->dwDisqualified & ~dwRecoveryRound ) != 0 )
 		{
 			return true;
 		}
@@ -221,6 +223,8 @@ void CMPManagerMode::UpdateDepartureRecovery()
 	commit->ePhase = CB2DepartureRecoveryPacket::COMMIT;
 	commit->dwDeparted = dwRecoveryRound;
 	commit->cutoffs.assign( slots.size(), -1 );
+	const int nPack = pTransceiver->GetSegmentsPackSize();
+	std::vector<int> verifiedCutoffs( slots.size(), -1 );
 	std::vector<int> lastPackets( slots.size(), -1 );
 	std::map<std::pair<int, int>, SMPRecoveryCommand> commands;
 	for ( size_t i = 0; i < slots.size(); ++i )
@@ -238,24 +242,29 @@ void CMPManagerMode::UpdateDepartureRecovery()
 		for ( size_t nPlayer = 0; nPlayer < slots.size(); ++nPlayer )
 		{
 			const int nPrevious = report.cutoffs[nPlayer];
+			const bool bVerified = ( report.dwDisqualified & ( uint32_t( 1 ) << nPlayer ) ) != 0;
+			if ( bVerified && nPrevious < 0 )
+			{
+				return;
+			}
 			if ( nPrevious < 0 )
 			{
 				continue;
 			}
+			// A fast survivor may already have shortened an ordinary departure at the verified vote tick.
+			int &nSaved = bVerified ? verifiedCutoffs[nPlayer] : commit->cutoffs[nPlayer];
 			if ( !NMPPlayerDrop::SPlayerDrop::IsValidSegment( nPrevious, pTransceiver->GetLatency() ) ||
-			     ( commit->cutoffs[nPlayer] >= 0 && commit->cutoffs[nPlayer] != nPrevious ) )
+			     ( bVerified && nPrevious + pTransceiver->GetLatency() > report.nCommonSegment ) ||
+			     ( nSaved >= 0 && nSaved != nPrevious ) )
 			{
-				// Never rewrite an accepted decision after another survivor may
-				// have executed it. Conflicting history must remain frozen.
 				return;
 			}
-			commit->cutoffs[nPlayer] = nPrevious;
+			nSaved = nPrevious;
 		}
 		for ( const SMPRecoveryCommand &command : report.commands )
 		{
 			if ( command.nPlayer < 0 || command.nPlayer >= slots.size() || command.nSegment < 0 ||
-			     command.nSegment % pTransceiver->GetSegmentsPackSize() != 0 ||
-			     ( dwRecoveryRound & ( uint32_t( 1 ) << command.nPlayer ) ) == 0 ||
+			     command.nSegment % nPack != 0 || ( dwRecoveryRound & ( uint32_t( 1 ) << command.nPlayer ) ) == 0 ||
 			     !CMPTransceiver::SameRecoveryCommand( command, command ) )
 			{
 				return;
@@ -270,14 +279,26 @@ void CMPManagerMode::UpdateDepartureRecovery()
 	}
 	for ( size_t i = 0; i < slots.size(); ++i )
 	{
-		if ( ( dwRecoveryRound & ( uint32_t( 1 ) << i ) ) == 0 || commit->cutoffs[i] >= 0 )
+		if ( ( dwRecoveryRound & ( uint32_t( 1 ) << i ) ) == 0 )
 		{
 			continue;
 		}
-		const int nPack = pTransceiver->GetSegmentsPackSize();
-		const int64_t nCutoff = lastPackets[i] < 0 ? nPack : int64_t( lastPackets[i] ) + 2 * int64_t( nPack );
-		if ( nPack <= 0 || nCutoff > ( std::numeric_limits<int>::max )() - pTransceiver->GetLatency() ||
-		     nCutoff + pTransceiver->GetLatency() < commit->nCommonSegment )
+		if ( commit->cutoffs[i] >= 0 )
+		{
+			if ( verifiedCutoffs[i] >= commit->cutoffs[i] )
+			{
+				return;
+			}
+			continue;
+		}
+		int64_t nCutoff = lastPackets[i] < 0 ? nPack : int64_t( lastPackets[i] ) + 2 * int64_t( nPack );
+		if ( verifiedCutoffs[i] >= 0 )
+		{
+			// An observer still needs to reach the vote with this player present. Only its own verdict may
+			// shorten the ordinary command prefix. Older verified slots can have no cached commands left.
+			nCutoff = (std::max)( nCutoff, int64_t( verifiedCutoffs[i] ) + nPack );
+		}
+		if ( nCutoff > ( std::numeric_limits<int>::max )() - pTransceiver->GetLatency() )
 		{
 			return;
 		}
@@ -299,6 +320,10 @@ void CMPManagerMode::UpdateDepartureRecovery()
 			{
 				continue;
 			}
+			if ( commit->cutoffs[nPlayer] + pTransceiver->GetLatency() < report.nCommonSegment )
+			{
+				return;
+			}
 			int nLast = -1;
 			for ( const SMPRecoveryCommand &command : report.commands )
 			{
@@ -307,7 +332,6 @@ void CMPManagerMode::UpdateDepartureRecovery()
 					nLast = (std::max)( nLast, command.nSegment );
 				}
 			}
-			const int nPack = pTransceiver->GetSegmentsPackSize();
 			int64_t nNext = nLast < 0 ? 0 : int64_t( nLast ) + nPack;
 			while ( nNext < int64_t( commit->cutoffs[nPlayer] ) - nPack )
 			{
@@ -322,7 +346,7 @@ void CMPManagerMode::UpdateDepartureRecovery()
 	for ( const auto &entry : commands )
 	{
 		const SMPRecoveryCommand &command = entry.second;
-		if ( command.nSegment < commit->cutoffs[command.nPlayer] - pTransceiver->GetSegmentsPackSize() )
+		if ( command.nSegment < commit->cutoffs[command.nPlayer] - nPack )
 		{
 			commit->commands.push_back( command );
 		}
@@ -340,6 +364,7 @@ bool CMPManagerMode::AcceptDepartureRecovery( CB2DepartureRecoveryPacket *pPacke
 	{
 		return false;
 	}
+	std::vector<int> localCutoffs = pPacket->cutoffs;
 	for ( size_t i = 0; i < slots.size(); ++i )
 	{
 		if ( ( dwRecoveryRound & ( uint32_t( 1 ) << i ) ) == 0 )
@@ -348,14 +373,27 @@ bool CMPManagerMode::AcceptDepartureRecovery( CB2DepartureRecoveryPacket *pPacke
 		}
 		const int nCutoff = pPacket->cutoffs[i];
 		const int nPrevious = playerDrops[i].GetSegment();
-		if ( !NMPPlayerDrop::SPlayerDrop::IsValidSegment( nCutoff, pTransceiver->GetLatency() ) ||
-		     ( nPrevious >= 0 && nCutoff != nPrevious ) ||
-		     ( nPrevious < 0 && nCutoff + pTransceiver->GetLatency() < pTransceiver->GetCurrentCommonSegment() ) )
+		const bool bVerified = ( dwDisqualifiedPlayers & ( uint32_t( 1 ) << i ) ) != 0;
+		if ( !NMPPlayerDrop::SPlayerDrop::IsValidSegment( nCutoff, pTransceiver->GetLatency() ) )
+		{
+			return false;
+		}
+		if ( bVerified )
+		{
+			// This client already has the proof. Commands beyond its verified removal must stay discarded.
+			if ( nPrevious < 0 || nCutoff <= nPrevious )
+			{
+				return false;
+			}
+			localCutoffs[i] = nPrevious;
+		}
+		else if ( ( nPrevious >= 0 && nCutoff != nPrevious ) ||
+		          ( nPrevious < 0 && nCutoff + pTransceiver->GetLatency() < pTransceiver->GetCurrentCommonSegment() ) )
 		{
 			return false;
 		}
 	}
-	if ( !pTransceiver->RestoreRecoveryCommands( pPacket->commands, dwRecoveryRound, pPacket->cutoffs ) )
+	if ( !pTransceiver->RestoreRecoveryCommands( pPacket->commands, dwRecoveryRound, localCutoffs ) )
 	{
 		NGameX::MatchPacketTrace_Log( pTransceiver->GetCurrentCommonSegment(),
 		                              "ERROR",

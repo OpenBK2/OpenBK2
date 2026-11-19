@@ -492,7 +492,6 @@ protected:
 	bool MsgBeginScriptMovieSequence( const SGameMessage &msg );
 	void MsgUpdateMinimapPos( const SGameMessage &msg );
 	void MsgReinfMode( const SGameMessage &msg );
-	void MsgBadWeather( const SGameMessage &msg );
 	void MsgAviaReturns( const SGameMessage &msg );
 	void MsgUserAbilitySlot( const SGameMessage &msg, int nParam );
 	void MsgMultistatePanelMinimize( const SGameMessage &msg );

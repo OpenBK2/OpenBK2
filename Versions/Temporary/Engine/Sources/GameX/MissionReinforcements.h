@@ -7,6 +7,8 @@
 #include "UI/UI.h"
 #include "WorldClient.h"
 
+#include "GameX_export.h"
+
 #include <zconf.h>
 
 class CMissionReinf : public CObjectBase
@@ -199,7 +201,7 @@ private:
 	NDb::EReinforcementType FindReinfInfo( const std::string &szName );
 	void UpdateReinfInfo();
 	bool CanCall( const NDb::EReinforcementType eType ) const;
-	bool IsAvia( const NDb::EReinforcementType eType ) const;
+	bool IsBlockedByWeather( const NDb::SReinforcement &reinforcement ) const;
 
 	int GetReinfCallsLeft() const;
 
@@ -213,11 +215,7 @@ private:
 	bool HaveUnits() const;
 	bool IsAutoShowReinf() const;
 
-	bool IsAviaPresents() const;
 	bool IsNonAllWeatherAviaPresents() const;
-	bool IsAviaAndCanNotFly( const NDb::EReinforcementType eType ) const;
-	bool IsAllWeatherAvia( const NDb::EReinforcementType eType ) const;
-	bool HasMasterPilot( const NDb::SReinforcement *pReinf, int nLevel ) const;
 
 public:
 	CMissionReinf();
@@ -227,6 +225,7 @@ public:
 
 	void UpdateNewAvail();
 	void UpdateNewPoint( bool bIsPoints );
+	GAMEX_EXPORT void UpdateWeather();
 
 	void Step();
 
@@ -245,7 +244,6 @@ public:
 	void UnitFullInfoBack();
 	void MouseOverForward( const std::string &szSender );
 	void MouseOverBackward( const std::string &szSender );
-	void BadWeather( bool bStart );
 	void UpdateWinLooseState();
 	bool ResetReinfMode();
 

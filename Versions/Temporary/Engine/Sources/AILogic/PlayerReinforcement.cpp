@@ -627,7 +627,7 @@ bool CPlayerReinforcement::CanExecutePlayerOrder( const SCallReinforcementComman
 	{
 		return false;
 	}
-	return !pReinf->IsAviation() || theWeather.CanCallAviation( nPlayer, command.eType );
+	return theWeather.CanCallPlayerReinforcement( nPlayer, *pReinf );
 }
 
 void CPlayerReinforcement::Segment()
@@ -653,12 +653,14 @@ void CPlayerReinforcement::Segment()
 
 	CheckReinfButton();
 
+	bool bRejectedPlayerOrder = false;
 	for ( int i = 0; i < commands.size(); ++i )
 	{
 		// Check each order immediately before execution: an earlier order in the same segment can spend the last call.
 		if ( !commands[i].bGeneralCall && pScenarioTracker->GetValidatePlayerReinforcements() &&
 		     !CanExecutePlayerOrder( commands[i] ) )
 		{
+			bRejectedPlayerOrder = true;
 			continue;
 		}
 		// Weather can change after the General queues a call and before this tick creates it.
@@ -680,6 +682,11 @@ void CPlayerReinforcement::Segment()
 		}
 	}
 	commands.clear();
+	// Submitting a call disables the local controls. Publish their final state once after a rejected batch.
+	if ( bRejectedPlayerOrder && bReinfButtonEnabled )
+	{
+		UpdateReinfButtonState( true, 0, 0.0f );
+	}
 
 	if ( superWeaponState == SWS_WAIT_FOR_FLY && curTime >= timeSuperWeaponFire )
 	{

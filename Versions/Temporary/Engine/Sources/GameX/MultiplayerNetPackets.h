@@ -222,6 +222,8 @@ public:
 	// Slots never rejoin a running match. Growing this mask fences old rounds,
 	// including a coordinator's partially delivered commit when it also dies.
 	uint32_t dwDeparted = 0;
+	// In a snapshot these slots have a locally verified reinforcement cutoff. A commit carries transport cutoffs.
+	uint32_t dwDisqualified = 0;
 	int nCommonSegment = 0;
 	std::vector<int> cutoffs;
 	std::vector<SMPRecoveryCommand> commands;
@@ -234,6 +236,7 @@ public:
 		f.Add( 5, &nCommonSegment );
 		f.Add( 6, &cutoffs );
 		f.Add( 7, &commands );
+		f.Add( 8, &dwDisqualified );
 		return 0;
 	}
 };
