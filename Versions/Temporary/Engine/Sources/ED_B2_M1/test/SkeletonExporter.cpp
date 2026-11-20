@@ -1,6 +1,8 @@
 #include "ED_B2_M1/stdafx.h"
 
+#include "3Dmotor/DBScene.h"
 #include "ED_B2_M1/SkeletonExporter.h"
+#include "ED_Common/GrannyModelExport.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ResourceManager.h"
@@ -163,7 +165,7 @@ protected:
 				binary.write( reinterpret_cast<const char *>( position ), sizeof( position ) );
 			}
 		}
-		WriteScene();
+		PrepareSource();
 		const std::string folder = root.generic_u8string() + "/";
 		savedVFS = NVFS::GetMainVFS();
 		savedCreator = NVFS::GetMainFileCreator();
@@ -189,6 +191,11 @@ protected:
 		ASSERT_NE( skeleton, nullptr );
 		ASSERT_TRUE( skeleton->SetValue( "ModelFileRef", "model.gltf" ) );
 		ASSERT_TRUE( skeleton->SetValue( "RootJoint", "Basis" ) );
+	}
+
+	virtual void PrepareSource()
+	{
+		WriteScene();
 	}
 
 	void TearDown() override
@@ -232,6 +239,50 @@ protected:
 		return Singleton<IResourceManager>()->CreateObjectManipulator( "AnimB2", std::string( "Unit/" ) + name );
 	}
 };
+
+class ElefantRoundTrip : public SkeletonExporter
+{
+	void PrepareSource() override
+	{
+		// Convert from the original read-only DB before opening the test's writable DB.
+		const auto data = fs::path( SKELETON_SCHEMA ).parent_path();
+		const char *path = "Units/Technics/German/SPG/jagdpanzer_elefant_ferdinand_sdkfz184/summer_whole_model.xdb";
+		if ( !fs::is_regular_file( data / path ) )
+		{
+			GTEST_SKIP() << "Optional Elefant fixture unavailable";
+		}
+		CObj<NVFS::IVFS> saved = NVFS::GetMainVFS();
+		NVFS::SetMainVFS( NVFS::CreateWinVFS( data.generic_u8string() + "/" ) );
+		std::string error;
+		const bool opened = NDb::OpenDatabase( NVFS::GetMainVFS(), nullptr, NDb::DATABASE_MODE_EDITOR );
+		bool exported = false;
+		if ( opened )
+		{
+			CDBPtr<NDb::SModel> model = NDb::Get<NDb::SModel>( CDBID( path ) );
+			exported = NEditorGltf::ExportGrannyModel( model.GetPtr(), ( root / "model.glb" ).u8string(), {}, &error );
+		}
+		NDb::CloseDatabase();
+		NVFS::SetMainVFS( saved );
+		ASSERT_TRUE( opened && exported ) << error;
+	}
+};
+
+TEST_F( ElefantRoundTrip, ImportsAllSevenDeathClipsFromTheConvertedModel )
+{
+	ASSERT_TRUE( skeleton->SetValue( "ModelFileRef", "model.glb" ) );
+	ASSERT_TRUE( Import() ) << log->messages;
+	ASSERT_EQ( Value<int>( skeleton, "Animations" ), 7 );
+	for ( int i = 0; i < 7; ++i )
+	{
+		const std::string name = "Anim_death_0" + std::to_string( i + 1 ) + "_animb2.xdb";
+		CPtr<IManipulator> death = Animation( name.c_str() );
+		ASSERT_NE( death, nullptr );
+		EXPECT_EQ( Value<int>( death, "FirstFrame" ), i * 10 );
+		EXPECT_EQ( Value<int>( death, "LastFrame" ), i * 10 + 9 );
+		EXPECT_EQ( Value<int>( death, "Length" ), 300 );
+		EXPECT_EQ( Value<std::string>( death, "Type" ), "ANIMATION_DEATH" );
+	}
+}
 
 TEST_F( SkeletonExporter, ImportsMarkerRangesAndLegacyProperties )
 {

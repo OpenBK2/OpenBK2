@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
-#include "AnimationMnemonics.h"
+#include "ED_Common/AnimationMnemonics.h"
 #include "ExporterMethods.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "UnitAnimationExporter.h"
 #include "WeaponMnemonics.h"
 

@@ -5,13 +5,16 @@
 #include "System/Streams.h"
 #include "System/VFSOperations.h"
 
+#include <algorithm>
 #include <deque>
 #include <filesystem>
 #include <mutex>
+#include <string_view>
 #include <unordered_set>
 
 #include <fastgltf/core.hpp>
 #include <fastgltf/tools.hpp>
+#include <simdjson.h>
 
 namespace NGltf
 {
@@ -129,28 +132,61 @@ namespace
 		}
 	}
 
+	bool IsAncestorOf( const CGltfFile &file, std::size_t ancestor, std::size_t nodeIndex )
+	{
+		int current = static_cast<int>( nodeIndex );
+		for ( size_t depth = 0;
+		      current >= 0 && size_t( current ) < file.nodeParents.size() && depth < file.nodeParents.size();
+		      ++depth )
+		{
+			if ( static_cast<std::size_t>( current ) == ancestor )
+			{
+				return true;
+			}
+			current = file.nodeParents[current];
+		}
+		return false;
+	}
+
 	bool FindUniqueNode( const TGltfFilePtr &file, const std::string &nodeName, std::size_t *pResult )
 	{
-		bool found = false;
+		std::vector<size_t> model, collision;
 		for ( std::size_t i = 0; i < file->asset.nodes.size(); ++i )
 		{
 			if ( std::string( file->asset.nodes[i].name ) != nodeName )
 			{
 				continue;
 			}
-			if ( found )
+			// Blender objects and bones have separate namespaces. A named armature
+			// can own a root joint with exactly the same name (for example Basis).
+			const int parent = file->nodeParents[i];
+			if ( parent >= 0 && file->asset.nodes[parent].name == file->asset.nodes[i].name &&
+			     std::any_of( file->asset.skins.begin(),
+			                  file->asset.skins.end(),
+			                  [i]( const fastgltf::Skin &skin )
+			                  { return std::find( skin.joints.begin(), skin.joints.end(), i ) != skin.joints.end(); } ) )
 			{
-				DebugTrace( "glTF: node selector %s is ambiguous in %s", nodeName.c_str(), file->sourcePath.c_str() );
-				return false;
+				continue;
 			}
-			found = true;
-			*pResult = i;
+			// Separate GR2 collision rigs can repeat names from the model's skeleton.
+			const bool inCollision = std::any_of( file->collisionRoots.begin(),
+			                                      file->collisionRoots.end(),
+			                                      [&]( size_t root ) { return IsAncestorOf( *file, root, i ); } );
+			( inCollision ? collision : model ).push_back( i );
 		}
-		if ( !found )
+		const auto &matches = model.empty() ? collision : model;
+		if ( matches.empty() )
 		{
 			DebugTrace( "glTF: node selector %s was not found in %s", nodeName.c_str(), file->sourcePath.c_str() );
+			return false;
 		}
-		return found;
+		if ( matches.size() != 1 )
+		{
+			DebugTrace( "glTF: node selector %s is ambiguous in %s", nodeName.c_str(), file->sourcePath.c_str() );
+			return false;
+		}
+		*pResult = matches.front();
+		return true;
 	}
 
 	void CollectSkinIndices( const fastgltf::Asset &asset,
@@ -172,20 +208,6 @@ namespace
 		{
 			CollectSkinIndices( asset, child, pVisited, pResult );
 		}
-	}
-
-	bool IsAncestorOf( const CGltfFile &file, std::size_t ancestor, std::size_t nodeIndex )
-	{
-		int current = static_cast<int>( nodeIndex );
-		while ( current >= 0 && current < static_cast<int>( file.nodeParents.size() ) )
-		{
-			if ( static_cast<std::size_t>( current ) == ancestor )
-			{
-				return true;
-			}
-			current = file.nodeParents[current];
-		}
-		return false;
 	}
 
 	bool ResolveSkinIndex( const TGltfFilePtr &file, const std::string &rootNodeName, int nFallbackSkin, int *pResult )
@@ -268,11 +290,14 @@ namespace
 	}
 } // namespace
 
-CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourcePath )
+CGltfFile::CGltfFile( fastgltf::Asset &&_asset,
+                      const NFile::CFilePath &_sourcePath,
+                      const std::vector<size_t> &collisionRoots )
 	: asset( std::move( _asset ) )
 	, sourcePath( _sourcePath )
 	, nodeParents( asset.nodes.size(), -1 )
 	, nodeWorldTransforms( asset.nodes.size() )
+	, collisionRoots( collisionRoots )
 {
 	for ( std::size_t parent = 0; parent < asset.nodes.size(); ++parent )
 	{
@@ -292,6 +317,12 @@ CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourceP
 	}
 
 	std::vector<bool> visited( asset.nodes.size(), false );
+	// The default render selection omits collision branches. Explicit AI selectors
+	// traverse the original hierarchy and still see every collision primitive.
+	for ( size_t root : collisionRoots )
+	{
+		visited[root] = true;
+	}
 	if ( asset.defaultScene.has_value() && *asset.defaultScene < asset.scenes.size() )
 	{
 		for ( std::size_t root : asset.scenes[*asset.defaultScene].nodeIndices )
@@ -310,7 +341,10 @@ CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourceP
 	{
 		for ( std::size_t i = 0; i < asset.nodes.size(); ++i )
 		{
-			if ( asset.nodes[i].meshIndex.has_value() )
+			if ( asset.nodes[i].meshIndex.has_value() &&
+			     std::none_of( collisionRoots.begin(),
+			                   collisionRoots.end(),
+			                   [&]( size_t root ) { return IsAncestorOf( *this, root, i ); } ) )
 			{
 				meshNodes.push_back( i );
 			}
@@ -461,6 +495,17 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner, const NFile::CFilePath &mod
 	}
 
 	fastgltf::Parser parser;
+	std::vector<size_t> collisionRoots;
+	parser.setUserPointer( &collisionRoots );
+	parser.setExtrasParseCallback(
+			[]( simdjson::dom::object *extras, size_t i, fastgltf::Category category, void *user )
+			{
+				std::string_view role;
+				if ( category == fastgltf::Category::Nodes && !( *extras )["role"].get( role ) && role == "AIGeometry" )
+				{
+					static_cast<std::vector<size_t> *>( user )->push_back( i );
+				}
+			} );
 	const fastgltf::Options options = fastgltf::Options::DecomposeNodeMatrices | fastgltf::Options::GenerateMeshIndices;
 	const fastgltf::Category categories =
 			fastgltf::Category::Asset | fastgltf::Category::Buffers | fastgltf::Category::BufferViews |
@@ -503,7 +548,7 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner, const NFile::CFilePath &mod
 		buffer.data = fastgltf::sources::Vector{ std::move( externalBytes ), pUri->mimeType };
 	}
 
-	TGltfFilePtr result = std::make_shared<CGltfFile>( std::move( asset ), path );
+	TGltfFilePtr result = std::make_shared<CGltfFile>( std::move( asset ), path, collisionRoots );
 	{
 		std::lock_guard<std::mutex> lock( fileCacheMutex );
 		SCachedFile &entry = fileCache[path];
@@ -535,7 +580,45 @@ bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName, st
 		return false;
 	}
 	std::vector<bool> visited( file->asset.nodes.size(), false );
+	// Even if an artist reparents the collision branch under the model, it
+	// remains collision-only unless the selector explicitly enters that branch.
+	for ( size_t collision : file->collisionRoots )
+	{
+		if ( !IsAncestorOf( *file, collision, rootNode ) )
+		{
+			visited[collision] = true;
+		}
+	}
 	CollectMeshNodes( file->asset, rootNode, &visited, pResult );
+	// The original Granny converter put a rig root and its mesh group beside
+	// each other in each scene. Honor existing XDB selectors for those files.
+	const auto &asset = file->asset;
+	if ( pResult->empty() && asset.assetInfo && asset.assetInfo->generator == "OpenBK2 Granny3D export" &&
+	     std::any_of( asset.skins.begin(),
+	                  asset.skins.end(),
+	                  [rootNode]( const fastgltf::Skin &skin ) { return skin.skeleton && *skin.skeleton == rootNode; } ) )
+	{
+		for ( const auto &scene : asset.scenes )
+		{
+			if ( std::find( scene.nodeIndices.begin(), scene.nodeIndices.end(), rootNode ) == scene.nodeIndices.end() )
+			{
+				continue;
+			}
+			for ( size_t sibling : scene.nodeIndices )
+			{
+				if ( sibling >= asset.nodes.size() )
+				{
+					continue;
+				}
+				const auto &name = asset.nodes[sibling].name;
+				if ( name == "Geometry" || ( name == "AIGeometry" && scene.name == "AIGeometry (hidden)" ) )
+				{
+					visited[sibling] = false;
+					CollectMeshNodes( asset, sibling, &visited, pResult );
+				}
+			}
+		}
+	}
 	if ( pResult->empty() )
 	{
 		DebugTrace( "glTF: RootMesh %s has no mesh-bearing nodes in %s", rootNodeName.c_str(), file->sourcePath.c_str() );
@@ -789,6 +872,7 @@ namespace
 		}
 
 		pResult->boneNames.clear();
+		pResult->jointNodes = nodes;
 		pResult->parents.assign( nodes.size(), -1 );
 		pResult->restPose.resize( nodes.size() );
 		pResult->inverseBindMatrices.resize( nodes.size() );
@@ -857,6 +941,7 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 	}
 
 	pResult->boneNames.clear();
+	pResult->jointNodes.assign( skin.joints.begin(), skin.joints.end() );
 	pResult->parents.assign( skin.joints.size(), -1 );
 	pResult->restPose.resize( skin.joints.size() );
 	pResult->inverseBindMatrices.resize( skin.joints.size() );

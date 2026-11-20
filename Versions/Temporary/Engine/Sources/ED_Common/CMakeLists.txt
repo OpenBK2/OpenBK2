@@ -1,6 +1,7 @@
 project(ED_Common)
 set(SOURCES
     AIGeometryExporter.cpp
+    AnimationMnemonics.cpp
     BaseUIBuilder.cpp
     BasicExporter.cpp
     BasicSceneExporter.cpp

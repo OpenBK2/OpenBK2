@@ -18,6 +18,7 @@ struct SGrannyExportOptions
 	// Only applies to separate files; embedded textures remain PNG/DDS.
 	bool convertTexturesToTga = true;
 	bool mirrorX = true;
+	bool includeAnimationsObject = true;
 };
 
 // Read the selected Model and its mounted game/mod resources without modifying

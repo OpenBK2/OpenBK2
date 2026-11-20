@@ -346,10 +346,13 @@ void CLoadAIGeometryFromGranny::Recalc()
 	pValue = new CGeometryInfo;
 	if ( pGeometry && !pGeometry->szModelFileRef.empty() )
 	{
+		pValue->massCenter = VNULL3;
 		const NGltf::TGltfFilePtr file = NGltf::LoadFile( pGeometry, pGeometry->szModelFileRef );
 		std::vector<std::size_t> meshNodes;
 		if ( !NGltf::GetMeshNodes( file, pGeometry->szRootMesh, &meshNodes ) )
 		{
+			// A hidden or deleted hull can be absent from a Blender re-export.
+			pValue->CalcBound();
 			return;
 		}
 		for ( std::size_t i = 0; i < meshNodes.size(); ++i )
@@ -374,7 +377,7 @@ void CLoadAIGeometryFromGranny::Recalc()
 		pValue->CalcBound();
 		return;
 	}
-	if ( pData->GetValue() && pData->GetValue()->GetData() )
+	if ( pData && pData->GetValue() && pData->GetValue()->GetData() )
 	{
 		granny_file_info *pFI = pData->GetValue()->GetData();
 		for ( int i = 0; i < pFI->MeshCount; ++i )
@@ -399,7 +402,7 @@ void CLoadAIGeometryFromGranny::SetKey( const NDb::SAIGeometry *pGeometry )
 bool CLoadAIGeometryFromGranny::NeedUpdate()
 {
 	bool bResult = TParent::NeedUpdate();
-	if ( !pGeometry || pGeometry->szModelFileRef.empty() )
+	if ( pData )
 	{
 		bResult |= pData.Refresh();
 	}
@@ -493,6 +496,7 @@ void CFileSkinPointsLoadFromA5Exporter::Recalc()
 void CFileSkinPointsLoadFromGranny::Recalc()
 {
 	pValue = new CFileSkinPoints;
+	pValue->massCenter = VNULL3;
 	if ( key.pGeometry && !key.pGeometry->szModelFileRef.empty() )
 	{
 		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry, key.pGeometry->szModelFileRef );
@@ -534,10 +538,9 @@ void CFileSkinPointsLoadFromGranny::Recalc()
 				part.edges.GenerateEdgeList( triangles, part.points );
 			}
 		}
-		pValue->massCenter = VNULL3;
 		return;
 	}
-	if ( pData->GetValue() && pData->GetValue()->GetData() )
+	if ( pData && pData->GetValue() && pData->GetValue()->GetData() )
 	{
 		granny_file_info *pFI = pData->GetValue()->GetData();
 		for ( int i = 0; i < pFI->MeshCount; ++i )
@@ -573,11 +576,11 @@ void CFileSkinPointsLoadFromGranny::SetKey( const NDb::SAIGeometry *pGeometry )
 bool CFileSkinPointsLoadFromGranny::NeedUpdate()
 {
 	bool bResult = TParent::NeedUpdate();
-	if ( !key.pGeometry || key.pGeometry->szModelFileRef.empty() )
+	if ( pData )
 	{
 		bResult |= pData.Refresh();
 	}
-	if ( key.skeletonH.pSkeleton && key.skeletonH.pSkeleton->szModelFileRef.empty() )
+	if ( pSkeletonData )
 	{
 		bResult |= pSkeletonData.Refresh();
 	}

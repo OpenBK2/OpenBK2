@@ -2,9 +2,11 @@
 
 #include "AnimationMnemonics.h"
 #include "libdb/Manipulator.h"
+#include "Stats_B2_M1/AnimationType.h"
 
 const char CMayaAnimationMnemonics::DECIMAL_NUMBERS[] = "0123456789";
 
+// The Granny converter and Skeleton importer share the same Maya marker names.
 CMayaAnimationMnemonics::CMayaAnimationMnemonics()
 	: CMnemonicsCollector<int>( NDb::ANIMATION_UNKNOWN, "" )
 {

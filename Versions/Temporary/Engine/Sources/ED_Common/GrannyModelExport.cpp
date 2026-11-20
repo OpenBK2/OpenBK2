@@ -1,12 +1,14 @@
 #include "stdafx.h"
 
 #include "3Dmotor/DBScene.h"
+#include "AnimationMnemonics.h"
 #include "GrannyGltf.h"
 #include "GrannyGltfTexture.h"
 #include "GrannyModelExport.h"
 #include "libdb/Manipulator.h"
 #include "libdb/ObjMan.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "Stats_B2_M1/DBAnimB2.h"
 #include "System/BinaryResources.h"
 #include "System/VFSOperations.h"
 
@@ -15,6 +17,9 @@
 #include <memory>
 #include <set>
 #include <stdexcept>
+#include <string_view>
+
+#include <fmt/format.h>
 
 namespace NEditorGltf
 {
@@ -81,6 +86,35 @@ namespace
 			throw std::runtime_error(
 					"This command exports legacy Granny3D resources. The model contains a GLB/GLTF reference: " + reference );
 		}
+	}
+
+	std::string MarkerName( const NDb::SAnimB2 &animation, const std::string &path, std::set<std::string> *used )
+	{
+		const auto &mnemonic = typeMayaAnimationMnemonics.GetMnemonic( animation.eType );
+		if ( mnemonic.empty() )
+		{
+			return {};
+		}
+		// Keep the variant in legacy names such as summer_whole_death_07_animb2.xdb.
+		std::string stem = std::filesystem::u8path( path ).stem().u8string();
+		NStr::ToLowerASCII( &stem );
+		const std::string suffix = "_animb2";
+		if ( stem.size() >= suffix.size() && stem.compare( stem.size() - suffix.size(), suffix.size(), suffix ) == 0 )
+		{
+			stem.resize( stem.size() - suffix.size() );
+		}
+		const size_t digit = stem.find_last_not_of( "0123456789" ) + 1;
+		unsigned number = 0;
+		if ( digit > 0 && digit < stem.size() && stem[digit - 1] == '_' && stem.size() - digit <= 6 )
+		{
+			number = static_cast<unsigned>( std::stoul( stem.substr( digit ) ) );
+		}
+		std::string name;
+		do
+		{
+			name = fmt::format( "{}{:02}", mnemonic, number++ );
+		} while ( !used->insert( name ).second );
+		return name;
 	}
 
 	std::string FileName( const std::string &text )
@@ -258,6 +292,8 @@ bool ExportGrannyModel( const NDb::SModel *model,
 		SFiles files;
 		NGrannyGltf::SModel input;
 		input.mirrorX = options.mirrorX;
+		input.includeAnimationsObject = options.includeAnimationsObject;
+		input.rootMesh = model->pGeometry->szRootMesh;
 		input.name = NDb::GetFileName( model->GetDBID() );
 		input.geometry = FirstModel( files.Load( "Geometries", model->pGeometry.GetPtr() ) );
 		input.materialQuantities = model->pGeometry->materialQuantities;
@@ -274,6 +310,7 @@ bool ExportGrannyModel( const NDb::SModel *model,
 		if ( model->pGeometry->pAIGeometry )
 		{
 			const auto *ai = model->pGeometry->pAIGeometry.GetPtr();
+			input.aiRootMesh = ai->szRootMesh;
 			RequireGranny( ai->szModelFileRef );
 			const auto *info = files.Load( "AIGeometries", ai );
 			if ( info->MeshCount < 1 || !info->Meshes )
@@ -299,6 +336,7 @@ bool ExportGrannyModel( const NDb::SModel *model,
 			}
 		}
 		std::set<std::string> seen;
+		std::set<std::string> markerNames;
 		auto animations = [&]( const auto &references, bool additional )
 		{
 			for ( const auto &reference : references )
@@ -320,7 +358,22 @@ bool ExportGrannyModel( const NDb::SModel *model,
 					throw std::runtime_error( "No Granny3D animation in " + name );
 				}
 				// AnimB2 references address animation zero, as SAnimHandle does.
-				input.clips.push_back( { info->Animations[0], name } );
+				NGrannyGltf::SClip clip{ info->Animations[0], name };
+				if ( options.includeAnimationsObject )
+				{
+					if ( const auto *anim = dynamic_cast<const NDb::SAnimB2 *>( reference.GetPtr() ) )
+					{
+						clip.markerName = MarkerName( *anim, name, &markerNames );
+						clip.looped = anim->bLooped;
+						clip.speed = anim->fMoveSpeed;
+						clip.actionMilliseconds = anim->nAction;
+					}
+					if ( clip.markerName.empty() )
+					{
+						NLog::Log( LT_IMPORTANT, "No AnimB2 marker type for %.450s. The clip is on the timeline.\n", name.c_str() );
+					}
+				}
+				input.clips.push_back( std::move( clip ) );
 			}
 		};
 		// Preserve the Model list's order, then append only new skeleton clips.
@@ -336,6 +389,14 @@ bool ExportGrannyModel( const NDb::SModel *model,
 			materials.Add( material );
 		}
 		NGrannyGltf::Convert( input, &doc );
+		if ( !input.aiMeshes.empty() )
+		{
+			const auto &ai = doc.asset.nodes[doc.asset.scenes[0].nodeIndices.back()];
+			if ( !input.aiRootMesh.empty() && std::string_view( ai.name ) != input.aiRootMesh )
+			{
+				NLog::Log( LT_IMPORTANT, "Use '%s' for the converted AIGeometry RootMesh.\n", ai.name.c_str() );
+			}
+		}
 		auto bytes = doc.Finish();
 		if ( !materials.files.empty() )
 		{

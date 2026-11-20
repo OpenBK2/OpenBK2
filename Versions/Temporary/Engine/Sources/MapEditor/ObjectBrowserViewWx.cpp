@@ -1725,14 +1725,17 @@ private:
 		auto *separate = NWx::Child<wxCheckBox>( &settings, wxID_ANY, "Export textures as separate files" );
 		auto *tga = NWx::Child<wxCheckBox>( &settings, wxID_ANY, "Convert textures to TGA" );
 		auto *mirror = NWx::Child<wxCheckBox>( &settings, wxID_ANY, "Mirror along X axis" );
+		auto *markers = NWx::Child<wxCheckBox>( &settings, wxID_ANY, "Include Animations object" );
 		separate->SetValue( options.separateTextures );
 		tga->SetValue( options.convertTexturesToTga );
 		mirror->SetValue( options.mirrorX );
+		markers->SetValue( options.includeAnimationsObject );
+		markers->SetToolTip( "Add empty clip markers with frame ranges for Skeleton export." );
 		tga->SetToolTip( "Available when exporting textures as separate files." );
 		separate->Bind( wxEVT_CHECKBOX, [separate, tga]( wxCommandEvent & ) { tga->Enable( separate->GetValue() ); } );
 		auto *layout = new wxBoxSizer( wxVERTICAL );
 		const int padding = settings.FromDIP( 12 );
-		for ( auto *option : { separate, tga, mirror } )
+		for ( auto *option : { separate, tga, mirror, markers } )
 		{
 			layout->Add( option, wxSizerFlags().Border( wxLEFT | wxRIGHT | wxTOP, padding ) );
 		}
@@ -1763,6 +1766,7 @@ private:
 					options.separateTextures = separate->GetValue();
 					options.convertTexturesToTga = tga->GetValue();
 					options.mirrorX = mirror->GetValue();
+					options.includeAnimationsObject = markers->GetValue();
 					std::string error;
 					bool success;
 					{

@@ -163,7 +163,7 @@ void CheckSkinPose( const granny_skeleton *skeleton, const fastgltf::Asset &asse
 std::vector<fastgltf::math::fvec4> SkinnedVertices( fastgltf::Asset &asset, size_t frame )
 {
 	// Evaluate the exported glTF channels and skin matrices independently of
-	// the converter, as an importer would, including the separate AI scene.
+	// the converter, as an importer would, including collision meshes.
 	for ( const auto &channel : asset.animations[0].channels )
 	{
 		const auto &sampler = asset.animations[0].samplers[channel.samplerIndex];
@@ -384,6 +384,31 @@ TEST( GrannyGltf, MirrorReflectsAnimatedSkinnedVerticesAndCollisionGeometry )
 	}
 }
 
+TEST( GrannyGltf, StillClipHasAnImportableRangeAndAnUnchangedPose )
+{
+	SFixture f;
+	granny_track_group rest = {};
+	granny_track_group *group = &rest;
+	granny_animation clip = {};
+	clip.TrackGroupCount = 1;
+	clip.TrackGroups = &group;
+	f.source.clips = { { &clip, "still", "IDLE00" } };
+	NGrannyGltf::SDocument doc;
+	NGrannyGltf::Convert( f.source, &doc );
+	auto asset = RoundTrip( &doc );
+	const size_t markers = asset.scenes[0].nodeIndices.back();
+	ASSERT_EQ( asset.nodes[markers].name, "Animations" );
+	ASSERT_EQ( asset.nodes[markers].children.size(), 1u );
+	const size_t marker = asset.nodes[markers].children[0];
+	EXPECT_EQ( asset.nodes[marker].name, "IDLE00" );
+	EXPECT_FALSE( asset.nodes[marker].meshIndex.has_value() );
+	EXPECT_NE( doc.extras.at( { fastgltf::Category::Nodes, marker } ).find( "\"StartTime\":0,\"EndTime\":1" ),
+	           std::string::npos );
+	const auto &sampler = asset.animations[0].samplers[0];
+	EXPECT_EQ( asset.accessors[sampler.inputAccessor].count, 3u );
+	EXPECT_EQ( SkinnedVertices( asset, 0 ), SkinnedVertices( asset, 1 ) );
+}
+
 TEST( GrannyGltf, RejectsInvalidIndicesAndBoneHierarchies )
 {
 	SFixture f;
@@ -396,22 +421,26 @@ TEST( GrannyGltf, RejectsInvalidIndicesAndBoneHierarchies )
 	EXPECT_THROW( NGrannyGltf::Convert( f.source, &cyclic ), std::runtime_error );
 }
 
-TEST( GrannyGltf, CollisionGeometryIsOutsideTheDefaultScene )
+TEST( GrannyGltf, RenderAndCollisionRigsHaveSeparateRootsInOneScene )
 {
 	SFixture f;
+	// Separate Granny files can use the same RootMesh and bone names.
+	f.source.rootMesh = f.source.aiRootMesh = "root";
 	f.source.aiMeshes.push_back( { &f.mesh, &f.skeleton } );
 	NGrannyGltf::SDocument doc;
 	NGrannyGltf::Convert( f.source, &doc );
 	auto asset = RoundTrip( &doc );
-	ASSERT_EQ( asset.scenes.size(), 2u );
+	ASSERT_EQ( asset.scenes.size(), 1u );
 	EXPECT_EQ( *asset.defaultScene, 0u );
-	const size_t visible = asset.scenes[0].nodeIndices.back();
-	const size_t hidden = asset.scenes[1].nodeIndices.front();
-	EXPECT_EQ( asset.nodes[visible].name, "Geometry" );
-	EXPECT_EQ( asset.nodes[hidden].name, "AIGeometry" );
-	EXPECT_NE( visible, hidden );
-	ASSERT_EQ( asset.nodes[hidden].children.size(), 1u );
-	EXPECT_TRUE( asset.nodes[asset.nodes[hidden].children[0]].meshIndex.has_value() );
+	ASSERT_EQ( asset.scenes[0].nodeIndices.size(), 2u );
+	for ( size_t i = 0; i < 2; ++i )
+	{
+		const auto &root = asset.nodes[asset.scenes[0].nodeIndices[i]];
+		EXPECT_EQ( root.name, i == 0 ? "root" : "root_AI" );
+		ASSERT_EQ( root.children.size(), 2u );
+		EXPECT_EQ( root.children[0], *asset.skins[i].skeleton );
+		EXPECT_EQ( *asset.nodes[root.children[1]].skinIndex, i );
+	}
 }
 
 TEST( GrannyGltf, ConvertsRepositoryMineTankAndInfantry )

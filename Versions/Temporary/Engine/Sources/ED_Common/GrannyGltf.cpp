@@ -8,8 +8,10 @@
 #include <limits>
 #include <locale>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
+#include <string_view>
 
 namespace NGrannyGltf
 {
@@ -247,14 +249,13 @@ namespace
 		return roots;
 	}
 
-	void Mesh( const granny_mesh *source,
-	           const granny_skeleton *skeleton,
-	           bool skinned,
-	           const std::vector<int> &materials,
-	           size_t parent,
-	           SDocument *doc,
-	           bool mirrorX,
-	           size_t skinIndex = 0 )
+	size_t Mesh( const granny_mesh *source,
+	             const granny_skeleton *skeleton,
+	             bool skinned,
+	             const std::vector<int> &materials,
+	             SDocument *doc,
+	             bool mirrorX,
+	             size_t skinIndex = 0 )
 	{
 		Require( source && source->PrimaryVertexData && source->PrimaryTopology, "Missing GR2 mesh data" );
 		const auto &vertices = *source->PrimaryVertexData;
@@ -423,8 +424,42 @@ namespace
 		{
 			doc->asset.nodes[node].skinIndex = skinIndex;
 		}
-		doc->asset.nodes[parent].children.push_back( node );
 		doc->asset.meshes.push_back( std::move( mesh ) );
+		return node;
+	}
+
+	bool IsStaticCollisionBox( const SModel &source, const std::string &root )
+	{
+		if ( source.aiMeshes.size() != 1 )
+		{
+			return false;
+		}
+		const auto &part = source.aiMeshes.front();
+		if ( !part.skeleton )
+		{
+			return true;
+		}
+		// Legacy AABBShape commonly has a separate one-bone rig. The box is already
+		// in model space. Its node name retains the rigid binding used by the AI loader.
+		if ( part.skeleton->BoneCount != 1 || !part.skeleton->Bones || !part.skeleton->Bones[0].Name ||
+		     root != part.skeleton->Bones[0].Name || !part.mesh || part.mesh->BoneBindingCount != 1 ||
+		     !part.mesh->BoneBindings || !part.mesh->BoneBindings[0].BoneName ||
+		     root != part.mesh->BoneBindings[0].BoneName )
+		{
+			return false;
+		}
+		for ( const auto &clip : source.clips )
+		{
+			const auto &group = *clip.animation->TrackGroups[0];
+			for ( int i = 0; i < group.TransformTrackCount; ++i )
+			{
+				if ( group.TransformTracks[i].Name && root == group.TransformTracks[i].Name )
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	void Animations( const SModel &source, const granny_skeleton *skeleton, SDocument *doc, size_t skinIndex = 0 )
@@ -447,7 +482,8 @@ namespace
 		std::vector<std::vector<V4>> rotations( skeleton->BoneCount );
 		std::vector<float> times;
 		std::string ranges = "{\"framesPerSecond\":30,\"clips\":[";
-		double startFrame = 0;
+		int startFrame = 0;
+		std::optional<size_t> markers;
 		for ( size_t clipIndex = 0; clipIndex < source.clips.size(); ++clipIndex )
 		{
 			const auto &clip = source.clips[clipIndex];
@@ -469,18 +505,18 @@ namespace
 			GrannySetControlForceClampedLooping( control.get(), true );
 			GrannySetControlEaseIn( control.get(), false );
 			GrannySetControlEaseOut( control.get(), false );
-			const int frames = static_cast<int>( std::ceil( double( animation->Duration ) * FramesPerSecond ) );
+			// Marker ranges address a uniform frame clock. Sample the exact GR2 endpoints
+			// onto the nearest whole-frame duration, including sub-frame and still clips.
+			const int frames = std::max( 1, int( std::round( double( animation->Duration ) * FramesPerSecond ) ) );
+			Require( startFrame < std::numeric_limits<int>::max() - frames - 1, "Animation timeline is too long" );
+			const int endFrame = startFrame + frames;
 			const double start = startFrame / FramesPerSecond;
-			for ( int frame = 0; frame <= frames; ++frame )
+			// The frame-slice importer needs three timestamps to identify a baked clock.
+			const int lastSample = source.clips.size() == 1 ? std::max( frames, 2 ) : frames;
+			for ( int frame = 0; frame <= lastSample; ++frame )
 			{
-				const float local = static_cast<float>( std::min( frame / FramesPerSecond, double( animation->Duration ) ) );
-				const float time = static_cast<float>( start + local );
-				// A float duration just above an exact 30 Hz frame can round both
-				// that frame and the final endpoint to the same float timestamp.
-				if ( frame == frames && frame > 0 && time == times.back() )
-				{
-					continue;
-				}
+				const float local = static_cast<float>( double( animation->Duration ) * std::min( frame, frames ) / frames );
+				const float time = static_cast<float>( ( startFrame + frame ) / FramesPerSecond );
 				Require( times.empty() || time > times.back(), "Animation timeline exceeds float time precision" );
 				times.push_back( time );
 				GrannySetControlRawLocalClock( control.get(), local );
@@ -515,9 +551,29 @@ namespace
 				ranges += ',';
 			}
 			ranges += "{\"name\":" + Quote( clip.name ) + ",\"firstFrame\":" + Number( startFrame ) +
-			          ",\"lastFrame\":" + Number( startFrame + animation->Duration * FramesPerSecond ) +
-			          ",\"startSeconds\":" + Number( start ) + ",\"endSeconds\":" + Number( start + animation->Duration ) +
-			          "}";
+			          ",\"lastFrame\":" + Number( endFrame ) + ",\"startSeconds\":" + Number( start ) +
+			          ",\"endSeconds\":" + Number( endFrame / FramesPerSecond ) + "}";
+			if ( skinIndex == 0 && source.includeAnimationsObject && !clip.markerName.empty() )
+			{
+				if ( !markers )
+				{
+					markers = Node( doc, "Animations" );
+					doc->asset.scenes[0].nodeIndices.push_back( *markers );
+				}
+				const size_t marker = Node( doc, clip.markerName );
+				doc->asset.nodes[*markers].children.push_back( marker );
+				const int action =
+						std::clamp( int( std::round( clip.actionMilliseconds * FramesPerSecond / 1000 ) ), 0, frames );
+				std::string properties = "{\"StartTime\":" + std::to_string( startFrame ) +
+				                         ",\"EndTime\":" + std::to_string( endFrame ) +
+				                         ",\"ActionTime\":" + std::to_string( startFrame + action ) +
+				                         ",\"Looped\":" + ( clip.looped ? "true" : "false" );
+				if ( std::isfinite( clip.speed ) && clip.speed > 0 )
+				{
+					properties += ",\"Speed\":" + Number( clip.speed );
+				}
+				doc->extras[{ fastgltf::Category::Nodes, marker }] = properties + '}';
+			}
 			// Keep both endpoints, with a one-frame boundary before the next clip.
 			startFrame += frames + 1;
 		}
@@ -645,13 +701,12 @@ void Convert( const SModel &source, SDocument *doc )
 	doc->asset.defaultScene = 0;
 	const auto *skeleton = source.skeleton ? source.skeleton : source.geometry->Skeleton;
 	const auto roots = Skeleton( skeleton, doc, source.mirrorX );
-	const size_t geometry = Node( doc, "Geometry" );
+	const size_t geometry = Node( doc, source.rootMesh.empty() ? "Basis" : source.rootMesh );
 	fastgltf::Scene scene;
 	scene.name = source.name;
-	for ( size_t root : roots )
-	{
-		scene.nodeIndices.push_back( root );
-	}
+	// Blender parents skinned meshes to the armature containing their joints.
+	// Make that armature the XDB mesh selector, with an identity transform.
+	doc->asset.nodes[geometry].children.assign( roots.begin(), roots.end() );
 	scene.nodeIndices.push_back( geometry );
 	doc->asset.scenes.push_back( std::move( scene ) );
 	size_t nextMaterial = 0;
@@ -674,19 +729,44 @@ void Convert( const SModel &source, SDocument *doc )
 		const bool animate =
 				skeleton && mesh && mesh->BoneBindingCount > 0 &&
 				( source.materialQuantities.empty() || size_t( i ) >= source.meshAnimated.size() || source.meshAnimated[i] );
-		Mesh( mesh, skeleton, animate, materials, geometry, doc, source.mirrorX );
+		const size_t node = Mesh( mesh, skeleton, animate, materials, doc, source.mirrorX );
+		doc->asset.nodes[geometry].children.push_back( node );
 	}
 	Animations( source, skeleton, doc );
 	if ( !source.aiMeshes.empty() )
 	{
-		const size_t ai = Node( doc, "AIGeometry" );
-		fastgltf::Scene aiScene;
-		aiScene.name = "AIGeometry (hidden)";
-		aiScene.nodeIndices.push_back( ai );
-		// Blender does not honor KHR_node_visibility. A non-default scene keeps
-		// the original collision mesh accessible without displaying it over Geometry.
-		doc->extras[{ fastgltf::Category::Nodes, ai }] = "{\"role\":\"AIGeometry\",\"visible\":false}";
+		std::string root = source.aiRootMesh.empty() ? "AABB" : source.aiRootMesh;
+		// Some GR2 pairs used the same selector in two different files. Give the
+		// collision branch a distinct name now that both live in one scene.
+		while ( std::any_of( doc->asset.nodes.begin(),
+		                     doc->asset.nodes.end(),
+		                     [&]( const fastgltf::Node &node ) { return std::string_view( node.name ) == root; } ) )
+		{
+			root += "_AI";
+		}
+		// Editors can show the hull in solid view, while material previews show the model.
+		fastgltf::Material collision;
+		collision.name = "Collision";
+		collision.alphaMode = fastgltf::AlphaMode::Blend;
+		collision.pbrData.baseColorFactor[3] = 0;
+		const std::vector<int> material{ int( doc->asset.materials.size() ) };
+		doc->asset.materials.push_back( std::move( collision ) );
+		const bool staticBox = IsStaticCollisionBox( source, root );
+		const size_t ai =
+				staticBox ? Mesh( source.aiMeshes[0].mesh, nullptr, false, material, doc, source.mirrorX ) : Node( doc, root );
+		doc->asset.nodes[ai].name = root;
+		doc->asset.scenes[0].nodeIndices.push_back( ai );
+		doc->extras[{ fastgltf::Category::Nodes, ai }] = "{\"role\":\"AIGeometry\"}";
+		if ( staticBox )
+		{
+			return;
+		}
 		std::map<const granny_skeleton *, size_t> aiSkins;
+		const auto *firstRig = source.aiMeshes.front().skeleton;
+		const bool separateRigs =
+				std::any_of( source.aiMeshes.begin(),
+		                 source.aiMeshes.end(),
+		                 [firstRig]( const SModel::SAIMesh &part ) { return part.skeleton != firstRig; } );
 		for ( const auto &part : source.aiMeshes )
 		{
 			size_t skin = 0;
@@ -696,9 +776,17 @@ void Convert( const SModel &source, SDocument *doc )
 				if ( found == aiSkins.end() )
 				{
 					skin = doc->asset.skins.size();
-					for ( size_t root : Skeleton( part.skeleton, doc, source.mirrorX ) )
+					// Blender makes the parent of the root joints into an armature.
+					// Give different GR2 models independent armatures in the AI branch.
+					size_t armature = ai;
+					if ( separateRigs )
 					{
-						aiScene.nodeIndices.push_back( root );
+						armature = Node( doc, root + "_Rig" + std::to_string( aiSkins.size() + 1 ) );
+						doc->asset.nodes[ai].children.push_back( armature );
+					}
+					for ( size_t joint : Skeleton( part.skeleton, doc, source.mirrorX ) )
+					{
+						doc->asset.nodes[armature].children.push_back( joint );
 					}
 					aiSkins.emplace( part.skeleton, skin );
 					Animations( source, part.skeleton, doc, skin );
@@ -708,16 +796,15 @@ void Convert( const SModel &source, SDocument *doc )
 					skin = found->second;
 				}
 			}
-			Mesh( part.mesh,
-			      part.skeleton,
-			      part.skeleton && part.mesh && part.mesh->BoneBindingCount > 0,
-			      {},
-			      ai,
-			      doc,
-			      source.mirrorX,
-			      skin );
+			const size_t node = Mesh( part.mesh,
+			                          part.skeleton,
+			                          part.skeleton && part.mesh && part.mesh->BoneBindingCount > 0,
+			                          material,
+			                          doc,
+			                          source.mirrorX,
+			                          skin );
+			doc->asset.nodes[ai].children.push_back( node );
 		}
-		doc->asset.scenes.push_back( std::move( aiScene ) );
 	}
 }
 } // namespace NGrannyGltf

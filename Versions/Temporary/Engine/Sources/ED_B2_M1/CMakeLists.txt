@@ -9,7 +9,6 @@ set(SOURCES
     aiObject.cpp
     AnimationBuilder.cpp
     AnimationExporter.cpp
-    AnimationMnemonics.cpp
     BridgeInfoData.cpp
     BridgeRPGStatsExporter.cpp
     BridgeState.cpp

@@ -31,8 +31,11 @@ public:
 	std::vector<int> nodeParents;
 	std::vector<SHMatrix> nodeWorldTransforms;
 	std::vector<std::size_t> meshNodes;
+	std::vector<std::size_t> collisionRoots;
 
-	CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourcePath );
+	CGltfFile( fastgltf::Asset &&_asset,
+	           const NFile::CFilePath &_sourcePath,
+	           const std::vector<size_t> &collisionRoots = {} );
 
 	// An accessor's payload is immutable source data, so it is decoded at most once per
 	// document and shared by everything using that document. Decoding a whole keyframe
@@ -60,6 +63,7 @@ typedef std::shared_ptr<CGltfFile> TGltfFilePtr;
 struct SSkeletonDefinition
 {
 	std::vector<std::string> boneNames;
+	std::vector<std::size_t> jointNodes;
 	std::vector<int> parents;
 	std::vector<NAnimation::SBoneTransform> restPose;
 	std::vector<SHMatrix> inverseBindMatrices;

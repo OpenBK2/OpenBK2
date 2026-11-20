@@ -95,7 +95,7 @@
 */
 #include "stdafx.h"
 
-#include "AnimationMnemonics.h"
+#include "ED_Common/AnimationMnemonics.h"
 #include "ED_Common/GltfExporter.h"
 #include "ED_Common/TempAttributesTool.h"
 #include "ExporterMethods.h"
@@ -104,6 +104,7 @@
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/MessageBoxes.h"
 #include "MechUnitRPGStatsExporter.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "System/FastMath.h"
 
 #include <cstdint>

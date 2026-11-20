@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "3Dmotor/GltfAnimation.h"
-#include "AnimationMnemonics.h"
+#include "ED_Common/AnimationMnemonics.h"
 #include "ED_Common/GltfExporter.h"
 #include "ED_Common/TempAttributesTool.h"
 #include "ExporterMethods.h"
@@ -13,6 +13,7 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "Misc/StrProc.h"
 #include "SkeletonExporter.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
 

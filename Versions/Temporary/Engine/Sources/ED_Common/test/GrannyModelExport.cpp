@@ -2,6 +2,7 @@
 
 #include "../GrannyModelExport.h"
 #include "3Dmotor/DBScene.h"
+#include "3Dmotor/GltfAnimation.h"
 #include "libdb/Db.h"
 #include "Stats_B2_M1/ActionCommand.h"
 #include "Stats_B2_M1/ActionsRemap.h"
@@ -22,9 +23,9 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 	// Allow the sparse CI checkout to be reproduced without moving game data.
 	const char *overrideRoot = std::getenv( "OBK2_GRANNY_TEST_DATA_DIR" );
 	const auto dataRoot = std::filesystem::u8path( overrideRoot ? overrideRoot : OBK2_DATA_DIR );
-	const char *modelPaths[] = { "Mines/All/MineUniversal/Model.xdb",
-	                             "Units/Technics/USSR/Tanks/T_60/1_1_Model.xdb",
-	                             "Units/Infantry/Japan/Japan_soldier/1_1_Model.xdb" };
+	std::vector<const char *> modelPaths = { "Mines/All/MineUniversal/Model.xdb",
+	                                         "Units/Technics/USSR/Tanks/T_60/1_1_Model.xdb",
+	                                         "Units/Infantry/Japan/Japan_soldier/1_1_Model.xdb" };
 	// Cone-mode sparse checkouts keep Data/index.bin and types.xml even when
 	// Mines and Units are omitted. Check the actual fixtures before opening
 	// the database; a missing model is otherwise a failure (or a Debug assert).
@@ -34,6 +35,11 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 		{
 			GTEST_SKIP() << "Optional Granny model fixture is unavailable: " << path;
 		}
+	}
+	const char *elefant = "Units/Technics/German/SPG/jagdpanzer_elefant_ferdinand_sdkfz184/summer_whole_model.xdb";
+	if ( std::filesystem::is_regular_file( dataRoot / elefant ) )
+	{
+		modelPaths.push_back( elefant );
 	}
 	// Force the stats module to load, so AnimB2 is registered just as in the editor.
 	EXPECT_EQ( GetCommandByAction( NDb::USER_ACTION_MOVE ), ACTION_COMMAND_MOVE_TO );
@@ -52,7 +58,8 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 	} cleanup{ saved };
 
 	ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), nullptr, NDb::DATABASE_MODE_EDITOR ) );
-	std::filesystem::create_directories( GRANNY_EXPORT_OUTPUT_DIR );
+	const auto gameFolder = std::filesystem::path( GRANNY_EXPORT_OUTPUT_DIR ) / "game";
+	std::filesystem::create_directories( gameFolder );
 	int number = 0;
 	for ( const char *path : modelPaths )
 	{
@@ -62,12 +69,15 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 		const auto geometryUID = model->pGeometry->uid;
 		const auto animationCount = model->animations.size();
 		for ( const auto &options : { NEditorGltf::SGrannyExportOptions{},
-		                              NEditorGltf::SGrannyExportOptions{ true, false, false },
+		                              NEditorGltf::SGrannyExportOptions{ true, false, false, false },
 		                              NEditorGltf::SGrannyExportOptions{ false, true, true },
 		                              NEditorGltf::SGrannyExportOptions{ false, false, false } } )
 		{
-			const auto output = std::filesystem::path( GRANNY_EXPORT_OUTPUT_DIR ) /
-			                    std::filesystem::u8path( "sample # \xc4\x8d-" + std::to_string( number++ ) + ".glb" );
+			const bool gameImport = options.separateTextures && options.convertTexturesToTga;
+			const auto filename = std::to_string( number++ ) + ".glb";
+			const auto output = gameImport ? gameFolder / filename
+			                               : std::filesystem::path( GRANNY_EXPORT_OUTPUT_DIR ) /
+			                                     std::filesystem::u8path( "sample # \xc4\x8d-" + filename );
 			SCOPED_TRACE( output.u8string() );
 			std::string error;
 			ASSERT_TRUE( NEditorGltf::ExportGrannyModel( model.GetPtr(), output.u8string(), options, &error ) ) << error;
@@ -147,7 +157,7 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 					           fastgltf::MimeType::DDS );
 				}
 			}
-			EXPECT_EQ( asset->scenes.size(), 2u );
+			EXPECT_EQ( asset->scenes.size(), 1u );
 			std::vector<std::string> expectedClips;
 			std::set<std::string> seen;
 			for ( const auto &clip : model->animations )
@@ -170,6 +180,44 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 			}
 			EXPECT_EQ( clipNames, expectedClips );
 			EXPECT_EQ( asset->animations.size(), expectedClips.empty() ? 0u : 1u );
+			const auto markers = std::find_if( asset->nodes.begin(),
+			                                   asset->nodes.end(),
+			                                   []( const fastgltf::Node &node ) { return node.name == "Animations"; } );
+			EXPECT_EQ( markers != asset->nodes.end(), options.includeAnimationsObject && !expectedClips.empty() );
+			if ( markers != asset->nodes.end() )
+			{
+				EXPECT_EQ( markers->children.size(), expectedClips.size() );
+			}
+			// Exercise the selectors and frame clock used by the editor and the game.
+			if ( !gameImport )
+			{
+				continue;
+			}
+			auto file = NGltf::LoadFile( nullptr, output.generic_u8string() );
+			ASSERT_TRUE( file );
+			std::vector<size_t> visible, collision;
+			ASSERT_TRUE( NGltf::GetMeshNodes( file, model->pGeometry->szRootMesh, &visible ) );
+			EXPECT_EQ( visible.size(), model->pGeometry->nNumMeshes );
+			EXPECT_EQ( file->meshNodes, visible );
+			ASSERT_TRUE( NGltf::GetMeshNodes( file, model->pGeometry->pAIGeometry->szRootMesh, &collision ) );
+			ASSERT_FALSE( collision.empty() );
+			for ( size_t node : collision )
+			{
+				EXPECT_EQ( std::find( visible.begin(), visible.end(), node ), visible.end() );
+			}
+			NGltf::SSkeletonDefinition skeleton;
+			ASSERT_TRUE( NGltf::BuildSkeleton( file, model->pSkeleton->szRootJoint, 0, &skeleton ) );
+			if ( path == elefant && markers != asset->nodes.end() )
+			{
+				ASSERT_EQ( markers->children.size(), 7u );
+				for ( int i = 0; i < 7; ++i )
+				{
+					EXPECT_EQ( std::string( asset->nodes[markers->children[i]].name ), "DEATH0" + std::to_string( i + 1 ) );
+					float seconds = 0;
+					ASSERT_TRUE( NAnimation::CGltfSkeletonAnimator::GetSourceDuration( file, "", i * 10, i * 10 + 9, &seconds ) );
+					EXPECT_NEAR( seconds, 0.3f, 1e-5f );
+				}
+			}
 		}
 	}
 }

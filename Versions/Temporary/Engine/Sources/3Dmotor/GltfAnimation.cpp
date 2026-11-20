@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <unordered_set>
 
 #include <fastgltf/tools.hpp>
@@ -74,8 +75,12 @@ namespace
 			bool uniformlySampled = true;
 			for ( std::size_t i = 1; i < times.size(); ++i )
 			{
-				const float delta = times[i] - times[i - 1];
-				if ( delta <= 0.0f || fabsf( delta - secondsPerFrame ) > tolerance )
+				// Float timestamps grow coarser late in a long sequence. Check each
+				// key against the frame grid without subtracting adjacent rounded keys.
+				const double expected =
+						times.front() + double( i ) * ( double( times.back() ) - times.front() ) / double( times.size() - 1 );
+				const double rounding = std::abs( expected ) * std::numeric_limits<float>::epsilon();
+				if ( times[i] <= times[i - 1] || std::abs( times[i] - expected ) > tolerance + rounding )
 				{
 					uniformlySampled = false;
 					break;
@@ -405,7 +410,9 @@ void CGltfSkeletonAnimator::ResolveBoundChannels( SAnimationHolder *pHolder )
 			const std::string nodeName =
 					node.name.empty() ? "Node_" + std::to_string( *channel.nodeIndex ) : std::string( node.name );
 			const int nBone = skeleton.FindBone( nodeName );
-			if ( nBone < 0 )
+			// A separate AI rig may use the same bone names. Within one document
+			// the channel targets an exact joint. External clips still bind by name.
+			if ( nBone < 0 || ( pHolder->pFile == pSkeletonFile && skeleton.jointNodes[nBone] != *channel.nodeIndex ) )
 			{
 				continue;
 			}

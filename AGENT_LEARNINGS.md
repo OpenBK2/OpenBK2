@@ -683,3 +683,6 @@ context. Read `git diff` of every touched file before building.
   simulation roster. Base lockstep votes on the applied roster and the packet
   prefix guaranteed to execute. Test a fast peer leaving while others still
   need its final packets, and compare their replay commands at the removal tick.
+- A test that temporarily wrapped the database VFS in a local `CObj` left the
+  next export with an invalid VFS when the last owning reference expired.
+  Load temporary GLBs by absolute path through the already mounted VFS.

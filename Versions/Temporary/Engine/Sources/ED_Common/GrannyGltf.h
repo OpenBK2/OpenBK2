@@ -15,6 +15,10 @@ struct SClip
 {
 	const granny_animation *animation = nullptr;
 	std::string name;
+	std::string markerName;
+	bool looped = false;
+	float speed = 1;
+	int actionMilliseconds = 0;
 };
 
 struct SModel
@@ -22,6 +26,9 @@ struct SModel
 	std::string name;
 	const granny_model *geometry = nullptr;
 	bool mirrorX = false;
+	bool includeAnimationsObject = true;
+	std::string rootMesh;
+	std::string aiRootMesh;
 	// The Model's separate skeleton wins over the one embedded in Geometry.
 	const granny_skeleton *skeleton = nullptr;
 

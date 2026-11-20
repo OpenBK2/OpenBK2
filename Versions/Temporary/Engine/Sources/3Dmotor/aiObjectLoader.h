@@ -186,7 +186,14 @@ class CSkinner : public CPtrFuncBase<CGeometryInfo>
 protected:
 	bool NeedUpdate() override
 	{
-		return AnyRefreshed( pAnimation.Refresh(), pSkin.Refresh() );
+		// Rebuild the destination topology if an editor reload removes or resizes
+		// the source hull. Pose-only updates can reuse its vertex storage.
+		const bool skinChanged = pSkin.Refresh();
+		if ( skinChanged )
+		{
+			pValue = nullptr;
+		}
+		return pAnimation.Refresh() || skinChanged;
 	}
 
 	void Recalc() override;

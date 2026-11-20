@@ -2,6 +2,11 @@
 #define __COMMON_TOOLS__MNEMONICS_COLLECTOR__
 #pragma once
 
+#include "Misc/Tools.h"
+
+#include <string>
+#include <unordered_map>
+
 template <class TValue>
 class CMnemonicsCollector
 {

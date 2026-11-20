@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "AnimationBuilder.h"
-#include "AnimationMnemonics.h"
 #include "CommandHandlerDefines.h"
+#include "ED_Common/AnimationMnemonics.h"
 #include "ExporterMethods.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/BuilderFactory.h"
@@ -16,6 +16,7 @@
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
 #include "ResourceDefines.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "WeaponMnemonics.h"
