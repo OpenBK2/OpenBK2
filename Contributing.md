@@ -521,6 +521,10 @@ play that recording back comparing the checksums it took the first time. all of 
 driven by global variables, which is why this section exists: several are named nothing
 like what they do, and two are dead.
 
+For the packet routes in custom and LAN matches, the room ping measurement,
+and the delay between issuing an order and executing it, see
+[How clients communicate in a multiplayer match](docs/multiplayer-networking.md).
+
 ## setting a variable
 
 three ways, each overriding the one before it:
