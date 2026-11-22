@@ -31448,7 +31448,7 @@
 									<Key>stringParam</Key>
 									<Data>
 										<Type>03000000</Type>
-										<Data>MB files (*.mb)|*.mb|All Files (*.*)|*.*||</Data>
+										<Data>BK2 particle clips (*.ptc)|*.ptc;*.PTC|All Files (*.*)|*.*||</Data>
 									</Data>
 								</Item>
 								<Item>
@@ -31478,6 +31478,13 @@
 						<__ClassTypeID>270064327</__ClassTypeID>
 						<__ObjectData>
 							<Attributes>
+								<Item>
+									<Key>hidden</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
 								<Item>
 									<Key>noCode</Key>
 									<Data>

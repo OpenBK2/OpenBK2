@@ -289,14 +289,12 @@ bool BuildSrcFilePath( std::string *pszFilePath, IManipulator *pManipulator, con
 
 std::string BuildDestFilePath( IManipulator *pManipulator, const std::string &szDestFolder )
 {
-	CVariant varUID;
-	bool bResult = CManipulatorManager::GetValue( &varUID, pManipulator, "uid" );
-	if ( !bResult )
+	boost::uuids::uuid uid;
+	// The runtime resolves a missing or nil UID through the numeric record ID.
+	if ( !CManipulatorManager::GetValue( &uid, pManipulator, "uid" ) || uid.is_nil() )
 	{
 		return szDestFolder + std::to_string( pManipulator->GetID( "" ) );
 	}
-	boost::uuids::uuid uid;
-	memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );
 	return szDestFolder + boost::uuids::to_string( uid );
 }
 

@@ -254,8 +254,8 @@ class SAnimLight
 [typeID = 0x12069B89; no_checksum]
 class SParticle
 {
-	[noCode] SceneFileRef _SrcName;
-	[noCode] string _ExportPrefix;
+	[noCode] ParticleFileRef _SrcName;
+	[noCode; hidden] string _ExportPrefix;
 	CVec2 _WrapSize;
 	[hidden] ParticleBound _Bound;
 	bool _PerParticleFog = false;

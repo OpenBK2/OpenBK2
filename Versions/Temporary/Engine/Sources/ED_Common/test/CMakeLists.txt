@@ -1,4 +1,15 @@
 # Exercise the conversion without loading the editor or a graphics device.
+add_unit_test(ParticleExporter ED_Common MapEditorLib 3Dmotor Stats_B2_M1 libdb System Misc gr2 zlib)
+target_compile_definitions(ParticleExporter_test PRIVATE NOMINMAX
+    PARTICLE_SCHEMA="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml"
+    PARTICLE_EXAMPLE="${CMAKE_SOURCE_DIR}/OBK2_Examples/BlenderParticleExport/Data/Effects/Examples/BlenderSmoke/Smoke.ptc")
+copy_wx_runtime(ParticleExporter_test)
+if(WIN32)
+    set_property(TARGET ParticleExporter_test APPEND PROPERTY LINK_DEPENDS $<TARGET_FILE:ED_Common> $<TARGET_FILE:3Dmotor>)
+    set_tests_properties(ParticleExporter_test PROPERTIES ENVIRONMENT_MODIFICATION
+        "PATH=path_list_prepend:$<TARGET_FILE_DIR:ffmpeg::avcodec>")
+endif()
+
 add_unit_test(GrannyGltf gr2 fastgltf::fastgltf SOURCES ../GrannyGltf.cpp)
 target_compile_definitions(GrannyGltf_test PRIVATE NOMINMAX)
 target_compile_definitions(GrannyGltf_test PRIVATE

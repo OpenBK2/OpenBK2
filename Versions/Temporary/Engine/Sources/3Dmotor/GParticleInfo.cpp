@@ -130,7 +130,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 	}
 	pInfo.Refresh();
 	CParticlesInfo *pParticles = pInfo->GetValue();
-	if ( !pParticles )
+	if ( !pParticles || pParticles->nParticles == 0 )
 	{
 		return;
 	}

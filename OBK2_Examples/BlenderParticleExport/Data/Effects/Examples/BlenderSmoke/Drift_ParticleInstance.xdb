@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ParticleInstance>
+	<Particle href="Smoke_Particle.xdb#xpointer(/Particle)"/>
+	<Position><x>2</x><y>0</y><z>0</z></Position>
+	<Rotation><x>0</x><y>0</y><z>0</z><w>1</w></Rotation>
+	<Scale>0.65</Scale>
+	<Speed>0.65</Speed>
+	<Offset>0.5</Offset>
+	<EndCycle>0</EndCycle>
+	<CycleCount>1</CycleCount>
+	<Textures>
+		<Item href="/Scene/TexAndMats/All/Effects/Exhaust/Dust1_Texture.xdb#xpointer(/Texture)"/>
+		<Item href="/Scene/TexAndMats/All/Effects/Exhaust/Dust0_Texture.xdb#xpointer(/Texture)"/>
+	</Textures>
+</ParticleInstance>

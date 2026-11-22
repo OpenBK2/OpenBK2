@@ -5,6 +5,7 @@
 
 #include "3Dmotor_export.h"
 
+#include <cmath>
 #include <cstdint>
 
 namespace NGScene
@@ -87,73 +88,107 @@ CFileRequest *CParticlesLoader::CreateRequest()
 	return CreateFileRequiest( "Effects", GetKey() );
 }
 
-//! Reads one field out of the particle resource blob and advances the cursor.
-//!
-//! The records are packed: three shorts then a four byte offset, then a short
-//! and an offset four times over. So every offset lands two bytes into a record,
-//! and casting the cursor to int32_t and loading through it was a load at an
-//! address that type does not permit, which is what UBSan reports once per
-//! offset. Copying the bytes is defined wherever the cursor happens to sit, and
-//! it also stops each of these reads from aliasing the byte buffer as another
-//! type, which the shorts and floats were doing too without being reported.
-template <class T>
-inline T ReadBlobField( char *&p )
+namespace
 {
-	T value;
-	memcpy( &value, p, sizeof( value ) );
-	p += sizeof( value );
-	return value;
+	// Read packed fields without binding a misaligned reference.
+	template <class T>
+	T ReadBlobField( const unsigned char *&cursor )
+	{
+		T value;
+		memcpy( &value, cursor, sizeof( value ) );
+		cursor += sizeof( value );
+		return value;
+	}
+
+	bool Finite( const CVec3 &v )
+	{
+		return std::isfinite( v.x ) && std::isfinite( v.y ) && std::isfinite( v.z );
+	}
+
+	bool Finite( const CVec2 &v )
+	{
+		return std::isfinite( v.x ) && std::isfinite( v.y );
+	}
+
+	template <class T>
+	bool Finite( T value )
+	{
+		return std::isfinite( value );
+	}
+
+	template <class T>
+	bool
+	ReadTrack( TKeyTrack<T> *track, const unsigned char *&cursor, const unsigned char *payload, int tableEnd, int size )
+	{
+		const short count = ReadBlobField<short>( cursor );
+		const int offset = ReadBlobField<int32_t>( cursor );
+		if ( count <= 0 || offset < tableEnd || offset > size || offset % alignof( TKey<T> ) != 0 ||
+		     size_t( count ) > size_t( size - offset ) / sizeof( TKey<T> ) )
+		{
+			return false;
+		}
+		track->nKeys = count;
+		track->keys = reinterpret_cast<const TKey<T> *>( payload + offset );
+		for ( int i = 0; i < count; ++i )
+		{
+			if ( ( i > 0 && track->keys[i].nT <= track->keys[i - 1].nT ) || !Finite( track->keys[i].GetValue() ) )
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+} // namespace
+
+bool CParticlesInfo::ReadClip( const CDataStream &stream )
+{
+	// Offsets start after the size prefix. Each directory entry holds two frame
+	// numbers and five (int16 key count, int32 offset) pairs.
+	constexpr int header = 12;
+	constexpr int record = 34;
+	const unsigned char *cursor = stream.GetBuffer();
+	if ( !cursor || stream.GetSize() < 4 + header )
+	{
+		return false;
+	}
+	const int size = ReadBlobField<int32_t>( cursor );
+	const unsigned char *payload = cursor;
+	const float duration = ReadBlobField<float>( cursor );
+	const float rate = ReadBlobField<float>( cursor );
+	const int count = ReadBlobField<int32_t>( cursor );
+	if ( size != stream.GetSize() - 4 || count < 0 || count > ( size - header ) / record || !std::isfinite( duration ) ||
+	     duration < 0 || !std::isfinite( rate ) || rate <= 0 )
+	{
+		return false;
+	}
+	const int tableEnd = header + record * count;
+	std::vector<SParticle> parsed( count );
+	for ( auto &part : parsed )
+	{
+		part.nTStart = ReadBlobField<short>( cursor );
+		part.nTEnd = ReadBlobField<short>( cursor );
+		if ( part.nTEnd < part.nTStart || !ReadTrack( &part.pos, cursor, payload, tableEnd, size ) ||
+		     !ReadTrack( &part.rot, cursor, payload, tableEnd, size ) ||
+		     !ReadTrack( &part.scale, cursor, payload, tableEnd, size ) ||
+		     !ReadTrack( &part.color, cursor, payload, tableEnd, size ) ||
+		     !ReadTrack( &part.sprite, cursor, payload, tableEnd, size ) )
+		{
+			return false;
+		}
+	}
+	particles.swap( parsed );
+	nParticles = count;
+	nBytes = size;
+	fTEnd = duration;
+	fFrameRate = rate;
+	return true;
 }
 
 void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 {
 	pValue = new CParticlesInfo;
 	pValue->pData = pRequest;
-	CMemoryStream *pFileData = pRequest->GetStream();
-	if ( pFileData->GetSize() == 0 )
-	{
-		return;
-	}
-	//CFileRequest &file = *pRequest;
-
-	//file->Read( &pValue->nBytes, sizeof(int) );
-	//pValue->pData.resize( pValue->nBytes );
-	char *pData = (char *)pFileData->GetBufferForWrite();
-	pValue->nBytes = ReadBlobField<int>( pData );
-	//file->Read( pData, pValue->nBytes );
-
-	char *p = pData;
-	pValue->fTEnd = ReadBlobField<float>( p );
-	pValue->fFrameRate = ReadBlobField<float>( p );
-	pValue->nParticles = ReadBlobField<int>( p );
-	pValue->particles.resize( pValue->nParticles );
-
-	for ( int nP = 0; nP < pValue->nParticles; ++nP )
-	{
-		SParticle &particle = pValue->particles[nP];
-		particle.nTStart = ReadBlobField<short>( p );
-		particle.nTEnd = ReadBlobField<short>( p );
-
-		particle.pos.nKeys = ReadBlobField<short>( p );
-		int32_t offset = ReadBlobField<int32_t>( p );
-		particle.pos.keys = reinterpret_cast<TKey<CVec3> *>( pData + offset );
-
-		particle.rot.nKeys = ReadBlobField<short>( p );
-		offset = ReadBlobField<int32_t>( p );
-		particle.rot.keys = reinterpret_cast<TKey<float> *>( pData + offset );
-
-		particle.scale.nKeys = ReadBlobField<short>( p );
-		offset = ReadBlobField<int32_t>( p );
-		particle.scale.keys = reinterpret_cast<TKey<CVec2> *>( pData + offset );
-
-		particle.color.nKeys = ReadBlobField<short>( p );
-		offset = ReadBlobField<int32_t>( p );
-		particle.color.keys = reinterpret_cast<TKey<uint32_t> *>( pData + offset );
-
-		particle.sprite.nKeys = ReadBlobField<short>( p );
-		offset = ReadBlobField<int32_t>( p );
-		particle.sprite.keys = reinterpret_cast<TKey<short> *>( pData + offset );
-	}
+	pValue->ReadClip( *pRequest->GetStream() );
 }
 
 } // namespace NGScene

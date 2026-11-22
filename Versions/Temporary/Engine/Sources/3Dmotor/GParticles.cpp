@@ -118,8 +118,8 @@ void CParticleAnimator::Recalc()
 		SParticleFrame frame;
 		frame.fT = fTimes[i] * pEffect->fFrameRate;
 		frame.bLastCycle = ( i == 0 );
-		frame.nNumFrame = ( fTObject - fTimes[i] ) / pInstance->fEndCycle + 1;
-		;
+		// A one-shot has a single placement cache and no cycle interval.
+		frame.nNumFrame = pInstance->fEndCycle == 0 ? 1 : int( ( fTObject - fTimes[i] ) / pInstance->fEndCycle ) + 1;
 		value.frames.push_back( frame );
 	}
 }

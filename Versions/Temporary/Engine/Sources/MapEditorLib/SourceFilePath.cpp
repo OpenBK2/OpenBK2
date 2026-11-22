@@ -4,6 +4,7 @@
 #include "Interface_UserData.h"
 #include "SourceFilePath.h"
 #include "System/FilePath.h"
+#include "System/FileUtils.h"
 
 #include <filesystem>
 #include <vector>
@@ -92,6 +93,17 @@ std::string Resolve( const std::string &path )
 			if ( fs::is_regular_file( candidate, error ) )
 			{
 				return candidate.generic_u8string();
+			}
+			// XDB paths are case-insensitive. Match the VFS when a record's spelling
+			// differs from the loose authoring file on a case-sensitive filesystem.
+			std::string actual;
+			if ( NFile::ResolveDataPathCase( &actual, root.generic_u8string() + "/", source.generic_u8string() ) )
+			{
+				const auto resolved = root / fs::u8path( actual );
+				if ( fs::is_regular_file( resolved, error ) )
+				{
+					return resolved.generic_u8string();
+				}
 			}
 		}
 		return ( Normalize( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder ) / source )

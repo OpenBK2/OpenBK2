@@ -686,3 +686,9 @@ context. Read `git diff` of every touched file before building.
 - A test that temporarily wrapped the database VFS in a local `CObj` left the
   next export with an invalid VFS when the last owning reference expired.
   Load temporary GLBs by absolute path through the already mounted VFS.
+
+## Blender particle export
+
+- Save the emitter's point-cache bake in the example .blend before checking
+  byte-for-byte exports. An unbaked simulation gave slightly different positions
+  when evaluated again after scrubbing, despite using the same emitter seed.

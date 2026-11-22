@@ -7,8 +7,11 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <vector>
 
 #include <boost/config.hpp>
+
+class CDataStream;
 
 namespace NGScene
 {
@@ -99,7 +102,7 @@ class TKeyTrack
 {
 public:
 	short nKeys;
-	TKey<TValue> *keys;
+	const TKey<TValue> *keys;
 
 	void GetValue( float fT, TValue *pRes ) const
 	{
@@ -180,6 +183,8 @@ public:
 		fFrameRate = 1;
 	}
 
+	// Track views borrow the stream buffer for the lifetime of the clip.
+	bool ReadClip( const CDataStream &stream );
 	void CalcBound( SBound *pRes );
 };
 

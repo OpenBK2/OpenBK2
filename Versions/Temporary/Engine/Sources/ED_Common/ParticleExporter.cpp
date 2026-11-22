@@ -1,40 +1,90 @@
 #include "stdafx.h"
 
 #include "3Dmotor/GParticleFormat.h"
-#include "libdb/ResourceManager.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/SourceFilePath.h"
 #include "Misc/StrProc.h"
 #include "ParticleExporter.h"
-#include "System/FilePath.h"
-#include "System/FileUtils.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
 
-#include <thread>
-
-#include <boost/uuid/uuid.hpp>
-#include <fmt/format.h>
+#include <cmath>
+#include <cstring>
+#include <filesystem>
 
 REGISTER_EXPORTER_IN_DLL( Particle, CParticleExporter )
-//
-#define ADD_PATH "bin\\effects\\"
 
-CParticleExporter::CParticleExporter()
-	: bNeedExport( false )
+std::string CParticleExporter::ImportClip( IManipulator *pManipulator,
+                                           const std::string &source,
+                                           NVFS::IFileCreator *destination,
+                                           bool force )
 {
-}
+	std::string extension = std::filesystem::u8path( source ).extension().u8string();
+	NStr::ToLowerASCII( &extension );
+	if ( extension == ".mb" || extension == ".ma" )
+	{
+		return "Maya particle export is no longer supported. Set SrcName to a baked .ptc file.";
+	}
+	if ( extension != ".ptc" )
+	{
+		return "Set SrcName to a BK2 particle clip (.ptc).";
+	}
 
-bool CParticleExporter::StartExport( const std::string &rszObjectTypeName, bool bForce )
-{
-	CStoreObjectExporter::StartExport( rszObjectTypeName, bForce );
-	bNeedExport = false;
-	MEStartScript( &szScriptText, true );
-	//
-	szScriptText +=
-			fmt::format( "loadPlugin \"{}\";\r\n", GetOption( &SUserData::SMayaExportData::szOldPluginFileName ).c_str() );
-	return true;
+	CFileStream stream( source, CFileStream::WIN_READ_ONLY );
+	if ( !stream.IsOk() )
+	{
+		return "Cannot read " + source;
+	}
+	CObj<NGScene::CParticlesInfo> clip = new NGScene::CParticlesInfo;
+	if ( !clip->ReadClip( stream ) || clip->nParticles == 0 || clip->fTEnd <= 0 )
+	{
+		return "Invalid or empty BK2 particle clip.";
+	}
+	SBound bound;
+	clip->CalcBound( &bound );
+	if ( !std::isfinite( bound.s.fRadius ) || !std::isfinite( bound.s.ptCenter.x ) ||
+	     !std::isfinite( bound.s.ptCenter.y ) || !std::isfinite( bound.s.ptCenter.z ) )
+	{
+		return "Particle bounds exceed the supported range.";
+	}
+
+	const std::string path = BuildDestFilePath( pManipulator, "bin/Effects/" );
+	bool write = true;
+	if ( !force )
+	{
+		// SrcName may have changed to an older file, so compare bytes, not timestamps.
+		CFileStream installed( NVFS::GetWritePath( destination, path ), CFileStream::WIN_READ_ONLY );
+		write = !installed.IsOk() || installed.GetSize() != stream.GetSize() ||
+		        memcmp( installed.GetBuffer(), stream.GetBuffer(), stream.GetSize() ) != 0;
+	}
+	// Calculate Bound from the same bytes we install. A cached UID resource may
+	// still describe the previous clip. Restore the metadata if replacement fails.
+	CVariant previous;
+	const CVariant next( &bound, sizeof( bound ) );
+	if ( !pManipulator->GetValue( "Bound", &previous ) )
+	{
+		return "Cannot read the particle Bound.";
+	}
+	const bool changed = !( previous == next );
+	if ( changed && !pManipulator->SetValue( "Bound", next ) )
+	{
+		return "Cannot update the particle Bound.";
+	}
+	std::string error;
+	if ( write && !NVFS::WriteFile( destination, path, stream, &error ) )
+	{
+		if ( changed )
+		{
+			pManipulator->SetValue( "Bound", previous );
+		}
+		return error;
+	}
+	return {};
 }
 
 EXPORT_RESULT CParticleExporter::ExportObject( IManipulator *pManipulator,
@@ -43,137 +93,21 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator *pManipulator,
                                                bool bForce,
                                                EXPORT_TYPE exportType )
 {
-	NI_ASSERT( pManipulator != 0, "CParticleExporter::ExportObject() pManipulator == 0 )" );
-	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
+	if ( exportType != ET_BEFORE_REF && exportType != ET_NO_REF )
 	{
 		return ER_SUCCESS;
 	}
-	//
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	//
-	// Формируем тело скрипта
-	std::string szSorceValue;
-	CManipulatorManager::GetValue( &szSorceValue, pManipulator, "SrcName" );
-	std::string szSource = pUserData->constUserData.szExportSourceFolder + szSorceValue;
-	NFile::NormalizePath( &szSource );
-	const std::string szParticleFolder =
-			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + ADD_PATH;
-	//const std::string szDestination = szParticleFolder + std::to_string(  nObjectID );
-	std::string szDestination = BuildDestFilePath( pManipulator, szParticleFolder ); // uid
-	NFile::NormalizePath( &szDestination );
-	// check for source and destination times if not forced mode
-	if ( CheckFilesUpdated( szSource, szDestination, bForce ) )
+	std::string source;
+	CManipulatorManager::GetValue( &source, pManipulator, "SrcName" );
+	const std::string root = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION );
+	CObj<NVFS::IFileCreator> creator = NVFS::CreateWinFileCreator( root );
+	const std::string error = ImportClip( pManipulator, NEditorSource::Resolve( source ), creator, bForce );
+	if ( !error.empty() )
 	{
-		return ER_SUCCESS;
+		const std::string message = rszObjectName + "\n" + source + "\n" + error;
+		NLog::Log( LT_ERROR, "%s\n", message.c_str() );
+		NMessage::Error( message, "Particle export" );
+		return ER_FAIL;
 	}
-	//
-	NFile::CreatePath( szParticleFolder.c_str() );
-	//
-	std::string szTempDstName = NFile::GetTempFileName() + ".ptc";
-	NFile::NormalizePath( &szTempDstName );
-	//
-	std::string szObjectName;
-	NFile::NormalizePath( &szObjectName, rszObjectName );
-	//
-	std::string szExportPrefix;
-	CManipulatorManager::GetValue( &szExportPrefix, pManipulator, "ExportPrefix" );
-	//
-	szScriptText += fmt::format( "print \"{}\";\r\n", szObjectName.c_str() );
-	//	szScriptText += fmt::format( "sysFile -del \"{}\";\r\n", szDestination.c_str() );
-	szScriptText += fmt::format( "file -o -f \"{}\";\r\n", szSource.c_str() );
-	szScriptText += fmt::format( "string $list[] = `ls -type objectSet \"{}*\"`;\r\n", szExportPrefix.c_str() );
-	szScriptText += fmt::format( "select -cl;\r\n" );
-	szScriptText += fmt::format( "for ($item in $list)\r\n" );
-	szScriptText += fmt::format( "  select -add -ne $item;\r\n" );
-	szScriptText += fmt::format( "file -es -f -typ \"{}\" -op \"particles=1;{};\" \"{}\";\r\n",
-	                             GetOption( &SUserData::SMayaExportData::szOldPluginName ).c_str(),
-	                             GetOption( &SUserData::SMayaExportData::szOldPluginParticleFixYZOption ).c_str(),
-	                             szTempDstName.c_str() );
-	exportedFilesMap[szDestination] = szTempDstName;
-	//
-	bNeedExport = true;
-	CStoreObjectExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 	return ER_SUCCESS;
 }
-
-void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool bForce )
-{
-	MEFinishScript( &szScriptText, true );
-	MERunScript( szScriptText, rszObjectTypeName, bNeedExport, true );
-	//
-	if ( GetObjectSet().objectNameSet.empty() )
-	{
-		return;
-	}
-	//
-	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const std::string szParticleFolder =
-			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + ADD_PATH;
-	//
-	for ( CObjectNameSet::const_iterator it = GetObjectSet().objectNameSet.begin();
-	      it != GetObjectSet().objectNameSet.end();
-	      ++it )
-	{
-		if ( CPtr<IManipulator> pManipulator =
-		         Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName, it->first ) )
-		{
-			//std::string szDstFileName = fmt::format( "{}{}", szParticleFolder.c_str(), nObjectID );
-			std::string szDstFileName = BuildDestFilePath( pManipulator, szParticleFolder ); // uid
-			NFile::NormalizePath( &szDstFileName );
-			const std::string szTempFileName = exportedFilesMap[szDstFileName];
-			if ( WaitForFile( szTempFileName, 10000, true ) != false )
-			{
-				MoveTempFileToDestination( szTempFileName, szDstFileName );
-				ImportInfoToDBAfterRefs( "Unknown name", szDstFileName, pManipulator );
-			}
-			else
-			{
-				NFile::RemoveFile( szTempFileName.c_str() );
-			}
-		}
-	}
-	exportedFilesMap.clear();
-}
-
-bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName,
-                                                 const std::string &szDstFileName,
-                                                 IManipulator *pManipulator )
-{
-	CPtr<NGScene::CParticlesLoader> pParticle = new NGScene::CParticlesLoader;
-
-	CVariant varUID;
-	if ( CManipulatorManager::GetValue( &varUID, pManipulator, "uid" ) )
-	{
-		boost::uuids::uuid uid;
-		memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );
-		pParticle->SetKey( SIntResKey( uid, pManipulator->GetID( "" ) ) );
-	}
-	else
-	{
-		pParticle->SetKey( pManipulator->GetID( "" ) );
-	}
-
-	// Through the raw pointer: CPtr to CDGPtr is two user conversions, which
-	// only MSVC chained in a copy-initialisation.
-	CDGPtr<CPtrFuncBase<NGScene::CParticlesInfo>> pFunc = pParticle.GetPtr();
-
-	pFunc.Refresh();
-	NGScene::CParticlesInfo *pInfo = pFunc->GetValue();
-	while ( pInfo == 0 )
-	{
-		std::this_thread::yield();
-		pInfo = pFunc->GetValue();
-	}
-	if ( pInfo == 0 )
-	{
-		return false;
-	}
-	SBound bound;
-	pInfo->CalcBound( &bound );
-
-	pManipulator->SetValue( "Bound", CVariant( &bound, sizeof( bound ) ) );
-
-	return true;
-}
-
-// basement storage

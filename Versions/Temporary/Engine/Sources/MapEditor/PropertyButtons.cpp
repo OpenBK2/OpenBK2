@@ -303,9 +303,11 @@ bool BrowseFile( const NPropertyButton::SContext &rContext, std::string *pszNewT
 					NMessage::Error( error, "Import model" );
 				}
 			}
-			else if ( rContext.szName == "ModelFileName" || rContext.szName == "TextureFileName" )
+			else if ( rContext.szName == "ModelFileName" || rContext.szName == "TextureFileName" ||
+			          ( rContext.szName == "SrcName" && rContext.pObjectSet &&
+			            rContext.pObjectSet->szObjectTypeName == "Particle" ) )
 			{
-				// The VisObj wizard imports after its destination name is known.
+				// These inputs may live in the active mod, Data, or the artist's source folder.
 				*pszNewText = NEditorSource::MakeRelative( szFullFilePath );
 				bResult = true;
 			}
