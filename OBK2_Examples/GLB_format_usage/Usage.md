@@ -12,6 +12,14 @@ When doing animation clip splitting, either have all animations in one big clip 
 
 Locators should probably be rotated 90 degrees along the X axis to show effects properly.
 
+## Importing a Map Editor GLB into Blender
+
+**Set the Blender scene to 30 fps before importing a model made with the Map Editor's Export Granny3D to GLB command.** In Blender, open **Output Properties → Format → Frame Rate**, choose **30 fps**, then import the GLB.
+
+Blender converts glTF timestamps in seconds to keyframes using the scene's frame rate. The `Animations` object's children store `StartTime`, `EndTime`, and `ActionTime` as frame numbers on the editor's 30 fps timeline. For example, the Elefant's last death clip covers frames 60 to 69. At 24 fps the entire action ends at frame 55.2, while the marker still says 69.
+
+If you already imported at 24 fps, set a fresh scene to 30 fps and reimport the original GLB. When exporting back to the game, enable **Custom Properties** to include the clip markers' frame ranges.
+
 ## Creating and exporting a VisObj
 
 In **Create New <VisObj> Object**, select a `.glb` or `.gltf` in `ModelFileName`. Keep using `TextureFileName`, `TextureType`, `RootMesh`, `RootJoint`, `AIRootMesh`, and the optional shared `Skeleton` as before. The creator fills `ModelFileRef` on Geometry, AIGeometry, and newly created Skeleton resources; it leaves their legacy `SrcName` fields empty.

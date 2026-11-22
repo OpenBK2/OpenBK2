@@ -302,7 +302,11 @@ X mirroring applies to geometry, normals, triangle winding, skeleton bind transf
 
 The converter samples skeletal animations into one `AllAnimations` clip at 30 fps, taking `Model.Animations` in order and then additional unique `Skeleton.Animations`. It fits each clip's endpoint poses to the nearest whole-frame duration, with a minimum of one frame interval. The next clip starts one frame later. Scene and animation extras record each source name and its exported range. Game-controlled movement and procedural effects remain runtime features.
 
-**Include Animations object** adds empty markers such as `DEATH01` under an `Animations` object for clips with a recognized AnimB2 type. Skeleton export reads their integer `StartTime` and `EndTime` properties and recreates the animation resources. Clearing the option exports the same animated timeline without the markers. To edit in Blender, set the scene to 30 fps before import and enable **Custom Properties** when exporting. Blender's glTF importer offers **Disable Bone Shape** to suppress the helper icosphere in its `glTF_not_exported` collection.
+**Include Animations object** adds empty markers such as `DEATH01` under an `Animations` object for clips with a recognized AnimB2 type. Skeleton export reads their integer `StartTime` and `EndTime` properties and recreates the animation resources. Clearing the option exports the same animated timeline without the markers.
+
+**Set the Blender scene to 30 fps before importing the exported GLB** so the keyframes line up with the clip markers. Enable **Custom Properties** when exporting from Blender. See [Importing a Map Editor GLB into Blender](OBK2_Examples/GLB_format_usage/Usage.md#importing-a-map-editor-glb-into-blender).
+
+Blender's glTF importer offers **Disable Bone Shape** to suppress the helper icosphere in its `glTF_not_exported` collection.
 
 By default, textures are converted to TGA and written into a `<GLB name>_textures` folder beside the GLB, which references those files directly. Special characters in folder/file names are escaped for portable relative paths. Keep the GLB and its texture folder together when moving the export. TGA references target Blender's image loader and are outside standard glTF image support. Unchecking TGA conversion writes original DDS files with PNG fallbacks instead. Unchecking separate files disables TGA conversion and embeds original DDS bytes through `MSFT_texture_dds`, plus PNG fallbacks, as before.
 
