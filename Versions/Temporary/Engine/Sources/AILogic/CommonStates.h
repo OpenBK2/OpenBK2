@@ -306,7 +306,7 @@ class CCommonAttackCommonStatObjState : public IUnitAttackingState, public CFree
 {
 	//
 	bool AttackUnits( class CStaticObject *pObj );
-	void AnalyzePosition();
+	void AnalyzePosition( bool bPlanApproach );
 	void AnalyzeShootingObj();
 
 	ZDATA_( CFreeFireManager )
