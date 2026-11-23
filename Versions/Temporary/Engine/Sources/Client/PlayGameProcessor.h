@@ -25,6 +25,8 @@ class CPlayGameProcessor : public CPacketProcessor
 	// A direct transport can close before the departing player's final lobby
 	// relays arrive. Only the ordered server notification confirms membership.
 	std::set<int> pendingServerRemovals;
+	std::set<int> joiningPeers;
+	uint32_t dwJoinStartTime = 0;
 
 	typedef std::unordered_map<int, CPtr<CConnectionEffort>> TConnectionEfforts;
 	TConnectionEfforts connectionEfforts;
@@ -86,6 +88,7 @@ public:
 	void ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
 
 	bool ProcessPacket( CNetPacket *pPacket ) override;
+	bool ProcessPeerAddressEnvelope( CNetPacket *pPacket );
 
 	//
 	bool ProcessCreateGame( class CCreateGamePacket *pPacket );

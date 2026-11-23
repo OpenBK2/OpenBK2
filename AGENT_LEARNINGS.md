@@ -1,6 +1,23 @@
 
 # AGENT LEARNINGS
 
+- Mistake: isolated direct-connection tests did not establish that online room
+  joining worked. Same-PC clients received their router's public endpoints;
+  TRY_SHORTCUT is post-login and cannot fix a failed public-address login.
+  Exchange bound local endpoints before login and test the complete UDP
+  handshake with an unanswered public endpoint, including the public retry.
+  Report failed joins as CConnectGameFailed and leave the server room;
+  CGameClientRemoved has no slot to remove while the join UI is still waiting.
+  CNodeAddressSet::GetAddress also needs a Windows DLL export when Client calls it.
+
+- Online peer setup must register and punch from the retained peer socket.
+  The server's registration reply goes to the persistent lobby ID even when
+  registration arrives on the probe connection, so no server protocol change
+  is needed. Disabling game relay fallback must cover both effort types;
+  departure subscriptions and explicit control envelopes are separate paths.
+  Drain setup state events without requiring an incoming packet, and replay
+  early accepting-net packets when the successful connection is installed.
+
 - One terrain patch is 16 x 16 fog tiles, so 8 x 8 base summary blocks give a
   2 x 2 upper grid on the smallest map. Fog hierarchy counters must track real
   zero/nonzero visibility transitions, not observer counts. Rebuild derived

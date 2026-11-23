@@ -1,10 +1,16 @@
 #include "Client/stdafx.h"
 
+#include "Client/ConnectionEffortInternal.h"
 #include "Client/ConnectionInternal.h"
 #include "Client/PlayGameProcessor.h"
 #include "GameX/MultiplayerNetPackets.h"
+#include "Net/NetLowest.h"
+#include "port/time.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/NetSaver.h"
+
+#include <chrono>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -16,6 +22,92 @@ REGISTER_SAVELOAD_CLASS( CLIENT, 107, CB2DropPlayerAtSegmentPacket );
 
 struct CPlayGameProcessorTestAccess
 {
+	static CNet *CreateNet( NNet::IDriver *driver )
+	{
+		CNet *net = new CNet( 1, 0, 60 );
+		net->pNetDriver = driver;
+		return net;
+	}
+
+	static void InitEffort( CSimpleClientEffort &effort,
+	                        CNet *lobby,
+	                        CNet *peer,
+	                        NNet::CGameLinksManager *links,
+	                        int clientID,
+	                        bool connectingPeer = false )
+	{
+		// Replace only socket setup; exercise the production state machine.
+		effort.nMyServerID = 42;
+		effort.nClientServerID = clientID;
+		effort.pNet = lobby;
+		effort.pConnet2PlayersNet = peer;
+		effort.pLinksManager = links;
+		effort.pConnectServerProcessor = new CConnectServerProcessor( peer, false );
+		effort.eState = CConnectionEffort::ES_CONNECTING;
+		effort.eSubState = connectingPeer ? CSimpleClientEffort::ECONNECT_CLIENT : CSimpleClientEffort::ECONNECT_SERVER;
+		effort.dwStartConnectClientTime = GetCurrentTimeMilliseconds();
+		effort.dwPeerAttemptStart = effort.dwStartConnectClientTime;
+		effort.dwPredBreakThroughSend = effort.dwStartConnectClientTime - 3001;
+		effort.szClientIP = "127.0.0.1";
+		effort.nClientPort = 43210;
+	}
+
+	static void ExpireEffort( CSimpleClientEffort &effort )
+	{
+		effort.dwStartConnectClientTime = GetCurrentTimeMilliseconds() - uint32_t( 1000 * CNet::GetTimeOut() ) - 1;
+	}
+
+	static void RetryPunch( CSimpleServerEffort &effort )
+	{
+		effort.dwPredBreakThroughSend = GetCurrentTimeMilliseconds() - 3001;
+	}
+
+	static void ExpireEffort( CSimpleServerEffort &effort )
+	{
+		effort.dwStartConnectClientTime = GetCurrentTimeMilliseconds() - uint32_t( 1000 * CNet::GetTimeOut() ) - 1;
+	}
+
+	static void AddEffort( CPlayGameProcessor &processor, CConnectionEffort *effort, CNet *accepting = nullptr )
+	{
+		processor.nOurGameID = 968;
+		processor.pAcceptGamersNet = accepting;
+		processor.CreateConnectionEffort( effort, effort->GetClientServerID() );
+	}
+
+	static void QueueEarlyPacket( CPlayGameProcessor &processor, CNetPacket *packet )
+	{
+		processor.waitingPackets.emplace_back( packet, GetCurrentTimeMilliseconds() );
+	}
+
+	static size_t GetWaitingCount( const CPlayGameProcessor &processor )
+	{
+		return processor.waitingPackets.size();
+	}
+
+	static void MarkJoining( CPlayGameProcessor &processor, int clientID, bool expired = false )
+	{
+		processor.joiningPeers.insert( clientID );
+		processor.dwJoinStartTime = GetCurrentTimeMilliseconds();
+		if ( expired )
+		{
+			processor.dwJoinStartTime -= uint32_t( 1000 * CNet::GetTimeOut() ) + 1;
+		}
+	}
+
+	static void InitPeer( CServerClient &client, int clientID, NNet::CGameLinksManager *acceptingLinks = nullptr )
+	{
+		auto &processor = *client.pPlayGameProcessor;
+		processor.nMyServerID = clientID;
+		processor.nOurGameID = 968;
+		if ( acceptingLinks )
+		{
+			processor.pLinksManager = acceptingLinks;
+			processor.pAcceptGamersNet = new CNet( 1, 0, 60 );
+			processor.pAcceptGamersNet->InitAsServer( acceptingLinks );
+			processor.pAcceptGamersNet->StartGame();
+		}
+	}
+
 	static void AddRelay( CPlayGameProcessor &processor, int clientID )
 	{
 		// The handshake is already complete in a running match. Bypass only
@@ -101,12 +193,14 @@ class CRecordingDriver : public NNet::IDriver
 public:
 	std::vector<CMemoryStream> sent;
 	std::list<CMemoryStream> received;
+	EState state = ACTIVE;
+	int expectedRecipient = 0;
 
 	void Init( NNet::APPLICATION_ID, int, bool, NNet::ILinksManager * ) override {}
 
 	EState GetState() const override
 	{
-		return ACTIVE;
+		return state;
 	}
 
 	EReject GetRejectReason() const override
@@ -140,7 +234,7 @@ public:
 
 	bool SendDirect( int clientID, const CMemoryStream &packet ) override
 	{
-		EXPECT_EQ( clientID, 0 ); // every control packet uses the persistent server link
+		EXPECT_EQ( clientID, expectedRecipient );
 		sent.push_back( packet );
 		return true;
 	}
@@ -263,6 +357,391 @@ void ReceiveDeath( CPlayGameProcessor &processor, int clientID )
 	ASSERT_TRUE( processor.ProcessPacket( received ) );
 }
 } // namespace
+
+namespace
+{
+// Recording the supplied links manager catches accidental use of a new socket.
+class CRecordingGameLinks : public NNet::CGameLinksManager
+{
+	OBJECT_NOCOPY_METHODS( CRecordingGameLinks );
+
+public:
+	mutable std::vector<NNet::CNodeAddress> destinations;
+	mutable std::vector<CMemoryStream> sent;
+
+	bool Send( const NNet::CNodeAddress &destination, CMemoryStream &packet ) const override
+	{
+		destinations.push_back( destination );
+		sent.push_back( packet );
+		return true;
+	}
+};
+} // namespace
+
+TEST( ClientDirectConnections, RegistrationAdvertisesTheRetainedPeerSocket )
+{
+	CPtr<CRecordingDriver> lobbyDriver = new CRecordingDriver();
+	CPtr<CRecordingDriver> peerDriver = new CRecordingDriver();
+	CPtr<CNet> lobby = CPlayGameProcessorTestAccess::CreateNet( lobbyDriver );
+	CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( peerDriver );
+	CSimpleClientEffort effort;
+	CPlayGameProcessorTestAccess::InitEffort( effort, lobby, peer, nullptr, hostID );
+	CPtr<CConnectServerPacket> connected =
+			new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, CConnectServerPacket::ERR_UNKNOWN );
+	effort.ProcessConnectServerPacket( connected );
+	ASSERT_EQ( peerDriver->sent.size(), 1u );
+	EXPECT_TRUE( lobbyDriver->sent.empty() );
+	CPtr<CNetPacket> packet = Deserialize( peerDriver->sent.front() );
+	auto *registration = dynamic_cast<CNewGameConnectingClient *>( packet.GetPtr() );
+	ASSERT_NE( registration, nullptr );
+	EXPECT_EQ( registration->nServerID, 42 );
+	EXPECT_EQ( registration->nConnection, hostID );
+
+	// The existing server replies on the lobby link, which still requests the introduction.
+	CPtr<CGameConnectingClientAccepted> accepted = new CGameConnectingClientAccepted( 0, hostID );
+	EXPECT_TRUE( effort.ProcessClientAccepted( accepted ) );
+	ASSERT_EQ( lobbyDriver->sent.size(), 1u );
+	packet = Deserialize( lobbyDriver->sent.front() );
+	ASSERT_NE( dynamic_cast<CWant2Connect2Client *>( packet.GetPtr() ), nullptr );
+}
+
+TEST( ClientDirectConnections, ProbeFailureWithoutIncomingPacketReportsRemovalWithoutRelay )
+{
+	CPtr<CRecordingDriver> lobbyDriver = new CRecordingDriver();
+	CPtr<CRecordingDriver> peerDriver = new CRecordingDriver();
+	peerDriver->state = NNet::IDriver::INACTIVE;
+	CPtr<CNet> lobby = CPlayGameProcessorTestAccess::CreateNet( lobbyDriver );
+	CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( peerDriver );
+	CPtr<CSimpleClientEffort> effort = new CSimpleClientEffort();
+	CPlayGameProcessorTestAccess::InitEffort( *effort, lobby, peer, nullptr, hostID );
+	CPlayGameProcessor processor( lobby, "127.0.0.1", 1, 0, 60 );
+	CPlayGameProcessorTestAccess::AddEffort( processor, effort );
+	processor.Segment();
+	EXPECT_EQ( effort->GetState(), CConnectionEffort::ES_FAILED );
+	CPtr<CNetPacket> packet = processor.GetPacket();
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ), nullptr );
+	EXPECT_EQ( packet->nClientID, hostID );
+	processor.Segment();
+	EXPECT_EQ( processor.GetPacket(), nullptr );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasConnection( processor, hostID ) );
+	EXPECT_TRUE( lobbyDriver->sent.empty() );
+}
+
+TEST( ClientDirectConnections, UnansweredRegistrationAndPeerHandshakeBothTimeOut )
+{
+	for ( bool connectingPeer : { false, true } )
+	{
+		CPtr<CRecordingDriver> driver = new CRecordingDriver();
+		CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( driver );
+		CSimpleClientEffort effort;
+		CPlayGameProcessorTestAccess::InitEffort( effort, peer, peer, nullptr, hostID, connectingPeer );
+		CPlayGameProcessorTestAccess::ExpireEffort( effort );
+		effort.Segment();
+		EXPECT_EQ( effort.GetState(), CConnectionEffort::ES_FAILED );
+		CPtr<CConnectionEffort> fallback = effort.CreateNextEffort( 968 );
+		EXPECT_EQ( fallback.GetPtr(), nullptr );
+		EXPECT_TRUE( driver->sent.empty() );
+	}
+}
+
+TEST( ClientDirectConnections, BothEndpointsPunchFromTheirRetainedSockets )
+{
+	CPtr<CRecordingDriver> driver = new CRecordingDriver();
+	CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( driver );
+	CPtr<CRecordingGameLinks> outgoingLinks = new CRecordingGameLinks();
+	CPtr<CRecordingGameLinks> acceptingLinks = new CRecordingGameLinks();
+	CSimpleClientEffort outgoing;
+	CPlayGameProcessorTestAccess::InitEffort( outgoing, peer, peer, outgoingLinks, hostID, true );
+	outgoing.Segment();
+	CSimpleServerEffort accepting( 42, hostID, "127.0.0.1", 43210, peer, peer, acceptingLinks );
+	CPlayGameProcessorTestAccess::RetryPunch( accepting );
+	accepting.Segment();
+	ASSERT_EQ( outgoingLinks->sent.size(), 1u );
+	ASSERT_EQ( acceptingLinks->sent.size(), 2u );
+	CMemoryStream nop;
+	NNet::GetNOPStream( &nop );
+	NNet::CNodeAddress destination;
+	ASSERT_TRUE( destination.SetInetName( "127.0.0.1", 43210 ) );
+	for ( const auto *links : { outgoingLinks.GetPtr(), acceptingLinks.GetPtr() } )
+	{
+		for ( size_t i = 0; i < links->sent.size(); ++i )
+		{
+			EXPECT_EQ( links->destinations[i], destination );
+			ASSERT_EQ( links->sent[i].GetSize(), nop.GetSize() );
+			EXPECT_EQ( std::memcmp( links->sent[i].GetBuffer(), nop.GetBuffer(), nop.GetSize() ), 0 );
+		}
+	}
+}
+
+TEST( ClientDirectConnections, AcceptingTimeoutDoesNotCreateRelay )
+{
+	CPtr<CRecordingDriver> driver = new CRecordingDriver();
+	CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( driver );
+	CPtr<CRecordingGameLinks> links = new CRecordingGameLinks();
+	CPtr<CSimpleServerEffort> effort = new CSimpleServerEffort( 42, hostID, "127.0.0.1", 43210, peer, peer, links );
+	CPlayGameProcessorTestAccess::ExpireEffort( *effort );
+	CPlayGameProcessor processor( peer, "127.0.0.1", 1, 0, 60 );
+	CPlayGameProcessorTestAccess::AddEffort( processor, effort );
+	processor.Segment();
+	EXPECT_EQ( effort->GetState(), CConnectionEffort::ES_FAILED );
+	CPtr<CNetPacket> packet = processor.GetPacket();
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ), nullptr );
+	EXPECT_EQ( packet->nClientID, hostID );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasConnection( processor, hostID ) );
+	EXPECT_TRUE( driver->sent.empty() );
+}
+
+TEST( ClientDirectConnections, FailedOutgoingJoinLeavesRoomAndReportsJoinFailure )
+{
+	CPtr<CRecordingDriver> driver = new CRecordingDriver();
+	driver->state = NNet::IDriver::INACTIVE;
+	CPtr<CNet> net = CPlayGameProcessorTestAccess::CreateNet( driver );
+	CPtr<CSimpleClientEffort> effort = new CSimpleClientEffort();
+	CPlayGameProcessorTestAccess::InitEffort( *effort, net, net, nullptr, hostID );
+	CPlayGameProcessor processor( net, "127.0.0.1", 1, 0, 60 );
+	CPlayGameProcessorTestAccess::AddEffort( processor, effort );
+	CPlayGameProcessorTestAccess::MarkJoining( processor, hostID );
+	processor.Segment();
+	CPtr<CNetPacket> failure = processor.GetPacket();
+	ASSERT_NE( dynamic_cast<CConnectGameFailed *>( failure.GetPtr() ), nullptr );
+	ASSERT_EQ( driver->sent.size(), 1u );
+	CPtr<CNetPacket> leave = Deserialize( driver->sent.front() );
+	ASSERT_NE( dynamic_cast<CLeaveGamePacket *>( leave.GetPtr() ), nullptr );
+	processor.Segment();
+	EXPECT_EQ( processor.GetPacket(), nullptr );
+	EXPECT_EQ( driver->sent.size(), 1u );
+}
+
+TEST( ClientDirectConnections, MissingFinalConnectionTestAlsoEndsTheJoin )
+{
+	CPtr<CRecordingDriver> driver = new CRecordingDriver();
+	CPtr<CNet> net = CPlayGameProcessorTestAccess::CreateNet( driver );
+	CPlayGameProcessor processor( net, "127.0.0.1", 1, 0, 60 );
+	CPlayGameProcessorTestAccess::AddRelay( processor, hostID );
+	CPlayGameProcessorTestAccess::MarkJoining( processor, hostID, true );
+	processor.Segment();
+	CPtr<CNetPacket> failure = processor.GetPacket();
+	ASSERT_NE( dynamic_cast<CConnectGameFailed *>( failure.GetPtr() ), nullptr );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasConnection( processor, hostID ) );
+	ASSERT_EQ( driver->sent.size(), 1u );
+	CPtr<CNetPacket> leave = Deserialize( driver->sent.front() );
+	ASSERT_NE( dynamic_cast<CLeaveGamePacket *>( leave.GetPtr() ), nullptr );
+}
+
+static void CheckSocketHandshake( bool bPublicReachable, bool bLocalReachable, bool bForwardOffers )
+{
+	// Real UDP sockets, drivers, registration, identity and connection-test
+	// packets. Only the lobby's authenticated introduction/forwarding is modeled.
+	CPtr<NNet::CGameLinksManager> serverLinks = new NNet::CGameLinksManager();
+	CPtr<NNet::CGameLinksManager> hostLinks = new NNet::CGameLinksManager();
+	CPtr<NNet::CGameLinksManager> unreachableLinks = new NNet::CGameLinksManager();
+	ASSERT_TRUE( serverLinks->Init( 0 ) );
+	ASSERT_TRUE( hostLinks->Init( 0 ) );
+	ASSERT_TRUE( unreachableLinks->Init( 0 ) );
+	NNet::CNodeAddressSet addresses;
+	NNet::CNodeAddress serverAddress, unreachableAddress, hostAddress;
+	ASSERT_TRUE( serverLinks->GetSelfAddress( &addresses ) );
+	ASSERT_TRUE( addresses.GetAddress( 0, &serverAddress ) );
+	ASSERT_TRUE( unreachableLinks->GetSelfAddress( &addresses ) );
+	ASSERT_TRUE( addresses.GetAddress( 0, &unreachableAddress ) );
+	ASSERT_TRUE( hostLinks->GetSelfAddress( &addresses ) );
+	ASSERT_TRUE( addresses.GetAddress( 0, &hostAddress ) );
+	if ( hostAddress.GetIP().compare( 0, 4, "127." ) == 0 )
+	{
+		GTEST_SKIP() << "Local-address offers require a non-loopback interface";
+	}
+	CPtr<CNet> server = new CNet( 1, 0, 60 );
+	ASSERT_TRUE( server->InitAsServer( serverLinks ) );
+	server->StartGame();
+	CPtr<CRecordingDriver> hostLobby = new CRecordingDriver();
+	CPtr<CRecordingDriver> joiningLobby = new CRecordingDriver();
+	CServerClient host, joining;
+	CPlayGameProcessorTestAccess::InitServerClient( host, hostLobby );
+	CPlayGameProcessorTestAccess::InitServerClient( joining, joiningLobby );
+	CPlayGameProcessorTestAccess::InitPeer( host, hostID, hostLinks );
+	CPlayGameProcessorTestAccess::InitPeer( joining, teammateID );
+	NEffortsFactory::SetServerInfo( "127.0.0.1", serverAddress.GetPort(), 1 );
+	CPtr<CAnswerConnectGame> answer = new CAnswerConnectGame();
+	answer->clients.push_back( hostID );
+	joiningLobby->received.push_back( Serialize( answer ) );
+	bool hostConnected = false;
+	bool joiningConnected = false;
+	bool sentPing = false;
+	bool receivedEcho = false;
+	int offersForwarded = 0;
+	const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds( 12 );
+	while ( !receivedEcho && std::chrono::steady_clock::now() < deadline )
+	{
+		joining.Segment();
+		host.Segment();
+		while ( CPtr<CNetPacket> packet = server->ReceivePacket() )
+		{
+			if ( auto *registration = dynamic_cast<CNewGameConnectingClient *>( packet.GetPtr() ) )
+			{
+				EXPECT_EQ( registration->nServerID, teammateID );
+				EXPECT_EQ( registration->nConnection, hostID );
+				joiningLobby->received.push_back( Serialize( new CGameConnectingClientAccepted( 0, hostID ) ) );
+			}
+		}
+		for ( auto &stream : joiningLobby->sent )
+		{
+			CPtr<CNetPacket> packet = Deserialize( stream );
+			ASSERT_NE( dynamic_cast<CWant2Connect2Client *>( packet.GetPtr() ), nullptr );
+			// Bound but unanswered sockets model a router that cannot hairpin.
+			joiningLobby->received.push_back( Serialize( new CClientGameConnectInfo(
+					0, "127.0.0.1", bPublicReachable ? hostAddress.GetPort() : unreachableAddress.GetPort(), hostID ) ) );
+			hostLobby->received.push_back(
+					Serialize( new CClientWantToConnect( 0, teammateID, "127.0.0.1", unreachableAddress.GetPort() ) ) );
+		}
+		joiningLobby->sent.clear();
+		for ( auto &stream : hostLobby->sent )
+		{
+			CPtr<CNetPacket> packet = Deserialize( stream );
+			auto *envelope = dynamic_cast<CDirectPacketToClient *>( packet.GetPtr() );
+			ASSERT_NE( envelope, nullptr );
+			auto *offer = dynamic_cast<CClientGameConnectInfo *>( envelope->pPacket.GetPtr() );
+			ASSERT_NE( offer, nullptr );
+			if ( !bLocalReachable )
+			{
+				offer->nPort = unreachableAddress.GetPort();
+			}
+			EXPECT_EQ( envelope->nClient, teammateID );
+			// Same sender rewrite performed by the unchanged CControlLobby.
+			envelope->nClientID = hostID;
+			std::swap( envelope->nClient, envelope->nClientID );
+			if ( bForwardOffers )
+			{
+				joiningLobby->received.push_back( Serialize( envelope ) );
+				++offersForwarded;
+			}
+		}
+		hostLobby->sent.clear();
+		while ( CPtr<CNetPacket> packet = host.GetPacket() )
+		{
+			if ( dynamic_cast<CNewGameClient *>( packet.GetPtr() ) )
+			{
+				EXPECT_EQ( packet->nClientID, teammateID );
+				hostConnected = true;
+			}
+			if ( auto *ping = dynamic_cast<CPingPacket *>( packet.GetPtr() ) )
+			{
+				host.SendGamePacket( new CPingPacket( packet->nClientID, ping->nFromID, ping->nSendTime ), false );
+			}
+		}
+		while ( CPtr<CNetPacket> packet = joining.GetPacket() )
+		{
+			if ( dynamic_cast<CNewGameClient *>( packet.GetPtr() ) )
+			{
+				EXPECT_EQ( packet->nClientID, hostID );
+				joiningConnected = true;
+			}
+			if ( auto *ping = dynamic_cast<CPingPacket *>( packet.GetPtr() ) )
+			{
+				EXPECT_EQ( packet->nClientID, hostID );
+				EXPECT_EQ( ping->nSendTime, 5678 );
+				receivedEcho = true;
+			}
+			ASSERT_EQ( dynamic_cast<CConnectGameFailed *>( packet.GetPtr() ), nullptr );
+		}
+		if ( hostConnected && joiningConnected && !sentPing )
+		{
+			joining.SendGamePacket( new CPingPacket( hostID, 2, 5678 ), false );
+			sentPing = true;
+		}
+		std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+	}
+	EXPECT_EQ( offersForwarded > 0, bForwardOffers );
+	EXPECT_TRUE( hostConnected );
+	EXPECT_TRUE( joiningConnected );
+	EXPECT_TRUE( receivedEcho );
+}
+
+TEST( ClientDirectConnections, CompleteSocketHandshakeAndPingUseLocalOfferWhenPublicEndpointCannotReply )
+{
+	CheckSocketHandshake( false, true, true );
+}
+
+TEST( ClientDirectConnections, CompleteSocketHandshakeRetriesPublicEndpointAfterLocalFailure )
+{
+	CheckSocketHandshake( true, false, true );
+}
+
+TEST( ClientDirectConnections, CompleteSocketHandshakeWorksWithoutLocalOffers )
+{
+	CheckSocketHandshake( true, false, false );
+}
+
+TEST( ClientDirectConnections, EarlyPeerPacketsAreDeliveredInOrderOnConnectionInstallation )
+{
+	CPtr<CRecordingDriver> lobbyDriver = new CRecordingDriver();
+	CPtr<CRecordingDriver> peerDriver = new CRecordingDriver();
+	peerDriver->expectedRecipient = 17;
+	CPtr<CNet> lobby = CPlayGameProcessorTestAccess::CreateNet( lobbyDriver );
+	CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( peerDriver );
+	CPtr<CRecordingGameLinks> links = new CRecordingGameLinks();
+	CPtr<CSimpleServerEffort> effort = new CSimpleServerEffort( 42, hostID, "127.0.0.1", 43210, lobby, peer, links );
+	CPlayGameProcessor processor( lobby, "127.0.0.1", 1, 0, 60 );
+	CPlayGameProcessorTestAccess::AddEffort( processor, effort, peer );
+	CPtr<CIndentityPacket> identity = new CIndentityPacket( 17, hostID );
+	ASSERT_TRUE( effort->ProcessClientIdentity( identity ) );
+	CPlayGameProcessorTestAccess::QueueEarlyPacket( processor, new CPingPacket( 18, 3, 900 ) );
+	CPlayGameProcessorTestAccess::QueueEarlyPacket( processor, new CPingPacket( 17, 2, 1000 ) );
+	CPlayGameProcessorTestAccess::QueueEarlyPacket( processor, new CPingPacket( 17, 2, 2000 ) );
+	processor.Segment();
+	ASSERT_TRUE( CPlayGameProcessorTestAccess::HasConnection( processor, hostID ) );
+	for ( int timestamp : { 1000, 2000 } )
+	{
+		CPtr<CNetPacket> packet = processor.GetPacket();
+		auto *ping = dynamic_cast<CPingPacket *>( packet.GetPtr() );
+		ASSERT_NE( ping, nullptr );
+		EXPECT_EQ( ping->nClientID, hostID );
+		EXPECT_EQ( ping->nSendTime, timestamp );
+	}
+	EXPECT_EQ( processor.GetPacket(), nullptr );
+	EXPECT_EQ( CPlayGameProcessorTestAccess::GetWaitingCount( processor ), 1u );
+	EXPECT_TRUE( lobbyDriver->sent.empty() );
+}
+
+TEST( ClientDirectConnections, RoomPingBroadcastAndEchoUseOnlyPeerConnections )
+{
+	CPtr<CRecordingDriver> lobbyDriver = new CRecordingDriver();
+	CPtr<CRecordingDriver> peerDriver = new CRecordingDriver();
+	CPtr<CRecordingDriver> secondPeerDriver = new CRecordingDriver();
+	CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( peerDriver );
+	CPtr<CNet> secondPeer = CPlayGameProcessorTestAccess::CreateNet( secondPeerDriver );
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobbyDriver );
+	CPlayGameProcessorTestAccess::AddConnection( client, hostID, new CSimpleConnection( peer, true, hostID, 0, 42 ) );
+	CPlayGameProcessorTestAccess::AddConnection(
+			client, teammateID, new CSimpleConnection( secondPeer, true, teammateID, 0, 42 ) );
+	peerDriver->sent.clear();
+	secondPeerDriver->sent.clear();
+	client.SendGamePacket( new CPingPacket( 0, 2, 1234 ), true );
+	ASSERT_EQ( peerDriver->sent.size(), 1u );
+	ASSERT_EQ( secondPeerDriver->sent.size(), 1u );
+	for ( auto *driver : { peerDriver.GetPtr(), secondPeerDriver.GetPtr() } )
+	{
+		CPtr<CNetPacket> packet = Deserialize( driver->sent.front() );
+		ASSERT_NE( dynamic_cast<CPingPacket *>( packet.GetPtr() ), nullptr );
+	}
+
+	// Same unicast path used by CMPManagerMode::OnPingPacket to return an echo.
+	peerDriver->received.push_back( Serialize( new CPingPacket( 0, 1, 5678 ) ) );
+	client.Segment();
+	CPtr<CNetPacket> packet = client.GetPacket();
+	auto *incoming = dynamic_cast<CPingPacket *>( packet.GetPtr() );
+	ASSERT_NE( incoming, nullptr );
+	EXPECT_EQ( incoming->nClientID, hostID );
+	client.SendGamePacket( new CPingPacket( incoming->nClientID, incoming->nFromID, incoming->nSendTime ), false );
+	ASSERT_EQ( peerDriver->sent.size(), 2u );
+	EXPECT_EQ( secondPeerDriver->sent.size(), 1u );
+	packet = Deserialize( peerDriver->sent.back() );
+	auto *echo = dynamic_cast<CPingPacket *>( packet.GetPtr() );
+	ASSERT_NE( echo, nullptr );
+	EXPECT_EQ( echo->nFromID, 1 );
+	EXPECT_EQ( echo->nSendTime, 5678 );
+	EXPECT_TRUE( lobbyDriver->sent.empty() );
+}
 
 TEST( ClientConnectionRemoval, HostFinalDropSurvivesDeathInSameServerBatch )
 {

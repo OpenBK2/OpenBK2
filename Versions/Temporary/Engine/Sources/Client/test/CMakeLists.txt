@@ -1,5 +1,5 @@
-# Exercise the internal connection queues without opening sockets or introducing
-# public DLL exports solely for tests.
+# Exercise internal connection queues and a complete local UDP peer handshake
+# without introducing public DLL exports solely for tests.
 add_unit_test(ClientConnectionRemoval MemoryLib Misc Net Server_Client_Common System fmt::fmt-header-only SOURCES
     ../Connection.cpp
     ../ConnectionEffort.cpp

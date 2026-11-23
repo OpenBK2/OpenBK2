@@ -1,6 +1,9 @@
 #pragma once
 
 #include "NetAddress.h"
+
+#include "Net_export.h"
+
 class CMemoryStream;
 
 namespace NNet
@@ -8,7 +11,8 @@ namespace NNet
 
 const int N_MAX_HOST_HOMES = 4;
 
-class CNodeAddressSet
+// The client exchanges the socket's local endpoints before peer login.
+class NET_EXPORT CNodeAddressSet
 {
 	unsigned short nPort;
 	int ips[N_MAX_HOST_HOMES];
