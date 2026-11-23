@@ -803,6 +803,22 @@ void CInterfaceMPGameRoom::UpdateInterior()
 				}
 			}
 		}
+		if ( slot.info.bPresent && i != nOwnSlot )
+		{
+			// Query the local pair's selected route, never another player's slot metadata.
+			switch ( Singleton<IMPToUIManager>()->GetPeerRoute( i ) )
+			{
+				case EPeerConnectionRoute::Direct:
+					wszPingTooltip += L" (Direct UDP)";
+					break;
+				case EPeerConnectionRoute::Relay:
+					wszPingTooltip += L" (Server relay)";
+					break;
+				default:
+					wszPingTooltip += L" (Connecting)";
+					break;
+			}
+		}
 		slot.pPing->SetTooltip( wszPingTooltip );
 	}
 

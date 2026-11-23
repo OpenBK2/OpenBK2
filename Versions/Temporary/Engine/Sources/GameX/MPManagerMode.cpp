@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Client/ServerClientInterface.h"
 #include "CommandsHistory.h"
 #include "DBMPConsts.h"
 #include "GameXClassIDs.h"
@@ -272,6 +273,13 @@ void CMPManagerMode::SendGameRoomInitMessages()
 	pingUpdate.timeNextUpdate = 0;
 
 	pClient->SendGamePacket( new CB2SlotInfoPacket( 0, nOwnSlot, slots[nOwnSlot] ), true );
+}
+
+EPeerConnectionRoute CMPManagerMode::GetPeerRoute( int nSlot ) const
+{
+	return pClient && nSlot >= 0 && nSlot < slots.size() && slots[nSlot].bPresent
+	           ? pClient->GetPeerRoute( slots[nSlot].nClientID )
+	           : EPeerConnectionRoute::Unknown;
 }
 
 void CMPManagerMode::ShowWaitWindow( bool bShow )

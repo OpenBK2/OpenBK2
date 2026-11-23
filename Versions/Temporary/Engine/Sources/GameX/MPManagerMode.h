@@ -30,6 +30,8 @@ struct CMPManagerMode : public CMPUIMessageProcessor, public CPacketProcessorBas
 	friend class CMPPlayerDropTestAccess;
 
 public:
+	EPeerConnectionRoute GetPeerRoute( int nSlot ) const;
+
 	enum ENetMode
 	{
 		ENM_NONE,

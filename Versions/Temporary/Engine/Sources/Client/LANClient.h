@@ -53,6 +53,11 @@ public:
 
 	void Segment() override;
 
+	EPeerConnectionRoute GetPeerRoute( int nClientID ) const override
+	{
+		return EPeerConnectionRoute::Direct;
+	}
+
 	// Access to NetDriver
 	bool GetGameInfo(
 			int nIdx, NNet::CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, NNet::IDriver::SGameInfo *pGameInfo );

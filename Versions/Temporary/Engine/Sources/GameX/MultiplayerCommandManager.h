@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Client/PeerConnectionRoute.h"
 #include "MPInterfaceData.h"
 #include "Server_Client_Common/LadderStatistics.h"
 
@@ -110,6 +111,11 @@ struct IMPToUIManager : public CObjectBase
 
 	virtual void MPUISegment() = 0;
 	virtual bool SaveReplay( const std::string &szFileName ) = 0;
+
+	virtual EPeerConnectionRoute GetPeerRoute( int nSlot ) const
+	{
+		return EPeerConnectionRoute::Unknown;
+	}
 };
 
 //*******************************************************************

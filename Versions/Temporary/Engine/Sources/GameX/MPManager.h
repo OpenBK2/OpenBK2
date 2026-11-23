@@ -44,6 +44,12 @@ public:
 	SMPUIMessage *GetUIMessage() override;
 	SMPUIMessage *PeekUIMessage() override;
 	void MPUISegment() override;
+
+	EPeerConnectionRoute GetPeerRoute( int nSlot ) const override
+	{
+		return pCurrentNetMode ? pCurrentNetMode->GetPeerRoute( nSlot ) : EPeerConnectionRoute::Unknown;
+	}
+
 	//}
 
 	//{ CPacketProcessor

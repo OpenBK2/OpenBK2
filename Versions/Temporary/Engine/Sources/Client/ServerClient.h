@@ -60,6 +60,7 @@ public:
 	void SendGamePacket( class CNetPacket *pPacket, bool bBroadcast ) override;
 
 	void Segment() override;
+	EPeerConnectionRoute GetPeerRoute( int nClientID ) const override;
 
 	// debug functions
 	void TogglePause( bool bPause );

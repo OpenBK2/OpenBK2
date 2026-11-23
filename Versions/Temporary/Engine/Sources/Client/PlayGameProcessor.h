@@ -1,10 +1,14 @@
 #pragma once
 
 #include "LinksManager.h"
+#include "PeerConnectionRoute.h"
+#include "PeerSetupPacket.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
 #include <cstdint>
+#include <map>
 #include <set>
+#include <vector>
 
 class CNet;
 class CNetPacket;
@@ -27,6 +31,61 @@ class CPlayGameProcessor : public CPacketProcessor
 	std::set<int> pendingServerRemovals;
 	std::set<int> joiningPeers;
 	uint32_t dwJoinStartTime = 0;
+
+	struct SPeerSetup
+	{
+		bool bInitiator = false;
+		bool bRecovery = false;
+		uint32_t nSetupID = 0;
+		int nAttempt = 0;
+		uint32_t dwStartTime = 0;
+		EPeerConnectionRoute route = EPeerConnectionRoute::Unknown;
+		bool bTested = false;
+		bool bConfirmed = false;
+		std::string szIP;
+		int nPort = 0;
+		CPtr<class CSimpleClientEffort> pClientEffort;
+		std::list<CPtr<CNetPacket>> packets;
+	};
+
+	// Tentative connections cannot carry room/game traffic until route agreement.
+	std::map<int, SPeerSetup> peerSetups;
+	void SendPeerSetup( int nClientID, CPeerSetupPacket::EAction action );
+	void ProcessPeerSetup( int nClientID, const CPeerSetupPacket &packet );
+	void ProcessPeerSetups();
+	void SelectRelay( int nClientID );
+	void FinishPeerSetup( int nClientID );
+
+	struct SPeerSession
+	{
+		bool bInitiator = false;
+		uint32_t nSetupID = 0;
+		int nAttempt = 0;
+		std::string szIP;
+		int nPort = 0;
+		CPtr<class CSimpleClientEffort> pClientEffort;
+		EPeerConnectionRoute route = EPeerConnectionRoute::Unknown;
+		uint64_t nNextSend = 1;
+		uint64_t nNextReceive = 1;
+		uint64_t nLastAcknowledged = 0;
+		std::map<uint64_t, std::vector<char>> pendingSend;
+		std::map<uint64_t, std::vector<char>> pendingReceive;
+		uint32_t dwLastReceive = 0;
+		uint32_t dwLastAckProgress = 0;
+		uint32_t dwLastHeartbeat = 0;
+		bool bAckPending = false;
+		bool bRecoveryRequested = false;
+	};
+
+	std::map<int, SPeerSession> peerSessions;
+	std::set<int> failedDirectPeers;
+	void ProcessPeerSessions();
+	void BeginPeerRecovery( int nClientID );
+	void PreparePeerRecovery( int nClientID );
+	void SendSessionPacket( int nClientID, uint64_t nSequence, const std::vector<char> &data, bool bRequestAck = false );
+	void QueueSessionPacket( int nClientID, CNetPacket *pPacket );
+	void ReceiveSessionPacket( CNetPacket *pPacket );
+	void FlushSessionPackets( int nClientID );
 
 	typedef std::unordered_map<int, CPtr<CConnectionEffort>> TConnectionEfforts;
 	TConnectionEfforts connectionEfforts;
@@ -85,10 +144,11 @@ public:
 
 	bool Segment() override;
 	void SendGamePacket( CNetPacket *pPacket, bool bBroadcast );
+	EPeerConnectionRoute GetPeerRoute( int nClientID ) const;
 	void ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
 
 	bool ProcessPacket( CNetPacket *pPacket ) override;
-	bool ProcessPeerAddressEnvelope( CNetPacket *pPacket );
+	bool ProcessPeerSetupEnvelope( CNetPacket *pPacket );
 
 	//
 	bool ProcessCreateGame( class CCreateGamePacket *pPacket );

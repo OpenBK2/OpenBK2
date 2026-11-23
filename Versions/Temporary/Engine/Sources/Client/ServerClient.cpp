@@ -126,9 +126,9 @@ void CServerClient::GetPacketsFromNet()
 	{
 		GetNetLogger()->Log( "client", fmt::format( "receive net {}", GetPacketInfo( pPacket ) ) );
 
-		// Endpoint offers are setup messages, handled before the generic relay
+		// Handle endpoint offers and route agreement before the generic relay
 		// converter publishes game-control packets to the game manager.
-		bool bProcessed = pPlayGameProcessor->ProcessPeerAddressEnvelope( pPacket );
+		bool bProcessed = pPlayGameProcessor->ProcessPeerSetupEnvelope( pPacket );
 
 		std::list<CPtr<CPacketProcessor>>::iterator iter = processors.begin();
 		while ( iter != processors.end() && !bProcessed )
@@ -216,6 +216,11 @@ void CServerClient::Segment()
 			++iter;
 		}
 	}
+}
+
+EPeerConnectionRoute CServerClient::GetPeerRoute( int nClientID ) const
+{
+	return pPlayGameProcessor ? pPlayGameProcessor->GetPeerRoute( nClientID ) : EPeerConnectionRoute::Unknown;
 }
 
 void CServerClient::SendGamePacket( CNetPacket *_pPacket, bool bBroadcast )

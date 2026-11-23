@@ -8,6 +8,7 @@ set(SOURCES
     LANClient.cpp
     LinksManager.cpp
     PlayGameProcessor.cpp
+    PeerSessions.cpp
     ServerClient.cpp
     StdAfx.cpp
 )

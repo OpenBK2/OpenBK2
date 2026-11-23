@@ -2,6 +2,7 @@
 
 #include "ConnectionEffort.h"
 #include "Net/NetAddress.h"
+#include "PeerSetupPacket.h"
 
 #include <cstdint>
 #include <vector>
@@ -29,6 +30,7 @@ class CSimpleClientEffort : public CConnectionEffort
 	{
 		ECONNECT_SERVER,
 		EWAIT_ADDRESSES,
+		EWAIT_ATTEMPT,
 		ECONNECT_CLIENT
 	};
 
@@ -48,9 +50,13 @@ class CSimpleClientEffort : public CConnectionEffort
 	std::vector<NNet::CNodeAddress> peerTargets;
 	size_t nNextPeerTarget = 0;
 	uint32_t dwPeerAttemptStart = 0;
+	int nOurGameID = 0;
+	uint32_t nSetupID = 0;
+	int nAttempt = 0;
+	int nAttemptLimit = 3;
+	bool bRecovery = false;
 
 	void StartPeerConnections();
-	void StartNextPeerConnection();
 
 public:
 	CSimpleClientEffort() {}
@@ -61,7 +67,26 @@ public:
 	                     const std::string &szServerIP,
 	                     const int nServerPort,
 	                     const int nGameNetVersion,
-	                     const int nTimeOut );
+	                     const int nTimeOut,
+	                     int nOurGameID = 0,
+	                     uint32_t nSetupID = 0 );
+
+	static constexpr uint32_t DIRECT_ATTEMPT_TIMEOUT = 5000;
+	static constexpr int DIRECT_ATTEMPTS = 3;
+	void StartNextPeerConnection();
+	void RetryEstablishedConnection();
+	void AcceptAttempt( const CPeerSetupPacket &packet );
+	bool IsAttemptExpired() const;
+
+	int GetAttempt() const
+	{
+		return nAttempt;
+	}
+
+	int GetAttemptLimit() const
+	{
+		return nAttemptLimit;
+	}
 
 	const EState GetState() const override
 	{
@@ -86,7 +111,7 @@ public:
 	CConnectionEffort *CreateNextEffort( const int nOurGameID ) override;
 
 	//
-	bool ProcessClientIdentity( class CIndentityPacket *pPacket );
+	bool ProcessClientIdentity( CPeerSetupPacket *pPacket );
 };
 
 class CSimpleServerEffort : public CConnectionEffort
@@ -108,6 +133,9 @@ class CSimpleServerEffort : public CConnectionEffort
 
 	uint32_t dwStartConnectClientTime;
 	uint32_t dwPredBreakThroughSend;
+	int nOurGameID = 0;
+	uint32_t nSetupID = 0;
+	int nAttempt = 0;
 
 public:
 	CSimpleServerEffort() {}
@@ -118,7 +146,10 @@ public:
 	                     const int nClientPort,
 	                     CNet *pNet,
 	                     CNet *pAcceptGamersNet,
-	                     NNet::ILinksManager *pLinksManager );
+	                     NNet::ILinksManager *pLinksManager,
+	                     int nOurGameID = 0,
+	                     uint32_t nSetupID = 0,
+	                     int nAttempt = 0 );
 
 	const EState GetState() const override
 	{
@@ -134,7 +165,7 @@ public:
 	bool Segment() override;
 
 	//
-	bool ProcessClientIdentity( class CIndentityPacket *pPacket );
+	bool ProcessClientIdentity( CPeerSetupPacket *pPacket );
 
 	CConnectionEffort *CreateNextEffort( const int nOurGameID ) override;
 };
