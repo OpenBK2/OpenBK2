@@ -126,7 +126,9 @@ void CServerClient::GetPacketsFromNet()
 	{
 		GetNetLogger()->Log( "client", fmt::format( "receive net {}", GetPacketInfo( pPacket ) ) );
 
-		bool bProcessed = false;
+		// Endpoint offers are setup messages, handled before the generic relay
+		// converter publishes game-control packets to the game manager.
+		bool bProcessed = pPlayGameProcessor->ProcessPeerAddressEnvelope( pPacket );
 
 		std::list<CPtr<CPacketProcessor>>::iterator iter = processors.begin();
 		while ( iter != processors.end() && !bProcessed )

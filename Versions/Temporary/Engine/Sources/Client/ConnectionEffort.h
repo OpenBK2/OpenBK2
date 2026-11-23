@@ -4,6 +4,11 @@
 
 class CNet;
 
+namespace NNet
+{
+struct ILinksManager;
+}
+
 enum EConnEffort
 {
 	ECE_NONE,
@@ -14,7 +19,7 @@ enum EConnEffort
 class CConnectionEffort : public CPacketProcessor
 {
 protected:
-	void SendBreakThroughPacket( const std::string &szIP, const int nPort );
+	void SendBreakThroughPacket( NNet::ILinksManager *pLinks, const std::string &szIP, const int nPort );
 
 public:
 	enum EState
@@ -29,6 +34,9 @@ public:
 
 	virtual struct IConnection *CreateConnection() const = 0;
 	virtual CConnectionEffort *CreateNextEffort( const int nOurGameID ) = 0;
+
+	// Optional setup information forwarded by the lobby before peer login.
+	virtual void AddPeerLocalAddress( const std::string &szIP, int nPort ) {}
 };
 
 namespace NEffortsFactory
@@ -40,7 +48,8 @@ CConnectionEffort *CreateFirstServerEffort( const int nMyServerID,
                                             const std::string &szClientIP,
                                             const int nClientPort,
                                             CNet *pNet,
-                                            CNet *pAcceptGamersNet );
+                                            CNet *pAcceptGamersNet,
+                                            NNet::ILinksManager *pLinksManager );
 
 void SetServerInfo( const std::string &szServerIP, const int nServerPort, const int nGameNetVersion );
 } // namespace NEffortsFactory

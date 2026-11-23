@@ -8,9 +8,10 @@
 
 BASIC_REGISTER_CLASS( CLIENT, CConnectionEffort );
 
-void CConnectionEffort::SendBreakThroughPacket( const std::string &szIP, const int nPort )
+void CConnectionEffort::SendBreakThroughPacket( NNet::ILinksManager *pLinks, const std::string &szIP, const int nPort )
 {
-	if ( CPtr<NNet::ILinksManager> pLinks = NNet::CreateClientLinksManager() )
+	// Open the NAT mapping for the retained peer socket, not a throwaway port.
+	if ( pLinks )
 	{
 		CMemoryStream pkt;
 		NNet::GetNOPStream( &pkt );
@@ -48,9 +49,11 @@ CConnectionEffort *CreateFirstServerEffort( const int nMyServerID,
                                             const std::string &szClientIP,
                                             const int nClientPort,
                                             CNet *pNet,
-                                            CNet *pAcceptGamersNet )
+                                            CNet *pAcceptGamersNet,
+                                            NNet::ILinksManager *pLinksManager )
 {
-	return new CSimpleServerEffort( nMyServerID, nClientServerID, szClientIP, nClientPort, pNet, pAcceptGamersNet );
+	return new CSimpleServerEffort(
+			nMyServerID, nClientServerID, szClientIP, nClientPort, pNet, pAcceptGamersNet, pLinksManager );
 }
 
 } // namespace NEffortsFactory

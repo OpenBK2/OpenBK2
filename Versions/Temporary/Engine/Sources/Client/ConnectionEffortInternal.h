@@ -3,6 +3,9 @@
 #include "ConnectionEffort.h"
 #include "Net/NetAddress.h"
 
+#include <cstdint>
+#include <vector>
+
 class CNet;
 
 namespace NNet
@@ -14,6 +17,7 @@ class CNodeAddress;
 class CSimpleClientEffort : public CConnectionEffort
 {
 	OBJECT_NOCOPY_METHODS( CSimpleClientEffort )
+	friend struct CPlayGameProcessorTestAccess;
 
 	int nMyServerID;
 	int nClientServerID;
@@ -24,6 +28,7 @@ class CSimpleClientEffort : public CConnectionEffort
 	enum ESubState
 	{
 		ECONNECT_SERVER,
+		EWAIT_ADDRESSES,
 		ECONNECT_CLIENT
 	};
 
@@ -34,11 +39,18 @@ class CSimpleClientEffort : public CConnectionEffort
 	CPtr<NNet::CGameLinksManager> pLinksManager;
 	NNet::CNodeAddress serverAddress;
 
-	float fStartConnectClientTime;
-	float fPredBreakThroughSend;
+	uint32_t dwStartConnectClientTime;
+	uint32_t dwPredBreakThroughSend;
 	std::string szClientIP;
 	int nClientPort;
 	int nTimeOut;
+	std::vector<NNet::CNodeAddress> peerLocalAddresses;
+	std::vector<NNet::CNodeAddress> peerTargets;
+	size_t nNextPeerTarget = 0;
+	uint32_t dwPeerAttemptStart = 0;
+
+	void StartPeerConnections();
+	void StartNextPeerConnection();
 
 public:
 	CSimpleClientEffort() {}
@@ -69,6 +81,7 @@ public:
 	//
 	bool ProcessClientAccepted( class CGameConnectingClientAccepted *pPacket );
 	bool ProcessClientConnectInfo( class CClientGameConnectInfo *pPacket );
+	void AddPeerLocalAddress( const std::string &szIP, int nPort ) override;
 
 	CConnectionEffort *CreateNextEffort( const int nOurGameID ) override;
 
@@ -79,6 +92,7 @@ public:
 class CSimpleServerEffort : public CConnectionEffort
 {
 	OBJECT_NOCOPY_METHODS( CSimpleServerEffort )
+	friend struct CPlayGameProcessorTestAccess;
 
 	EState eState;
 
@@ -88,11 +102,12 @@ class CSimpleServerEffort : public CConnectionEffort
 
 	CPtr<CNet> pNet;
 	CPtr<CNet> pAcceptGamersNet;
+	CPtr<NNet::ILinksManager> pLinksManager;
 	std::string szClientIP;
 	int nClientPort;
 
-	float fStartConnectClientTime;
-	float fPredBreakThroughSend;
+	uint32_t dwStartConnectClientTime;
+	uint32_t dwPredBreakThroughSend;
 
 public:
 	CSimpleServerEffort() {}
@@ -102,7 +117,8 @@ public:
 	                     const std::string &szClientIP,
 	                     const int nClientPort,
 	                     CNet *pNet,
-	                     CNet *pAcceptGamersNet );
+	                     CNet *pAcceptGamersNet,
+	                     NNet::ILinksManager *pLinksManager );
 
 	const EState GetState() const override
 	{

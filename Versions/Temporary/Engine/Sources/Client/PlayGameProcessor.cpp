@@ -3,6 +3,7 @@
 #include "Connection.h"
 #include "ConnectionEffort.h"
 #include "ConnectServerProcessor.h"
+#include "Net/NetLowest.h"
 #include "PlayGameProcessor.h"
 #include "port/time.h"
 #include "Server_Client_Common/CommonPackets.h"
@@ -91,10 +92,12 @@ bool CPlayGameProcessor::ProcessAnswerConnectGame( CAnswerConnectGame *pPacket )
 */
 	for ( std::list<int>::iterator iter = pPacket->clients.begin(); iter != pPacket->clients.end(); ++iter )
 	{
+		joiningPeers.insert( *iter );
 		CPtr<CConnectionEffort> pEffort = NEffortsFactory::CreateFirstClientEffort( nMyServerID, *iter, pNet, nTimeOut );
 		CreateConnectionEffort( pEffort, *iter );
 	}
 	//	}
+	dwJoinStartTime = GetCurrentTimeMilliseconds();
 
 	return true;
 }
@@ -110,8 +113,23 @@ bool CPlayGameProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket )
 bool CPlayGameProcessor::ProcessClientWantToConnect( CClientWantToConnect *pPacket )
 {
 	CPtr<CConnectionEffort> pEffort = NEffortsFactory::CreateFirstServerEffort(
-			nMyServerID, pPacket->nWantedClient, pPacket->szIP, pPacket->nPort, pNet, pAcceptGamersNet );
+			nMyServerID, pPacket->nWantedClient, pPacket->szIP, pPacket->nPort, pNet, pAcceptGamersNet, pLinksManager );
 	CreateConnectionEffort( pEffort, pPacket->nWantedClient );
+
+	// Use the existing server-forwarded packet format for setup only. The peer
+	// needs the bound local endpoint before login, not after the UDP handshake.
+	NNet::CNodeAddressSet localAddresses;
+	if ( pLinksManager && pLinksManager->GetSelfAddress( &localAddresses ) )
+	{
+		NNet::CNodeAddress address;
+		for ( int i = 0; localAddresses.GetAddress( i, &address ); ++i )
+		{
+			pNet->SendPacket( new CDirectPacketToClient(
+					0,
+					pPacket->nWantedClient,
+					new CClientGameConnectInfo( 0, address.GetIP(), address.GetPort(), nMyServerID ) ) );
+		}
+	}
 
 	return true;
 }
@@ -205,6 +223,10 @@ void CPlayGameProcessor::DrainConnectionPackets( IConnection *pConnection, bool 
 			}
 			continue;
 		}
+		if ( dynamic_cast<CNewGameClient *>( pPacket.GetPtr() ) )
+		{
+			joiningPeers.erase( pPacket->nClientID );
+		}
 		PushPacket( pPacket );
 	}
 }
@@ -236,6 +258,26 @@ void CPlayGameProcessor::ProcessEfforts()
 		connectionEfforts.erase( nClientServerID );
 
 		connections[nClientServerID] = pEffort->CreateConnection();
+		IConnection *pConnection = connections[nClientServerID];
+		GetNetLogger()->Log( "client", fmt::format( "direct peer {} connected; game relay disabled", nClientServerID ) );
+
+		// The identity and the first game packets can arrive in one receive batch.
+		// Replay buffered packets in order as soon as the accepting connection exists.
+		if ( pConnection->GetNet() == pAcceptGamersNet )
+		{
+			for ( auto packet = waitingPackets.begin(); packet != waitingPackets.end(); )
+			{
+				if ( pConnection->ProcessPacketFromPlayersNet( packet->pPacket ) )
+				{
+					packet = waitingPackets.erase( packet );
+				}
+				else
+				{
+					++packet;
+				}
+			}
+			DrainConnectionPackets( pConnection );
+		}
 	}
 
 	for ( std::list<CPtr<CConnectionEffort>>::iterator iter = failed.begin(); iter != failed.end(); ++iter )
@@ -248,6 +290,15 @@ void CPlayGameProcessor::ProcessEfforts()
 		connectionEfforts.erase( nClientServerID );
 
 		CPtr<CConnectionEffort> pNextEffort = pEffort->CreateNextEffort( nOurGameID );
+		if ( !pNextEffort && joiningPeers.find( nClientServerID ) != joiningPeers.end() )
+		{
+			// A failed join is not a departure of an already assigned player.
+			// Release the server room and send the UI's actual failure event.
+			pNet->SendPacket( new CLeaveGamePacket( 0, nOurGameID ) );
+			Clear();
+			PushPacket( new CConnectGameFailed() );
+			return;
+		}
 		CreateConnectionEffort( pNextEffort, nClientServerID );
 	}
 }
@@ -258,6 +309,13 @@ bool CPlayGameProcessor::Segment()
 	ProcessAcceptingGamersPackets();
 
 	ProcessEfforts();
+	if ( !joiningPeers.empty() && GetCurrentTimeMilliseconds() - dwJoinStartTime > 1000 * CNet::GetTimeOut() )
+	{
+		// Also bound the final connection-test exchange, after identity succeeds.
+		pNet->SendPacket( new CLeaveGamePacket( 0, nOurGameID ) );
+		Clear();
+		PushPacket( new CConnectGameFailed() );
+	}
 
 	uint32_t dwCurTime = GetCurrentTimeMilliseconds();
 	std::list<SWaitingPacket>::iterator iter = waitingPackets.begin();
@@ -406,6 +464,7 @@ void CPlayGameProcessor::Clear()
 {
 	pAcceptGamersNet = 0;
 	connections.clear();
+	joiningPeers.clear();
 	pendingServerRemovals.clear();
 	connectionEfforts.clear();
 	pConnectGamePacket = 0;
@@ -438,6 +497,27 @@ bool CPlayGameProcessor::ProcessPacket( CNetPacket *pPacket )
 	}
 
 	return bProcessed ? true : CPacketProcessor::ProcessPacket( pPacket );
+}
+
+bool CPlayGameProcessor::ProcessPeerAddressEnvelope( CNetPacket *pPacket )
+{
+	auto *envelope = dynamic_cast<CDirectPacketToClient *>( pPacket );
+	if ( !envelope )
+	{
+		return false;
+	}
+	auto *address = dynamic_cast<CClientGameConnectInfo *>( envelope->pPacket.GetPtr() );
+	if ( !address )
+	{
+		return false;
+	}
+	// Preserve the server-authenticated sender, and consume only setup hints.
+	const auto effort = connectionEfforts.find( envelope->nClient );
+	if ( envelope->nClient == address->nClient2Connect && effort != connectionEfforts.end() )
+	{
+		effort->second->AddPeerLocalAddress( address->szIP, address->nPort );
+	}
+	return true;
 }
 
 bool CPlayGameProcessor::ProcessKickClient( CGameKickClient *pPacket )
