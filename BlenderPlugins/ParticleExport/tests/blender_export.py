@@ -24,17 +24,24 @@ def check_export(folder):
         assert (scene.frame_current, scene.frame_subframe) == (38, 0.25)
         return output.read_bytes()
 
-    # The example carries its physics bake so consecutive exports can be compared.
-    combined = export("Smoke Puff")
-    assert combined == export("Smoke Puff")
-    size, duration, fps, count = struct.unpack_from("<iffi", combined)
-    assert (size, duration, fps, count) == (len(combined) - 4, 2, 30, 19)
-    for name, expected in (("Smoke emitter", 18), ("Drifting wisp (Geometry Nodes)", 1)):
-        collection = bpy.data.collections.new(name + " only")
-        scene.collection.children.link(collection)
-        collection.objects.link(bpy.data.objects[name])
-        data = export(collection.name)
-        assert struct.unpack_from("<i", data, 12)[0] == expected
+    # The saved emitter bake must reproduce both copies of the clip shipped with the example.
+    assert bpy.context.collection.name == "Smoke Puff"
+    smoke = export("Smoke Puff")
+    size, duration, fps, count = struct.unpack_from("<iffi", smoke)
+    assert (size, duration, fps, count) == (len(smoke) - 4, 2, 30, 18)
+    assert smoke == (example / "Data/Effects/Examples/BlenderSmoke/Smoke.ptc").read_bytes()
+    assert smoke == (example / "Data/bin/Effects/b70c16df-f18d-4152-ae05-5b04d9648c33").read_bytes()
+
+    wisp_layer = bpy.context.view_layer.layer_collection.children["Geometry Nodes Wisp"]
+    assert wisp_layer.exclude
+    wisp_layer.exclude = False
+    wisp = export(wisp_layer.name)
+    assert struct.unpack_from("<ihh", wisp, 12) == (1, 0, 60)
+    assert export("Smoke Puff") == smoke
+
+    # Selecting their common parent explicitly includes both particle sources.
+    combined = export(scene.collection.name)
+    assert struct.unpack_from("<i", combined, 12)[0] == 19
 
     # A failed export must preserve the timeline and the previous clip.
     empty = bpy.data.collections.new("Empty")
@@ -45,7 +52,7 @@ def check_export(folder):
         assert "No live emitter particles" in str(error)
     else:
         raise AssertionError("Empty export should fail")
-    assert output.read_bytes() == data
+    assert output.read_bytes() == combined
     assert (scene.frame_current, scene.frame_subframe) == (38, 0.25)
 
 

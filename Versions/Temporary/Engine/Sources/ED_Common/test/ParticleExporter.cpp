@@ -201,7 +201,7 @@ TEST_F( ParticleExporter, ImportsPackedClipAndKeepsLastGoodExport )
 	EXPECT_TRUE( fs::is_regular_file( root / "bin/Effects" / std::to_string( particle->GetID( "" ) ) ) );
 }
 
-TEST_F( ParticleExporter, ReadsBlenderExampleWithBothSources )
+TEST_F( ParticleExporter, ReadsBlenderSmokeExample )
 {
 	if ( !fs::is_regular_file( PARTICLE_EXAMPLE ) )
 	{
@@ -221,19 +221,19 @@ TEST_F( ParticleExporter, ReadsBlenderExampleWithBothSources )
 	CFileStream source( PARTICLE_EXAMPLE, CFileStream::WIN_READ_ONLY );
 	CObj<NGScene::CParticlesInfo> clip = new NGScene::CParticlesInfo;
 	ASSERT_TRUE( clip->ReadClip( source ) );
-	ASSERT_EQ( clip->nParticles, 19 );
+	ASSERT_EQ( clip->nParticles, 18 );
 	EXPECT_FLOAT_EQ( clip->fTEnd, 2 );
 	EXPECT_FLOAT_EQ( clip->fFrameRate, 30 );
-	const auto &wisp = clip->particles[0];
-	CVec3 pos;
-	wisp.pos.GetValue( 59, &pos );
-	EXPECT_FLOAT_EQ( pos.x, -0.4f );
-	EXPECT_FLOAT_EQ( pos.z, 2.0f );
-	const auto &puff = clip->particles[1];
+	const auto &puff = clip->particles[0];
 	short sprite;
 	puff.sprite.GetValue( 40, &sprite );
 	EXPECT_EQ( sprite, 1 );
-	EXPECT_LT( puff.color.keys[puff.color.nKeys - 1].GetValue() >> 24, 12u );
+	for ( const auto &particle : clip->particles )
+	{
+		// All the smoke fades out before the end of the clip.
+		EXPECT_LT( particle.nTEnd, 60 );
+		EXPECT_LT( particle.color.keys[particle.color.nKeys - 1].GetValue() >> 24, 12u );
+	}
 }
 
 TEST( ParticleClips, ReadsInstalledLegacyClips )

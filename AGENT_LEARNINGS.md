@@ -692,3 +692,6 @@ context. Read `git diff` of every touched file before building.
 - Save the emitter's point-cache bake in the example .blend before checking
   byte-for-byte exports. An unbaked simulation gave slightly different positions
   when evaluated again after scrubbing, despite using the same emitter seed.
+- Keep optional Geometry Nodes examples in a sibling collection outside the
+  default effect. The exporter includes child collections, so a demonstration
+  point grouped with the smoke became a visible sprite in the game.
