@@ -140,7 +140,7 @@ int CSimpleConnection::CheckTestConnection( CNetPacket *pPacket )
 
 bool CSimpleConnection::ProcessPacketFromPlayersNet( CNetPacket *pPacket )
 {
-	if ( bAsClient )
+	if ( bAsClient || pPacket->nClientID != nClientLocalID )
 	{
 		return false;
 	}

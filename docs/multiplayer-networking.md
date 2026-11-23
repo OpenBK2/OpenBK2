@@ -1,90 +1,104 @@
 # How clients communicate in a multiplayer match
 
-## Direct-only test build (2026-11-23)
+## Direct first, with server relay fallback (2026-11-23)
 
-The current client disables relay fallback for ordinary game traffic. Commands,
-room chat and room ping use direct peer connections exclusively. Both initiating
-and accepting connection attempts stop on failure instead of constructing a
-`CThroughServerEffort`. There is no runtime switch: use this build on every test
-client. The server executable and packet formats do not change. On Windows,
-install both `Client.dll` and `Net.dll`: local endpoint enumeration now has the
-DLL export that the client needs.
+Online pairs prefer direct UDP. When joining a room, each pair gets three direct
+attempts, each bounded at **5 seconds**, including the peer login, identity and
+connection test. After three failures the clients agree to use the server relay.
+If a local endpoint is available, attempts use local, public, then local; otherwise
+all three use the public endpoint. Pairs are independent: one player can use a
+direct connection to one opponent and relay to another.
 
-The lobby still handles login, discovery, peer introductions and heartbeats.
-Departure, recovery and outcome traffic keeps its existing persistent server
-route, including final command retransmissions before leaving. The
-`CThroughServerConnectionPacket` sent when a direct link closes still subscribes
-to ordered departure notifications; it does not install a game relay.
+The initiator still registers the retained peer socket with the server, and both
+ends punch from their retained sockets. Bound local endpoints are exchanged before
+login using `CClientGameConnectInfo` inside `CDirectPacketToClient`. This avoids a
+public-address hairpin when two instances run on one PC or a reachable LAN. Local
+address discovery has a one-second collection window. A normally responsive lobby
+therefore reaches relay after roughly 16 seconds of unsuccessful peer setup,
+plus relay testing and confirmation. Registration has its separate existing
+20-second allowance, route confirmation has 5 seconds, and a 45-second overall
+join bound prevents an indefinite joining screen. A failed join leaves the server
+room and emits `CConnectGameFailed`.
 
-To make direct connections usable, the client now registers its retained peer
-socket with the server and sends hole-punch packets from that same socket. The
-accepting side also punches from its retained socket. Setup failures are drained
-even without incoming application packets, both setup phases have a timeout,
-and packets received before an accepting connection is installed are delivered
-in order on installation. These address the socket, timeout and early-packet
-findings in the historical [connection audit](netcode-connection-audit.txt) and
-[netcode audit](netcode-audit.txt).
+Only the joining side selects a pair's route. `CPeerSetupPacket` carries the room,
+setup token and attempt number inside the server's existing forwarding envelope.
+UDP login starts after the accepting side acknowledges retiring the previous
+attempt. UDP identities carry the same token and attempt number, so delayed replies
+cannot finish another attempt. Connections remain tentative until the connection
+test and route agreement complete. This fixes the historical asymmetric fallback
+race where one client used direct transport while the other used relay.
 
-The first direct-only build still failed the same-PC online join: the server
-introduced both instances using their public IP and different UDP ports, but
-the peer login timed out. The local-address shortcut only runs after login and
-could not rescue that initial connection. The logs establish the failed public
-path; they do not distinguish router hairpin support from firewall filtering.
-The joining screen also kept waiting because the failure was reported as a
-player removal before that player had a slot.
+### Recovery during a match
 
-The corrected client forwards its bound local endpoints during setup using
-`CClientGameConnectInfo` inside the existing `CDirectPacketToClient` envelope.
-This is address discovery only, not relayed gameplay or ping. The initiator
-collects offers for one second, tries a local address on its own subnet (preferring
-an address on the same machine), then tries the public endpoint if that attempt
-fails. An individual peer attempt is bounded at seven seconds, within the existing
-overall join timeout. Peers without offers still use the public endpoint.
-An unsuccessful join now leaves the server room and emits `CConnectGameFailed`,
-including when the final connection-test exchange never completes.
+An established direct connection gets **one direct retry**, bounded at 5 seconds,
+then switches to relay if that retry fails. The retry reuses the registered socket
+and last working endpoint, without another registration round. Either endpoint
+can request recovery; the original initiator remains the route-selection authority.
+A successful retry stays direct. After fallback, the pair stays on relay for the
+rest of that session.
 
-Test procedure:
+Transport failure triggers recovery. Session heartbeats run every second, and
+five seconds without incoming session traffic or acknowledgement progress also
+triggers it. A silent failure can therefore take about five seconds to detect,
+followed by up to five seconds for the direct retry, then relay negotiation.
+These are wall-clock network timers, not simulation segment sizes.
 
-1. Build/install the updated client on both instances. A successful `Client`
-   build alone does not update an installed game's DLLs. Keep the same
-   server, map and game settings as the baseline test.
-2. Join an online room and wait for several ping updates (one every five seconds).
-   Record both displayed RTTs, frame rates and which instance has focus. Where
-   packet logging is enabled, `Logs/client.log` records `direct peer ... connected;
-   game relay disabled` or `direct peer ... failed; game relay disabled`.
-   The `direct peer ... trying IP:port` lines show each attempted endpoint.
-3. Compare with a LAN room on the same PC. Use a packet capture to check the actual
-   peer endpoints; the absence of ordinary relay traffic does not mean the lobby
-   connection is idle. Some routers cannot connect two clients through their own
-   public address; the new local-address offers avoid that path on a reachable
-   local network. Some NAT/firewall combinations still prevent direct connections.
-   Such pairs fail instead of silently using the relay.
-4. Start a match and test one player leaving, since final commands still use the
-   preserved recovery path. The simulation's command delay has not changed.
+Every ordinary game message is snapshotted, numbered and retained until a
+cumulative application acknowledgement arrives. Sequence numbers survive route
+changes. Recovery queues new outgoing messages, resends the unacknowledged suffix
+on the selected route, and delivers incoming messages in sequence exactly once.
+Duplicate messages and acknowledgements from the old route cannot repeat commands.
+Recovery does not emit another `CNewGameClient` or reset player slots. The existing
+reliable UDP transport still handles ordinary packet retransmission on each route.
+
+The lobby must remain reachable for relay to help. During an established match,
+an unresponsive lobby leaves messages queued and the game's existing lag/departure
+policy in control; a network timeout alone does not invent a player departure.
+Departure, recovery-of-command-history, kick and outcome messages retain their
+existing persistent server paths. Server-ordered removal drains received session
+messages before publishing departure, including while a route switch is pending.
+Simulation timing and replay command semantics are unchanged.
+
+### Room ping and installation
+
+Room ping follows the currently selected connection in both directions. The tooltip
+appends **Direct UDP**, **Server relay**, or **Connecting** to the existing ping text.
+It queries this client's route to that slot, rather than another player's metadata.
+A relayed ping includes the server detour; a direct ping does not. The ping remains
+an application RTT including frame processing, queues and retransmission.
+
+Use the updated build on every client: the new peer setup and session packets
+require matching clients. The existing server executable can forward these opaque
+payloads without modification. On Windows the updated UI and protocol are in
+`GameX.dll` and `Client.dll`. Keep the previously updated `Net.dll`, whose endpoint
+enumeration export is required by the local-address setup fix.
+
+For a live test, first check that a normal room shows Direct UDP. Block only peer
+UDP while leaving the lobby reachable: joining should try direct three times and
+then show Server relay. During a match, interrupt a direct pair and check for one
+retry followed by relay, resumed command delivery, and no extra player/slot event.
+Also test a three-player room with mixed routes and a departure during recovery.
+Logs identify each endpoint attempt, recovery request and final selected route.
+
+Automated regression coverage uses real local UDP for registration, peer login,
+identity, connection testing and ping, with lobby introduction/forwarding modeled.
+It exercises local/public selection, three blocked joining attempts, one-sided
+setup, successful mid-match direct retry, blocked retry with relay recovery, and
+recovery requested by the accepting peer. Session tests cover retained messages,
+cumulative acknowledgements, stale session rejection, duplicates, ordering and
+mixed direct/relay routing. Existing departure and room-start tests remain relevant.
+Internet NAT traversal and live tooltip appearance require live game checks.
 
 Direct UDP removes the server detour but does not select an optimized Internet
-route. The transport does attempt advertised local-address shortcuts after peer
-login (`TRY_SHORTCUT` in [NetA4.cpp][pacing]); this is endpoint selection, not an
-Internet routing service. Room ping remains an application RTT, including queues
-and frame processing. The existing 50 ms per-peer send spacing remains, and the
-unfocused game adds a 40 ms sleep per main loop in [Game/main.cpp](../Versions/Temporary/Engine/Sources/Game/main.cpp).
-These can contribute to same-PC RTT; the reported 200-300 ms is not yet attributed
-to a measured cause.
-
-Validation: the Windows x64 Release `Client` and `ClientConnectionRemoval_test`
-targets build with the Visual Studio toolchain. The client regression suite covers
-direct-only failure, retained-socket registration/punching, early packet delivery,
-room ping routing and join-failure notification. Three tests use real UDP sockets
-for registration, login, identity, connection testing and ping: a working local
-offer with an unanswered public endpoint, public retry after a failed local
-attempt, and a public connection without local offers. Only lobby introduction
-and forwarding are modeled in those tests. Live game UI RTT and Internet NAT
-traversal still need measurement.
+route. The existing 50 ms per-peer send spacing remains, and the unfocused game
+adds a 40 ms sleep per main loop in [Game/main.cpp](../Versions/Temporary/Engine/Sources/Game/main.cpp).
+These can contribute to same-PC RTT; the original 200-300 ms measurement alone
+cannot establish which component caused the delay.
 
 ## Baseline design before the direct-only experiment
 
 The following describes the baseline relay-capable design and its timing. The
-direct-only experiment above supersedes its fallback and setup-bug descriptions.
+current implementation above supersedes its fallback and setup-bug descriptions.
 
 In an online custom match, the standalone `Server` introduces the players. Each pair first tries to connect directly over UDP and can fall back to a relay through that server. If Alice hosts a three-player game, Bob can send an order straight to Carol even when his connection to Alice uses the relay. All three machines run the simulation. At normal speed, even an order that arrives immediately takes **600 ms of simulation time from packing to execution**. The room's ping measures a different interval. [Peer connection setup][setup] · [Game packet routing][fanout] · [Simulation timing][ticks]
 

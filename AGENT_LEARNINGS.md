@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- Reliable UDP alone cannot preserve a message stream across a route switch.
+  Retain serialized application messages until cumulative acknowledgement,
+  keep session sequence numbers across retries, and deduplicate received data.
+  Give route selection one authority, fence delayed identities by attempt,
+  and do not publish another room client during recovery. Test real sockets,
+  one-sided failure, an accepting peer's recovery request, and server-ordered
+  departure while route confirmation is pending.
+
 - Mistake: isolated direct-connection tests did not establish that online room
   joining worked. Same-PC clients received their router's public endpoints;
   TRY_SHORTCUT is post-login and cannot fix a failed public-address login.

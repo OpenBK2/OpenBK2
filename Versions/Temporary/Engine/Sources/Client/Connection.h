@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PeerConnectionRoute.h"
+
 class CNetPacket;
 
 struct IConnection : public CObjectBase
@@ -13,6 +15,11 @@ public:
 	virtual CNetPacket *GetPacket() = 0;
 
 	virtual bool IsAlive() const = 0;
+
+	virtual EPeerConnectionRoute GetRoute() const
+	{
+		return EPeerConnectionRoute::Direct;
+	}
 
 	virtual void TogglePauseNet( const bool bPause ) const {}
 };

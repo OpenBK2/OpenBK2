@@ -19,6 +19,7 @@
 
 BASIC_REGISTER_CLASS( CLIENT, CSimpleClientEffort );
 BASIC_REGISTER_CLASS( CLIENT, CSimpleServerEffort );
+REGISTER_SAVELOAD_CLASS( CLIENT, 93, CPeerSetupPacket );
 
 //*******************************************************************
 //*                     CSimpleClientEffort                         *
@@ -30,7 +31,9 @@ CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID,
                                           const std::string &szServerIP,
                                           const int nServerPort,
                                           const int _nGameNetVersion,
-                                          const int _nTimeOut )
+                                          const int _nTimeOut,
+                                          int _nOurGameID,
+                                          uint32_t _nSetupID )
 	: nMyServerID( _nMyServerID )
 	, nClientServerID( _nClientServerID )
 	, nGameNetVersion( _nGameNetVersion )
@@ -38,6 +41,8 @@ CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID,
 	, eState( ES_CONNECTING )
 	, eSubState( ECONNECT_SERVER )
 	, nTimeOut( _nTimeOut )
+	, nOurGameID( _nOurGameID )
+	, nSetupID( _nSetupID )
 {
 	REGISTER_PACKET_PROCESSOR( &CSimpleClientEffort::ProcessClientAccepted );
 	REGISTER_PACKET_PROCESSOR( &CSimpleClientEffort::ProcessClientConnectInfo );
@@ -104,13 +109,13 @@ bool CSimpleClientEffort::Segment()
 	{
 		// Bound both the address-registration phase and the peer handshake.
 		const uint32_t dwCurTime = GetCurrentTimeMilliseconds();
-		if ( dwCurTime - dwStartConnectClientTime > 1000 * CNet::GetTimeOut() )
+		if ( nAttempt == 0 && dwCurTime - dwStartConnectClientTime > 1000 * CNet::GetTimeOut() )
 		{
 			eState = ES_FAILED;
 		}
-		else if ( eSubState == ECONNECT_CLIENT && dwCurTime - dwPeerAttemptStart > 7000 )
+		else if ( IsAttemptExpired() )
 		{
-			StartNextPeerConnection();
+			eState = ES_FAILED;
 		}
 		else if ( eSubState == ECONNECT_CLIENT && dwCurTime - dwPredBreakThroughSend > 3000 )
 		{
@@ -139,7 +144,7 @@ bool CSimpleClientEffort::ProcessClientAccepted( CGameConnectingClientAccepted *
 
 bool CSimpleClientEffort::ProcessClientConnectInfo( CClientGameConnectInfo *pPacket )
 {
-	if ( pPacket->nClient2Connect == nClientServerID )
+	if ( pPacket->nClient2Connect == nClientServerID && eSubState == ECONNECT_SERVER )
 	{
 		pConnectServerProcessor = 0;
 		pConnet2PlayersNet = 0;
@@ -164,8 +169,8 @@ bool CSimpleClientEffort::ProcessClientConnectInfo( CClientGameConnectInfo *pPac
 void CSimpleClientEffort::AddPeerLocalAddress( const std::string &szIP, int nPort )
 {
 	// These are numeric IPv4 endpoints, not names to resolve on a peer's behalf.
-	if ( eState != ES_CONNECTING || eSubState == ECONNECT_CLIENT || peerLocalAddresses.size() >= NNet::N_MAX_HOST_HOMES ||
-	     nPort <= 0 || nPort > 65535 || szIP.empty() || szIP.size() > 15 ||
+	if ( eState != ES_CONNECTING || nAttempt != 0 || peerLocalAddresses.size() >= NNet::N_MAX_HOST_HOMES || nPort <= 0 ||
+	     nPort > 65535 || szIP.empty() || szIP.size() > 15 ||
 	     szIP.find_first_not_of( "0123456789." ) != std::string::npos )
 	{
 		return;
@@ -230,35 +235,71 @@ void CSimpleClientEffort::StartNextPeerConnection()
 {
 	pConnectServerProcessor = nullptr;
 	pConnet2PlayersNet = nullptr;
-	if ( nNextPeerTarget == peerTargets.size() )
+	if ( nAttempt >= nAttemptLimit || peerTargets.empty() )
 	{
 		eState = ES_FAILED;
 		return;
 	}
-	NNet::CNodeAddress address = peerTargets[nNextPeerTarget++];
+	NNet::CNodeAddress address = peerTargets[nNextPeerTarget++ % peerTargets.size()];
 	szClientIP = address.GetIP();
 	nClientPort = address.GetPort();
-	GetNetLogger()->Log( "client", fmt::format( "direct peer {} trying {}", nClientServerID, address.GetFastName() ) );
+	++nAttempt;
+	eState = ES_CONNECTING;
+	eSubState = EWAIT_ATTEMPT;
+	dwPeerAttemptStart = dwPredBreakThroughSend = GetCurrentTimeMilliseconds();
+	GetNetLogger()->Log( "client",
+	                     fmt::format( "direct peer {} attempt {}/{} trying {} (5000 ms)",
+	                                  nClientServerID,
+	                                  nAttempt,
+	                                  nAttemptLimit,
+	                                  address.GetFastName() ) );
+	// Wait for the other end to retire its previous tentative connection before
+	// sending a new UDP identity. Lobby delivery itself shares the five-second budget.
+	CPtr<CPeerSetupPacket> begin = new CPeerSetupPacket( nOurGameID, nSetupID, nAttempt, CPeerSetupPacket::BeginAttempt );
+	begin->bRecovery = bRecovery;
+	pNet->SendPacket( new CDirectPacketToClient( 0, nClientServerID, begin ) );
+}
+
+void CSimpleClientEffort::RetryEstablishedConnection()
+{
+	// Reuse the registered socket and the last working endpoint. Recovery gets
+	// one fresh five-second attempt, without repeating server registration.
+	bRecovery = true;
+	nAttemptLimit = nAttempt + 1;
+	if ( nNextPeerTarget != 0 )
+	{
+		--nNextPeerTarget;
+	}
+	StartNextPeerConnection();
+}
+
+bool CSimpleClientEffort::IsAttemptExpired() const
+{
+	return nAttempt != 0 && GetCurrentTimeMilliseconds() - dwPeerAttemptStart >= DIRECT_ATTEMPT_TIMEOUT;
+}
+
+void CSimpleClientEffort::AcceptAttempt( const CPeerSetupPacket &packet )
+{
+	if ( eSubState != EWAIT_ATTEMPT || packet.nSetupID != nSetupID || packet.nAttempt != nAttempt )
+	{
+		return;
+	}
+	eSubState = ECONNECT_CLIENT;
+	NNet::CNodeAddress address;
+	address.SetInetName( szClientIP.c_str(), nClientPort );
 	SendBreakThroughPacket( pLinksManager, szClientIP, nClientPort );
 	pConnet2PlayersNet = new CNet( nGameNetVersion, 0, nTimeOut );
 	pConnet2PlayersNet->InitAsClient( pLinksManager );
 	pConnet2PlayersNet->ConnectGame( address, CMemoryStream() );
 	pConnectServerProcessor = new CConnectServerProcessor( pConnet2PlayersNet, false );
-	dwPeerAttemptStart = dwPredBreakThroughSend = GetCurrentTimeMilliseconds();
+	dwPredBreakThroughSend = GetCurrentTimeMilliseconds();
 }
 
 void CSimpleClientEffort::ProcessConnectServerPacket( CConnectServerPacket *pPacket )
 {
 	if ( pPacket->eConnectionState == CConnectServerPacket::ECS_FAILED )
 	{
-		if ( eSubState == ECONNECT_CLIENT )
-		{
-			StartNextPeerConnection();
-		}
-		else
-		{
-			eState = ES_FAILED;
-		}
+		eState = ES_FAILED;
 	}
 	else
 	{
@@ -270,15 +311,18 @@ void CSimpleClientEffort::ProcessConnectServerPacket( CConnectServerPacket *pPac
 		}
 		else
 		{
-			CPtr<CNetPacket> pPacket = new CIndentityPacket( 0, nMyServerID );
+			CPtr<CNetPacket> pPacket =
+					new CPeerSetupPacket( nOurGameID, nSetupID, nAttempt, CPeerSetupPacket::Identity, nMyServerID );
 			pConnet2PlayersNet->SendPacket( pPacket );
 		}
 	}
 }
 
-bool CSimpleClientEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
+bool CSimpleClientEffort::ProcessClientIdentity( CPeerSetupPacket *pPacket )
 {
-	if ( pPacket->nServerID == nClientServerID )
+	if ( eState == ES_CONNECTING && eSubState == ECONNECT_CLIENT && pPacket->eAction == CPeerSetupPacket::Identity &&
+	     pPacket->nServerID == nClientServerID && pPacket->nGameID == nOurGameID && pPacket->nSetupID == nSetupID &&
+	     pPacket->nAttempt == nAttempt )
 	{
 		eState = ES_SUCCESS;
 		return true;
@@ -289,8 +333,7 @@ bool CSimpleClientEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
 
 CConnectionEffort *CSimpleClientEffort::CreateNextEffort( const int nOurGameID )
 {
-	// Direct-only experiment: failure must be visible, never hidden by a relay.
-	GetNetLogger()->Log( "client", fmt::format( "direct peer {} failed; game relay disabled", nClientServerID ) );
+	// The room processor coordinates retries and relay selection at both ends.
 	return nullptr;
 }
 
@@ -304,7 +347,10 @@ CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID,
                                           const int _nClientPort,
                                           CNet *_pNet,
                                           CNet *_pAcceptGamersNet,
-                                          NNet::ILinksManager *_pLinksManager )
+                                          NNet::ILinksManager *_pLinksManager,
+                                          int _nOurGameID,
+                                          uint32_t _nSetupID,
+                                          int _nAttempt )
 	: nMyServerID( _nMyServerID )
 	, nClientServerID( _nClientServerID )
 	, pNet( _pNet )
@@ -313,6 +359,9 @@ CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID,
 	, nClientPort( _nClientPort )
 	, pAcceptGamersNet( _pAcceptGamersNet )
 	, pLinksManager( _pLinksManager )
+	, nOurGameID( _nOurGameID )
+	, nSetupID( _nSetupID )
+	, nAttempt( _nAttempt )
 {
 	REGISTER_PACKET_PROCESSOR( &CSimpleServerEffort::ProcessClientIdentity );
 
@@ -339,15 +388,18 @@ bool CSimpleServerEffort::Segment()
 	return true;
 }
 
-bool CSimpleServerEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
+bool CSimpleServerEffort::ProcessClientIdentity( CPeerSetupPacket *pPacket )
 {
-	if ( pPacket->nServerID == nClientServerID )
+	if ( pPacket->eAction == CPeerSetupPacket::Identity && pPacket->nServerID == nClientServerID &&
+	     pPacket->nGameID == nOurGameID && pPacket->nSetupID == nSetupID && pPacket->nAttempt == nAttempt )
 	{
 		nClientLocalID = pPacket->nClientID;
 		eState = ES_SUCCESS;
 
-		CPtr<CNetPacket> pPacket = new CIndentityPacket( nClientLocalID, nMyServerID );
-		pAcceptGamersNet->SendPacket( pPacket );
+		CPtr<CNetPacket> reply =
+				new CPeerSetupPacket( nOurGameID, nSetupID, nAttempt, CPeerSetupPacket::Identity, nMyServerID );
+		reply->nClientID = nClientLocalID;
+		pAcceptGamersNet->SendPacket( reply );
 
 		return true;
 	}
@@ -366,8 +418,7 @@ IConnection *CSimpleServerEffort::CreateConnection() const
 
 CConnectionEffort *CSimpleServerEffort::CreateNextEffort( const int nOurGameID )
 {
-	// Apply the same policy at both ends of the peer handshake.
-	GetNetLogger()->Log( "client", fmt::format( "direct peer {} failed; game relay disabled", nClientServerID ) );
+	// Only the joining client can select relay, through the setup handshake.
 	return nullptr;
 }
 

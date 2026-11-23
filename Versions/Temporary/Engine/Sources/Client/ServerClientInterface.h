@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PeerConnectionRoute.h"
+
 namespace NNet
 {
 struct SNetDriverConsts;
@@ -11,6 +13,11 @@ struct IServerClient : public CObjectBase
 	virtual void SendPacket( class CNetPacket *pPacket ) = 0;
 	virtual void SendGamePacket( class CNetPacket *pPacket, bool bBroadcast ) = 0;
 	virtual void Segment() = 0;
+
+	virtual EPeerConnectionRoute GetPeerRoute( int nClientID ) const
+	{
+		return EPeerConnectionRoute::Unknown;
+	}
 
 	static IServerClient *
 	Create( const char *pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int nTimeOut );

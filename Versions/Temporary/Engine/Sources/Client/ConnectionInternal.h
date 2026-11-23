@@ -62,6 +62,11 @@ public:
 
 	CThroughServerConnection( const int nClientServerID, CNet *pNet );
 
+	EPeerConnectionRoute GetRoute() const override
+	{
+		return EPeerConnectionRoute::Relay;
+	}
+
 	CNet *GetNet() override
 	{
 		return pNet;
