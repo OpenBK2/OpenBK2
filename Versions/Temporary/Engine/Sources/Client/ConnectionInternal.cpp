@@ -177,45 +177,35 @@ bool CSimpleConnection::ProcessPacketFromPlayersNet( CNetPacket *pPacket )
 
 CNetPacket *CSimpleConnection::GetPacket()
 {
-	if ( !packets.empty() )
+	while ( packets.empty() )
 	{
-		CPtr<CNetPacket> pPacket = packets.front();
-		packets.pop_front();
-		return pPacket.Extract();
+		if ( !bAsClient )
+		{
+			return nullptr;
+		}
+		if ( CNetPacket *event = pFinishConnection->GetPacket() )
+		{
+			return event;
+		}
+		CNetPacket *packet = pNet->ReceivePacket();
+		if ( !packet )
+		{
+			return nullptr;
+		}
+		// A consumed test or control frame can precede the final game message.
+		// Only report an empty queue after checking the rest of the receive batch.
+		if ( CheckTestConnection( packet ) == 0 )
+		{
+			packet->nClientID = nClientServerID;
+			if ( !pFinishConnection->ProcessPacket( packet ) )
+			{
+				return packet;
+			}
+		}
 	}
-
-	if ( !bAsClient )
-	{
-		return 0;
-	}
-
-	if ( CNetPacket *pPacket = pFinishConnection->GetPacket() )
-	{
-		return pPacket;
-	}
-
-	CNetPacket *pPacket = pNet->ReceivePacket();
-	if ( !pPacket )
-	{
-		return 0;
-	}
-
-	const int nCheckTestConnectionResult = CheckTestConnection( pPacket );
-	if ( nCheckTestConnectionResult != 0 )
-	{
-		return 0;
-	}
-
-	pPacket->nClientID = nClientServerID;
-	if ( !pFinishConnection->ProcessPacket( pPacket ) )
-	{
-		return pPacket;
-	}
-	else
-	{
-		CNetPacket *pFinishConnectionPacket = pFinishConnection->GetPacket();
-		return pFinishConnectionPacket;
-	}
+	CPtr<CNetPacket> packet = packets.front();
+	packets.pop_front();
+	return packet.Extract();
 }
 
 bool CSimpleConnection::IsAlive() const
@@ -298,5 +288,5 @@ void CThroughServerConnection::TogglePauseNet( const bool bPause ) const
 
 bool CSimpleConnection::GetPeerAddress( NNet::CNodeAddress *address ) const
 {
-	return address->SetInetName( pNet->GetIP( nClientLocalID ).c_str(), pNet->GetPort( nClientLocalID ) );
+	return pNet->TryGetPeerAddress( nClientLocalID, address );
 }

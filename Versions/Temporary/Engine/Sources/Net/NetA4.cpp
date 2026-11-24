@@ -1254,16 +1254,27 @@ const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 
 const std::string CNetDriver::GetIP( const int nClientID )
 {
-	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	CPeerList::iterator iter = clients.find( nClientID );
-	return iter == clients.end() ? 0 : iter->second.currentAddr.GetIP();
+	CNodeAddress address;
+	return TryGetPeerAddress( nClientID, &address ) ? address.GetIP() : std::string();
 }
 
 const int CNetDriver::GetPort( const int nClientID )
 {
+	CNodeAddress address;
+	return TryGetPeerAddress( nClientID, &address ) ? address.GetPort() : 0;
+}
+
+bool CNetDriver::TryGetPeerAddress( int nClientID, CNodeAddress *pAddress ) const
+{
+	// A logout on the worker thread can retire the peer while the game configures probes.
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	CPeerList::iterator iter = clients.find( nClientID );
-	return iter == clients.end() ? 0 : iter->second.currentAddr.GetPort();
+	const auto it = clients.find( nClientID );
+	if ( it == clients.end() )
+	{
+		return false;
+	}
+	*pAddress = it->second.currentAddr;
+	return true;
 }
 
 void CNetDriver::PauseNet()

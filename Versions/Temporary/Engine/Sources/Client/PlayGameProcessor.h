@@ -36,6 +36,7 @@ class CPlayGameProcessor : public CPacketProcessor
 	struct SPeerSetup
 	{
 		bool bInitiator = false;
+		// Mirrors the initiator's wire flag. Its join can still be pending after this end published the session.
 		bool bRecovery = false;
 		uint32_t nSetupID = 0;
 		int nAttempt = 0;
@@ -152,7 +153,8 @@ class CPlayGameProcessor : public CPacketProcessor
 	//
 	void StartServerConnect();
 	void ProcessConnectServerProcessor();
-	void ProcessAcceptingGamersPackets();
+	void DispatchAcceptingGamersPackets();
+	void DrainDepartingConnections( int nClientID = -1 );
 	void DrainConnectionPackets( IConnection *pConnection, bool bServerConfirmed = false );
 	void ProcessEfforts();
 	void Clear();

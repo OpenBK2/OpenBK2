@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Net/NetDriver.h"
 #include "NetPacket.h"
 #include "NetSaver.h"
 
@@ -46,6 +47,7 @@ class CNetSaver : public IBinSaver
 	OBJECT_NOCOPY_METHODS( CNetSaver );
 	CMemoryStream *pRes;
 	ESaverMode mode;
+	bool bInvalidPacket = false;
 
 	bool StartChunk( const chunk_id idChunk, int nChunkNumber ) override
 	{
@@ -197,13 +199,14 @@ class CNetSaver : public IBinSaver
 		{
 			if ( NObjectFactory::IsRegistered( cTypeID ) )
 			{
-				CObjectBase *pObject = MakeObject<CObjectBase>( cTypeID );
+				CPtr<CObjectBase> pObject = MakeObject<CObjectBase>( cTypeID );
 				if ( pObject )
 				{
 					pObject->operator&( *this );
 				}
 
-				return pObject;
+				// Discard the outer relay envelope too if its nested peer packet failed to decode.
+				return bInvalidPacket ? nullptr : pObject.Extract();
 			}
 			// not registered packet, load as raw stream
 			else
@@ -218,6 +221,28 @@ class CNetSaver : public IBinSaver
 	}
 
 public:
+	void ReadPacketBytes( std::vector<char> *pData )
+	{
+		pData->clear();
+		int32_t nSize = 0;
+		if ( pRes->GetSize() - pRes->GetPosition() < static_cast<int>( sizeof( nSize ) ) )
+		{
+			bInvalidPacket = true;
+			return;
+		}
+		pRes->Read( &nSize, sizeof( nSize ) );
+		if ( nSize < 0 || nSize > NNet::N_MAX_FRAME_SIZE || nSize > pRes->GetSize() - pRes->GetPosition() )
+		{
+			bInvalidPacket = true;
+			return;
+		}
+		if ( nSize > 0 )
+		{
+			pData->resize( nSize );
+			pRes->Read( pData->data(), nSize );
+		}
+	}
+
 	bool IsReading() override
 	{
 		return mode == SAVER_MODE_READ;
@@ -243,4 +268,17 @@ public:
 IBinSaver *CreateNetSaver( CMemoryStream *pStream, ESaverMode mode )
 {
 	return new CNetSaver( pStream, mode );
+}
+
+void AddNetPacketBytes( IBinSaver &saver, IBinSaver::chunk_id id, std::vector<char> *pData )
+{
+	if ( auto *pNetSaver = dynamic_cast<CNetSaver *>( &saver ); pNetSaver && pNetSaver->IsReading() )
+	{
+		pNetSaver->ReadPacketBytes( pData );
+	}
+	else
+	{
+		// Preserve the existing count and bytes on the wire and normal chunking for other savers.
+		saver.Add( id, pData );
+	}
 }
