@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- When adding redundant stream blocks, track the offsets carried by each physical
+  datagram. Aliasing an old packet number to a newer bundle can let a late ACK
+  commit unrelated, undelivered bytes. Retire mappings on packet-number reuse,
+  validate the whole bundle before processing its ACKs, and test lost bundles,
+  late originals and counter wrap. ACK-only packets must bypass the data window
+  without requesting more ACKs. Measure redundancy against the same ACK policy:
+  lower tail latency can cost bandwidth and worsen median latency.
+
 - Mistake: a heartbeat on the reliable ordered game stream treated head-of-line
   blocking as a dead UDP path. Probe reachability on the retained socket outside
   that stream, measure relay end to end, and require sustained quality evidence

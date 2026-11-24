@@ -184,6 +184,10 @@ struct IDriver : public CObjectBase
 
 	virtual const std::string GetIP( const int nClientID ) = 0;
 	virtual const int GetPort( const int nClientID ) = 0;
+
+	// Direct peers opt in after advertising receive support during identity exchange.
+	// Default keeps other driver implementations and legacy lobby links unchanged.
+	virtual void SetPeerTransport( int nClientID, bool bReceiveBundles, bool bSendBundles ) {}
 };
 
 NET_EXPORT IDriver *CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );

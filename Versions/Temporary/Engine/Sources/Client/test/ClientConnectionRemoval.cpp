@@ -315,6 +315,15 @@ public:
 	std::list<CMemoryStream> received;
 	EState state = ACTIVE;
 	int expectedRecipient = 0;
+	bool receiveBundles = false;
+	bool sendBundles = false;
+
+	void SetPeerTransport( int clientID, bool receive, bool send ) override
+	{
+		EXPECT_EQ( clientID, expectedRecipient );
+		receiveBundles = receive;
+		sendBundles = send;
+	}
 
 	void Init( NNet::APPLICATION_ID, int, bool, NNet::ILinksManager * ) override {}
 
@@ -1295,6 +1304,54 @@ TEST( ClientPeerPaths, RealSocketOrderedStreamPauseKeepsResponsiveDirectRoute )
 TEST( ClientPeerPaths, RealSocketFiveHundredMillisecondsAndTenPercentLossKeepDirectRoute )
 {
 	CheckSocketHandshake( true, true, true, false, 6 );
+}
+
+TEST( ClientDirectConnections, InitiatorAdvertisesReceiveSupportBeforeSendingBundledData )
+{
+	for ( unsigned version : { 0u, 1u } )
+	{
+		CPtr<CRecordingDriver> lobbyDriver = new CRecordingDriver(), peerDriver = new CRecordingDriver();
+		CPtr<CNet> lobby = CPlayGameProcessorTestAccess::CreateNet( lobbyDriver );
+		CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( peerDriver );
+		CPtr<CRecordingGameLinks> links = new CRecordingGameLinks();
+		CSimpleClientEffort effort;
+		CPlayGameProcessorTestAccess::InitEffort( effort, lobby, peer, links, hostID, true );
+		CPtr<CConnectServerPacket> connected =
+				new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, CConnectServerPacket::ERR_UNKNOWN );
+		effort.ProcessConnectServerPacket( connected );
+		EXPECT_TRUE( peerDriver->receiveBundles );
+		EXPECT_FALSE( peerDriver->sendBundles );
+		CPtr<CNetPacket> advertised = Deserialize( peerDriver->sent.back() );
+		auto *identity = dynamic_cast<CPeerSetupPacket *>( advertised.GetPtr() );
+		ASSERT_NE( identity, nullptr );
+		EXPECT_EQ( identity->nTransportVersion, 1u );
+		CPtr<CPeerSetupPacket> reply = new CPeerSetupPacket( 0, 0, 0, CPeerSetupPacket::Identity, hostID );
+		reply->nTransportVersion = version;
+		ASSERT_TRUE( effort.ProcessClientIdentity( reply ) );
+		EXPECT_EQ( peerDriver->sendBundles, version == 1 );
+		EXPECT_FALSE( lobbyDriver->receiveBundles );
+		EXPECT_FALSE( lobbyDriver->sendBundles );
+	}
+}
+
+TEST( ClientDirectConnections, AcceptorUsesLegacyFormatUntilPeerAdvertisesBundleSupport )
+{
+	for ( unsigned version : { 0u, 1u } )
+	{
+		CPtr<CRecordingDriver> lobbyDriver = new CRecordingDriver(), peerDriver = new CRecordingDriver();
+		peerDriver->expectedRecipient = 17;
+		CPtr<CNet> lobby = CPlayGameProcessorTestAccess::CreateNet( lobbyDriver );
+		CPtr<CNet> peer = CPlayGameProcessorTestAccess::CreateNet( peerDriver );
+		CPtr<CRecordingGameLinks> links = new CRecordingGameLinks();
+		CSimpleServerEffort effort( 42, hostID, "127.0.0.1", 43210, lobby, peer, links );
+		CPtr<CPeerSetupPacket> identity = new CPeerSetupPacket( 0, 0, 0, CPeerSetupPacket::Identity, hostID );
+		identity->nClientID = 17;
+		identity->nTransportVersion = version;
+		ASSERT_TRUE( effort.ProcessClientIdentity( identity ) );
+		EXPECT_EQ( peerDriver->receiveBundles, version == 1 );
+		EXPECT_EQ( peerDriver->sendBundles, version == 1 );
+		EXPECT_FALSE( lobbyDriver->sendBundles );
+	}
 }
 
 TEST( ClientDirectConnections, EarlyPeerPacketsAreDeliveredInOrderOnConnectionInstallation )

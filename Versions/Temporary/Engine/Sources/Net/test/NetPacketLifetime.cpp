@@ -12,6 +12,7 @@ struct SDatagram
 {
 	CMemoryStream bytes;
 	PACKET_ID id;
+	bool bundled = false;
 };
 
 struct SEndpoint
@@ -54,9 +55,30 @@ struct SEndpoint
 		std::vector<PACKET_ID> acked;
 		if ( acks.ReadAcks( &acked, bits ) )
 		{
-			stream.ReadMsg( bits );
+			unsigned char count = 1;
+			if ( packet.bundled )
+			{
+				bits.Read( count );
+			}
+			for ( unsigned i = 0; i < count; ++i )
+			{
+				stream.ReadMsg( bits );
+			}
 			stream.Commit( acked );
 		}
+	}
+
+	SDatagram SendBundle()
+	{
+		SDatagram result;
+		result.bundled = true;
+		CBitLocker bits;
+		bits.LockWrite( result.bytes, N_MAX_PACKET_SIZE );
+		result.id = acks.WrtieAcks( &bits, 534 );
+		stream.WriteBundle( result.id, &bits, true );
+		bits.Free();
+		result.bytes.SetSize( result.bytes.GetPosition() );
+		return result;
 	}
 
 	void Tick( double fSeconds = 0.05 )
@@ -209,4 +231,134 @@ TEST( NetPacketLifetime, DelayedAcknowledgementStillCommitsAChainOfCurrentRetrie
 	receiver.Receive( sender.Send() );
 	EXPECT_EQ( receiver.Read(), 0xC3 );
 	EXPECT_EQ( receiver.Read(), -1 );
+}
+
+TEST( NetPacketLifetime, AcknowledgingBundleCommitsBothOffsetsAndIgnoresLateOriginal )
+{
+	SEndpoint sender, receiver;
+	sender.Queue( 42 );
+	const auto original = sender.Send( 100 );
+	sender.Queue( 43 );
+	const auto bundled = sender.SendBundle();
+	receiver.Receive( bundled );
+	EXPECT_EQ( receiver.Read(), 42 );
+	EXPECT_EQ( receiver.Read(), 43 );
+	sender.Receive( receiver.Send() );
+	receiver.Receive( original );
+	EXPECT_EQ( receiver.Read(), -1 );
+	sender.Tick( 25 );
+	EXPECT_FALSE( sender.stream.HasOutData() );
+	EXPECT_FALSE( sender.stream.HasRedundantData() );
+}
+
+TEST( NetPacketLifetime, OriginalAcknowledgementCannotCommitOtherBlockInLostBundle )
+{
+	SEndpoint sender, receiver;
+	sender.Queue( 42 );
+	const auto original = sender.Send( 100 );
+	sender.Queue( 43 );
+	const auto lost = sender.SendBundle();
+	receiver.Receive( original );
+	sender.Receive( receiver.Send() );
+	EXPECT_EQ( receiver.Read(), 42 );
+	sender.SendFailed( lost.id );
+	ASSERT_TRUE( sender.stream.HasOutData() );
+	receiver.Receive( sender.Send() );
+	EXPECT_EQ( receiver.Read(), 43 );
+	EXPECT_EQ( receiver.Read(), -1 );
+}
+
+TEST( NetPacketLifetime, LostBundleRollsBackEveryUnacknowledgedBlock )
+{
+	SEndpoint sender, receiver;
+	sender.Queue( 42 );
+	sender.Send( 100 );
+	sender.Queue( 43 );
+	sender.SendFailed( sender.SendBundle().id );
+	receiver.Receive( sender.SendBundle() );
+	receiver.Receive( sender.SendBundle() );
+	EXPECT_EQ( receiver.Read(), 42 );
+	EXPECT_EQ( receiver.Read(), 43 );
+	sender.Receive( receiver.Send() );
+	sender.Tick( 25 );
+	EXPECT_FALSE( sender.stream.HasOutData() );
+}
+
+TEST( NetPacketLifetime, BundledOffsetsCannotBeAcknowledgedThroughReusedPacketNumber )
+{
+	SEndpoint sender, receiver;
+	sender.Queue( 42 );
+	sender.Send( 100 );
+	sender.Queue( 43 );
+	receiver.Receive( sender.SendBundle() ); // packet 101 also carries packet 100's bytes
+	sender.Receive( receiver.Send() );
+	EXPECT_EQ( receiver.Read(), 42 );
+	EXPECT_EQ( receiver.Read(), 43 );
+	sender.Tick( 25 );
+	for ( int i = 0; i < 0x10000 - 2; ++i )
+	{
+		receiver.Receive( sender.Send() );
+		sender.Receive( receiver.Send() );
+		sender.Tick();
+		receiver.Tick();
+	}
+	sender.Queue( 44 );
+	const auto delivered = sender.Send();
+	ASSERT_EQ( delivered.id, 100 );
+	receiver.Receive( delivered );
+	sender.Queue( 45 );
+	const auto lost = sender.Send();
+	ASSERT_EQ( lost.id, 101 );
+	sender.Receive( receiver.Send() );
+	EXPECT_EQ( receiver.Read(), 44 );
+	sender.Tick( 4 );
+	receiver.Receive( sender.Send() );
+	EXPECT_EQ( receiver.Read(), 45 );
+	EXPECT_EQ( receiver.Read(), -1 );
+}
+
+TEST( NetPacketLifetime, FirstRttSampleAndSelectiveGapRecoveryDoNotWaitForOldThreeSecondEstimate )
+{
+	SEndpoint sender, receiver;
+	std::vector<SDatagram> packets;
+	for ( int i = 0; i < 4; ++i )
+	{
+		sender.Queue( 42 + i );
+		packets.push_back( sender.Send() );
+	}
+	sender.Tick( 0.020 );
+	// Three later datagrams arrive; the oldest is missing.
+	for ( int i = 1; i < 4; ++i )
+	{
+		receiver.Receive( packets[i] );
+	}
+	sender.Receive( receiver.Send() );
+	EXPECT_NEAR( sender.acks.GetRTT(), 0.020, 0.001 );
+	sender.Tick( 0.001 );
+	EXPECT_FALSE( sender.stream.HasOutData() ); // allow reordering first
+	sender.Tick( 0.010 );
+	ASSERT_TRUE( sender.stream.HasOutData() );
+	receiver.Receive( sender.Send() );
+	for ( int i = 0; i < 4; ++i )
+	{
+		EXPECT_EQ( receiver.Read(), 42 + i );
+	}
+}
+
+TEST( NetPacketLifetime, TailTimeoutBacksOffWhenNoAcknowledgementsArrive )
+{
+	SEndpoint sender, receiver;
+	sender.Queue( 42 );
+	receiver.Receive( sender.Send() );
+	sender.Tick( 0.020 );
+	sender.Receive( receiver.Send() );
+	sender.Queue( 43 );
+	sender.Send();
+	sender.Tick( 0.101 );
+	ASSERT_TRUE( sender.stream.HasOutData() );
+	sender.Send();
+	sender.Tick( 0.101 );
+	EXPECT_FALSE( sender.stream.HasOutData() );
+	sender.Tick( 0.101 );
+	EXPECT_TRUE( sender.stream.HasOutData() );
 }

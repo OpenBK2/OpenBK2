@@ -3,6 +3,8 @@
 #include "port/socket.h"
 
 #include <cstdint>
+#include <list>
+#include <vector>
 
 class CBitStream;
 
@@ -25,7 +27,7 @@ public:
 
 	float GetRTTDisp() const
 	{
-		return std::sqrt( std::fabs( sqr( fAvrgRTT ) - fAvrgRTT2 ) );
+		return fRTTVariation;
 	}
 
 	float GetTimeSinceLastRecv() const
@@ -38,13 +40,21 @@ public:
 		return fPing;
 	}
 
-	// if true is returned then packet considered sent and timer corrected accordingly
-	// all packets are considered to be of same size
-	bool CanSend();
+	// Charge each stream block to the window, including redundant copies.
+	// Pure acknowledgements do not consume data-window capacity.
+	bool CanSend( int nUnits = 1 ) const;
 	bool NeedSend() const;
+	bool AckDue() const;
+	void RequestAck();
+
+	PACKET_ID GetNextPacketID() const
+	{
+		return nPktSent;
+	}
+
 	void Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT );
-	PACKET_ID WrtieAcks( CBitStream *pBits, int nPktSize );
-	bool ReadAcks( std::vector<PACKET_ID> *acked, CBitStream &bits );
+	PACKET_ID WrtieAcks( CBitStream *pBits, int nPktSize, int nUnits = 1 );
+	bool ReadAcks( std::vector<PACKET_ID> *acked, CBitStream &bits, bool bAcceptData = true );
 	void PacketLost( PACKET_ID pktID );
 
 private:
@@ -58,7 +68,12 @@ private:
 	uint32_t dwAckedBits;
 	PACKET_ID nAckedLast;
 	//
-	float fAvrgRTT, fAvrgRTT2; // RTT statistics
+	float fAvrgRTT, fRTTVariation;
+	bool bHaveRTT = false;
+	bool bAckPending = false;
+	double fAckDeadline = 0;
+	unsigned int nTimeoutBackoff = 0;
+	double fRecoveryEnd = -1;
 
 	// ping information
 	float fPing;
@@ -85,6 +100,8 @@ private:
 		double fTimeCreated;
 		PACKET_ID nPktNumber;
 		bool bOnTheWindowEdge;
+		int nUnits = 1;
+		unsigned int nLaterAcks = 0;
 	};
 
 	// info on sent update packets

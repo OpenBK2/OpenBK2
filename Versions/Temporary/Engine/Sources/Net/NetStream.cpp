@@ -29,9 +29,8 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 	// Packet IDs wrap. A mapping left by an expired or immediately failed send
 	// belongs to the old transmission, even when this new packet carries no data.
 	// Retire it before an ACK for the reused ID can commit an unrelated block.
-	reassign.erase( nPkt );
+	transmissions.erase( nPkt );
 	//	cout << "CHANNEL stats " << channelOutFlyList.size() << " " << channelOutList.size();
-	//	cout << " " << channelInList.size() << " " << reassign.size() << endl;
 	ASSERT( nSizeLimit <= N_MAX_PACKET_SIZE );
 	if ( channelOutList.empty() )
 	{
@@ -95,18 +94,62 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 		cout << "reassign out pkt" << ibest->nPkt << " into " << nPkt << endl;
 		cout << "send reassigned block offs=" << (unsigned)ibest->nOffset << " size=" << (unsigned)ibest->nLength << endl;
 #endif
-		PACKET_ID oldPkt = ibest->nPkt;
 		channelOutFlyList.splice( channelOutFlyList.end(), channelOutList, ibest );
-		reassign[oldPkt] = nPkt;
 	}
 	// send channel data
 	SChannelBlock &block = channelOutFlyList.back();
 	ASSERT( block.GetSendSize() <= nSizeLimit );
 	block.nPkt = nPkt;
+	transmissions[nPkt].push_back( block.nOffset );
 	pBits->Write( &block, block.GetSendSize() );
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
+bool CStreamTracker::HasRedundantData() const
+{
+	for ( const auto &block : channelOutFlyList )
+	{
+		if ( !block.bRepeated )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+int CStreamTracker::WriteBundle( PACKET_ID nPkt, CBitStream *pBits, bool bAllowExtraBlock )
+{
+	const bool primary = HasOutData();
+	auto extra = channelOutFlyList.end();
+	if ( !primary || bAllowExtraBlock )
+	{
+		for ( auto it = channelOutFlyList.begin(); it != channelOutFlyList.end(); ++it )
+		{
+			if ( !it->bRepeated && ( extra == channelOutFlyList.end() || IsBefore( extra->nOffset, it->nOffset ) ) )
+			{
+				extra = it;
+			}
+		}
+	}
+	const unsigned char count = ( primary ? 1 : 0 ) + ( extra != channelOutFlyList.end() ? 1 : 0 );
+	pBits->Write( count );
+	transmissions.erase( nPkt );
+	if ( primary )
+	{
+		WriteMsg( nPkt, pBits, N_MAX_STREAM_BLOCK_SIZE + SChannelBlock::GetHeaderSize() );
+	}
+	if ( extra != channelOutFlyList.end() )
+	{
+		// One proactive copy per block, sent in a different paced datagram.
+		// Ordinary retransmission remains available if both copies are lost.
+		extra->bRepeated = true;
+		extra->nPkt = nPkt;
+		transmissions[nPkt].push_back( extra->nOffset );
+		pBits->Write( &*extra, extra->GetSendSize() );
+	}
+	return count;
+}
+
 void CStreamTracker::ReadMsg( CBitStream &bits )
 {
 	// receive channel data
@@ -190,8 +233,8 @@ void CStreamTracker::Rollback( const std::vector<PACKET_ID> &pkts )
 #ifdef LOG
 				cout << "ROLLBACK pkt" << nPkt << endl;
 #endif
-				channelOutList.splice( channelOutList.end(), channelOutFlyList, i );
-				break;
+				auto lost = i++;
+				channelOutList.splice( channelOutList.end(), channelOutFlyList, lost );
 			}
 			else
 			{
@@ -204,68 +247,40 @@ void CStreamTracker::Rollback( const std::vector<PACKET_ID> &pkts )
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::Erase( const std::vector<PACKET_ID> &pkts )
 {
-	for ( int i = 0; i < pkts.size(); ++i )
+	for ( PACKET_ID id : pkts )
 	{
-		PACKET_ID nPkt = pkts[i];
-		std::unordered_map<PACKET_ID, PACKET_ID>::iterator k = reassign.find( nPkt );
-		if ( k != reassign.end() )
-		{
-			reassign.erase( k );
-		}
+		transmissions.erase( id );
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::Commit( const std::vector<PACKET_ID> &pkts )
 {
-	for ( int i = 0; i < pkts.size(); ++i )
+	for ( PACKET_ID id : pkts )
 	{
-		PACKET_ID nPkt = pkts[i];
-		for ( ;; )
+		const auto sent = transmissions.find( id );
+		if ( sent == transmissions.end() )
 		{
-			std::unordered_map<PACKET_ID, PACKET_ID>::iterator k = reassign.find( nPkt );
-			if ( k == reassign.end() )
-			{
-				break;
-			}
-#ifdef LOG
-			cout << "commit pkt" << nPkt << " translated to commit pkt " << k->second << endl;
-#endif
-			nPkt = k->second;
-			reassign.erase( k );
+			continue;
 		}
-		SChannelBlockList::iterator k;
-		bool isFound = false;
-		for ( k = channelOutFlyList.begin(); k != channelOutFlyList.end(); )
+		for ( CHANNEL_DATA_OFFSET offset : sent->second )
 		{
-			if ( k->nPkt == nPkt )
+			for ( auto *blocks : { &channelOutFlyList, &channelOutList } )
 			{
-#ifdef LOG
-				cout << "commit pkt" << nPkt << endl;
-#endif
-				channelOutFlyList.erase( k );
-				isFound = true;
-				break;
-			}
-			++k;
-		}
-		if ( !isFound )
-		{
-			for ( k = channelOutList.begin(); k != channelOutList.end(); )
-			{
-				if ( k->nPkt == nPkt )
+				for ( auto it = blocks->begin(); it != blocks->end(); )
 				{
-#ifdef LOG
-					cout << "commit pkt" << nPkt << " from rolled set" << endl;
-#endif
-					channelOutList.erase( k );
-					break;
+					if ( it->nOffset == offset )
+					{
+						it = blocks->erase( it );
+					}
+					else
+					{
+						++it;
+					}
 				}
-				++k;
 			}
 		}
+		transmissions.erase( sent );
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
 } // namespace NNet

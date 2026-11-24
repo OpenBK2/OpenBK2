@@ -3,6 +3,8 @@
 #include "NetAcks.h"
 #include "port/socket.h"
 
+#include <map>
+
 /////////////////////////////////////////////////////////////////////////////////////
 namespace NNet
 {
@@ -111,13 +113,15 @@ public:
 		return !outList.empty() || channelOutBuf.GetSize() != 0 || !channelOutList.empty();
 	}
 
-	// A datagram carries at most 255 stream bytes, even with a larger UDP limit.
-	bool CanReadMsg() const
+	// Reserve space for every block before acknowledging a complete datagram.
+	bool CanReadMsg( int nBlocks = 1 ) const
 	{
-		return channelInBuf.GetBufSize() >= N_MAX_STREAM_BLOCK_SIZE;
+		return channelInBuf.GetBufSize() >= nBlocks * N_MAX_STREAM_BLOCK_SIZE;
 	}
 
 	void WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit );
+	bool HasRedundantData() const;
+	int WriteBundle( PACKET_ID nPkt, CBitStream *pBits, bool bAllowExtraBlock );
 	void ReadMsg( CBitStream &bits );
 	void PumpIncoming();
 	void Rollback( const std::vector<PACKET_ID> &pkts );
@@ -136,6 +140,7 @@ private:
 		unsigned char nLength;
 		char cData[256];
 		PACKET_ID nPkt;
+		bool bRepeated = false;
 
 		int GetSendSize() const
 		{
@@ -155,7 +160,9 @@ private:
 	CHANNEL_DATA_OFFSET nChannelOutputOffset, nChannelInputOffset;
 	typedef std::list<SChannelBlock> SChannelBlockList;
 	SChannelBlockList channelOutFlyList, channelOutList, channelInList;
-	std::unordered_map<PACKET_ID, PACKET_ID> reassign;
+	// A datagram can carry two offsets, and either copy can acknowledge an offset.
+	// Keep this association until ACK/expiry, never alias a whole packet to another.
+	std::map<PACKET_ID, std::vector<CHANNEL_DATA_OFFSET>> transmissions;
 
 	static bool IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET test );
 };

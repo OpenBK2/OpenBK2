@@ -2,6 +2,8 @@
 
 #include "Net/NetA4.h"
 
+#include <algorithm>
+#include <cstdio>
 #include <deque>
 #include <map>
 
@@ -50,6 +52,23 @@ struct CNetDriverTestAccess
 	static int GetIncomingFrameSize( CNetDriver &driver, unsigned int id )
 	{
 		return driver.GetClient( id )->nIncomingPacketSize;
+	}
+
+	static bool FillWindow( CNetDriver &driver, unsigned int id )
+	{
+		auto &acks = driver.GetClient( id )->acks;
+		while ( acks.CanSend() )
+		{
+			unsigned char header[8];
+			CBitStream bits( header, CBitStream::write, sizeof( header ) );
+			acks.WrtieAcks( &bits, 500 );
+		}
+		return acks.CanSend();
+	}
+
+	static bool CanSend( CNetDriver &driver, unsigned int id )
+	{
+		return driver.GetClient( id )->acks.CanSend();
 	}
 };
 } // namespace NNet
@@ -218,7 +237,217 @@ std::vector<DirectMessage> ReadFullDirectMessages( CNetDriver &driver )
 	}
 	return result;
 }
+
+// A repeatable transport experiment, not an Internet latency benchmark. Both
+// modes use the new ACK policy; only proactive stream redundancy differs.
+void MeasureLossRecovery( bool bundled, int delayMs, bool burstLoss )
+{
+	CPtr<CQueuedLinks> tx = new CQueuedLinks(), rx = new CQueuedLinks();
+	CNetDriver sender( SNetDriverConsts( 60 ), false ), receiver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( sender, tx );
+	CNetDriverTestAccess::Init( receiver, rx );
+	const auto source = Address( 12600 ), target = Address( 12601 );
+	CNetDriverTestAccess::AddPeer( sender, 0, target );
+	CNetDriverTestAccess::AddPeer( receiver, 0, source );
+	sender.SetPeerTransport( 0, bundled, bundled );
+	receiver.SetPeerTransport( 0, bundled, bundled );
+
+	struct Pending
+	{
+		int due;
+		CQueuedLinks *destination;
+		CQueuedLinks::Datagram datagram;
+	};
+
+	std::vector<Pending> pending;
+	int counts[2] = {};
+	int bytes = 0, dropped = 0, maxSize = 0;
+	auto Transfer = [&]( CQueuedLinks *from, CQueuedLinks *to, const CNodeAddress &address, int direction, int now )
+	{
+		for ( const auto &packet : from->outgoing )
+		{
+			const int ordinal = ++counts[direction];
+			bytes += packet.data.GetSize();
+			maxSize = (std::max)( maxSize, packet.data.GetSize() );
+			// Ten percent loss in each direction, either isolated or in bursts.
+			const bool lose = burstLoss ? ordinal % 30 >= 27 : ordinal % 10 == 7;
+			if ( lose )
+			{
+				++dropped;
+				continue;
+			}
+			const int jitter = ordinal % 7 == 0 ? 80 : 0;
+			pending.push_back( { now + delayMs + jitter, to, { address, packet.data } } );
+		}
+		from->outgoing.clear();
+	};
+	constexpr int messages = 200;
+	constexpr int intervalMs = 100;
+	std::vector<int> latency;
+	int next = 0;
+	for ( int now = 0; now < 120000 && latency.size() < messages; now += 5 )
+	{
+		if ( next < messages && now == next * intervalMs )
+		{
+			const auto payload = Payload( next, 32 );
+			CMemoryStream packet;
+			packet.Write( payload.data(), static_cast<int>( payload.size() ) );
+			ASSERT_TRUE( sender.SendDirect( 0, packet ) );
+			++next;
+		}
+		for ( auto it = pending.begin(); it != pending.end(); )
+		{
+			if ( it->due <= now )
+			{
+				it->destination->incoming.push_back( it->datagram );
+				it = pending.erase( it );
+			}
+			else
+			{
+				++it;
+			}
+		}
+		CNetDriverTestAccess::Elapse( sender, 0.005 );
+		CNetDriverTestAccess::Elapse( receiver, 0.005 );
+		sender.Step();
+		receiver.Step();
+		Transfer( tx, rx, source, 0, now );
+		Transfer( rx, tx, target, 1, now );
+		for ( const auto &message : ReadFullDirectMessages( receiver ) )
+		{
+			const int id = static_cast<int>( latency.size() );
+			ASSERT_LT( id, messages );
+			ASSERT_EQ( message, ( DirectMessage{ 0, Payload( id, 32 ) } ) );
+			latency.push_back( now - id * intervalMs );
+		}
+	}
+	ASSERT_EQ( latency.size(), messages );
+	EXPECT_GT( dropped, 0 );
+	EXPECT_LE( maxSize, 534 );
+	std::sort( latency.begin(), latency.end() );
+	std::printf(
+			"Synthetic %d ms one-way, %s loss, redundancy %s: median=%d ms, p95=%d ms, max=%d ms, UDP bytes=%d, datagrams=%d\n",
+			delayMs,
+			burstLoss ? "3/30 burst" : "1/10 isolated",
+			bundled ? "on" : "off",
+			latency[messages / 2],
+			latency[messages * 95 / 100],
+			latency.back(),
+			bytes,
+			counts[0] + counts[1] );
+}
 } // namespace
+
+TEST( NetTransport, PacedTrafficSurvivesIsolatedAndBurstLossWithBoundedDatagrams )
+{
+	for ( bool bundled : { false, true } )
+	{
+		MeasureLossRecovery( bundled, 20, false );
+		MeasureLossRecovery( bundled, 500, false );
+		MeasureLossRecovery( bundled, 20, true );
+	}
+}
+
+TEST( NetTransport, DataAcknowledgementBypassesFullSendWindowWithin25Milliseconds )
+{
+	CPtr<CQueuedLinks> links = new CQueuedLinks();
+	CNetDriver driver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( driver, links );
+	const CNodeAddress peer = Address( 12500 );
+	CNetDriverTestAccess::AddPeer( driver, 17, peer );
+	ASSERT_FALSE( CNetDriverTestAccess::FillWindow( driver, 17 ) );
+	links->incoming.push_back( { peer, Normal( 17, { 42 } ) } );
+	driver.Step();
+	EXPECT_TRUE( links->outgoing.empty() );
+	CNetDriverTestAccess::Elapse( driver, 0.026 );
+	driver.Step();
+	ASSERT_EQ( links->outgoing.size(), 1u );
+	EXPECT_EQ( links->outgoing.front().data.GetSize(), 18 );
+	EXPECT_FALSE( CNetDriverTestAccess::CanSend( driver, 17 ) );
+	EXPECT_EQ( ReadDirectMessages( driver ), ( std::vector<unsigned char>{ 42 } ) );
+}
+
+TEST( NetTransport, AcknowledgementOnlyPacketsDoNotCreateAnAcknowledgementLoop )
+{
+	CPtr<CQueuedLinks> links = new CQueuedLinks();
+	CNetDriver driver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( driver, links );
+	const CNodeAddress peer = Address( 12501 );
+	CNetDriverTestAccess::AddPeer( driver, 17, peer );
+	links->incoming.push_back( { peer, Normal( 17, {} ) } );
+	driver.Step();
+	for ( int i = 0; i < 10; ++i )
+	{
+		CNetDriverTestAccess::Elapse( driver, 0.03 );
+		driver.Step();
+	}
+	EXPECT_TRUE( links->outgoing.empty() );
+	EXPECT_TRUE( CNetDriverTestAccess::CanSend( driver, 17 ) );
+}
+
+TEST( NetTransport, TailCopyRepairsLostDatagramWithoutWaitingForRetransmissionTimeout )
+{
+	CPtr<CQueuedLinks> tx = new CQueuedLinks(), rx = new CQueuedLinks();
+	CNetDriver sender( SNetDriverConsts( 60 ), false ), receiver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( sender, tx );
+	CNetDriverTestAccess::Init( receiver, rx );
+	const auto source = Address( 12502 ), target = Address( 12503 );
+	CNetDriverTestAccess::AddPeer( sender, 0, target );
+	CNetDriverTestAccess::AddPeer( receiver, 0, source );
+	sender.SetPeerTransport( 0, true, true );
+	receiver.SetPeerTransport( 0, true, true );
+	CMemoryStream message;
+	message << static_cast<unsigned char>( 42 );
+	ASSERT_TRUE( sender.SendDirect( 0, message ) );
+	sender.Step();
+	ASSERT_EQ( tx->outgoing.size(), 1u );
+	EXPECT_EQ( tx->outgoing.front().data.GetBuffer()[0], 10 );
+	// Lose the original datagram. The next paced send repairs the same offset.
+	tx->outgoing.clear();
+	CNetDriverTestAccess::Elapse( sender, 0.051 );
+	sender.Step();
+	ASSERT_EQ( tx->outgoing.size(), 1u );
+	rx->incoming.push_back( { source, tx->outgoing.front().data } );
+	receiver.Step();
+	EXPECT_EQ( ReadDirectMessages( receiver ), ( std::vector<unsigned char>{ 42 } ) );
+	EXPECT_LE( tx->outgoing.front().data.GetSize(), 534 );
+	tx->outgoing.clear();
+	CNetDriverTestAccess::Elapse( sender, 0.06 );
+	sender.Step();
+	EXPECT_TRUE( tx->outgoing.empty() ); // only one proactive copy
+}
+
+TEST( NetTransport, BundlesRequireOptInAndMalformedSecondBlockCannotCommitFirstBlock )
+{
+	CPtr<CQueuedLinks> links = new CQueuedLinks();
+	CNetDriver driver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( driver, links );
+	const auto peer = Address( 12504 );
+	CNetDriverTestAccess::AddPeer( driver, 17, peer );
+	CMemoryStream packet;
+	packet << static_cast<unsigned char>( 10 ) << unsigned( 17 );
+	packet << PACKET_ID( 123 ) << PACKET_ID( 0 ) << uint32_t( 0 );
+	packet << static_cast<unsigned char>( 2 );
+	packet << uint32_t( 0 ) << static_cast<unsigned char>( 3 );
+	packet << static_cast<unsigned char>( 5 ) << static_cast<unsigned char>( 3 ) << static_cast<unsigned char>( 42 );
+	packet << uint32_t( 3 ) << static_cast<unsigned char>( 3 );
+	packet << static_cast<unsigned char>( 5 ) << static_cast<unsigned char>( 3 ) << static_cast<unsigned char>( 43 );
+	links->incoming.push_back( { peer, packet } );
+	driver.Step();
+	EXPECT_TRUE( ReadDirectMessages( driver ).empty() );
+	driver.SetPeerTransport( 17, true, true );
+	CMemoryStream truncated = packet;
+	truncated.SetSize( truncated.GetSize() - 1 );
+	links->incoming.push_back( { peer, truncated } );
+	driver.Step();
+	EXPECT_TRUE( ReadDirectMessages( driver ).empty() );
+	links->incoming.push_back( { peer, packet } );
+	driver.Step();
+	EXPECT_EQ( ReadDirectMessages( driver ), ( std::vector<unsigned char>{ 42, 43 } ) );
+	links->incoming.push_back( { peer, packet } );
+	driver.Step();
+	EXPECT_TRUE( ReadDirectMessages( driver ).empty() );
+}
 
 TEST( NetTransport, ShortFinalMessageDoesNotWaitForAnotherPacket )
 {
@@ -293,7 +522,7 @@ TEST( NetTransport, FormerFrameLimitAcceptsItsLastFragment )
 	EXPECT_EQ( received[0], ( DirectMessage{ 17, Payload( 1, N_STREAM_BUFFER - 1002 ) } ) );
 }
 
-TEST( NetTransport, LargeFramesRoundTripInOrderWithLossAndReordering )
+static void CheckLargeFrames( bool bundled )
 {
 	CPtr<CQueuedLinks> senderLinks = new CQueuedLinks();
 	CPtr<CQueuedLinks> receiverLinks = new CQueuedLinks();
@@ -306,6 +535,8 @@ TEST( NetTransport, LargeFramesRoundTripInOrderWithLossAndReordering )
 	// Both fixtures have login ID zero; each maps its sole remote endpoint to it.
 	CNetDriverTestAccess::AddPeer( sender, 0, receiverAddress );
 	CNetDriverTestAccess::AddPeer( receiver, 0, senderAddress );
+	sender.SetPeerTransport( 0, bundled, bundled );
+	receiver.SetPeerTransport( 0, bundled, bundled );
 	std::vector<DirectMessage> expected;
 	for ( int size : { 0, 1, 126, 127, N_STREAM_BUFFER - 6, N_STREAM_BUFFER - 5, 100000, 1 } )
 	{
@@ -371,6 +602,16 @@ TEST( NetTransport, LargeFramesRoundTripInOrderWithLossAndReordering )
 	}
 	EXPECT_GT( nDropped, 0 );
 	EXPECT_EQ( received, expected );
+}
+
+TEST( NetTransport, LargeFramesRoundTripInOrderWithLossAndReordering )
+{
+	CheckLargeFrames( false );
+}
+
+TEST( NetTransport, BundledLargeFramesRoundTripInOrderWithLossAndReordering )
+{
+	CheckLargeFrames( true );
 }
 
 TEST( NetTransport, FrameLargerThanRingDrainsAcknowledgedBlocksAfterGapCloses )
