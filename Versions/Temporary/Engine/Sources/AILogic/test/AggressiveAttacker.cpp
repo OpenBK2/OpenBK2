@@ -5,6 +5,7 @@
 #include "../Artillery.h"
 #include "../Aviation.h"
 #include "../B2AI.h"
+#include "../Building.h"
 #include "../Commands.h"
 #include "../DBAIConsts.h"
 #include "../Diplomacy.h"
@@ -28,6 +29,8 @@
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/CommonPathFinder.h"
 #include "Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/StandartSmoothPath.h"
+#include "Common_RTS_AI/Terrain.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
@@ -566,6 +569,121 @@ protected:
 };
 
 std::filesystem::path AggressiveAttacker::directory;
+
+class TankBuildingAttack : public AggressiveAttacker
+{
+protected:
+	static constexpr int nTankParty = 1;
+	const SVector bunkerTile{ 32, 40 };
+	CPtr<IUnitState> attack;
+
+	void SetUp() override
+	{
+		AggressiveAttacker::SetUp();
+		theWarFog.Init( 256, 256, 32, 2.0f );
+		auto *stats =
+				const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+		stats->nAIPassabilityClass = EAC_TRACK;
+		stats->platforms[0].guns[0].nAmmo = 10;
+		weapon->shells[0].etrajectory = NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
+		weapon->shells[0].eDamageType = NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
+		weapon->shells[0].fArea2 = 32;
+		InitializeAuthoredGuns();
+		gun = owner->GetGun( 0 );
+
+		auto *buildingStats = MakeRecord<NDb::SBuildingRPGStats>( "BuildingRPGStats" );
+		buildingStats->defences.resize( NDb::RPG_BOTTOM + 1 );
+		CDBPtr<NDb::SBuildingRPGStats> buildingRecord = buildingStats;
+		CBuilding *bunker = MakeObject<CBuilding>( 0x1108D450 );
+		CVec3 center( GetAIMap()->GetPointByTile( bunkerTile ), 0.0f );
+		SRect bounds;
+		bounds.InitRect( CVec2( center.x, center.y ), V2_AXIS_X, 16, 16, 16 );
+		SFields footprint{ [&]( IBinSaver &saver )
+		                   {
+												 saver.Add( 2, &center );
+												 saver.Add( 3, &bounds );
+											 } };
+		SFields building{ [&]( IBinSaver &saver )
+		                  {
+												saver.Add( 1, &footprint );
+												saver.Add( 29, &buildingRecord );
+											} };
+		LoadFields( bunker, [&]( IBinSaver &saver ) { saver.Add( 1, &building ); } );
+		ASSERT_EQ( bunker->GetStats(), buildingStats );
+		bunker->CExistingObject::SetHitPoints( 100 );
+		bunker->nUniqueID = 123;
+		bunker->Mem2UniqueIdObjs();
+		auto *command = MakeObject<CAICommand>( 0x1108D44D );
+		command->ToUnitCmd().nCmdType = ACTION_COMMAND_ATTACK_OBJECT;
+		command->ToUnitCmd().nObjectID = bunker->GetUniqueId();
+		PlaceUnit( owner, 0, true, nTankParty, command );
+		GetAIMap()->GetTerrain()->FinishInitMode();
+		owner->CBasePathUnit::Init( CVec3( GetAIMap()->GetPointByTile( SVector( 32, 30 ) ), 0.0f ),
+		                            0,
+		                            GetAIMap(),
+		                            nullptr,
+		                            Singleton<CCommonPathFinder>() );
+		attack = owner->GetStatesFactory()->ProduceState( owner, command );
+		ASSERT_TRUE( attack );
+		owner->SetCurState( attack );
+		ASSERT_TRUE( owner->CanMove() );
+		ASSERT_NE( GetAIMap()->GetTerrain()->CanUnitGo( owner->GetBoundTileRadius(), owner->GetCenterTile(), EAC_TRACK ),
+		           FREE_NONE );
+		ASSERT_TRUE( gun->CanShootToObject( bunker ) );
+	}
+
+	void SpotBunker()
+	{
+		SWarFogUnitInfo scout;
+		scout.vPos = SVector( bunkerTile.x / AI_TILES_IN_VIS_TILE, bunkerTile.y / AI_TILES_IN_VIS_TILE );
+		scout.nRadius = 2;
+		scout.bPlane = true;
+		theWarFog.AddUnit( 321, scout, nTankParty );
+		theWarFog.Segment();
+		ASSERT_TRUE( theWarFog.IsTileVisible( bunkerTile, nTankParty ) );
+	}
+
+	void TearDown() override
+	{
+		theWarFog.Clear();
+		AggressiveAttacker::TearDown();
+	}
+};
+
+TEST_F( TankBuildingAttack, ApproachesSpottedBuildingToGunRange )
+{
+	ASSERT_NO_FATAL_FAILURE( SpotBunker() );
+	attack->Segment();
+	ASSERT_FALSE( owner->IsIdle() );
+	// The cannon reaches five tiles and the tank sees only one.
+	const auto *movement = dynamic_cast<const CStandartSmoothPathBasis *>( owner->GetSmoothPath() );
+	ASSERT_NE( movement, nullptr );
+	ASSERT_NE( movement->GetPath(), nullptr );
+	const int nDestinationY = GetAIMap()->GetTile( movement->GetPath()->GetFinishPoint() ).y;
+	EXPECT_GE( nDestinationY, 35 );
+	EXPECT_LE( nDestinationY, 36 );
+	EXPECT_FALSE( gun->IsFiring() );
+	owner->SetCenter( CVec3( GetAIMap()->GetPointByTile( SVector( 32, 35 ) ), 0.0f ) );
+	attack->Segment();
+	EXPECT_TRUE( owner->IsIdle() );
+	EXPECT_TRUE( gun->IsFiring() );
+}
+
+TEST_F( TankBuildingAttack, ClosesForSightUntilAnAllySpotsTheBuilding )
+{
+	// Place the tank at maximum gun range before issuing the first movement order.
+	owner->SetCenter( CVec3( GetAIMap()->GetPointByTile( SVector( 32, 35 ) ), 0.0f ) );
+	ASSERT_FALSE( theWarFog.IsTileVisible( bunkerTile, nTankParty ) );
+	attack->Segment();
+	ASSERT_FALSE( owner->IsIdle() );
+	EXPECT_FALSE( gun->IsFiring() );
+
+	ASSERT_NO_FATAL_FAILURE( SpotBunker() );
+	attack->Segment();
+	EXPECT_TRUE( owner->IsIdle() );
+	EXPECT_TRUE( gun->IsFiring() );
+	EXPECT_EQ( owner->GetCenterTile(), SVector( 32, 35 ) );
+}
 
 class VehicleRocketSalvo : public AggressiveAttacker
 {

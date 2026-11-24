@@ -667,6 +667,9 @@ context. Read `git diff` of every touched file before building.
   asserting CanUnitGo. Omitting that refresh left the fixture's start passable
   and bypassed the failing fallback branch. Propagate helper assertion failures
   so a malformed fixture cannot continue into misleading path assertions.
+- On a bunker approach I assumed the tank would reach the static path's final
+  tile. CStandartPath2 uses the penultimate waypoint. Check the destination on
+  the unit's active movement path and whether the gun can fire from there.
 - Test helpers can gain different meanings for the same positional bool on each
   branch. In AggressiveAttacker, preserve entrenchment and command origin as
   independent inputs, and adapt incoming ReadFields calls to InspectFields.
@@ -717,3 +720,6 @@ context. Read `git diff` of every touched file before building.
 - Save the emitter's point-cache bake in the example .blend before checking
   byte-for-byte exports. An unbaked simulation gave slightly different positions
   when evaluated again after scrubbing, despite using the same emitter seed.
+- Keep optional Geometry Nodes examples in a sibling collection outside the
+  default effect. The exporter includes child collections, so a demonstration
+  point grouped with the smoke became a visible sprite in the game.

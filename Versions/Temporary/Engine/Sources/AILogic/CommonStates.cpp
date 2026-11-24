@@ -1098,39 +1098,60 @@ void CCommonAttackCommonStatObjState::FinishState()
 	GetUnit()->SetCommandFinished();
 }
 
-void CCommonAttackCommonStatObjState::AnalyzePosition()
+void CCommonAttackCommonStatObjState::AnalyzePosition( bool bPlanApproach )
 {
-	// объект в зоне огня
-	const CVec2 vUnitCenter = GetUnit()->GetCenterPlain();
-	if ( pGun->CanShootToPointWOMove( pObj->GetAttackCenter( vUnitCenter ), 0.0f ) )
+	CAIUnit *pUnit = GetUnit();
+	const bool bTankAttackingBuilding = pObj->GetObjectType() == ESOT_BUILDING && dynamic_cast<CTank *>( pUnit );
+	if ( !bPlanApproach && !bTankAttackingBuilding )
+	{
+		return;
+	}
+
+	const CVec2 vAttackPoint = pObj->GetAttackCenter( pUnit->GetCenterPlain() );
+	if ( pGun->CanShootToPointWOMove( vAttackPoint, 0.0f ) )
 	{
 		FireNow();
 		bAim = false;
+		return;
 	}
-	else if ( pGun->TooCloseToFire( CVec3( pObj->GetAttackCenter( vUnitCenter ), 0.0f ) ) )
+
+	// Recheck the shot while driving, but keep the current path until the tank can fire or reaches its destination.
+	if ( !bPlanApproach )
 	{
-		GetUnit()->SendAcknowledgement( ACK_NOT_IN_FIRE_RANGE );
+		return;
+	}
+	const CVec3 vTarget( vAttackPoint, 0.0f );
+	if ( pGun->TooCloseToFire( vTarget ) )
+	{
+		pUnit->SendAcknowledgement( ACK_NOT_IN_FIRE_RANGE );
 		FinishState();
 	}
 	else if ( bSwarmAttack || g_bAgressiveMovement )
 	{
-		if ( CPtr<IStaticPath> pStaticPath =
-		         CreateStaticPathForStObjAttack( GetUnit(),
-		                                         pObj,
-		                                         pGun->GetWeapon()->fRangeMin,
-		                                         (std::min)( pGun->GetFireRange( 0 ), GetUnit()->GetSightRadius() ),
-		                                         false ) )
+		float fRangeMax = pGun->GetFireRange( 0 );
+		if ( bTankAttackingBuilding && !pGun->InFireRange( vTarget ) )
 		{
-			if ( GetUnit()->GetCenterTile() != pStaticPath->GetFinishTile() )
+			// Movement can stop one waypoint short. Allow for a diagonal step and fire as soon as the gun is in range.
+			fRangeMax = (std::max)( pGun->GetWeapon()->fRangeMin, fRangeMax - FP_SQRT_2 * SConsts::TILE_SIZE );
+		}
+		else
+		{
+			// A direct-fire tank already in range may still need to close to see the target.
+			fRangeMax = (std::min)( fRangeMax, pUnit->GetSightRadius() );
+		}
+		if ( CPtr<IStaticPath> pStaticPath =
+		         CreateStaticPathForStObjAttack( pUnit, pObj, pGun->GetWeapon()->fRangeMin, fRangeMax, false ) )
+		{
+			if ( pUnit->GetCenterTile() != pStaticPath->GetFinishTile() )
 			{
 				bAim = true;
 			}
 
-			GetUnit()->SendAlongPath( pStaticPath, VNULL2, true );
+			pUnit->SendAlongPath( pStaticPath, VNULL2, true );
 		}
 		else
 		{
-			GetUnit()->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
+			pUnit->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
 			FinishState();
 		}
 	}
@@ -1138,15 +1159,12 @@ void CCommonAttackCommonStatObjState::AnalyzePosition()
 
 void CCommonAttackCommonStatObjState::AnalyzeShootingObj()
 {
-	if ( GetUnit()->IsIdle() )
+	const bool bIdle = GetUnit()->IsIdle();
+	if ( bIdle && GetUnit()->IsMech() )
 	{
-		if ( GetUnit()->IsMech() )
-		{
-			Analyze( GetUnit(), pGun );
-		}
-
-		AnalyzePosition();
+		Analyze( GetUnit(), pGun );
 	}
+	AnalyzePosition( bIdle );
 }
 
 bool CCommonAttackCommonStatObjState::AttackUnits( CStaticObject *pObj )
@@ -1252,7 +1270,7 @@ void CCommonAttackCommonStatObjState::Segment()
 			else
 			{
 				GetUnit()->Lock( pGun );
-				AnalyzePosition();
+				AnalyzePosition( true );
 			}
 		}
 		else
