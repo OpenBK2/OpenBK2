@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Net/NetAddress.h"
 #include "PeerConnectionRoute.h"
 
 class CNetPacket;
@@ -15,6 +16,11 @@ public:
 	virtual CNetPacket *GetPacket() = 0;
 
 	virtual bool IsAlive() const = 0;
+
+	virtual bool GetPeerAddress( NNet::CNodeAddress *address ) const
+	{
+		return false;
+	}
 
 	virtual EPeerConnectionRoute GetRoute() const
 	{

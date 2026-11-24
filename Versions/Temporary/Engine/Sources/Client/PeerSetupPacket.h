@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PeerConnectionRoute.h"
 #include "Server_Client_Common/NetPacket.h"
 
 #include <cstdint>
@@ -20,7 +21,10 @@ public:
 		ConfirmDirect,
 		ConfirmRelay,
 		RequestRecovery,
-		Identity
+		Identity,
+		SwitchRoute,
+		ConfirmRoute,
+		RejectRoute
 	};
 
 	int nGameID = 0;
@@ -29,6 +33,8 @@ public:
 	EAction eAction = BeginAttempt;
 	int nServerID = 0;
 	bool bRecovery = false;
+	uint32_t nRouteSerial = 0;
+	EPeerConnectionRoute route = EPeerConnectionRoute::Unknown;
 
 	CPeerSetupPacket() {}
 
@@ -49,6 +55,8 @@ public:
 		saver.Add( 5, &eAction );
 		saver.Add( 6, &nServerID );
 		saver.Add( 7, &bRecovery );
+		saver.Add( 8, &nRouteSerial );
+		saver.Add( 9, &route );
 		return 0;
 	}
 };

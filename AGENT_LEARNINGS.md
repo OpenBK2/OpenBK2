@@ -1,6 +1,14 @@
 
 # AGENT LEARNINGS
 
+- Mistake: a heartbeat on the reliable ordered game stream treated head-of-line
+  blocking as a dead UDP path. Probe reachability on the retained socket outside
+  that stream, measure relay end to end, and require sustained quality evidence
+  before changing routes. Keep the usable route while testing its replacement.
+  Also inspect nested timeouts: the old UDP login backoff stopped after roughly
+  six seconds despite a longer client attempt deadline. Continue login within
+  the same bounded attempt rather than silently shortening the user's timeout.
+
 - Reliable UDP alone cannot preserve a message stream across a route switch.
   Retain serialized application messages until cumulative acknowledgement,
   keep session sequence numbers across retries, and deduplicate received data.

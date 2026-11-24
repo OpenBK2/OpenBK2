@@ -27,6 +27,7 @@ public:
 	CSimpleConnection(
 			CNet *pNet, bool bAsClient, const int nClientServerID, const int nClientLocalID, const int nMyServerID );
 	bool IsAlive() const override;
+	bool GetPeerAddress( NNet::CNodeAddress *address ) const override;
 
 	CNet *GetNet() override
 	{
