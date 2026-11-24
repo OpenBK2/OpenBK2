@@ -1,6 +1,10 @@
 
 # AGENT LEARNINGS
 
+- The stream block wire format is a four-byte offset, a one-byte length and
+  that many payload bytes. Write those fields individually. GCC 13's
+  `-Warray-bounds=2` flagged the packed-struct copy in the redundant send path.
+
 - When adding redundant stream blocks, track the offsets carried by each physical
   datagram. Aliasing an old packet number to a newer bundle can let a late ACK
   commit unrelated, undelivered bytes. Retire mappings on packet-number reuse,

@@ -23,6 +23,14 @@ bool CStreamTracker::IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET t
 	return ( (CHANNEL_DATA_OFFSET)( test - border ) ) > 0x80000000;
 }
 
+void CStreamTracker::SChannelBlock::Write( CBitStream &bits ) const
+{
+	// Both original and redundant blocks carry only the offset, length and payload.
+	bits.Write( nOffset );
+	bits.Write( nLength );
+	bits.Write( cData, nLength );
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit )
 {
@@ -57,7 +65,7 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 			SChannelBlock block;
 			block.nOffset = nChannelOutputOffset;
 			block.nLength = 0;
-			pBits->Write( &block, block.GetSendSize() );
+			block.Write( *pBits );
 			return;
 		}
 		else
@@ -98,10 +106,10 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 	}
 	// send channel data
 	SChannelBlock &block = channelOutFlyList.back();
-	ASSERT( block.GetSendSize() <= nSizeLimit );
+	ASSERT( SChannelBlock::GetHeaderSize() + block.nLength <= nSizeLimit );
 	block.nPkt = nPkt;
 	transmissions[nPkt].push_back( block.nOffset );
-	pBits->Write( &block, block.GetSendSize() );
+	block.Write( *pBits );
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +153,7 @@ int CStreamTracker::WriteBundle( PACKET_ID nPkt, CBitStream *pBits, bool bAllowE
 		extra->bRepeated = true;
 		extra->nPkt = nPkt;
 		transmissions[nPkt].push_back( extra->nOffset );
-		pBits->Write( &*extra, extra->GetSendSize() );
+		extra->Write( *pBits );
 	}
 	return count;
 }
@@ -154,7 +162,8 @@ void CStreamTracker::ReadMsg( CBitStream &bits )
 {
 	// receive channel data
 	SChannelBlock block;
-	bits.Read( &block, block.GetHeaderSize() );
+	bits.Read( block.nOffset );
+	bits.Read( block.nLength );
 	bits.Read( block.cData, block.nLength );
 
 #ifdef LOG
