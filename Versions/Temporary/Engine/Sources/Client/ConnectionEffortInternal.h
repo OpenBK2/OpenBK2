@@ -53,7 +53,7 @@ class CSimpleClientEffort : public CConnectionEffort
 	int nOurGameID = 0;
 	uint32_t nSetupID = 0;
 	int nAttempt = 0;
-	int nAttemptLimit = 3;
+	int nAttemptLimit = 2;
 	bool bRecovery = false;
 
 	void StartPeerConnections();
@@ -71,8 +71,15 @@ public:
 	                     int nOurGameID = 0,
 	                     uint32_t nSetupID = 0 );
 
-	static constexpr uint32_t DIRECT_ATTEMPT_TIMEOUT = 5000;
-	static constexpr int DIRECT_ATTEMPTS = 3;
+	static constexpr uint32_t DIRECT_ATTEMPT_TIMEOUT = 15000;
+	static constexpr int DIRECT_ATTEMPTS = 2;
+	NNet::CGameLinksManager *GetLinks() const;
+
+	const std::vector<NNet::CNodeAddress> &GetPeerTargets() const
+	{
+		return peerTargets;
+	}
+
 	void StartNextPeerConnection();
 	void RetryEstablishedConnection();
 	void AcceptAttempt( const CPeerSetupPacket &packet );

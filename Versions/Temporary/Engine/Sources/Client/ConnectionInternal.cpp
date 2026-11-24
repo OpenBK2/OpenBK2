@@ -295,3 +295,8 @@ void CThroughServerConnection::TogglePauseNet( const bool bPause ) const
 {
 	pNet->DebugTogglePause( bPause );
 }
+
+bool CSimpleConnection::GetPeerAddress( NNet::CNodeAddress *address ) const
+{
+	return address->SetInetName( pNet->GetIP( nClientLocalID ).c_str(), pNet->GetPort( nClientLocalID ) );
+}

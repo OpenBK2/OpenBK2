@@ -8,7 +8,8 @@ add_unit_test(ClientConnectionRemoval MemoryLib Misc Net Server_Client_Common Sy
     ../ConnectServerProcessor.cpp
     ../LinksManager.cpp
     ../PlayGameProcessor.cpp
-    ../PeerSessions.cpp)
+    ../PeerSessions.cpp
+    ../PeerPaths.cpp)
 target_compile_definitions(ClientConnectionRemoval_test PRIVATE CLIENT_STATIC_DEFINE)
 if(WIN32)
     target_link_libraries(ClientConnectionRemoval_test PRIVATE winapi)

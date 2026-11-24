@@ -1,12 +1,12 @@
 # How clients communicate in a multiplayer match
 
-## Direct first, with server relay fallback (2026-11-23)
+## Direct first, with measured relay fallback (2026-11-24)
 
-Online pairs prefer direct UDP. When joining a room, each pair gets three direct
-attempts, each bounded at **5 seconds**, including the peer login, identity and
-connection test. After three failures the clients agree to use the server relay.
-If a local endpoint is available, attempts use local, public, then local; otherwise
-all three use the public endpoint. Pairs are independent: one player can use a
+Online pairs prefer direct UDP. When joining a room, each pair gets two direct
+attempts, each bounded at **15 seconds**, including the peer login, identity and
+connection test. After two failures the clients agree to use the server relay.
+If a local endpoint is available, attempts use local, then public; otherwise
+both use the public endpoint. Pairs are independent: one player can use a
 direct connection to one opponent and relay to another.
 
 The initiator still registers the retained peer socket with the server, and both
@@ -14,9 +14,9 @@ ends punch from their retained sockets. Bound local endpoints are exchanged befo
 login using `CClientGameConnectInfo` inside `CDirectPacketToClient`. This avoids a
 public-address hairpin when two instances run on one PC or a reachable LAN. Local
 address discovery has a one-second collection window. A normally responsive lobby
-therefore reaches relay after roughly 16 seconds of unsuccessful peer setup,
+therefore reaches relay after roughly 31 seconds of unsuccessful peer setup,
 plus relay testing and confirmation. Registration has its separate existing
-20-second allowance, route confirmation has 5 seconds, and a 45-second overall
+20-second allowance, route confirmation has 15 seconds, and a 70-second overall
 join bound prevents an indefinite joining screen. A failed join leaves the server
 room and emits `CConnectGameFailed`.
 
@@ -30,23 +30,56 @@ race where one client used direct transport while the other used relay.
 
 ### Recovery during a match
 
-An established direct connection gets **one direct retry**, bounded at 5 seconds,
-then switches to relay if that retry fails. The retry reuses the registered socket
-and last working endpoint, without another registration round. Either endpoint
-can request recovery; the original initiator remains the route-selection authority.
-A successful retry stays direct. After fallback, the pair stays on relay for the
-rest of that session.
+An established direct connection gets **one direct retry**, bounded at 15 seconds,
+then switches to a tested relay if that retry fails. The retry reuses the registered
+socket and a validated endpoint, without another registration round. Either
+endpoint can request recovery; the original initiator remains the route-selection
+authority. Relay is no longer permanent: a recovered direct path can be selected
+again, with relay continuing to carry commands during a background handshake.
 
-Transport failure triggers recovery. Session heartbeats run every second, and
-five seconds without incoming session traffic or acknowledgement progress also
-triggers it. A silent failure can therefore take about five seconds to detect,
-followed by up to five seconds for the direct retry, then relay negotiation.
-These are wall-clock network timers, not simulation segment sizes.
+### Path health and route selection
+
+Each pair probes both paths every two seconds. Direct probes are fixed-size UDP
+challenges on the retained peer socket, outside the reliable ordered game stream.
+They carry room/session IDs, a cookie exchanged through the authenticated lobby,
+and a nonce checked against outstanding probes. Unknown, duplicate and expired
+responses cannot produce RTT samples. The receiver limits responses and queue size.
+Relay probes travel client-server-other-client-server-client through the existing
+lobby forwarding envelope. They measure the entire relay path, not server ping.
+The lobby transport is reliable, so its late/missing probe results describe
+end-to-end deadline misses rather than raw network packet-loss percentage.
+
+Session heartbeats still run every second. A blocked game queue alone no longer
+means direct UDP has failed. Silence must persist for at least **15 seconds** on
+both session traffic and the independent direct checks before recovery starts;
+the measured RTT/jitter can extend this floor. Explicit transport closure also
+starts recovery. Detection plus the one direct retry can therefore take roughly
+30 seconds for a silent failure, followed by relay confirmation. These timers
+measure wall-clock time, not simulation segments.
+
+Quality decisions use smoothed RTT, jitter and missed probe deadlines, with at
+least five replies and fresh measurements from both clients. Relay must beat the
+direct score by 25% plus 100 ms; returning to direct requires a 10% plus 25 ms
+advantage. An advantage must persist for 10 seconds, and quality changes have a
+30-second cooldown. The score includes jitter and deadline misses, so it is not
+identical to the displayed room ping. A command stream without acknowledgement
+progress for 30 seconds can also justify testing a healthy alternative, subject
+to the hold/cooldown. Tiny probes succeeding does not prove command delivery works.
+
+Usable transports stay available during quality evaluation and route agreement.
+The initiator selects; the other client confirms or rejects an unavailable route.
+Both connections are drained during the overlap. A standby relay is tested when
+direct connects, and independent probes continue after fallback. Quality-based
+changes therefore avoid rebuilding a working direct connection. Actual direct
+failure still uses the one-retry rule above. If Clumsy impairs both paths similarly,
+the extra server hop will usually make relay less attractive. Internet routing can
+still make an indirect route faster; fewer hops alone is not a latency guarantee.
 
 Every ordinary game message is snapshotted, numbered and retained until a
 cumulative application acknowledgement arrives. Sequence numbers survive route
-changes. Recovery queues new outgoing messages, resends the unacknowledged suffix
-on the selected route, and delivers incoming messages in sequence exactly once.
+changes. Recovery queues outgoing messages when no usable route remains, resends
+the unacknowledged suffix on the selected route, and delivers incoming messages
+in sequence exactly once.
 Duplicate messages and acknowledgements from the old route cannot repeat commands.
 Recovery does not emit another `CNewGameClient` or reset player slots. The existing
 reliable UDP transport still handles ordinary packet retransmission on each route.
@@ -74,18 +107,24 @@ payloads without modification. On Windows the updated UI and protocol are in
 enumeration export is required by the local-address setup fix.
 
 For a live test, first check that a normal room shows Direct UDP. Block only peer
-UDP while leaving the lobby reachable: joining should try direct three times and
-then show Server relay. During a match, interrupt a direct pair and check for one
+UDP while leaving the lobby reachable: joining should try direct twice for
+15 seconds each and then show Server relay. During a match, interrupt a direct pair and check for one
 retry followed by relay, resumed command delivery, and no extra player/slot event.
+Remove the impairment and check for a measured return to Direct UDP. With shared
+500 ms delay and 10% loss, a responsive, faster direct path should stay selected.
 Also test a three-player room with mixed routes and a departure during recovery.
 Logs identify each endpoint attempt, recovery request and final selected route.
 
 Automated regression coverage uses real local UDP for registration, peer login,
 identity, connection testing and ping, with lobby introduction/forwarding modeled.
-It exercises local/public selection, three blocked joining attempts, one-sided
-setup, successful mid-match direct retry, blocked retry with relay recovery, and
-recovery requested by the accepting peer. Session tests cover retained messages,
-cumulative acknowledgements, stale session rejection, duplicates, ordering and
+It exercises local/public selection, two blocked joining attempts, one-sided
+setup, successful mid-match direct retry, blocked retry with relay recovery,
+recovery requested by the accepting peer, and returning from relay to direct.
+Real-socket tests also apply 500 ms delay with 10% datagram loss, pause the reliable
+stream for 20 seconds, and deliver new commands while a direct retry is pending.
+Path tests cover cookies/nonces, clock wrap, 15-second silence, independent probes,
+shared delay/loss, hysteresis and coordinated switching. Session tests cover
+retained messages, cumulative acknowledgements, stale session rejection, duplicates, ordering and
 mixed direct/relay routing. Existing departure and room-start tests remain relevant.
 Internet NAT traversal and live tooltip appearance require live game checks.
 

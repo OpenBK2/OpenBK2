@@ -9,6 +9,7 @@ set(SOURCES
     LinksManager.cpp
     PlayGameProcessor.cpp
     PeerSessions.cpp
+    PeerPaths.cpp
     ServerClient.cpp
     StdAfx.cpp
 )

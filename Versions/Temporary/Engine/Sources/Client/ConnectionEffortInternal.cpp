@@ -248,13 +248,13 @@ void CSimpleClientEffort::StartNextPeerConnection()
 	eSubState = EWAIT_ATTEMPT;
 	dwPeerAttemptStart = dwPredBreakThroughSend = GetCurrentTimeMilliseconds();
 	GetNetLogger()->Log( "client",
-	                     fmt::format( "direct peer {} attempt {}/{} trying {} (5000 ms)",
+	                     fmt::format( "direct peer {} attempt {}/{} trying {} (15000 ms)",
 	                                  nClientServerID,
 	                                  nAttempt,
 	                                  nAttemptLimit,
 	                                  address.GetFastName() ) );
 	// Wait for the other end to retire its previous tentative connection before
-	// sending a new UDP identity. Lobby delivery itself shares the five-second budget.
+	// sending a new UDP identity. Lobby delivery shares the 15-second budget.
 	CPtr<CPeerSetupPacket> begin = new CPeerSetupPacket( nOurGameID, nSetupID, nAttempt, CPeerSetupPacket::BeginAttempt );
 	begin->bRecovery = bRecovery;
 	pNet->SendPacket( new CDirectPacketToClient( 0, nClientServerID, begin ) );
@@ -263,12 +263,23 @@ void CSimpleClientEffort::StartNextPeerConnection()
 void CSimpleClientEffort::RetryEstablishedConnection()
 {
 	// Reuse the registered socket and the last working endpoint. Recovery gets
-	// one fresh five-second attempt, without repeating server registration.
+	// one fresh 15-second attempt, without repeating server registration.
 	bRecovery = true;
 	nAttemptLimit = nAttempt + 1;
 	if ( nNextPeerTarget != 0 )
 	{
 		--nNextPeerTarget;
+	}
+	NNet::CNodeAddress validated;
+	if ( pLinksManager->GetProbeAddress( nClientServerID, &validated ) )
+	{
+		// A restored NAT/local path can differ from the last failed login target.
+		const auto target = std::find( peerTargets.begin(), peerTargets.end(), validated );
+		nNextPeerTarget = static_cast<size_t>( target - peerTargets.begin() );
+		if ( target == peerTargets.end() )
+		{
+			peerTargets.push_back( validated );
+		}
 	}
 	StartNextPeerConnection();
 }
@@ -276,6 +287,11 @@ void CSimpleClientEffort::RetryEstablishedConnection()
 bool CSimpleClientEffort::IsAttemptExpired() const
 {
 	return nAttempt != 0 && GetCurrentTimeMilliseconds() - dwPeerAttemptStart >= DIRECT_ATTEMPT_TIMEOUT;
+}
+
+NNet::CGameLinksManager *CSimpleClientEffort::GetLinks() const
+{
+	return pLinksManager;
 }
 
 void CSimpleClientEffort::AcceptAttempt( const CPeerSetupPacket &packet )
@@ -299,6 +315,17 @@ void CSimpleClientEffort::ProcessConnectServerPacket( CConnectServerPacket *pPac
 {
 	if ( pPacket->eConnectionState == CConnectServerPacket::ECS_FAILED )
 	{
+		if ( eSubState == ECONNECT_CLIENT && pPacket->eRejectReason == CConnectServerPacket::ERR_LOGIN_TIMEOUT &&
+		     !IsAttemptExpired() )
+		{
+			// The legacy login backoff stops after about six seconds. Continue it
+			// on this socket/endpoint without consuming another coordinated attempt.
+			NNet::CNodeAddress address;
+			address.SetInetName( szClientIP.c_str(), nClientPort );
+			pConnet2PlayersNet->ConnectGame( address, CMemoryStream() );
+			pConnectServerProcessor = new CConnectServerProcessor( pConnet2PlayersNet, false );
+			return;
+		}
 		eState = ES_FAILED;
 	}
 	else

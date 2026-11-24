@@ -2,6 +2,7 @@
 
 #include "LinksManager.h"
 #include "PeerConnectionRoute.h"
+#include "PeerPathQuality.h"
 #include "PeerSetupPacket.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
@@ -45,6 +46,7 @@ class CPlayGameProcessor : public CPacketProcessor
 		std::string szIP;
 		int nPort = 0;
 		CPtr<class CSimpleClientEffort> pClientEffort;
+		CPtr<IConnection> pConnection;
 		std::list<CPtr<CNetPacket>> packets;
 	};
 
@@ -75,6 +77,21 @@ class CPlayGameProcessor : public CPacketProcessor
 		uint32_t dwLastHeartbeat = 0;
 		bool bAckPending = false;
 		bool bRecoveryRequested = false;
+		CPtr<IConnection> pStandby;
+		bool bStandbyReady = false;
+		SPeerPathQuality directQuality;
+		SPeerPathQuality relayQuality;
+		uint64_t probeCookie = 0;
+		uint64_t nextProbe = 0;
+		uint32_t lastProbe = 0;
+		uint32_t lastSwitch = 0;
+		uint32_t betterSince = 0;
+		bool bBetter = false;
+		uint32_t remoteReportTime = 0;
+		int remoteDirectScore = -1;
+		int remoteRelayScore = -1;
+		uint32_t routeSerial = 0;
+		EPeerConnectionRoute pendingRoute = EPeerConnectionRoute::Unknown;
 	};
 
 	std::map<int, SPeerSession> peerSessions;
@@ -86,6 +103,15 @@ class CPlayGameProcessor : public CPacketProcessor
 	void QueueSessionPacket( int nClientID, CNetPacket *pPacket );
 	void ReceiveSessionPacket( CNetPacket *pPacket );
 	void FlushSessionPackets( int nClientID );
+	std::vector<CPtr<IConnection>> GetConnections( int nClientID = -1 ) const;
+	NNet::CGameLinksManager *GetProbeLinks( const SPeerSession &session ) const;
+	void ConfigurePeerProbes( int nClientID );
+	void RemovePeerProbes( int nClientID );
+	void ProcessPeerProbe( int nClientID, const class CPeerPathProbePacket &packet );
+	void ProcessPeerPaths( int nClientID, uint32_t now );
+	void RequestRouteSwitch( int nClientID, EPeerConnectionRoute route );
+	void ProcessRouteSwitch( int nClientID, const CPeerSetupPacket &packet );
+	bool SwitchSessionRoute( int nClientID, EPeerConnectionRoute route );
 
 	typedef std::unordered_map<int, CPtr<CConnectionEffort>> TConnectionEfforts;
 	TConnectionEfforts connectionEfforts;

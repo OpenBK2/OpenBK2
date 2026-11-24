@@ -3,6 +3,7 @@
 #include "Client/ConnectionEffortInternal.h"
 #include "Client/ConnectionInternal.h"
 #include "Client/PeerGamePacket.h"
+#include "Client/PeerPathProbePacket.h"
 #include "Client/PlayGameProcessor.h"
 #include "GameX/MultiplayerNetPackets.h"
 #include "Net/NetLowest.h"
@@ -10,6 +11,7 @@
 #include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/NetSaver.h"
 
+#include <atomic>
 #include <chrono>
 #include <thread>
 
@@ -93,7 +95,7 @@ struct CPlayGameProcessorTestAccess
 		processor.dwJoinStartTime = GetCurrentTimeMilliseconds();
 		if ( expired )
 		{
-			processor.dwJoinStartTime -= 45001;
+			processor.dwJoinStartTime -= 70001;
 		}
 	}
 
@@ -127,7 +129,7 @@ struct CPlayGameProcessorTestAccess
 		{
 			return false;
 		}
-		setup->second.pClientEffort->dwPeerAttemptStart = GetCurrentTimeMilliseconds() - 5000;
+		setup->second.pClientEffort->dwPeerAttemptStart = GetCurrentTimeMilliseconds() - 15000;
 		processor.ProcessPeerSetups();
 		return true;
 	}
@@ -137,8 +139,34 @@ struct CPlayGameProcessorTestAccess
 	static void ExpireSession( CServerClient &client, int clientID )
 	{
 		auto &processor = *client.pPlayGameProcessor;
-		processor.peerSessions.at( clientID ).dwLastReceive = GetCurrentTimeMilliseconds() - 5000;
+		processor.peerSessions.at( clientID ).dwLastReceive = GetCurrentTimeMilliseconds() - 15000;
+		processor.peerSessions.at( clientID ).directQuality.lastReply = GetCurrentTimeMilliseconds() - 15000;
 		processor.ProcessPeerSessions();
+	}
+
+	static auto &Session( CServerClient &client, int clientID )
+	{
+		return client.pPlayGameProcessor->peerSessions.at( clientID );
+	}
+
+	static void CheckPaths( CServerClient &client, int clientID, uint32_t now )
+	{
+		client.pPlayGameProcessor->ProcessPeerPaths( clientID, now );
+	}
+
+	static bool HasSetup( CServerClient &client, int clientID )
+	{
+		return client.pPlayGameProcessor->peerSetups.count( clientID ) != 0;
+	}
+
+	static void ProcessRoute( CServerClient &client, int clientID, const CPeerSetupPacket &packet )
+	{
+		client.pPlayGameProcessor->ProcessPeerSetup( clientID, packet );
+	}
+
+	static void SelectRoute( CServerClient &client, int clientID, EPeerConnectionRoute route )
+	{
+		client.pPlayGameProcessor->RequestRouteSwitch( clientID, route );
 	}
 
 	static void InitSession( CServerClient &client, int clientID, IConnection *connection )
@@ -167,9 +195,10 @@ struct CPlayGameProcessorTestAccess
 		setup.bRecovery = recovery;
 		setup.bInitiator = true;
 		setup.nSetupID = 123;
-		setup.nAttempt = 3;
+		setup.nAttempt = 2;
 		setup.route = EPeerConnectionRoute::Relay;
-		setup.dwStartTime = GetCurrentTimeMilliseconds() - 5000;
+		setup.pConnection = processor.connections.at( clientID );
+		setup.dwStartTime = GetCurrentTimeMilliseconds() - 15000;
 		if ( !recovery )
 		{
 			MarkJoining( processor, clientID );
@@ -199,7 +228,7 @@ struct CPlayGameProcessorTestAccess
 
 	static bool HasConnection( const CPlayGameProcessor &processor, int clientID )
 	{
-		return processor.connections.find( clientID ) != processor.connections.end();
+		return !processor.GetConnections( clientID ).empty();
 	}
 
 	static void InitServerClient( CServerClient &client, NNet::IDriver *driver )
@@ -382,6 +411,13 @@ class CQueuedDirectConnection : public IConnection
 
 public:
 	std::list<CPtr<CNetPacket>> packets;
+	std::list<CPtr<CNetPacket>> sent;
+	EPeerConnectionRoute route = EPeerConnectionRoute::Direct;
+
+	EPeerConnectionRoute GetRoute() const override
+	{
+		return route;
+	}
 
 	bool IsAlive() const override
 	{
@@ -393,7 +429,10 @@ public:
 		return nullptr;
 	}
 
-	void SendGamePacket( CNetPacket * ) override {}
+	void SendGamePacket( CNetPacket *packet ) override
+	{
+		sent.push_back( packet );
+	}
 
 	bool ProcessPacketFromPlayersNet( CNetPacket * ) override
 	{
@@ -467,7 +506,259 @@ public:
 		return true;
 	}
 };
+
+// Delay/drop actual UDP datagrams after login, including the independent probes.
+class CImpairedGameLinks : public NNet::CGameLinksManager
+{
+	OBJECT_NOCOPY_METHODS( CImpairedGameLinks );
+
+	struct SPending
+	{
+		uint32_t sent;
+		NNet::CNodeAddress destination;
+		CMemoryStream bytes;
+	};
+
+	mutable std::mutex mutex;
+	mutable std::list<SPending> pending;
+	mutable unsigned ordinal = 0;
+
+public:
+	std::atomic<bool> impaired{ false };
+
+	bool Send( const NNet::CNodeAddress &destination, CMemoryStream &packet ) const override
+	{
+		std::lock_guard<std::mutex> lock( mutex );
+		if ( impaired )
+		{
+			if ( ++ordinal % 10 )
+			{
+				pending.push_back( { GetCurrentTimeMilliseconds(), destination, packet } );
+			}
+			return true;
+		}
+		return CGameLinksManager::Send( destination, packet );
+	}
+
+	bool Recv( NNet::CNodeAddress *source, CMemoryStream *packet ) const override
+	{
+		{
+			std::lock_guard<std::mutex> lock( mutex );
+			while ( !pending.empty() && GetCurrentTimeMilliseconds() - pending.front().sent >= 500 )
+			{
+				CGameLinksManager::Send( pending.front().destination, pending.front().bytes );
+				pending.pop_front();
+			}
+		}
+		return CGameLinksManager::Recv( source, packet );
+	}
+};
 } // namespace
+
+TEST( ClientPeerPaths, ProbeNonceTimeoutAndClockWrap )
+{
+	SPeerPathQuality quality;
+	quality.pending[11] = 0xfffffff0u;
+	EXPECT_FALSE( quality.Reply( 12, 20 ) );
+	EXPECT_TRUE( quality.Reply( 11, 20 ) );
+	EXPECT_FLOAT_EQ( quality.rtt, 36 );
+	EXPECT_FALSE( quality.Reply( 11, 21 ) );
+	EXPECT_EQ( quality.SilenceTimeout(), 15000u );
+	quality.pending[13] = 100;
+	quality.Expire( 15099 );
+	EXPECT_EQ( quality.pending.size(), 1u );
+	quality.Expire( 15100 );
+	EXPECT_TRUE( quality.pending.empty() );
+	EXPECT_FALSE( quality.results.back() );
+	EXPECT_FALSE( quality.Reply( 13, 15101 ) );
+	EXPECT_EQ( quality.Score( 15101 ), -1 );
+}
+
+TEST( ClientPeerPaths, SharedDelayAndTenPercentLossKeepTheFasterDirectPath )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitSession( client, hostID, new CQueuedDirectConnection() );
+	auto &session = CPlayGameProcessorTestAccess::Session( client, hostID );
+	session.bInitiator = true;
+	const uint32_t start = GetCurrentTimeMilliseconds();
+	session.lastSwitch = start;
+	for ( uint64_t sample = 1; sample <= 50; ++sample )
+	{
+		const uint32_t now = start + static_cast<uint32_t>( sample * 2000 );
+		session.directQuality.pending[sample] = now - 1000;
+		session.relayQuality.pending[sample] = now - 1500;
+		if ( sample % 10 )
+		{
+			session.directQuality.Reply( sample, now );
+			session.relayQuality.Reply( sample, now );
+		}
+		session.dwLastReceive = now;
+		session.remoteReportTime = now;
+		session.remoteDirectScore = session.directQuality.Score( now );
+		session.remoteRelayScore = session.relayQuality.Score( now );
+		CPlayGameProcessorTestAccess::CheckPaths( client, hostID, now );
+		EXPECT_EQ( session.pendingRoute, EPeerConnectionRoute::Unknown );
+		EXPECT_FALSE( session.bRecoveryRequested );
+	}
+	EXPECT_EQ( client.GetPeerRoute( hostID ), EPeerConnectionRoute::Direct );
+}
+
+TEST( ClientPeerPaths, OrderedQueueStallDoesNotMeanDirectPathFailure )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitSession( client, hostID, new CQueuedDirectConnection() );
+	auto &session = CPlayGameProcessorTestAccess::Session( client, hostID );
+	const uint32_t now = GetCurrentTimeMilliseconds();
+	session.dwLastReceive = session.dwLastAckProgress = now - 20000;
+	session.pendingSend[1] = { 'x' };
+	session.directQuality.replies = 10;
+	session.directQuality.lastReply = now - 500;
+	CPlayGameProcessorTestAccess::CheckPaths( client, hostID, now );
+	EXPECT_FALSE( session.bRecoveryRequested );
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasSetup( client, hostID ) );
+	EXPECT_TRUE( lobby->sent.empty() );
+	// A truly silent direct path is suspect only at the 15-second floor.
+	session.dwLastReceive = session.directQuality.lastReply = now - 14999;
+	CPlayGameProcessorTestAccess::CheckPaths( client, hostID, now );
+	EXPECT_FALSE( session.bRecoveryRequested );
+	CPlayGameProcessorTestAccess::CheckPaths( client, hostID, now + 1 );
+	EXPECT_TRUE( session.bRecoveryRequested );
+	ASSERT_EQ( lobby->sent.size(), 2u );
+}
+
+TEST( ClientPeerPaths, QualitySelectionRequiresSustainedAdvantageAndCooldown )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitSession( client, hostID, new CQueuedDirectConnection() );
+	auto &session = CPlayGameProcessorTestAccess::Session( client, hostID );
+	session.bInitiator = true;
+	CPtr<CQueuedDirectConnection> relay = new CQueuedDirectConnection();
+	relay->route = EPeerConnectionRoute::Relay;
+	session.pStandby = relay;
+	session.bStandbyReady = true;
+	const uint32_t start = GetCurrentTimeMilliseconds();
+	session.lastSwitch = start;
+	for ( unsigned elapsed : { 20000u, 30000u, 39999u, 40000u } )
+	{
+		const uint32_t now = start + elapsed;
+		for ( auto *quality : { &session.directQuality, &session.relayQuality } )
+		{
+			quality->replies = 10;
+			quality->lastReply = now;
+			quality->results.assign( 10, true );
+		}
+		session.directQuality.rtt = 1000;
+		session.relayQuality.rtt = 100;
+		session.dwLastReceive = now;
+		session.remoteReportTime = now;
+		session.remoteDirectScore = 1000;
+		session.remoteRelayScore = 100;
+		CPlayGameProcessorTestAccess::CheckPaths( client, hostID, now );
+		EXPECT_EQ( session.pendingRoute, elapsed == 40000 ? EPeerConnectionRoute::Relay : EPeerConnectionRoute::Unknown );
+		EXPECT_EQ( client.GetPeerRoute( hostID ), EPeerConnectionRoute::Direct );
+	}
+	ASSERT_EQ( lobby->sent.size(), 1u );
+}
+
+TEST( ClientPeerPaths, BothRoutesAreDrainedAcrossCoordinatedSwitchAndReturn )
+{
+	CPtr<CRecordingDriver> leftLobby = new CRecordingDriver(), rightLobby = new CRecordingDriver();
+	CServerClient left, right;
+	CPlayGameProcessorTestAccess::InitServerClient( left, leftLobby );
+	CPlayGameProcessorTestAccess::InitServerClient( right, rightLobby );
+	CPtr<CQueuedDirectConnection> leftDirect = new CQueuedDirectConnection(), rightDirect = new CQueuedDirectConnection();
+	CPtr<CQueuedDirectConnection> leftRelay = new CQueuedDirectConnection(), rightRelay = new CQueuedDirectConnection();
+	leftRelay->route = rightRelay->route = EPeerConnectionRoute::Relay;
+	CPlayGameProcessorTestAccess::InitSession( left, hostID, leftDirect );
+	CPlayGameProcessorTestAccess::InitSession( right, teammateID, rightDirect );
+	auto &leftSession = CPlayGameProcessorTestAccess::Session( left, hostID );
+	auto &rightSession = CPlayGameProcessorTestAccess::Session( right, teammateID );
+	leftSession.bInitiator = true;
+	leftSession.nAttempt = rightSession.nAttempt = 1;
+	leftSession.pStandby = leftRelay;
+	rightSession.pStandby = rightRelay;
+	leftSession.bStandbyReady = rightSession.bStandbyReady = true;
+	left.SendGamePacket( new CPingPacket( hostID, 2, 1000 ), false );
+	ASSERT_EQ( leftDirect->sent.size(), 1u );
+	for ( const auto target : { EPeerConnectionRoute::Relay, EPeerConnectionRoute::Direct } )
+	{
+		CPlayGameProcessorTestAccess::SelectRoute( left, hostID, target );
+		CPtr<CNetPacket> envelope = Deserialize( leftLobby->sent.back() );
+		auto *request = dynamic_cast<CPeerSetupPacket *>(
+				dynamic_cast<CDirectPacketToClient *>( envelope.GetPtr() )->pPacket.GetPtr() );
+		ASSERT_NE( request, nullptr );
+		CPlayGameProcessorTestAccess::ProcessRoute( right, teammateID, *request );
+		EXPECT_EQ( right.GetPeerRoute( teammateID ), target );
+		CPtr<CNetPacket> response = Deserialize( rightLobby->sent.back() );
+		auto *confirmation = dynamic_cast<CPeerSetupPacket *>(
+				dynamic_cast<CDirectPacketToClient *>( response.GetPtr() )->pPacket.GetPtr() );
+		ASSERT_NE( confirmation, nullptr );
+		CPlayGameProcessorTestAccess::ProcessRoute( left, hostID, *confirmation );
+		EXPECT_EQ( left.GetPeerRoute( hostID ), target );
+	}
+	EXPECT_EQ( leftRelay->sent.size(), 1u );
+	EXPECT_EQ( leftDirect->sent.size(), 2u );
+	rightDirect->packets.push_back( SessionMessage( teammateID, 1, 1000 ) );
+	rightRelay->packets.push_back( SessionMessage( teammateID, 1, 1000 ) );
+	rightRelay->packets.push_back( SessionMessage( teammateID, 2, 2000 ) );
+	right.Segment();
+	for ( int timestamp : { 1000, 2000 } )
+	{
+		CPtr<CNetPacket> packet = right.GetPacket();
+		auto *ping = dynamic_cast<CPingPacket *>( packet.GetPtr() );
+		ASSERT_NE( ping, nullptr );
+		EXPECT_EQ( ping->nSendTime, timestamp );
+	}
+	EXPECT_EQ( right.GetPacket(), nullptr );
+	CPeerSetupPacket stale( 968, 123, 1, CPeerSetupPacket::ConfirmRoute );
+	stale.nRouteSerial = 1;
+	stale.route = EPeerConnectionRoute::Relay;
+	CPlayGameProcessorTestAccess::ProcessRoute( left, hostID, stale );
+	EXPECT_EQ( left.GetPeerRoute( hostID ), EPeerConnectionRoute::Direct );
+}
+
+TEST( ClientPeerPaths, RawProbesValidateCookiesAndWorkWithoutAReliableGameStream )
+{
+	CPtr<NNet::CGameLinksManager> left = new NNet::CGameLinksManager(), right = new NNet::CGameLinksManager();
+	ASSERT_TRUE( left->Init( 0 ) );
+	ASSERT_TRUE( right->Init( 0 ) );
+	NNet::CNodeAddressSet addresses;
+	NNet::CNodeAddress leftAddress, rightAddress;
+	ASSERT_TRUE( left->GetSelfAddress( &addresses ) );
+	ASSERT_TRUE( addresses.GetAddress( 0, &leftAddress ) );
+	ASSERT_TRUE( right->GetSelfAddress( &addresses ) );
+	ASSERT_TRUE( addresses.GetAddress( 0, &rightAddress ) );
+	left->ConfigureProbe( hostID, teammateID, 968, 123, 111, { rightAddress } );
+	right->ConfigureProbe( teammateID, hostID, 968, 123, 222, { leftAddress } );
+	right->SetRemoteCookie( teammateID, 111 );
+	left->SetRemoteCookie( hostID, 999 );
+	left->SendProbe( hostID, 10 );
+	std::vector<std::pair<uint64_t, uint32_t>> replies;
+	for ( unsigned i = 0; i < 200 && replies.empty(); ++i )
+	{
+		if ( i == 20 )
+		{
+			left->SetRemoteCookie( hostID, 222 );
+			left->SendProbe( hostID, 11 );
+		}
+		CMemoryStream packet;
+		NNet::CNodeAddress source;
+		EXPECT_FALSE( right->Recv( &source, &packet ) );
+		EXPECT_FALSE( left->Recv( &source, &packet ) );
+		replies = left->TakeProbeReplies( hostID );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+	}
+	ASSERT_EQ( replies.size(), 1u );
+	EXPECT_EQ( replies[0].first, 11u );
+	EXPECT_TRUE( right->GetProbeAddress( teammateID, &rightAddress ) );
+	EXPECT_EQ( rightAddress, leftAddress );
+}
 
 TEST( ClientDirectConnections, RegistrationAdvertisesTheRetainedPeerSocket )
 {
@@ -628,7 +919,7 @@ static void CheckSocketHandshake( bool bPublicReachable,
 	// Real UDP sockets, drivers, registration, identity and connection-test
 	// packets. Only the lobby's authenticated introduction/forwarding is modeled.
 	CPtr<NNet::CGameLinksManager> serverLinks = new NNet::CGameLinksManager();
-	CPtr<NNet::CGameLinksManager> hostLinks = new NNet::CGameLinksManager();
+	CPtr<CImpairedGameLinks> hostLinks = new CImpairedGameLinks();
 	CPtr<NNet::CGameLinksManager> unreachableLinks = new NNet::CGameLinksManager();
 	ASSERT_TRUE( serverLinks->Init( 0 ) );
 	ASSERT_TRUE( hostLinks->Init( 0 ) );
@@ -671,12 +962,61 @@ static void CheckSocketHandshake( bool bPublicReachable,
 	bool recoveryStarted = false;
 	int attemptsBeforeRecovery = 0;
 	std::vector<int> recoveryDelivered, recoveryEchoed;
+	bool restoringDirect = false;
+	bool returnedDirect = false;
+	bool sentDuringRecovery = false;
+	bool deliveredDuringRecovery = false;
+	uint32_t impairmentStart = 0;
+	bool impairmentFinished = false;
+
+	struct SDelayedProbe
+	{
+		uint32_t sent;
+		uint32_t delay;
+		CRecordingDriver *target;
+		CMemoryStream bytes;
+	};
+
+	std::list<SDelayedProbe> delayedProbes;
+	const auto forwardControl = [&]( CRecordingDriver *target, CDirectPacketToClient *packet )
+	{
+		auto *setup = dynamic_cast<CPeerSetupPacket *>( packet->pPacket.GetPtr() );
+		if ( recoveryMode == 4 && setup && setup->eAction == CPeerSetupPacket::BeginAttempt && setup->nAttempt == 3 )
+		{
+			// Hold the direct handshake while asserting relay still delivers new commands.
+			delayedProbes.push_back( { GetCurrentTimeMilliseconds(), 2000, target, Serialize( packet ) } );
+		}
+		else if ( ( recoveryMode == 4 || recoveryMode == 6 ) &&
+		          dynamic_cast<CPeerPathProbePacket *>( packet->pPacket.GetPtr() ) )
+		{
+			// A slower, reachable relay makes returning to direct worth evaluating.
+			delayedProbes.push_back(
+					{ GetCurrentTimeMilliseconds(), recoveryMode == 6 ? 750u : 100u, target, Serialize( packet ) } );
+		}
+		else
+		{
+			target->received.push_back( Serialize( packet ) );
+		}
+	};
 	const bool expectRelay = !bPublicReachable && !( bLocalReachable && bForwardOffers );
 	const auto startTime = std::chrono::steady_clock::now();
-	const auto deadline = startTime + std::chrono::seconds( 22 );
-	while ( ( !receivedEcho || ( recoveryMode != 0 && recoveryEchoed.size() < 2 ) ) &&
+	const auto deadline = startTime + std::chrono::seconds( recoveryMode == 4 || recoveryMode == 6 ? 65 : 42 );
+	while ( ( !receivedEcho || ( recoveryMode != 0 && recoveryEchoed.size() < 2 ) ||
+	          ( recoveryMode == 4 && !returnedDirect ) || ( recoveryMode >= 5 && !impairmentFinished ) ) &&
 	        std::chrono::steady_clock::now() < deadline )
 	{
+		for ( auto it = delayedProbes.begin(); it != delayedProbes.end(); )
+		{
+			if ( GetCurrentTimeMilliseconds() - it->sent >= it->delay )
+			{
+				it->target->received.push_back( it->bytes );
+				it = delayedProbes.erase( it );
+			}
+			else
+			{
+				++it;
+			}
+		}
 		joining.Segment();
 		host.Segment();
 		if ( bExpireTentative && !expiredTentative )
@@ -706,12 +1046,12 @@ static void CheckSocketHandshake( bool bPublicReachable,
 				}
 				envelope->nClientID = teammateID;
 				std::swap( envelope->nClient, envelope->nClientID );
-				hostLobby->received.push_back( Serialize( envelope ) );
+				forwardControl( hostLobby, envelope );
 				continue;
 			}
 			if ( auto *relay = dynamic_cast<CThroughServerGamePacket *>( packet.GetPtr() ) )
 			{
-				++relayGamePackets;
+				relayGamePackets += dynamic_cast<CPeerGamePacket *>( relay->pGamePacket.GetPtr() ) != nullptr;
 				relay->nClientID = teammateID;
 				std::swap( relay->nClient, relay->nClientID );
 				hostLobby->received.push_back( Serialize( relay ) );
@@ -734,7 +1074,7 @@ static void CheckSocketHandshake( bool bPublicReachable,
 			CPtr<CNetPacket> packet = Deserialize( stream );
 			if ( auto *relay = dynamic_cast<CThroughServerGamePacket *>( packet.GetPtr() ) )
 			{
-				++relayGamePackets;
+				relayGamePackets += dynamic_cast<CPeerGamePacket *>( relay->pGamePacket.GetPtr() ) != nullptr;
 				relay->nClientID = hostID;
 				std::swap( relay->nClient, relay->nClientID );
 				joiningLobby->received.push_back( Serialize( relay ) );
@@ -757,7 +1097,7 @@ static void CheckSocketHandshake( bool bPublicReachable,
 			std::swap( envelope->nClient, envelope->nClientID );
 			if ( !offer || bForwardOffers )
 			{
-				joiningLobby->received.push_back( Serialize( envelope ) );
+				forwardControl( joiningLobby, envelope );
 				if ( offer )
 				{
 					++offersForwarded;
@@ -775,7 +1115,7 @@ static void CheckSocketHandshake( bool bPublicReachable,
 			}
 			if ( auto *ping = dynamic_cast<CPingPacket *>( packet.GetPtr() ) )
 			{
-				if ( ping->nSendTime != 5678 )
+				if ( ping->nSendTime != 5678 && ping->nSendTime != 8901 )
 				{
 					recoveryDelivered.push_back( ping->nSendTime );
 				}
@@ -798,6 +1138,11 @@ static void CheckSocketHandshake( bool bPublicReachable,
 					EXPECT_FALSE( receivedEcho );
 					receivedEcho = true;
 				}
+				else if ( ping->nSendTime == 8901 )
+				{
+					deliveredDuringRecovery = CPlayGameProcessorTestAccess::HasSetup( joining, hostID );
+					EXPECT_EQ( joining.GetPeerRoute( hostID ), EPeerConnectionRoute::Relay );
+				}
 				else
 				{
 					recoveryEchoed.push_back( ping->nSendTime );
@@ -814,10 +1159,11 @@ static void CheckSocketHandshake( bool bPublicReachable,
 		{
 			recoveryStarted = true;
 			attemptsBeforeRecovery = attempts;
+			impairmentStart = GetCurrentTimeMilliseconds();
 			// Pause the failed transport. A fresh direct driver can recover in mode 1;
 			// pausing the accepting socket also blocks that one retry in modes 2/3.
-			joining.TogglePauseConnectGamer( hostID, true );
-			if ( recoveryMode >= 2 )
+			joining.TogglePauseConnectGamer( hostID, recoveryMode != 6 );
+			if ( recoveryMode >= 2 && recoveryMode <= 4 )
 			{
 				host.TogglePauseAcceptGamers( true );
 			}
@@ -825,9 +1171,13 @@ static void CheckSocketHandshake( bool bPublicReachable,
 			{
 				CPlayGameProcessorTestAccess::ExpireSession( host, teammateID );
 			}
-			else
+			else if ( recoveryMode < 5 )
 			{
 				CPlayGameProcessorTestAccess::ExpireSession( joining, hostID );
+			}
+			if ( recoveryMode == 6 )
+			{
+				hostLinks->impaired = true;
 			}
 			CPtr<CPingPacket> queued = new CPingPacket( hostID, 2, 6789 );
 			joining.SendGamePacket( queued, false );
@@ -835,27 +1185,60 @@ static void CheckSocketHandshake( bool bPublicReachable,
 			queued->nSendTime = 7890;
 			joining.SendGamePacket( queued, false );
 		}
+		if ( recoveryStarted && recoveryMode >= 5 )
+		{
+			EXPECT_EQ( joining.GetPeerRoute( hostID ), EPeerConnectionRoute::Direct );
+			EXPECT_EQ( host.GetPeerRoute( teammateID ), EPeerConnectionRoute::Direct );
+			if ( GetCurrentTimeMilliseconds() - impairmentStart >= ( recoveryMode == 5 ? 20000u : 45000u ) )
+			{
+				impairmentFinished = true;
+				joining.TogglePauseConnectGamer( hostID, false );
+			}
+		}
+		if ( recoveryMode == 4 && recoveryEchoed.size() == 2 && !restoringDirect &&
+		     joining.GetPeerRoute( hostID ) == EPeerConnectionRoute::Relay &&
+		     host.GetPeerRoute( teammateID ) == EPeerConnectionRoute::Relay )
+		{
+			restoringDirect = true;
+			host.TogglePauseAcceptGamers( false );
+			CPlayGameProcessorTestAccess::Session( joining, hostID ).lastSwitch -= 30000;
+		}
+		if ( restoringDirect && joining.GetPeerRoute( hostID ) == EPeerConnectionRoute::Direct &&
+		     host.GetPeerRoute( teammateID ) == EPeerConnectionRoute::Direct )
+		{
+			returnedDirect = true;
+		}
+		if ( restoringDirect && !sentDuringRecovery && CPlayGameProcessorTestAccess::HasSetup( joining, hostID ) )
+		{
+			sentDuringRecovery = true;
+			joining.SendGamePacket( new CPingPacket( hostID, 2, 8901 ), false );
+		}
 		std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
 	}
 	EXPECT_EQ( offersForwarded > 0, bForwardOffers );
 	EXPECT_TRUE( hostConnected );
 	EXPECT_TRUE( joiningConnected );
 	EXPECT_TRUE( receivedEcho );
-	const bool finalRelay = expectRelay || recoveryMode >= 2;
+	const bool finalRelay = expectRelay || recoveryMode == 2 || recoveryMode == 3;
 	EXPECT_EQ( joining.GetPeerRoute( hostID ), finalRelay ? EPeerConnectionRoute::Relay : EPeerConnectionRoute::Direct );
 	EXPECT_EQ( host.GetPeerRoute( teammateID ), joining.GetPeerRoute( hostID ) );
-	EXPECT_EQ( relayGamePackets > 0, finalRelay );
+	EXPECT_EQ( relayGamePackets > 0, finalRelay || recoveryMode == 4 );
 	EXPECT_EQ( expiredTentative, bExpireTentative );
 	if ( expectRelay )
 	{
-		EXPECT_EQ( attempts, 3 );
-		EXPECT_GE( std::chrono::steady_clock::now() - startTime, std::chrono::seconds( 15 ) );
+		EXPECT_EQ( attempts, 2 );
+		EXPECT_GE( std::chrono::steady_clock::now() - startTime, std::chrono::seconds( 30 ) );
 	}
 	if ( recoveryMode != 0 )
 	{
-		EXPECT_EQ( attempts, attemptsBeforeRecovery + 1 );
+		EXPECT_EQ( attempts, attemptsBeforeRecovery + ( recoveryMode >= 5 ? 0 : ( recoveryMode == 4 ? 2 : 1 ) ) );
 		EXPECT_EQ( recoveryDelivered, ( std::vector<int>{ 6789, 7890 } ) );
 		EXPECT_EQ( recoveryEchoed, recoveryDelivered );
+	}
+	if ( recoveryMode == 4 )
+	{
+		EXPECT_TRUE( returnedDirect );
+		EXPECT_TRUE( deliveredDuringRecovery );
 	}
 }
 
@@ -874,7 +1257,7 @@ TEST( ClientDirectConnections, CompleteSocketHandshakeWorksWithoutLocalOffers )
 	CheckSocketHandshake( true, false, false );
 }
 
-TEST( ClientDirectConnections, ThreeBlockedDirectAttemptsFallBackToRelayAndPing )
+TEST( ClientDirectConnections, TwoBlockedDirectAttemptsFallBackToRelayAndPing )
 {
 	CheckSocketHandshake( false, false, true );
 }
@@ -897,6 +1280,21 @@ TEST( ClientPeerRecovery, EstablishedConnectionFallsBackToRelayAfterOneBlockedDi
 TEST( ClientPeerRecovery, AcceptingPeerCanRequestRecoveryWithoutChoosingAConflictingRoute )
 {
 	CheckSocketHandshake( true, true, true, false, 3 );
+}
+
+TEST( ClientPeerPaths, RealSocketDirectRetryFailsThenRelayReturnsToDirectWhenPathRecovers )
+{
+	CheckSocketHandshake( true, true, true, false, 4 );
+}
+
+TEST( ClientPeerPaths, RealSocketOrderedStreamPauseKeepsResponsiveDirectRoute )
+{
+	CheckSocketHandshake( true, true, true, false, 5 );
+}
+
+TEST( ClientPeerPaths, RealSocketFiveHundredMillisecondsAndTenPercentLossKeepDirectRoute )
+{
+	CheckSocketHandshake( true, true, true, false, 6 );
 }
 
 TEST( ClientDirectConnections, EarlyPeerPacketsAreDeliveredInOrderOnConnectionInstallation )
