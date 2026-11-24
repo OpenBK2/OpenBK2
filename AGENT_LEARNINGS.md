@@ -1,6 +1,13 @@
 
 # AGENT LEARNINGS
 
+- Exercise departure with the final sequenced frame still in the shared accepting
+  driver. A fixture that starts at the individual connection queue skips the
+  ordering race with the lobby. During a route change, test each direction of
+  the connection test independently and delay the lobby confirmation past the
+  attempt deadline. The accepting peer may already have sent its first room
+  update while the joining peer still needs to retry.
+
 - The stream block wire format is a four-byte offset, a one-byte length and
   that many payload bytes. Write those fields individually. GCC 13's
   `-Warray-bounds=2` flagged the packed-struct copy in the redundant send path.

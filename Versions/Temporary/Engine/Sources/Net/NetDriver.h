@@ -9,6 +9,9 @@ class CNodeAddressSet;
 
 typedef unsigned int APPLICATION_ID;
 
+// The long transport frame header stores twice its size in a positive int32.
+constexpr int N_MAX_FRAME_SIZE = 0x3fffffff;
+
 struct SNetDriverConsts
 {
 	// время, после которого drop клиента
@@ -188,6 +191,12 @@ struct IDriver : public CObjectBase
 	// Direct peers opt in after advertising receive support during identity exchange.
 	// Default keeps other driver implementations and legacy lobby links unchanged.
 	virtual void SetPeerTransport( int nClientID, bool bReceiveBundles, bool bSendBundles ) {}
+
+	// Drivers with addressable peers can return the current IP and port in one snapshot.
+	virtual bool TryGetPeerAddress( int nClientID, CNodeAddress *pAddress ) const
+	{
+		return false;
+	}
 };
 
 NET_EXPORT IDriver *CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );

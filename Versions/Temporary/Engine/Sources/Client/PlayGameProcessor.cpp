@@ -125,12 +125,16 @@ bool CPlayGameProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket )
 
 bool CPlayGameProcessor::ProcessClientWantToConnect( CClientWantToConnect *pPacket )
 {
-	if ( connections.find( pPacket->nWantedClient ) != connections.end() ||
-	     peerSetups.find( pPacket->nWantedClient ) != peerSetups.end() )
+	const int nClientID = pPacket->nWantedClient;
+	if ( pPacket->nClientID != 0 || connections.count( nClientID ) || peerSessions.count( nClientID ) ||
+	     joiningPeers.count( nClientID ) )
 	{
 		return true;
 	}
-	SPeerSetup &setup = peerSetups[pPacket->nWantedClient];
+	// A player can cancel before its old tentative setup subscribed to departure. The lobby orders the
+	// new introduction after that player's old setup controls, even when the persistent client ID is reused.
+	connectionEfforts.erase( nClientID );
+	SPeerSetup &setup = peerSetups.insert_or_assign( nClientID, SPeerSetup() ).first->second;
 	setup.szIP = pPacket->szIP;
 	setup.nPort = pPacket->nPort;
 	setup.dwStartTime = GetCurrentTimeMilliseconds();
@@ -176,52 +180,60 @@ void CPlayGameProcessor::ProcessConnectServerProcessor()
 	}
 }
 
-void CPlayGameProcessor::ProcessAcceptingGamersPackets()
+void CPlayGameProcessor::DispatchAcceptingGamersPackets()
 {
-	if ( pAcceptGamersNet )
+	while ( pAcceptGamersNet )
 	{
-		while ( CPtr<CNetPacket> pPacket = pAcceptGamersNet->ReceivePacket() )
+		CPtr<CNetPacket> pPacket = pAcceptGamersNet->ReceivePacket();
+		if ( !pPacket )
 		{
-			GetNetLogger()->Log( "client", fmt::format( "receive acceptgamers net {}", GetPacketInfo( pPacket ) ) );
-			// wait for pAcceptGamersNet packet processed
-			bool bProcessed = ProcessPacket( pPacket );
+			break;
+		}
+		GetNetLogger()->Log( "client", fmt::format( "receive acceptgamers net {}", GetPacketInfo( pPacket ) ) );
+		// Only the registration server uses ID zero. Accepted peers have their
+		// own physical IDs and cannot dispatch lobby events during a departure drain.
+		bool bProcessed = pPacket->nClientID == 0 && ProcessPacket( pPacket );
+		if ( !bProcessed && pConnectServerProcessor )
+		{
+			bProcessed = pConnectServerProcessor->ProcessPacket( pPacket );
+		}
 
-			if ( pConnectServerProcessor )
+		for ( const auto &entry : connectionEfforts )
+		{
+			if ( bProcessed )
 			{
-				bProcessed = pConnectServerProcessor->ProcessPacket( pPacket );
+				break;
 			}
+			bProcessed = entry.second->ProcessPacket( pPacket );
+		}
 
-			TConnectionEfforts::iterator eff_iter = connectionEfforts.begin();
-			while ( !bProcessed && eff_iter != connectionEfforts.end() )
-			{
-				CConnectionEffort *pEffort = eff_iter->second;
-				bProcessed = pEffort->ProcessPacket( pPacket );
-				++eff_iter;
-			}
-
+		if ( !bProcessed )
+		{
 			for ( const auto &connection : GetConnections() )
 			{
-				IConnection *pConnection = connection;
-				if ( !bProcessed && pConnection->GetNet() == pAcceptGamersNet )
+				if ( connection->GetNet() == pAcceptGamersNet && connection->ProcessPacketFromPlayersNet( pPacket ) )
 				{
-					if ( pConnection->ProcessPacketFromPlayersNet( pPacket ) )
-					{
-						bProcessed = true;
-					}
+					bProcessed = true;
+					break;
 				}
 			}
-
-			// some new client, we didn't start accepting packets from him yet
-			if ( !bProcessed && pPacket->nClientID != 0 )
-			{
-				waitingPackets.push_back( SWaitingPacket( pPacket, GetCurrentTimeMilliseconds() ) );
-			}
+		}
+		// Identity and the first game packet can arrive before a connection is installed.
+		if ( !bProcessed && pPacket->nClientID != 0 )
+		{
+			waitingPackets.emplace_back( pPacket, GetCurrentTimeMilliseconds() );
 		}
 	}
+}
 
-	for ( const auto &connection : GetConnections() )
+void CPlayGameProcessor::DrainDepartingConnections( int nClientID )
+{
+	// The lobby can report departure before this frame's shared UDP receive pass.
+	// Route already received frames to their owners while the peer IDs still exist.
+	DispatchAcceptingGamersPackets();
+	for ( const auto &connection : GetConnections( nClientID ) )
 	{
-		DrainConnectionPackets( connection );
+		DrainConnectionPackets( connection, true );
 	}
 }
 
@@ -291,8 +303,8 @@ void CPlayGameProcessor::DrainConnectionPackets( IConnection *pConnection, bool 
 				session->second.bStandbyReady = true;
 			}
 			const auto setup = peerSetups.find( pPacket->nClientID );
-			if ( setup != peerSetups.end() &&
-			     ( !setup->second.pConnection || setup->second.pConnection.GetPtr() == pConnection ) )
+			// A standby can finish its relay test while the next direct candidate still has no connection.
+			if ( setup != peerSetups.end() && setup->second.pConnection.GetPtr() == pConnection )
 			{
 				setup->second.bTested = true;
 				continue;
@@ -402,7 +414,11 @@ void CPlayGameProcessor::ProcessEfforts()
 bool CPlayGameProcessor::Segment()
 {
 	ProcessConnectServerProcessor();
-	ProcessAcceptingGamersPackets();
+	DispatchAcceptingGamersPackets();
+	for ( const auto &connection : GetConnections() )
+	{
+		DrainConnectionPackets( connection );
+	}
 
 	ProcessEfforts();
 	ProcessPeerSetups();
@@ -472,7 +488,7 @@ void CPlayGameProcessor::SelectRelay( int nClientID )
 		setup.pConnection = connections.at( nClientID );
 		setup.bTested = true;
 	}
-	else if ( setup.bRecovery )
+	else if ( peerSessions.count( nClientID ) )
 	{
 		SPeerSession &session = peerSessions.at( nClientID );
 		if ( session.pStandby && session.pStandby->GetRoute() == EPeerConnectionRoute::Relay )
@@ -507,53 +523,60 @@ void CPlayGameProcessor::ProcessPeerSetup( int nClientID, const CPeerSetupPacket
 		ProcessRouteSwitch( nClientID, packet );
 		return;
 	}
-	if ( packet.bRecovery )
+	if ( !packet.bRecovery && packet.nAttempt > CSimpleClientEffort::DIRECT_ATTEMPTS )
 	{
-		const auto session = peerSessions.find( nClientID );
-		if ( session == peerSessions.end() || session->second.nSetupID != packet.nSetupID )
+		return;
+	}
+	const auto session = peerSessions.find( nClientID );
+	if ( packet.bRecovery && ( session == peerSessions.end() || session->second.nSetupID != packet.nSetupID ) )
+	{
+		return;
+	}
+	if ( packet.eAction == CPeerSetupPacket::RequestRecovery )
+	{
+		if ( packet.bRecovery && session->second.bInitiator && packet.nAttempt == session->second.nAttempt )
+		{
+			BeginPeerRecovery( nClientID );
+		}
+		return;
+	}
+	if ( session != peerSessions.end() && peerSetups.count( nClientID ) == 0 )
+	{
+		// Our direct confirmation can cross the initiator's deadline. Its next attempt or final relay
+		// selection continues this same session, including messages already sent on the first route.
+		const SPeerSession &active = session->second;
+		if ( active.bInitiator || active.nSetupID != packet.nSetupID ||
+		     ( !packet.bRecovery && active.route != EPeerConnectionRoute::Direct ) )
 		{
 			return;
 		}
-		if ( packet.eAction == CPeerSetupPacket::RequestRecovery )
+		const bool bRetry = packet.eAction == CPeerSetupPacket::BeginAttempt && packet.nAttempt == active.nAttempt + 1;
+		const bool bFallback = packet.eAction == CPeerSetupPacket::SelectRelay && packet.nAttempt == active.nAttempt &&
+		                       ( packet.bRecovery || packet.nAttempt == CSimpleClientEffort::DIRECT_ATTEMPTS );
+		if ( !bRetry && !bFallback )
 		{
-			if ( session->second.bInitiator && packet.nAttempt == session->second.nAttempt )
-			{
-				BeginPeerRecovery( nClientID );
-			}
 			return;
 		}
-		if ( !session->second.bInitiator && peerSetups.find( nClientID ) == peerSetups.end() )
-		{
-			if ( packet.eAction == CPeerSetupPacket::BeginAttempt && packet.nAttempt == session->second.nAttempt + 1 )
-			{
-				PreparePeerRecovery( nClientID );
-			}
-			else if ( packet.eAction == CPeerSetupPacket::SelectRelay && packet.nAttempt == session->second.nAttempt )
-			{
-				// The direct retry succeeded here, but its confirmation missed the
-				// initiator's deadline. Session sequences make this late switch safe.
-				PreparePeerRecovery( nClientID );
-				SelectRelay( nClientID );
-				return;
-			}
-		}
+		PreparePeerRecovery( nClientID );
+		peerSetups.at( nClientID ).bRecovery = packet.bRecovery;
 	}
 	const auto found = peerSetups.find( nClientID );
 	// Only accept setup from a server-introduced room member, for this room.
-	if ( found == peerSetups.end() || found->second.bRecovery != packet.bRecovery ||
-	     ( !packet.bRecovery && packet.nAttempt > CSimpleClientEffort::DIRECT_ATTEMPTS ) )
+	if ( found == peerSetups.end() || found->second.bRecovery != packet.bRecovery )
 	{
 		return;
 	}
 	SPeerSetup &setup = found->second;
 	if ( !setup.bInitiator && packet.eAction == CPeerSetupPacket::BeginAttempt &&
-	     setup.route == EPeerConnectionRoute::Unknown && packet.nAttempt > setup.nAttempt &&
+	     setup.route != EPeerConnectionRoute::Relay && packet.nAttempt > setup.nAttempt &&
 	     ( setup.nAttempt == 0 || setup.nSetupID == packet.nSetupID ) )
 	{
 		setup.nSetupID = packet.nSetupID;
 		setup.nAttempt = packet.nAttempt;
 		setup.dwStartTime = GetCurrentTimeMilliseconds();
+		setup.route = EPeerConnectionRoute::Unknown;
 		setup.bTested = false;
+		setup.bConfirmed = false;
 		setup.packets.clear();
 		setup.pConnection = nullptr;
 		connectionEfforts.erase( nClientID );
@@ -587,8 +610,7 @@ void CPlayGameProcessor::ProcessPeerSetup( int nClientID, const CPeerSetupPacket
 			setup.bConfirmed = true;
 		}
 	}
-	else if ( setup.route == EPeerConnectionRoute::Unknown ||
-	          ( setup.bRecovery && setup.route == EPeerConnectionRoute::Direct ) )
+	else if ( setup.route != EPeerConnectionRoute::Relay )
 	{
 		if ( packet.eAction == CPeerSetupPacket::SelectRelay &&
 		     ( setup.bRecovery || setup.nAttempt == CSimpleClientEffort::DIRECT_ATTEMPTS ) )
@@ -611,7 +633,8 @@ void CPlayGameProcessor::FinishPeerSetup( int nClientID )
 	                                  nClientID,
 	                                  setup.route == EPeerConnectionRoute::Direct ? "direct UDP" : "server relay" ) );
 	joiningPeers.erase( nClientID );
-	SPeerSession &session = peerSessions[nClientID];
+	const auto [sessionIt, bNewSession] = peerSessions.try_emplace( nClientID );
+	SPeerSession &session = sessionIt->second;
 	session.bInitiator = setup.bInitiator;
 	session.nSetupID = setup.nSetupID;
 	session.nAttempt = setup.nAttempt;
@@ -619,27 +642,24 @@ void CPlayGameProcessor::FinishPeerSetup( int nClientID )
 	session.nPort = setup.nPort;
 	session.pClientEffort = setup.pClientEffort;
 	session.route = setup.route;
-	if ( setup.pConnection )
+	const auto old = connections.find( nClientID );
+	if ( old != connections.end() && old->second->GetRoute() != setup.route )
 	{
-		const auto old = connections.find( nClientID );
-		if ( old != connections.end() && old->second->GetRoute() != setup.route )
-		{
-			session.pStandby = old->second;
-			session.bStandbyReady = true;
-		}
-		connections[nClientID] = setup.pConnection;
-		if ( session.pStandby == setup.pConnection )
-		{
-			session.pStandby = nullptr;
-			session.bStandbyReady = false;
-		}
+		session.pStandby = old->second;
+		session.bStandbyReady = true;
+	}
+	connections[nClientID] = setup.pConnection;
+	if ( session.pStandby == setup.pConnection )
+	{
+		session.pStandby = nullptr;
+		session.bStandbyReady = false;
 	}
 	session.bRecoveryRequested = false;
 	session.pendingRoute = EPeerConnectionRoute::Unknown;
 	session.bBetter = false;
 	session.lastSwitch = GetCurrentTimeMilliseconds();
 	session.dwLastReceive = session.dwLastAckProgress = session.dwLastHeartbeat = GetCurrentTimeMilliseconds();
-	if ( !setup.bRecovery )
+	if ( bNewSession )
 	{
 		PushPacket( new CNewGameClient( nClientID ) );
 	}
@@ -659,38 +679,21 @@ void CPlayGameProcessor::ProcessPeerSetups()
 	{
 		const int nClientID = entry.first;
 		SPeerSetup &setup = entry.second;
-		if ( setup.bInitiator && setup.route == EPeerConnectionRoute::Unknown )
+		const bool bTested = setup.bTested && setup.pConnection && setup.pConnection->IsAlive();
+		CSimpleClientEffort *effort =
+				setup.bInitiator && setup.route != EPeerConnectionRoute::Relay ? setup.pClientEffort.GetPtr() : nullptr;
+		if ( effort )
 		{
-			CSimpleClientEffort *effort = setup.pClientEffort;
 			setup.nAttempt = effort->GetAttempt();
-			if ( setup.bTested )
+			if ( setup.route == EPeerConnectionRoute::Unknown && bTested &&
+			     setup.pConnection->GetRoute() == EPeerConnectionRoute::Direct )
 			{
 				setup.route = EPeerConnectionRoute::Direct;
 				setup.dwStartTime = GetCurrentTimeMilliseconds();
 				SendPeerSetup( nClientID, CPeerSetupPacket::SelectDirect );
 			}
-			else if ( effort->GetState() == CConnectionEffort::ES_FAILED || effort->IsAttemptExpired() )
-			{
-				if ( setup.nAttempt == 0 )
-				{
-					// Registration/introduction failed, so no peer handshake is possible.
-					failed.push_back( nClientID );
-				}
-				else if ( setup.nAttempt == effort->GetAttemptLimit() )
-				{
-					SelectRelay( nClientID );
-				}
-				else
-				{
-					setup.pConnection = nullptr;
-					setup.packets.clear();
-					effort->StartNextPeerConnection();
-					setup.nAttempt = effort->GetAttempt();
-					CreateConnectionEffort( effort, nClientID );
-				}
-			}
 		}
-		if ( setup.route != EPeerConnectionRoute::Unknown && setup.bTested )
+		if ( bTested && setup.pConnection->GetRoute() == setup.route && setup.route != EPeerConnectionRoute::Unknown )
 		{
 			if ( !setup.bInitiator )
 			{
@@ -705,15 +708,36 @@ void CPlayGameProcessor::ProcessPeerSetups()
 				continue;
 			}
 		}
-		if ( setup.bRecovery && setup.bInitiator && setup.route == EPeerConnectionRoute::Direct &&
-		     setup.pClientEffort->IsAttemptExpired() )
+		// The direct attempt includes confirmation from both ends. A one-way test must still
+		// advance to the next endpoint or the relay when its original deadline expires.
+		if ( effort && ( effort->GetState() == CConnectionEffort::ES_FAILED || effort->IsAttemptExpired() ) )
 		{
-			SelectRelay( nClientID );
+			if ( setup.nAttempt == 0 )
+			{
+				// Registration/introduction failed, so no peer handshake is possible.
+				failed.push_back( nClientID );
+			}
+			else if ( setup.nAttempt == effort->GetAttemptLimit() )
+			{
+				SelectRelay( nClientID );
+			}
+			else
+			{
+				setup.route = EPeerConnectionRoute::Unknown;
+				setup.bTested = false;
+				setup.bConfirmed = false;
+				setup.pConnection = nullptr;
+				setup.packets.clear();
+				effort->StartNextPeerConnection();
+				setup.nAttempt = effort->GetAttempt();
+				CreateConnectionEffort( effort, nClientID );
+			}
+			continue;
 		}
-		const uint32_t timeout = setup.route == EPeerConnectionRoute::Unknown ? JOIN_TIMEOUT : ROUTE_CONFIRM_TIMEOUT;
-		// During a match the existing lag/departure policy remains authoritative
-		// if the lobby itself is unresponsive. Keep queued commands until it recovers.
-		if ( !setup.bRecovery && GetCurrentTimeMilliseconds() - setup.dwStartTime >= timeout )
+		// Keep a tentative acceptor around for the initiator's next direct attempt or relay choice.
+		// A published session retains its queued commands under the existing lag/departure policy.
+		const uint32_t timeout = setup.route == EPeerConnectionRoute::Relay ? ROUTE_CONFIRM_TIMEOUT : JOIN_TIMEOUT;
+		if ( !peerSessions.count( nClientID ) && GetCurrentTimeMilliseconds() - setup.dwStartTime >= timeout )
 		{
 			failed.push_back( nClientID );
 		}
@@ -820,20 +844,12 @@ bool CPlayGameProcessor::ProcessGameConnectingClientAccepted( CGameConnectingCli
 
 bool CPlayGameProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket )
 {
-	for ( const auto &connection : GetConnections( pPacket->nKicked ) )
-	{
-		DrainConnectionPackets( connection, true );
-	}
+	DrainDepartingConnections( pPacket->nKicked );
 	RemovePeerProbes( pPacket->nKicked );
-	TConnections::iterator iter = connections.find( pPacket->nKicked );
-	if ( iter != connections.end() )
-	{
-		// Server notifications can follow forwarded game packets in the same
-		// receive batch. Deliver those packets before destroying their queue.
-		DrainConnectionPackets( iter->second, true );
-		connections.erase( iter );
-	}
+	connections.erase( pPacket->nKicked );
 	PushPacket( pPacket );
+	// A kicked room member no longer owes us a handshake, even if the kick arrived during our join.
+	joiningPeers.erase( pPacket->nKicked );
 	connectionEfforts.erase( pPacket->nKicked );
 	pendingServerRemovals.erase( pPacket->nKicked );
 	peerSetups.erase( pPacket->nKicked );
@@ -969,12 +985,7 @@ bool CPlayGameProcessor::ProcessGameKilled( CGameKilled *pPacket )
 {
 	if ( nOurGameID == pPacket->nGame )
 	{
-		// As with a single-client departure, the server can kill the room in
-		// the same batch that delivered its final relayed game packets.
-		for ( const auto &connection : GetConnections() )
-		{
-			DrainConnectionPackets( connection, true );
-		}
+		DrainDepartingConnections();
 		Clear();
 		PushPacket( pPacket );
 	}
@@ -1009,24 +1020,13 @@ bool CPlayGameProcessor::ProcessGameClientDead( CGameClientDead *pPacket )
 		}
 		return true;
 	}
-	TConnections::iterator iter = connections.find( pPacket->nDeadClient );
-	if ( iter == connections.end() && pendingServerRemovals.find( pPacket->nDeadClient ) == pendingServerRemovals.end() )
+	// A retired direct connection can still have an ordered server subscription.
+	if ( !connections.count( pPacket->nDeadClient ) && !pendingServerRemovals.count( pPacket->nDeadClient ) )
 	{
 		return false;
 	}
-	if ( iter != connections.end() )
-	{
-		// A relay may already hold the departing host's final drop or outcome
-		// packet. Preserve its order before publishing the removal notification.
-		DrainConnectionPackets( iter->second, true );
-		connections.erase( iter );
-	}
-	// The direct connection may already have been retired by Segment. Its
-	// pending subscription still authorizes this ordered removal notification.
-	for ( const auto &connection : GetConnections( pPacket->nDeadClient ) )
-	{
-		DrainConnectionPackets( connection, true );
-	}
+	DrainDepartingConnections( pPacket->nDeadClient );
+	connections.erase( pPacket->nDeadClient );
 	RemovePeerProbes( pPacket->nDeadClient );
 	pendingServerRemovals.erase( pPacket->nDeadClient );
 	connectionEfforts.erase( pPacket->nDeadClient );

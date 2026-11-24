@@ -242,6 +242,11 @@ const int CNet::GetPort( const int nClientID ) const
 	return pNetDriver->GetPort( nClientID );
 }
 
+bool CNet::TryGetPeerAddress( int nClientID, NNet::CNodeAddress *pAddress ) const
+{
+	return pNetDriver && pNetDriver->TryGetPeerAddress( nClientID, pAddress );
+}
+
 const float CNet::GetTimeOut()
 {
 	return fTimeOut;

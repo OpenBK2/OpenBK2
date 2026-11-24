@@ -50,6 +50,7 @@ public:
 
 	const std::string GetIP( const int nClientID ) const;
 	const int GetPort( const int nClientID ) const;
+	bool TryGetPeerAddress( int nClientID, NNet::CNodeAddress *pAddress ) const;
 	void SetPeerTransport( int nClientID, bool bReceiveBundles, bool bSendBundles );
 
 	void SendPacket( CNetPacket *pPacket );

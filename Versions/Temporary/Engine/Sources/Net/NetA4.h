@@ -16,9 +16,6 @@
 
 namespace NNet
 {
-// The existing long frame header stores twice the size in a positive int32.
-constexpr int N_MAX_FRAME_SIZE = 0x3fffffff;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 class CNetDriver : public IDriver
 {
@@ -217,6 +214,7 @@ public:
 	const std::string GetIP( const int nClientID ) override;
 	const int GetPort( const int nClientID ) override;
 	void SetPeerTransport( int nClientID, bool bReceiveBundles, bool bSendBundles ) override;
+	bool TryGetPeerAddress( int nClientID, CNodeAddress *pAddress ) const override;
 
 	void PauseNet() override;
 	void UnpauseNet() override;

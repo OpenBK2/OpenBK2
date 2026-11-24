@@ -118,6 +118,34 @@ struct CPlayGameProcessorTestAccess
 		client.pPlayGameProcessor->nServerPort = port;
 	}
 
+	static void SetAcceptingNet( CServerClient &client, CNet *net )
+	{
+		client.pPlayGameProcessor->pAcceptGamersNet = net;
+	}
+
+	static auto &Setup( CServerClient &client, int clientID )
+	{
+		return client.pPlayGameProcessor->peerSetups[clientID];
+	}
+
+	static void MarkJoining( CServerClient &client, int clientID, bool expired = false )
+	{
+		MarkJoining( *client.pPlayGameProcessor, clientID, expired );
+	}
+
+	static void ExpireDirectAttempt( CServerClient &client, int clientID )
+	{
+		auto &setup = client.pPlayGameProcessor->peerSetups.at( clientID );
+		setup.pClientEffort->dwPeerAttemptStart -= CSimpleClientEffort::DIRECT_ATTEMPT_TIMEOUT;
+	}
+
+	static void SetPendingAttempt( CSimpleClientEffort &effort, int attempt )
+	{
+		effort.nAttempt = attempt;
+		effort.dwPeerAttemptStart = GetCurrentTimeMilliseconds();
+		effort.eState = CConnectionEffort::ES_CONNECTING;
+	}
+
 	static bool ExpireTentativeAttempt( CServerClient &joining, const CServerClient &host, int clientID )
 	{
 		// Model loss after the accepting side saw identity but before the joiner
@@ -315,6 +343,7 @@ public:
 	std::list<CMemoryStream> received;
 	EState state = ACTIVE;
 	int expectedRecipient = 0;
+	int incomingClientID = 0;
 	bool receiveBundles = false;
 	bool sendBundles = false;
 
@@ -377,7 +406,7 @@ public:
 			return false;
 		}
 		*type = DIRECT;
-		*clientID = 0;
+		*clientID = incomingClientID;
 		*packet = received.front();
 		received.pop_front();
 		return true;
@@ -923,7 +952,8 @@ static void CheckSocketHandshake( bool bPublicReachable,
                                   bool bLocalReachable,
                                   bool bForwardOffers,
                                   bool bExpireTentative = false,
-                                  int recoveryMode = 0 )
+                                  int recoveryMode = 0,
+                                  bool bDelayInitialConfirmation = false )
 {
 	// Real UDP sockets, drivers, registration, identity and connection-test
 	// packets. Only the lobby's authenticated introduction/forwarding is modeled.
@@ -962,6 +992,8 @@ static void CheckSocketHandshake( bool bPublicReachable,
 	joiningLobby->received.push_back( Serialize( answer ) );
 	bool hostConnected = false;
 	bool joiningConnected = false;
+	bool sentBeforeConfirmation = false;
+	bool receivedBeforeConfirmationMessage = false;
 	bool sentPing = false;
 	bool receivedEcho = false;
 	int offersForwarded = 0;
@@ -987,9 +1019,37 @@ static void CheckSocketHandshake( bool bPublicReachable,
 	};
 
 	std::list<SDelayedProbe> delayedProbes;
+	std::list<CMemoryStream> heldHostReplies;
+	bool holdHostReplies = false;
+	int lateConfirmations = 0;
+	const auto deliver = [&]( CRecordingDriver *target, CNetPacket *packet )
+	{
+		if ( holdHostReplies && target == joiningLobby.GetPtr() )
+		{
+			heldHostReplies.push_back( Serialize( packet ) );
+		}
+		else
+		{
+			target->received.push_back( Serialize( packet ) );
+		}
+	};
 	const auto forwardControl = [&]( CRecordingDriver *target, CDirectPacketToClient *packet )
 	{
 		auto *setup = dynamic_cast<CPeerSetupPacket *>( packet->pPacket.GetPtr() );
+		if ( bDelayInitialConfirmation && setup && setup->eAction == CPeerSetupPacket::ConfirmDirect )
+		{
+			// Both UDP endpoints passed the test. Hold this ordered lobby stream until the joiner
+			// has advanced to its next attempt or to relay, while the acceptor has already committed.
+			holdHostReplies = true;
+			++lateConfirmations;
+			CPlayGameProcessorTestAccess::ExpireDirectAttempt( joining, hostID );
+		}
+		if ( holdHostReplies && target == hostLobby.GetPtr() && setup &&
+		     ( setup->eAction == CPeerSetupPacket::BeginAttempt || setup->eAction == CPeerSetupPacket::SelectRelay ) )
+		{
+			holdHostReplies = false;
+			joiningLobby->received.splice( joiningLobby->received.end(), heldHostReplies );
+		}
 		if ( recoveryMode == 4 && setup && setup->eAction == CPeerSetupPacket::BeginAttempt && setup->nAttempt == 3 )
 		{
 			// Hold the direct handshake while asserting relay still delivers new commands.
@@ -1004,7 +1064,7 @@ static void CheckSocketHandshake( bool bPublicReachable,
 		}
 		else
 		{
-			target->received.push_back( Serialize( packet ) );
+			deliver( target, packet );
 		}
 	};
 	const bool expectRelay = !bPublicReachable && !( bLocalReachable && bForwardOffers );
@@ -1086,7 +1146,7 @@ static void CheckSocketHandshake( bool bPublicReachable,
 				relayGamePackets += dynamic_cast<CPeerGamePacket *>( relay->pGamePacket.GetPtr() ) != nullptr;
 				relay->nClientID = hostID;
 				std::swap( relay->nClient, relay->nClientID );
-				joiningLobby->received.push_back( Serialize( relay ) );
+				deliver( joiningLobby, relay );
 				continue;
 			}
 			if ( dynamic_cast<CThroughServerConnectionPacket *>( packet.GetPtr() ) )
@@ -1147,6 +1207,12 @@ static void CheckSocketHandshake( bool bPublicReachable,
 					EXPECT_FALSE( receivedEcho );
 					receivedEcho = true;
 				}
+				else if ( bDelayInitialConfirmation && ping->nSendTime == 4567 )
+				{
+					EXPECT_TRUE( joiningConnected );
+					EXPECT_FALSE( receivedBeforeConfirmationMessage );
+					receivedBeforeConfirmationMessage = true;
+				}
 				else if ( ping->nSendTime == 8901 )
 				{
 					deliveredDuringRecovery = CPlayGameProcessorTestAccess::HasSetup( joining, hostID );
@@ -1158,6 +1224,13 @@ static void CheckSocketHandshake( bool bPublicReachable,
 				}
 			}
 			ASSERT_EQ( dynamic_cast<CConnectGameFailed *>( packet.GetPtr() ), nullptr );
+		}
+		if ( bDelayInitialConfirmation && hostConnected && !joiningConnected && !sentBeforeConfirmation )
+		{
+			// The acceptor has published its session and can already send room state.
+			// The still-joining client must receive that first sequence exactly once after fallback.
+			host.SendGamePacket( new CPingPacket( teammateID, 2, 4567 ), false );
+			sentBeforeConfirmation = true;
 		}
 		if ( hostConnected && joiningConnected && !sentPing )
 		{
@@ -1228,11 +1301,18 @@ static void CheckSocketHandshake( bool bPublicReachable,
 	EXPECT_TRUE( hostConnected );
 	EXPECT_TRUE( joiningConnected );
 	EXPECT_TRUE( receivedEcho );
-	const bool finalRelay = expectRelay || recoveryMode == 2 || recoveryMode == 3;
+	const bool finalRelay = expectRelay || recoveryMode == 2 || recoveryMode == 3 || bDelayInitialConfirmation;
 	EXPECT_EQ( joining.GetPeerRoute( hostID ), finalRelay ? EPeerConnectionRoute::Relay : EPeerConnectionRoute::Direct );
 	EXPECT_EQ( host.GetPeerRoute( teammateID ), joining.GetPeerRoute( hostID ) );
 	EXPECT_EQ( relayGamePackets > 0, finalRelay || recoveryMode == 4 );
 	EXPECT_EQ( expiredTentative, bExpireTentative );
+	if ( bDelayInitialConfirmation )
+	{
+		EXPECT_EQ( attempts, 2 );
+		EXPECT_EQ( lateConfirmations, 2 );
+		EXPECT_TRUE( sentBeforeConfirmation );
+		EXPECT_TRUE( receivedBeforeConfirmationMessage );
+	}
 	if ( expectRelay )
 	{
 		EXPECT_EQ( attempts, 2 );
@@ -1274,6 +1354,11 @@ TEST( ClientDirectConnections, TwoBlockedDirectAttemptsFallBackToRelayAndPing )
 TEST( ClientDirectConnections, RetryReplacesOneSidedSuccessfulHandshakeBeforePublishingRoomClient )
 {
 	CheckSocketHandshake( true, true, true, true );
+}
+
+TEST( ClientDirectConnections, LateInitialDirectConfirmationsRetryThenUseRelayWithoutRejoining )
+{
+	CheckSocketHandshake( true, true, true, false, 0, true );
 }
 
 TEST( ClientPeerRecovery, EstablishedConnectionRecoversWithOneDirectRetryAndQueuedMessages )
@@ -1562,6 +1647,169 @@ TEST( ClientPeerRecovery, AcceptingPeerReceivesOrderedDepartureWhileWaitingForDi
 	EXPECT_EQ( removed->nClientID, hostID );
 	EXPECT_EQ( client.GetPacket(), nullptr );
 	EXPECT_EQ( client.GetPeerRoute( hostID ), EPeerConnectionRoute::Unknown );
+}
+
+TEST( ClientDirectConnections, KickingAnUnfinishedPeerDoesNotCancelOtherRoomConnections )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitSession( client, hostID, new CQueuedDirectConnection() );
+	CPlayGameProcessorTestAccess::Setup( client, teammateID ).bInitiator = true;
+	CPlayGameProcessorTestAccess::MarkJoining( client, teammateID, true );
+	lobby->received.push_back( Serialize( new CGameClientWasKicked( 0, teammateID ) ) );
+	client.Segment();
+
+	CPtr<CNetPacket> notice = client.GetPacket();
+	ASSERT_NE( dynamic_cast<CGameClientWasKicked *>( notice.GetPtr() ), nullptr );
+	EXPECT_EQ( client.GetPacket(), nullptr );
+	EXPECT_EQ( client.GetPeerRoute( hostID ), EPeerConnectionRoute::Direct );
+	EXPECT_TRUE( lobby->sent.empty() );
+}
+
+TEST( ClientDirectConnections, RejoiningWithTheSameLobbyIDReplacesThePriorTentativeSetup )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver(), direct = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitPeer( client, hostID );
+	CPlayGameProcessorTestAccess::SetAcceptingNet( client, CPlayGameProcessorTestAccess::CreateNet( direct ) );
+	for ( uint32_t generation : { 41u, 42u } )
+	{
+		// Cancelling before either side subscribes produces no departure notice on the accepting client.
+		lobby->received.push_back( Serialize( new CClientWantToConnect( 0, teammateID, "127.0.0.1", 43210 ) ) );
+		lobby->received.push_back( Serialize( new CDirectPacketToClient(
+				0, teammateID, new CPeerSetupPacket( 968, generation, 1, CPeerSetupPacket::BeginAttempt ) ) ) );
+		client.Segment();
+		ASSERT_EQ( lobby->sent.size(), 1u );
+		CPtr<CNetPacket> response = Deserialize( lobby->sent.front() );
+		auto *envelope = dynamic_cast<CDirectPacketToClient *>( response.GetPtr() );
+		ASSERT_NE( envelope, nullptr );
+		auto *accept = dynamic_cast<CPeerSetupPacket *>( envelope->pPacket.GetPtr() );
+		ASSERT_NE( accept, nullptr );
+		EXPECT_EQ( accept->eAction, CPeerSetupPacket::AcceptAttempt );
+		EXPECT_EQ( accept->nSetupID, generation );
+		lobby->sent.clear();
+	}
+
+	// A UDP identity from the cancelled attempt can arrive after the replacement introduction.
+	direct->incomingClientID = 17;
+	direct->received.push_back( Serialize( new CPeerSetupPacket( 968, 41, 1, CPeerSetupPacket::Identity, teammateID ) ) );
+	client.Segment();
+	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasConnection( client, teammateID ) );
+	EXPECT_TRUE( direct->sent.empty() );
+}
+
+TEST( ClientDirectConnections, MissingRemoteTestOnFinalDirectAttemptStillSelectsRelay )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitPeer( client, teammateID );
+	CPlayGameProcessorTestAccess::MarkJoining( client, hostID );
+	auto &setup = CPlayGameProcessorTestAccess::Setup( client, hostID );
+	setup.bInitiator = true;
+	setup.nSetupID = 123;
+	setup.pClientEffort = new CSimpleClientEffort();
+	CPlayGameProcessorTestAccess::SetPendingAttempt( *setup.pClientEffort, CSimpleClientEffort::DIRECT_ATTEMPTS );
+	setup.dwStartTime = GetCurrentTimeMilliseconds();
+	CPtr<CQueuedDirectConnection> direct = new CQueuedDirectConnection();
+	setup.pConnection = direct;
+	direct->packets.push_back( new CNewGameClient( hostID ) );
+
+	client.Segment();
+	EXPECT_EQ( setup.route, EPeerConnectionRoute::Direct );
+	// The accepting endpoint never receives the test in the reverse direction and cannot confirm.
+	CPlayGameProcessorTestAccess::ExpireDirectAttempt( client, hostID );
+	client.Segment();
+	ASSERT_TRUE( CPlayGameProcessorTestAccess::HasSetup( client, hostID ) );
+	EXPECT_EQ( CPlayGameProcessorTestAccess::Setup( client, hostID ).route, EPeerConnectionRoute::Relay );
+	EXPECT_EQ( client.GetPacket(), nullptr );
+}
+
+TEST( ClientPeerRecovery, StandbyRelayTestCannotValidatePendingDirectRetry )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitPeer( client, teammateID );
+	CPlayGameProcessorTestAccess::InitSession( client, hostID, new CQueuedDirectConnection() );
+	auto &session = CPlayGameProcessorTestAccess::Session( client, hostID );
+	session.bInitiator = true;
+	session.nAttempt = 1;
+	session.pClientEffort = new CSimpleClientEffort();
+	CPlayGameProcessorTestAccess::SetPendingAttempt( *session.pClientEffort, 2 );
+	session.pStandby = new CThroughServerConnection( hostID, CPlayGameProcessorTestAccess::GetLobby( client ) );
+	ASSERT_EQ( lobby->sent.size(), 1u );
+	// The remote sends the same serialized relay test. Its direct login has not finished.
+	lobby->received.push_back( lobby->sent.front() );
+	CPlayGameProcessorTestAccess::PrepareWaitingRecovery( client, hostID );
+	client.Segment();
+	ASSERT_TRUE( CPlayGameProcessorTestAccess::HasSetup( client, hostID ) );
+	auto &setup = CPlayGameProcessorTestAccess::Setup( client, hostID );
+	EXPECT_TRUE( session.bStandbyReady );
+	EXPECT_FALSE( setup.bTested );
+	EXPECT_EQ( setup.route, EPeerConnectionRoute::Unknown );
+}
+
+TEST( ClientConnectionRemoval, AcceptingDriverDeliversQueuedSessionFrameBeforeServerRemoval )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver(), direct = new CRecordingDriver();
+	const int localID = 17;
+	direct->expectedRecipient = direct->incomingClientID = localID;
+	CPtr<CNet> sharedNet = CPlayGameProcessorTestAccess::CreateNet( direct );
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPlayGameProcessorTestAccess::InitPeer( client, teammateID );
+	CPlayGameProcessorTestAccess::SetAcceptingNet( client, sharedNet );
+	CPlayGameProcessorTestAccess::InitSession(
+			client, hostID, new CSimpleConnection( sharedNet, false, hostID, localID, teammateID ) );
+	direct->received.push_back( Serialize( SessionMessage( hostID, 1, 1000 ) ) );
+	client.Segment();
+	CPtr<CNetPacket> first = client.GetPacket();
+	ASSERT_NE( dynamic_cast<CPingPacket *>( first.GetPtr() ), nullptr );
+
+	// The last frame is on the shared accepting driver, ahead of the next room-processor tick.
+	direct->received.push_back( Serialize( SessionMessage( hostID, 2, 2000 ) ) );
+	lobby->received.push_back( Serialize( new CGameClientDead( 0, hostID ) ) );
+	client.Segment();
+	CPtr<CNetPacket> last = client.GetPacket();
+	auto *ping = dynamic_cast<CPingPacket *>( last.GetPtr() );
+	ASSERT_NE( ping, nullptr );
+	EXPECT_EQ( ping->nSendTime, 2000 );
+	CPtr<CNetPacket> removed = client.GetPacket();
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( removed.GetPtr() ), nullptr );
+	EXPECT_EQ( removed->nClientID, hostID );
+	EXPECT_EQ( client.GetPacket(), nullptr );
+}
+
+TEST( ClientConnectionRemoval, DirectTestInTheReceiveBatchDoesNotHideTheFinalGameMessage )
+{
+	CPtr<CRecordingDriver> lobby = new CRecordingDriver(), peer = new CRecordingDriver(), remote = new CRecordingDriver();
+	CServerClient client;
+	CPlayGameProcessorTestAccess::InitServerClient( client, lobby );
+	CPtr<CNet> peerNet = CPlayGameProcessorTestAccess::CreateNet( peer );
+	CPlayGameProcessorTestAccess::InitSession(
+			client, hostID, new CSimpleConnection( peerNet, true, hostID, 0, teammateID ) );
+
+	// An accepting peer sends its connection test as soon as it learns our UDP identity.
+	const int localID = 17;
+	remote->expectedRecipient = localID;
+	CPtr<CNet> remoteNet = CPlayGameProcessorTestAccess::CreateNet( remote );
+	CSimpleConnection accepting( remoteNet, false, teammateID, localID, hostID );
+	ASSERT_EQ( remote->sent.size(), 1u );
+	peer->received.push_back( remote->sent.front() );
+	peer->received.push_back( Serialize( SessionMessage( hostID, 1, 1234 ) ) );
+	lobby->received.push_back( Serialize( new CGameClientDead( 0, hostID ) ) );
+	client.Segment();
+
+	CPtr<CNetPacket> last = client.GetPacket();
+	auto *ping = dynamic_cast<CPingPacket *>( last.GetPtr() );
+	ASSERT_NE( ping, nullptr );
+	EXPECT_EQ( ping->nSendTime, 1234 );
+	CPtr<CNetPacket> removed = client.GetPacket();
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( removed.GetPtr() ), nullptr );
+	EXPECT_EQ( client.GetPacket(), nullptr );
 }
 
 TEST( ClientDirectConnections, RelayConfirmationTimeoutLeavesRoomAndReportsJoinFailure )

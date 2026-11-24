@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Server_Client_Common/NetPacket.h"
+#include "Server_Client_Common/NetSaver.h"
 
 #include <cstdint>
 #include <vector>
@@ -27,7 +28,7 @@ public:
 		saver.Add( 4, &nSequence );
 		saver.Add( 5, &nAcknowledged );
 		saver.Add( 6, &bRequestAck );
-		saver.Add( 7, &data );
+		AddNetPacketBytes( saver, 7, &data );
 		return 0;
 	}
 };

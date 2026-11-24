@@ -3,8 +3,9 @@
 ## Direct first, with measured relay fallback (2026-11-24)
 
 Online pairs prefer direct UDP. When joining a room, each pair gets two direct
-attempts, each bounded at **15 seconds**, including the peer login, identity and
-connection test. After two failures the clients agree to use the server relay.
+attempts, each bounded at **15 seconds**, including peer login, identity, the
+connection test and confirmation from both ends. A missing direct confirmation
+uses up that attempt. After two failures the clients agree to use the server relay.
 If a local endpoint is available, attempts use local, then public; otherwise
 both use the public endpoint. Pairs are independent: one player can use a
 direct connection to one opponent and relay to another.
@@ -16,7 +17,7 @@ public-address hairpin when two instances run on one PC or a reachable LAN. Loca
 address discovery has a one-second collection window. A normally responsive lobby
 therefore reaches relay after roughly 31 seconds of unsuccessful peer setup,
 plus relay testing and confirmation. Registration has its separate existing
-20-second allowance, route confirmation has 15 seconds, and a 70-second overall
+20-second allowance, relay confirmation has 15 seconds, and a 70-second overall
 join bound prevents an indefinite joining screen. A failed join leaves the server
 room and emits `CConnectGameFailed`.
 

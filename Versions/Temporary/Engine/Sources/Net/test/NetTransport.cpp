@@ -461,6 +461,24 @@ TEST( NetTransport, ShortFinalMessageDoesNotWaitForAnotherPacket )
 	EXPECT_EQ( ReadDirectMessages( driver ), ( std::vector<unsigned char>{ 42 } ) );
 }
 
+TEST( NetTransport, PeerAddressLookupHandlesLogoutBeforeProbeConfiguration )
+{
+	CPtr<CQueuedLinks> links = new CQueuedLinks();
+	CNetDriver driver( SNetDriverConsts( 60 ), false );
+	CNetDriverTestAccess::Init( driver, links );
+	const CNodeAddress peer = Address( 12505 );
+	CNetDriverTestAccess::AddPeer( driver, 17, peer );
+
+	CNodeAddress address;
+	ASSERT_TRUE( driver.TryGetPeerAddress( 17, &address ) );
+	EXPECT_EQ( address, peer );
+	links->incoming.push_back( { peer, Logout( 17 ) } );
+	driver.Step();
+	EXPECT_FALSE( driver.TryGetPeerAddress( 17, &address ) );
+	EXPECT_TRUE( driver.GetIP( 17 ).empty() );
+	EXPECT_EQ( driver.GetPort( 17 ), 0 );
+}
+
 TEST( NetTransport, BufferedBurstLargerThanRingDrainsWithoutAnotherDatagram )
 {
 	CPtr<CQueuedLinks> links = new CQueuedLinks();

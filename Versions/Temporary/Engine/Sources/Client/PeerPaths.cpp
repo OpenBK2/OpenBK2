@@ -68,9 +68,17 @@ void CPlayGameProcessor::ConfigurePeerProbes( int nClientID )
 	}
 	std::vector<NNet::CNodeAddress> addresses;
 	NNet::CNodeAddress address;
-	if ( connections.count( nClientID ) && connections.at( nClientID )->GetPeerAddress( &address ) )
+	if ( session.route == EPeerConnectionRoute::Direct )
 	{
-		addresses.push_back( address );
+		if ( connections.at( nClientID )->GetPeerAddress( &address ) )
+		{
+			addresses.push_back( address );
+		}
+		else
+		{
+			// The driver can retire this peer between its connection test and route confirmation.
+			failedDirectPeers.insert( nClientID );
+		}
 	}
 	if ( session.pClientEffort )
 	{
