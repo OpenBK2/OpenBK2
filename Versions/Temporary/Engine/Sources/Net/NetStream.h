@@ -132,7 +132,6 @@ private:
 	CRingBuffer<N_STREAM_BUFFER> channelOutBuf;
 	int nOutListOffset;
 	typedef unsigned int CHANNEL_DATA_OFFSET;
-#pragma pack( push, 1 )
 
 	struct SChannelBlock
 	{
@@ -142,18 +141,13 @@ private:
 		PACKET_ID nPkt;
 		bool bRepeated = false;
 
-		int GetSendSize() const
-		{
-			return sizeof( nOffset ) + sizeof( nLength ) + nLength;
-		}
+		void Write( CBitStream &bits ) const;
 
 		static int GetHeaderSize()
 		{
-			return sizeof( CHANNEL_DATA_OFFSET ) + sizeof( unsigned char );
+			return sizeof( nOffset ) + sizeof( nLength );
 		}
 	};
-
-#pragma pack( pop )
 
 	// streaming data control structures
 	// текущее смещение отсылаемых и принимаемых данных
