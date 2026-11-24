@@ -266,3 +266,8 @@ void CNet::DebugTogglePause( bool bPause )
 		pausePackets.clear();
 	}
 }
+
+void CNet::SetPeerTransport( int nClientID, bool bReceiveBundles, bool bSendBundles )
+{
+	pNetDriver->SetPeerTransport( nClientID, bReceiveBundles, bSendBundles );
+}

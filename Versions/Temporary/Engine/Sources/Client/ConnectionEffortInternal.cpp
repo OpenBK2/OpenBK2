@@ -338,8 +338,12 @@ void CSimpleClientEffort::ProcessConnectServerPacket( CConnectServerPacket *pPac
 		}
 		else
 		{
-			CPtr<CNetPacket> pPacket =
+			CPtr<CPeerSetupPacket> pPacket =
 					new CPeerSetupPacket( nOurGameID, nSetupID, nAttempt, CPeerSetupPacket::Identity, nMyServerID );
+			// Enable reception before advertising support: the identity reply may
+			// already use the negotiated format. Sending waits for that reply.
+			pConnet2PlayersNet->SetPeerTransport( 0, true, false );
+			pPacket->nTransportVersion = 1;
 			pConnet2PlayersNet->SendPacket( pPacket );
 		}
 	}
@@ -351,6 +355,10 @@ bool CSimpleClientEffort::ProcessClientIdentity( CPeerSetupPacket *pPacket )
 	     pPacket->nServerID == nClientServerID && pPacket->nGameID == nOurGameID && pPacket->nSetupID == nSetupID &&
 	     pPacket->nAttempt == nAttempt )
 	{
+		if ( pPacket->nTransportVersion >= 1 )
+		{
+			pConnet2PlayersNet->SetPeerTransport( 0, true, true );
+		}
 		eState = ES_SUCCESS;
 		return true;
 	}
@@ -422,9 +430,14 @@ bool CSimpleServerEffort::ProcessClientIdentity( CPeerSetupPacket *pPacket )
 	{
 		nClientLocalID = pPacket->nClientID;
 		eState = ES_SUCCESS;
+		if ( pPacket->nTransportVersion >= 1 )
+		{
+			pAcceptGamersNet->SetPeerTransport( nClientLocalID, true, true );
+		}
 
-		CPtr<CNetPacket> reply =
+		CPtr<CPeerSetupPacket> reply =
 				new CPeerSetupPacket( nOurGameID, nSetupID, nAttempt, CPeerSetupPacket::Identity, nMyServerID );
+		reply->nTransportVersion = 1;
 		reply->nClientID = nClientLocalID;
 		pAcceptGamersNet->SendPacket( reply );
 

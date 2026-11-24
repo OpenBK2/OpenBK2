@@ -75,6 +75,8 @@ private:
 		bool bInvalidFrame = false;
 		bool bTryShortcut;
 		float fTimeToSendData;
+		bool bReceiveBundles = false;
+		bool bSendBundles = false;
 
 		SPeer()
 			: fTimeToSendData( 0.0f )
@@ -110,7 +112,7 @@ private:
 
 	void ProcessIncomingMessages();
 	void ProcessLogin( const CNodeAddress &addr, CBitStream &bits );
-	void ProcessNormal( const CNodeAddress &addr, CBitStream &bits );
+	void ProcessNormal( const CNodeAddress &addr, CBitStream &bits, int nSize, bool bBundled = false );
 	void AddOutputMessage( EMessage msg,
 	                       CP2PTracker::UCID _from,
 	                       CMemoryStream &data,
@@ -214,6 +216,7 @@ public:
 
 	const std::string GetIP( const int nClientID ) override;
 	const int GetPort( const int nClientID ) override;
+	void SetPeerTransport( int nClientID, bool bReceiveBundles, bool bSendBundles ) override;
 
 	void PauseNet() override;
 	void UnpauseNet() override;

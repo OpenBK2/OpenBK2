@@ -103,8 +103,8 @@ an application RTT including frame processing, queues and retransmission.
 Use the updated build on every client: the new peer setup and session packets
 require matching clients. The existing server executable can forward these opaque
 payloads without modification. On Windows the updated UI and protocol are in
-`GameX.dll` and `Client.dll`. Keep the previously updated `Net.dll`, whose endpoint
-enumeration export is required by the local-address setup fix.
+`GameX.dll` and `Client.dll`. The packet-loss improvements below additionally
+require the updated `Net.dll` and `Server_Client_Common.dll` on clients.
 
 For a live test, first check that a normal room shows Direct UDP. Block only peer
 UDP while leaving the lobby reachable: joining should try direct twice for
@@ -134,10 +134,78 @@ adds a 40 ms sleep per main loop in [Game/main.cpp](../Versions/Temporary/Engine
 These can contribute to same-PC RTT; the original 200-300 ms measurement alone
 cannot establish which component caused the delay.
 
+## Packet-loss mitigation (2026-11-24)
+
+The reliable UDP transport now requests an acknowledgement within **25 ms** of
+receiving data. It can piggyback the ACK sooner; otherwise it sends a small
+ACK-only datagram even when the outgoing data window is full. ACK-only packets do
+not occupy that window or trigger ACK loops. The deadline is serviced by the
+network worker, so scheduling delays can extend it. The 50 ms data-send spacing
+and one-second idle keepalive remain.
+
+The RTT estimator starts at 333 ms and immediately adopts its first measurement.
+Its retransmission timeout uses smoothed RTT plus four times the measured RTT
+variation and a 25 ms ACK allowance, with a 100 ms floor. Repeated timeouts back
+off exponentially, up to the existing 20-second transport limit. Three distinct
+newer packet acknowledgements can identify a gap sooner, after a reordering
+allowance of at least 25 ms or 1.125 times smoothed RTT. A timer still recovers
+loss when no later packets arrive. These timers govern retransmission; they do
+not change the 15-second direct connection attempts or route-health policy.
+
+Updated online direct peers also negotiate a small redundant stream bundle.
+An outgoing datagram can contain a new/retried block and one older unacknowledged
+block, each up to 255 bytes. An idle sender can send the older block alone at its
+next paced opportunity. Each block gets at most **one proactive extra copy**,
+in a separate datagram, before falling back to ordinary retransmission. Already
+acknowledged blocks need no copy. Both blocks count against the congestion window;
+new or retried data takes priority when only one block fits. The largest bundle
+is **534 bytes of UDP payload**, including protocol headers.
+
+ACKs identify the actual stream offsets carried by each datagram. An ACK for an
+original block cannot accidentally acknowledge unrelated data bundled with its
+copy. The receiver assembles offsets in order and discards duplicate bytes before
+application messages are delivered. The existing ring buffers, command segments,
+deterministic simulation and replay format remain unchanged. This is redundancy
+plus retransmission, not forward error correction; correlated loss can discard
+both copies, and extra traffic can hurt a saturated connection.
+
+`CPeerSetupPacket::Identity` advertises transport version 1. The initiator enables
+bundle reception before advertising support, and transmission starts only after
+the other peer advertises it. Missing support defaults to the legacy format.
+Lobby connections, server relay legs and the separate LAN setup retain their
+legacy wire format. The ACK/retransmission improvements apply locally on those
+links, but direct bundle redundancy requires two updated online peers. An
+unchanged server keeps its existing outbound ACK/retransmission behavior and
+needs no deployment for this client update.
+
+Transport regression tests cover a full send window, ACK loops, first RTT sample,
+selective loss detection, timeout backoff, lost tail data, truncated bundles,
+mixed capability versions, late original ACKs, bundled retransmission, 16-bit
+packet-number wrap and 100 KB messages under loss/reordering/duplication.
+
+A synthetic driver experiment sends 200 ordered 32-byte messages at 100 ms
+intervals with deterministic 10% datagram loss in each direction and occasional
+80 ms jitter. Both modes use the new ACK policy; only redundancy changes.
+All messages arrived exactly once, byte for byte and in order. A local Windows
+Release run measured the following application delivery delays (not room RTT):
+
+| One-way delay / loss pattern | Redundancy | Median | 95th percentile | UDP payload bytes, both directions |
+| --- | --- | ---: | ---: | ---: |
+| 20 ms / isolated | Off | 35 ms | 310 ms | 15,116 |
+| 20 ms / isolated | On | 40 ms | 145 ms | 24,002 |
+| 500 ms / isolated | Off | 1,350 ms | 3,155 ms | 9,650 |
+| 500 ms / isolated | On | 1,175 ms | 2,195 ms | 11,502 |
+| 20 ms / three-packet bursts | Off | 20 ms | 1,005 ms | 13,493 |
+| 20 ms / three-packet bursts | On | 70 ms | 860 ms | 20,782 |
+
+These fixed traces show faster recovery of delayed commands at a bandwidth cost,
+not a guarantee that every connection or percentile improves. Test live Clumsy
+runs on both updated clients using the same delay, loss, map and command workload.
+
 ## Baseline design before the direct-only experiment
 
 The following describes the baseline relay-capable design and its timing. The
-current implementation above supersedes its fallback and setup-bug descriptions.
+current implementation above supersedes its fallback, setup and transport timing.
 
 In an online custom match, the standalone `Server` introduces the players. Each pair first tries to connect directly over UDP and can fall back to a relay through that server. If Alice hosts a three-player game, Bob can send an order straight to Carol even when his connection to Alice uses the relay. All three machines run the simulation. At normal speed, even an order that arrives immediately takes **600 ms of simulation time from packing to execution**. The room's ping measures a different interval. [Peer connection setup][setup] · [Game packet routing][fanout] · [Simulation timing][ticks]
 

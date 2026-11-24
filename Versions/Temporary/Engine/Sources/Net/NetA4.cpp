@@ -41,6 +41,7 @@ enum EPacket
 	TRY_SHORTCUT,
 	NOP,
 	KICK,
+	NORMAL_BUNDLE, // Negotiated direct-peer format: at most two stream blocks.
 };
 
 void GetNOPStream( CMemoryStream *pNOP )
@@ -531,31 +532,79 @@ void CNetDriver::ProcessLogin( const CNodeAddress &addr, CBitStream &bits )
 	}
 }
 
-void CNetDriver::ProcessNormal( const CNodeAddress &addr, CBitStream &bits )
+void CNetDriver::SetPeerTransport( int nClientID, bool bReceiveBundles, bool bSendBundles )
 {
+	std::lock_guard criticalSectionLock( netDriverCriticalSection );
+	if ( SPeer *peer = GetClient( nClientID ) )
+	{
+		peer->bReceiveBundles = bReceiveBundles;
+		peer->bSendBundles = bSendBundles && bReceiveBundles;
+	}
+}
+
+void CNetDriver::ProcessNormal( const CNodeAddress &addr, CBitStream &bits, int nSize, bool bBundled )
+{
+	// Validate the entire datagram before accepting its ACKs or stream bytes.
+	// CBitStream's release build does not bounds-check reads.
+	if ( nSize < 12 + ( bBundled ? 1 : 5 ) )
+	{
+		return;
+	}
+	const unsigned char *bytes = bits.GetCurrentPtr();
+	const unsigned count = bBundled ? bytes[12] : 1;
+	if ( count < 1 || count > 2 )
+	{
+		return;
+	}
+	int offset = 12 + ( bBundled ? 1 : 0 );
+	bool hasData = false;
+	for ( unsigned i = 0; i < count; ++i )
+	{
+		if ( offset + 5 > nSize || offset + 5 + bytes[offset + 4] > nSize )
+		{
+			return;
+		}
+		hasData = hasData || bytes[offset + 4] != 0;
+		offset += 5 + bytes[offset + 4];
+	}
+	if ( offset != nSize )
+	{
+		return;
+	}
 	CP2PTracker::UCID clientID = -1;
-	bits.Read( &clientID, sizeof( clientID ) );
+	bits.Read( clientID );
 	if ( !p2p.IsActive( clientID ) )
 	{
 		return;
 	}
-	SPeer *pPeer = GetClient( clientID );
-	if ( pPeer )
+	SPeer *peer = GetClient( clientID );
+	if ( !peer || ( bBundled && !peer->bReceiveBundles ) )
 	{
-		pPeer->currentAddr = addr;
-		pPeer->bTryShortcut = false;
-		std::vector<PACKET_ID> acked;
-		NI_ASSERT( pPeer->data.CanReadMsg(), "data polling is not perfect" ); // data polling is not perfect
-		if ( pPeer->data.CanReadMsg() && pPeer->acks.ReadAcks( &acked, bits ) )
-		{
-			pPeer->data.ReadMsg( bits );
-			pPeer->data.Commit( acked );
-			PollMessages( pPeer );
-		}
+		return;
 	}
-	else
+	peer->currentAddr = addr;
+	peer->bTryShortcut = false;
+	std::vector<PACKET_ID> acknowledged;
+	const bool canReceive = !hasData || peer->data.CanReadMsg( count );
+	const bool fresh = peer->acks.ReadAcks( &acknowledged, bits, canReceive );
+	peer->data.Commit( acknowledged );
+	if ( hasData && canReceive )
 	{
-		//if (pCSLog) (*pCSLog) << "normal packet from non client received from " << addr.GetFastName() << endl;
+		// Duplicates must elicit another ACK if the preceding ACK was lost.
+		peer->acks.RequestAck();
+	}
+	if ( fresh && hasData )
+	{
+		if ( bBundled )
+		{
+			unsigned char ignoredCount;
+			bits.Read( ignoredCount );
+		}
+		for ( unsigned i = 0; i < count; ++i )
+		{
+			peer->data.ReadMsg( bits );
+		}
+		PollMessages( peer );
 	}
 }
 
@@ -579,7 +628,10 @@ void CNetDriver::ProcessIncomingMessages()
 		switch ( cmd )
 		{
 			case NORMAL:
-				ProcessNormal( addr, bits );
+				ProcessNormal( addr, bits, pkts.GetSize() - 1 );
+				break;
+			case NORMAL_BUNDLE:
+				ProcessNormal( addr, bits, pkts.GetSize() - 1, true );
 				break;
 			case LOGIN:
 				ProcessLogin( addr, bits );
@@ -939,43 +991,71 @@ void CNetDriver::StepActive( float fDeltaTime )
 	{
 		if ( p2p.IsActive( it->second.clientID ) )
 		{
-			if ( it->second.acks.CanSend() && ( it->second.data.HasOutData() || it->second.acks.NeedSend() ) &&
-			     it->second.fTimeToSendData <= 0 )
+			SPeer &peer = it->second;
+			peer.fTimeToSendData -= fDeltaTime;
+			const bool hasData = peer.data.HasOutData() || ( peer.bSendBundles && peer.data.HasRedundantData() );
+			const bool sendData = hasData && peer.acks.CanSend() && peer.fTimeToSendData <= 0;
+			if ( !sendData && !peer.acks.AckDue() && !peer.acks.NeedSend() )
 			{
-				it->second.fTimeToSendData = MIN_TIME_BETWEEN_PACKETS_PER_PEER;
-				if ( it->second.bTryShortcut )
+				continue;
+			}
+			if ( sendData && peer.bTryShortcut )
+			{
+				for ( int k = 0;; ++k )
 				{
-					for ( int k = 0; 1; ++k )
+					CNodeAddress destination;
+					if ( !peer.addrInfo.localAddress.GetAddress( k, &destination ) )
 					{
-						CNodeAddress dest;
-						if ( !it->second.addrInfo.localAddress.GetAddress( k, &dest ) )
-						{
-							break;
-						}
-						CSendPacket pkt( dest, TRY_SHORTCUT, login.GetSelfClientID(), pLinks );
-						pkt.GetBits()->Write( login.GetUniqueServerID() );
+						break;
 					}
+					CSendPacket packet( destination, TRY_SHORTCUT, login.GetSelfClientID(), pLinks );
+					packet.GetBits()->Write( login.GetUniqueServerID() );
 				}
-
-				PACKET_ID pktID;
+			}
+			// Even two full blocks produce only 534 UDP payload bytes. Count both
+			// against the congestion window; redundant bytes are not free capacity.
+			unsigned char body[521];
+			CBitStream bodyBits( body, CBitStream::write, sizeof( body ) );
+			const PACKET_ID id = peer.acks.GetNextPacketID();
+			const bool bundled = sendData && peer.bSendBundles;
+			int units = 0;
+			if ( sendData )
+			{
+				peer.fTimeToSendData = MIN_TIME_BETWEEN_PACKETS_PER_PEER;
+				if ( bundled )
 				{
-					CSendPacket pkt( it->second.currentAddr, NORMAL, login.GetSelfClientID(), pLinks );
-					pktID = it->second.acks.WrtieAcks( pkt.GetBits(), PACKET_SIZE ); // CRAP - packet size limits??
-					it->second.data.WriteMsg( pktID, pkt.GetBits(), PACKET_SIZE );
+					units = peer.data.WriteBundle( id, &bodyBits, peer.acks.CanSend( 2 ) );
 				}
-
-				if ( !CSendPacket::GetResult() )
+				else
 				{
-					it->second.acks.PacketLost( pktID );
-					std::vector<PACKET_ID> roll;
-					roll.push_back( pktID );
-					it->second.data.Rollback( roll );
-					break;
+					peer.data.WriteMsg( id, &bodyBits, PACKET_SIZE );
+					units = body[4] != 0 ? 1 : 0;
 				}
 			}
 			else
 			{
-				it->second.fTimeToSendData -= fDeltaTime;
+				// A legacy zero-length block is also understood by the existing server.
+				// ACK-only packets bypass the data window/pacer and never request ACKs.
+				peer.data.Erase( { id } );
+				bodyBits.Write( uint32_t( 0 ) );
+				bodyBits.Write( static_cast<unsigned char>( 0 ) );
+			}
+			{
+				CSendPacket packet( peer.currentAddr, bundled ? NORMAL_BUNDLE : NORMAL, login.GetSelfClientID(), pLinks );
+				peer.acks.WrtieAcks( packet.GetBits(), PACKET_SIZE, units );
+				packet.GetBits()->Write( body, static_cast<unsigned>( bodyBits.GetCurrentPtr() - body ) );
+			}
+			if ( !CSendPacket::GetResult() )
+			{
+				if ( units )
+				{
+					peer.acks.PacketLost( id );
+					peer.data.Rollback( { id } );
+					peer.data.Erase( { id } );
+				}
+				// Retry a failed ACK without a tight socket-error loop.
+				peer.acks.RequestAck();
+				break;
 			}
 		}
 	}

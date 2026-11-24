@@ -14,9 +14,9 @@
 namespace NNet
 {
 const int CS_PACKET_ID_RANGE = 0x10000;
-const float FP_RTT_KEEP = 0.93f; // RTT recalc rate
 const float TIME_TO_UPDATE_PING = 4;
-const float F_INITIAL_RTT = 3;
+const float F_INITIAL_RTT = 0.333f;
+const double MAX_ACK_DELAY = 0.025;
 const float MIN_WINDOWS_SIZE = 2.0f;
 const float MAX_WINDOWS_SIZE = 10.0f;
 
@@ -28,7 +28,7 @@ CAckTracker::CAckTracker()
 	float fRTT;
 	fRTT = F_INITIAL_RTT;
 	fAvrgRTT = fRTT;
-	fAvrgRTT2 = sqr( fAvrgRTT );
+	fRTTVariation = fAvrgRTT * 0.5f;
 	// 1 мало, т.к. в начале первые пакеты с обоих сторон не имеют ack`ов. Как следствие обе стороны приходят в состояние
 	// "хочу послать подтверждение о первом приеме, но не могу, т.к. окно занято не подтвержденным первым сообщением"
 	// это состояние разрешается по таймауту. Чтобы это происходило сразу нужно окно как минимум 2
@@ -61,20 +61,9 @@ CAckTracker::CAckTracker()
 	fUpdateTimeDelay = 250.0f / nBytesPerSec;
 }*/
 
-bool CAckTracker::CanSend()
+bool CAckTracker::CanSend( int nUnits ) const
 {
-	if ( nFlyPackets < fWindow )
-	{
-		return true;
-	}
-	return false;
-	/*	if ( fUpdateTimeElapsed > fUpdateTimeDelay )
-	{
-		fUpdateTimeElapsed -= fUpdateTimeDelay;
-		fTimeSinceLastSend = 0;
-		return true;
-	}
-	return false;*/
+	return nFlyPackets + nUnits - 1 < fWindow;
 }
 
 bool CAckTracker::NeedSend() const
@@ -82,14 +71,37 @@ bool CAckTracker::NeedSend() const
 	return fTimeSinceLastSend > 1.0f;
 }
 
+void CAckTracker::RequestAck()
+{
+	if ( !bAckPending )
+	{
+		bAckPending = true;
+		fAckDeadline = fCurrentTime + MAX_ACK_DELAY;
+	}
+}
+
+bool CAckTracker::AckDue() const
+{
+	return bAckPending && fCurrentTime >= fAckDeadline;
+}
+
 void CAckTracker::RegisterRTT( float _fRTT )
 {
 	//ASSERT( fRTT >= 0 );
-	float fRTT = Clamp( _fRTT, 0.0f, 20.0f );
-	fAvrgRTT *= FP_RTT_KEEP;
-	fAvrgRTT += ( 1 - FP_RTT_KEEP ) * fRTT;
-	fAvrgRTT2 *= FP_RTT_KEEP;
-	fAvrgRTT2 += ( 1 - FP_RTT_KEEP ) * sqr( fRTT );
+	const float fRTT = Clamp( _fRTT, 0.001f, 20.0f );
+	// The first observation seeds the estimate instead of slowly decaying a
+	// multi-second guess. Variation keeps delayed/reordered paths conservative.
+	if ( !bHaveRTT )
+	{
+		fAvrgRTT = fRTT;
+		fRTTVariation = fRTT * 0.5f;
+		bHaveRTT = true;
+	}
+	else
+	{
+		fRTTVariation = 0.75f * fRTTVariation + 0.25f * std::fabs( fAvrgRTT - fRTT );
+		fAvrgRTT = 0.875f * fAvrgRTT + 0.125f * fRTT;
+	}
 
 	// update ping info
 	++nPingPacketsReceived;
@@ -117,36 +129,42 @@ void CAckTracker::Step( std::vector<PACKET_ID> *pRolled,
 
 	fCurrentTime += fDeltaTime;
 	//
-	float fRTTDiscard = fAvrgRTT + GetRTTDisp() * 3; // 99% probability if normal distribution
-	// check network capacity
-	//float fMaxTimeElapsed = Max( fUpdateTimeDelay * 1.2f, fRTTDiscard );
-	//fUpdateTimeElapsed = Min( fUpdateTimeElapsed, fMaxTimeElapsed );
-	fRTTDiscard = (std::max)( fRTTDiscard, 0.1f );
-	fRTTDiscard = (std::min)( fRTTDiscard, fMaxRTT );
-	// roll back updates that are out of estimated rtt
-	std::list<CUpdate>::iterator it, itmp;
+	const double timeout =
+			(std::min)( static_cast<double>( fMaxRTT ),
+	                std::ldexp( (std::max)( 0.1, fAvrgRTT + 4.0 * fRTTVariation + MAX_ACK_DELAY ), nTimeoutBackoff ) );
+	// Three distinct newer acknowledgements indicate a gap, but allow a
+	// reordering interval before retransmission. Tail loss still has a timer.
+	const double reorderDelay = (std::max)( 0.025, 1.125 * fAvrgRTT );
+	std::list<CUpdate>::iterator it;
+	bool timedOut = false;
 	for ( it = sentUpdates.begin(); it != sentUpdates.end(); )
 	{
-		double fCrap = it->fTimeCreated;
-		if ( fCurrentTime - it->fTimeCreated > fRTTDiscard )
+		const double age = fCurrentTime - it->fTimeCreated;
+		const bool fastLoss = it->nLaterAcks >= 3 && age >= reorderDelay;
+		if ( fastLoss || age >= timeout )
 		{
-			//fUpdateTimeDelay *= 1.2f;
-			--nFlyPackets;
-			fWindow -= 0.5f;
-			fWindow = (std::max)( MIN_WINDOWS_SIZE, fWindow );
-#ifdef LOG
-			std::cout << "CONGESTION, new window=" << fWindow << "packets" << std::endl;
-#endif
-			//fUpdateTimeDelay = Min( fUpdateTimeDelay, 0.5f );
+			timedOut = timedOut || !fastLoss;
+			nFlyPackets -= it->nUnits;
+			// React once to a flight's loss, rather than shrinking again for
+			// every missing datagram in the same burst.
+			if ( it->fTimeCreated > fRecoveryEnd )
+			{
+				fWindow = (std::max)( MIN_WINDOWS_SIZE, fWindow * 0.75f );
+				fRecoveryEnd = fCurrentTime;
+			}
 			pRolled->push_back( it->nPktNumber );
-			itmp = it;
-			++it;
-			rolledUpdates.splice( rolledUpdates.end(), sentUpdates, itmp );
+			auto lost = it++;
+			rolledUpdates.splice( rolledUpdates.end(), sentUpdates, lost );
 		}
 		else
 		{
-			break;
+			++it;
 		}
+	}
+
+	if ( timedOut )
+	{
+		nTimeoutBackoff = (std::min)( nTimeoutBackoff + 1, 6u );
 	}
 	for ( it = rolledUpdates.begin(); it != rolledUpdates.end(); )
 	{
@@ -171,7 +189,8 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 	{
 		if ( ( i->nPktNumber ) == nPkt )
 		{
-			--nFlyPackets;
+			nTimeoutBackoff = 0;
+			nFlyPackets -= i->nUnits;
 			if ( i->bOnTheWindowEdge )
 			{
 				fWindow += 0.05f;
@@ -183,7 +202,16 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 #ifdef LOG
 			std::cout << "ACCELERATE new window=" << fWindow << "packets" << std::endl;
 #endif
+			for ( auto &pending : sentUpdates )
+			{
+				const unsigned distance = static_cast<PACKET_ID>( nPkt - pending.nPktNumber );
+				if ( distance > 0 && distance < CS_PACKET_ID_RANGE / 2 )
+				{
+					++pending.nLaterAcks;
+				}
+			}
 			pAcked->push_back( nPkt );
+			// Late ACKs for rolled transmissions do not inflate the RTT estimate.
 			RegisterRTT( fCurrentTime - i->fTimeCreated );
 			i = sentUpdates.erase( i );
 			return;
@@ -198,8 +226,8 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 	{
 		if ( i->nPktNumber == nPkt )
 		{
+			nTimeoutBackoff = 0;
 			pAcked->push_back( nPkt );
-			RegisterRTT( fCurrentTime - i->fTimeCreated );
 			i = rolledUpdates.erase( i );
 			return;
 		}
@@ -258,7 +286,7 @@ void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bi
 	for ( int i = 1; i <= 32; i++ )
 	{
 		nLast--;
-		if ( dwNewAckBits & ( 1 << ( i - 1 ) ) )
+		if ( dwNewAckBits & ( uint32_t( 1 ) << ( i - 1 ) ) )
 		{
 			ReceiveAck( pAcked, nLast );
 		}
@@ -291,7 +319,7 @@ bool CAckTracker::CheckRecvPacketNumber( UPDATE_ID nPkt )
 	return true;
 }
 
-bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
+bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits, bool bAcceptData )
 {
 	PACKET_ID nReceived;
 	UPDATE_ID nCurUpdate;
@@ -316,16 +344,10 @@ bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 		nCurUpdate += CS_PACKET_ID_RANGE;
 		nPktHighCounter += CS_PACKET_ID_RANGE;
 	}
-	// check is not packet too obsolete
-	if ( !CheckRecvPacketNumber( nCurUpdate ) )
-	{
-		return false;
-	}
-
-	// receiving acks
+	// ACKs still free outgoing data when the receive ring is full or this
+	// datagram is a duplicate. Do not acknowledge payload we cannot retain.
 	ReceivePktAcks( pAcked, bits );
-	//bHasNewPacketToAck = true;
-	return true;
+	return bAcceptData && CheckRecvPacketNumber( nCurUpdate );
 }
 
 // use receivedPkts
@@ -342,7 +364,7 @@ void CAckTracker::SendPktAcks( CBitStream *pBits )
 		k = find( receivedPkts.begin(), receivedPkts.end(), nTest );
 		if ( k != receivedPkts.end() )
 		{
-			dwBits |= 1 << ( i - 1 );
+			dwBits |= uint32_t( 1 ) << ( i - 1 );
 		}
 	}
 	( *pBits ).Write( &nLast, sizeof( nLast ) );
@@ -357,9 +379,10 @@ void CAckTracker::SendPktAcks( CBitStream *pBits )
 	}
 }
 
-PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
+PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize, int nUnits )
 {
-	++nFlyPackets;
+	nFlyPackets += nUnits;
+	bAckPending = false;
 	fTimeSinceLastSend = 0;
 #ifdef LOG
 	std::cout << "SEND, pkts left=" << fWindow - nFlyPackets << std::endl;
@@ -372,13 +395,17 @@ PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 	// acks on received packets
 	SendPktAcks( pBits );
 
-	CUpdate &update = sentUpdates.emplace_back();
-	update.fTimeCreated = fCurrentTime;
-	update.nPktNumber = nPktCurrent;
-	update.bOnTheWindowEdge = nFlyPackets + 1 > fWindow;
+	// Pure acknowledgements/keepalives do not occupy the data window and
+	// never require an acknowledgement of their own.
+	if ( nUnits > 0 )
+	{
+		CUpdate &update = sentUpdates.emplace_back();
+		update.fTimeCreated = fCurrentTime;
+		update.nPktNumber = nPktCurrent;
+		update.nUnits = nUnits;
+		update.bOnTheWindowEdge = nFlyPackets + 1 > fWindow;
+	}
 
-	//	bHasNewPacketToAck = false;
-	// CRAP - fix rate tracking info
 	return nPktCurrent;
 }
 
@@ -391,7 +418,7 @@ void CAckTracker::PacketLost( PACKET_ID pktID )
 		if ( it->nPktNumber == pktID )
 		{
 			bFound = true;
-			--nFlyPackets;
+			nFlyPackets -= it->nUnits;
 			fWindow -= 1.0f;
 			fWindow = (std::max)( MIN_WINDOWS_SIZE, fWindow );
 #ifdef LOG
