@@ -79,8 +79,12 @@ class UnitPositioning:
 
 	@staticmethod
 	def place_units(units: list[list[list]], map):
+		if not units:
+			return
 		y_progression = UnitPositioning.unit_span[1] / len(units)
 		for i, techlevel in enumerate(units):
+			if not techlevel:
+				continue
 			x_progression = UnitPositioning.unit_span[0] / len(techlevel)
 			for j, reinf in enumerate(techlevel):
 				for k, unit in enumerate(reinf):
@@ -115,24 +119,20 @@ def main(args):
 		name_ref = tech_level.NameFileRef
 		print(str(i) + " " + bk2_xml_utils.href_get_file_contents(name_ref, fs, "Consts/Test"))"""
 
-	nation_ids = [0, 1, 2, 3, 4, 5, 6]
-	tech_levels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-
+	tech_levels = consts.findall("TechLevels/Item")
 	map_name = "AllUsedUnits"
 
-	counter = 0
-	for i, side in enumerate(consts.Sides.Item):
-		counter += 1
-		units = []
+	for counter, side in enumerate(consts.findall("Sides/Item"), start=1):
+		# Reserve every global tech level so disabled or missing levels leave a gap.
+		units = [[] for _ in tech_levels]
 		map = bk2_xml_utils.load_xml_file(fs, map_template)
-		for t, tech_level in enumerate(consts.TechLevels.Item):
-			units.append([])
-			map.Players.Item[0].PartyInfo.attrib["href"] = side.PartyInfo.attrib["href"]
-			level = side.TechLevels.Item[t]
-			reinfs = level.Reinforcements.Item
-			# print(f"Side: {i}, reinfs: ")
-			for k, reinf_ref in enumerate(reinfs):
-				units[t].append([])
+		map.Players.Item[0].PartyInfo.attrib["href"] = side.PartyInfo.attrib["href"]
+		for row, level in zip(units, side.findall("TechLevels/Item")):
+			if level.findtext("Disabled", "false").strip().lower() in ("true", "1"):
+				continue
+			for reinf_ref in level.findall("Reinforcements/Item"):
+				reinf_units = []
+				row.append(reinf_units)
 				bk2_map_xml_utils.add_reinf_type(map, reinf_ref.attrib["href"], 0)
 				reinf_content = bk2_xml_utils.href_get_binary_file_contents(reinf_ref, fs)
 				reinf = objectify.fromstring(reinf_content)
@@ -144,11 +144,11 @@ def main(args):
 				for j, unit in enumerate(reinf_items):
 					if bk2_xml_utils.href_file_exists(unit.MechUnit, fs):
 						# bk2_map_xml_utils.add_object_on_map(map, unit.MechUnit.attrib["href"], pos, 32768, 0)
-						units[t][k].append(unit.MechUnit)
+						reinf_units.append(unit.MechUnit)
 						continue
 					if bk2_xml_utils.href_file_exists(unit.Squad, fs):
 						# bk2_map_xml_utils.add_object_on_map(map, unit.Squad.attrib["href"], pos, 32768, 0)
-						units[t][k].append(unit.Squad)
+						reinf_units.append(unit.Squad)
 						continue
 		UnitPositioning.place_units(units, map)
 		map_name_bytes = utils.string_to_utf16_le(f"{map_name}{counter}")
