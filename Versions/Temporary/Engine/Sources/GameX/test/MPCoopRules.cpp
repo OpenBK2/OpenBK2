@@ -14,6 +14,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include <limits>
 
 #include <gtest/gtest.h>
 
@@ -431,5 +432,53 @@ TEST_F( MPCoopRules, ClassicLockedNationsKeepRandomPlacementAndUseDestinationMap
 	ASSERT_EQ( mission->players.size(), 1 );
 	EXPECT_FALSE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) );
 	EXPECT_EQ( error, "<val MP_RULE_INVALID_PLAYER_ASSIGNMENT>" );
+}
+
+TEST_F( MPCoopRules, ManualPlacementUsesAllHumanStartsAndPreservesLockedNations )
+{
+	ConfigureLockedNations();
+	mission->players[4].pPartyInfo = mission->players[1].pPartyInfo;
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	// Seat 4 is outside the room limit, seats 0/2 are scripted bots, and seat 5 is neutral.
+	EXPECT_TRUE( NGameX::IsManualPlacementStart( game, 4 ) );
+	EXPECT_TRUE( NGameX::IsValidManualPlacement( game, { 0, 4, 2, 3, 1, 5 } ) );
+	for ( const auto &order : std::vector<std::vector<uint8_t>>{ { 1, 0, 2, 3, 4, 5 },
+	                                                             { 0, 3, 2, 1, 4, 5 },
+	                                                             { 0, 5, 2, 3, 4, 1 },
+	                                                             { 0, 1, 2, 3, 1, 5 },
+	                                                             { 0, 1, 2, 3, 4, 6 },
+	                                                             { 0, 1 } } )
+	{
+		EXPECT_FALSE( NGameX::IsValidManualPlacement( game, order ) );
+	}
+	for ( int i = 0; i < 10; ++i )
+	{
+		const auto order = NGameX::GenerateManualPlacement( game );
+		ASSERT_TRUE( NGameX::IsValidManualPlacement( game, order ) );
+		EXPECT_EQ( order[0], 0 );
+		EXPECT_EQ( order[2], 2 );
+		EXPECT_EQ( order[3], 3 );
+		EXPECT_EQ( order[5], 5 );
+	}
+
+	map->eGameType = NDb::CLASSIC;
+	mission->players[0].pPartyInfo = mission->players[3].pPartyInfo;
+	mission->players[2].pPartyInfo = mission->players[1].pPartyInfo;
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	EXPECT_TRUE( NGameX::IsValidManualPlacement( game, { 0, 2, 1 } ) );
+	EXPECT_FALSE( NGameX::IsValidManualPlacement( game, { 2, 1, 0 } ) );
+	EXPECT_FALSE( NGameX::IsManualPlacementStart( game, 3 ) );
+}
+
+TEST_F( MPCoopRules, NonFiniteHumanStartDisablesPreviewWithoutAffectingOrdinaryPlacement )
+{
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	mission->players[0].vMPStartPos.x = std::numeric_limits<float>::quiet_NaN();
+	EXPECT_EQ( NGameX::GetManualPlacementSize( game ), 6 );
+	mission->players[3].vMPStartPos.y = std::numeric_limits<float>::infinity();
+	EXPECT_EQ( NGameX::GetManualPlacementSize( game ), 0 );
+	EXPECT_TRUE( NGameX::GenerateManualPlacement( game ).empty() );
+	EXPECT_FALSE( NGameX::IsValidManualPlacement( game, { 0, 1, 2, 3, 4, 5 } ) );
+	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( game, ReadySlots(), &error, constants ) ) << error;
 }
 } // namespace

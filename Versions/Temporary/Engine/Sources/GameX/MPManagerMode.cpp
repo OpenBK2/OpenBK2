@@ -8,6 +8,7 @@
 #include "InterfaceMisc.h"
 #include "Main/MainLoopCommands.h"
 #include "Misc/StrProc.h"
+#include "MPCoopRules.h"
 #include "MPManagerMode.h"
 #include "MPTransceiver.h"
 #include "MultiplayerTestNet.h"
@@ -46,6 +47,8 @@ CMPManagerMode::CMPManagerMode()
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_INTERRUPT, SMPUIMessage, &CMPManagerMode::OnInterruptMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_SLOT, SMPUIUpdateSlotMessage, &CMPManagerMode::OnUpdateSlotMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_MANUAL_PLACEMENT, SMPUIManualPlacementMessage, &CMPManagerMode::OnManualPlacementMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
 			EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, &CMPManagerMode::OnUpdateGameListMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_WAITING_FOR_PLAYERS, SMPUILagMessage, &CMPManagerMode::OnLagMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_MP_PAUSE, SMPUIMessage, &CMPManagerMode::OnPauseMessage );
@@ -54,6 +57,7 @@ CMPManagerMode::CMPManagerMode()
 	// Packets
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnGameClientRemoved );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2SlotInfoPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2ManualPlacementPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnGameKilled );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2GameRoomStartGamePacket );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2GameSpecificInfoPacket );
@@ -269,10 +273,25 @@ void CMPManagerMode::SendGameRoomInitMessages()
 		PushMessage( pSlotMsg );
 	}
 	bGameRoomInit = true;
+	PushMessage( new SMPUIManualPlacementMessage( manualPlacement ) );
 	pingUpdate.bUpdating = true;
 	pingUpdate.timeNextUpdate = 0;
 
 	pClient->SendGamePacket( new CB2SlotInfoPacket( 0, nOwnSlot, slots[nOwnSlot] ), true );
+}
+
+bool CMPManagerMode::SetManualPlacement( const std::vector<uint8_t> &order )
+{
+	if ( manualPlacement == order || ( !order.empty() && !NGameX::IsValidManualPlacement( gameDesc, order ) ) )
+	{
+		return false;
+	}
+	manualPlacement = order;
+	if ( bGameRoomInit )
+	{
+		PushMessage( new SMPUIManualPlacementMessage( manualPlacement ) );
+	}
+	return true;
 }
 
 EPeerConnectionRoute CMPManagerMode::GetPeerRoute( int nSlot ) const
@@ -332,6 +351,7 @@ void CMPManagerMode::SendStartGamePacket()
 	// Only the host resolves this profile setting, once, for every player in the match.
 	bBaseReinforcementBonuses = NGlobal::GetVar( "multiplayer_flag_calls_bonus", 0 ) == 1;
 	pStartPkt->bBaseReinforcementBonuses = bBaseReinforcementBonuses;
+	pStartPkt->bManualPlacement = !manualPlacement.empty();
 	CreateRehash( &( pStartPkt->slotRehash ) );
 	RehashSlots( pStartPkt->slotRehash );
 	for ( const SMPSlot &slot : slots )

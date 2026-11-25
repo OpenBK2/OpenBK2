@@ -24,6 +24,15 @@
 
 // CMPManagerMode - packet handling methods
 
+bool CMPManagerMode::OnB2ManualPlacementPacket( CB2ManualPlacementPacket *pPacket )
+{
+	if ( IsInGameRoom() && !IsGameHost() && pPacket->nClientID == nHostClientID )
+	{
+		SetManualPlacement( pPacket->manualPlacement );
+	}
+	return true;
+}
+
 bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 {
 	// Once running, membership changes only at synchronized drop boundaries.
@@ -180,25 +189,40 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 {
 	NI_VERIFY( IsInGameRoom() && !IsGameHost(), "PRG: StartGame received by not a client", return true );
 
+	const auto &order = pPacket->slotRehash;
 	if ( pPacket->nClientID != nHostClientID || nOwnSlot < 0 || nOwnSlot >= slots.size() ||
-	     pPacket->slots.size() != slots.size() || pPacket->slotRehash.size() != slots.size() )
+	     order.size() != pPacket->slots.size() || order.size() < slots.size() )
 	{
 		return true;
 	}
-	std::vector<bool> used( slots.size(), false );
-	for ( int i = 0; i < slots.size(); ++i )
+	if ( pPacket->bManualPlacement )
 	{
-		const int nTarget = pPacket->slotRehash[i];
-		if ( nTarget >= slots.size() || used[nTarget] || ( NGameX::IsCoopGame( gameDesc ) && nTarget != i ) )
+		if ( !NGameX::IsValidManualPlacement( gameDesc, order ) )
 		{
 			return true;
 		}
-		used[nTarget] = true;
+	}
+	else
+	{
+		if ( order.size() != slots.size() )
+		{
+			return true;
+		}
+		std::vector<bool> used( order.size() );
+		for ( int i = 0; i < order.size(); ++i )
+		{
+			const int nTarget = order[i];
+			if ( nTarget >= order.size() || used[nTarget] || ( NGameX::IsCoopGame( gameDesc ) && nTarget != i ) )
+			{
+				return true;
+			}
+			used[nTarget] = true;
+		}
 	}
 	// Validate the complete host snapshot before changing local slot placement.
 	// Other peers' colour, presence and ready updates may still be in flight.
 	std::vector<SMPSlot> startSlots( pPacket->slots );
-	const int nNewOwnSlot = pPacket->slotRehash[nOwnSlot];
+	const int nNewOwnSlot = order[nOwnSlot];
 	if ( !startSlots[nNewOwnSlot].bPresent || startSlots[nNewOwnSlot].nClientID != GetOwnClientID() )
 	{
 		return true;
@@ -230,8 +254,26 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 	{
 		return true;
 	}
+	std::vector<SMPSlot> lobbySlots;
+	if ( pPacket->bManualPlacement )
+	{
+		// Manual moves retain each player's nation and lobby eligibility, even when the destination
+		// exceeds the room's player limit. Only actual lobby seats may contribute a participant.
+		for ( int i = 0; i < order.size(); ++i )
+		{
+			const auto &slot = startSlots[order[i]];
+			if ( i < slots.size() )
+			{
+				lobbySlots.push_back( slot );
+			}
+			else if ( slot.bPresent )
+			{
+				return true;
+			}
+		}
+	}
 	std::string szError;
-	if ( !NGameX::ValidateMultiplayerLobby( gameDesc, startSlots, &szError ) )
+	if ( !NGameX::ValidateMultiplayerLobby( gameDesc, pPacket->bManualPlacement ? lobbySlots : startSlots, &szError ) )
 	{
 		auto *pFailure = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
 		pFailure->szDetail = szError;

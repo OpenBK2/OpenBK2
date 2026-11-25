@@ -7,6 +7,9 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 
 #include <algorithm>
+#include <cmath>
+#include <numeric>
+#include <random>
 
 namespace
 {
@@ -18,6 +21,29 @@ bool RejectRules( std::string *pError, const char *pszReason )
 		*pError = pszReason;
 	}
 	return false;
+}
+
+bool IsAuthoredPlacementStart( const SB2GameSpecificData &game, int nSlot )
+{
+	const auto &player = game.pMPMap->pMap->players[nSlot];
+	// CLASSIC maps reserve their first nPlayers map IDs. COOP can interleave scripted bots with humans.
+	return ( !NGameX::IsCoopGame( game ) || ( player.nDiplomacySide == 0 && player.ePlayerType == NDb::HUMAN ) ) &&
+	       ( !NGameX::IsMultiplayerNationSelectionDisabled( game ) || player.pPartyInfo );
+}
+
+bool CanPlaceAtStart( const SB2GameSpecificData &game, int nSource, int nTarget )
+{
+	if ( nSource == nTarget )
+	{
+		return true;
+	}
+	if ( !IsAuthoredPlacementStart( game, nSource ) || !IsAuthoredPlacementStart( game, nTarget ) )
+	{
+		return false;
+	}
+	const auto &players = game.pMPMap->pMap->players;
+	return !NGameX::IsMultiplayerNationSelectionDisabled( game ) ||
+	       players[nSource].pPartyInfo == players[nTarget].pPartyInfo;
 }
 } // namespace
 
@@ -36,6 +62,78 @@ bool IsMultiplayerNationSelectionDisabled( const SB2GameSpecificData &game )
 int GetMultiplayerSlotCount( const SB2GameSpecificData &game )
 {
 	return IsCoopGame( game ) && game.pMPMap && game.pMPMap->pMap ? game.pMPMap->pMap->players.size() : game.nPlayers;
+}
+
+int GetManualPlacementSize( const SB2GameSpecificData &game )
+{
+	if ( !game.pMPMap || !game.pMPMap->pMap )
+	{
+		return 0;
+	}
+	const auto &players = game.pMPMap->pMap->players;
+	const int nSize = IsCoopGame( game ) ? int( players.size() ) : game.pMPMap->nPlayers;
+	// Lobby connectivity uses a 16-bit player-ID mask on both transports.
+	if ( nSize < game.nPlayers || nSize < 2 || nSize > 16 || nSize > players.size() )
+	{
+		return 0;
+	}
+	for ( int i = 0; i < nSize; ++i )
+	{
+		const auto &pos = players[i].vMPStartPos;
+		if ( IsAuthoredPlacementStart( game, i ) && ( !std::isfinite( pos.x ) || !std::isfinite( pos.y ) ) )
+		{
+			// A layout could put a player on this start without a visible or draggable marker.
+			return 0;
+		}
+	}
+	return nSize;
+}
+
+bool IsManualPlacementStart( const SB2GameSpecificData &game, int nSlot )
+{
+	return nSlot >= 0 && nSlot < GetManualPlacementSize( game ) && IsAuthoredPlacementStart( game, nSlot );
+}
+
+bool IsValidManualPlacement( const SB2GameSpecificData &game, const std::vector<uint8_t> &order )
+{
+	if ( order.empty() || order.size() != GetManualPlacementSize( game ) )
+	{
+		return false;
+	}
+	std::vector<bool> used( order.size() );
+	for ( int i = 0; i < order.size(); ++i )
+	{
+		const int nTarget = order[i];
+		if ( nTarget >= order.size() || used[nTarget] || !CanPlaceAtStart( game, i, nTarget ) )
+		{
+			return false;
+		}
+		used[nTarget] = true;
+	}
+	return true;
+}
+
+std::vector<uint8_t> GenerateManualPlacement( const SB2GameSpecificData &game )
+{
+	const int nSize = GetManualPlacementSize( game );
+	std::vector<uint8_t> order( nSize );
+	std::iota( order.begin(), order.end(), 0 );
+	// Shuffle each group of interchangeable starts independently. Only the lobby host draws random numbers.
+	static std::mt19937 random( std::random_device{}() );
+	for ( int i = 1; i < nSize; ++i )
+	{
+		std::vector<int> compatible;
+		for ( int j = 0; j <= i; ++j )
+		{
+			if ( CanPlaceAtStart( game, i, j ) )
+			{
+				compatible.push_back( j );
+			}
+		}
+		const int nIndex = std::uniform_int_distribution<int>( 0, int( compatible.size() ) - 1 )( random );
+		std::swap( order[i], order[compatible[nIndex]] );
+	}
+	return order;
 }
 
 bool IsHumanMultiplayerSlot( const SB2GameSpecificData &game, int nSlot )

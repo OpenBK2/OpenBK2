@@ -30,6 +30,7 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 {
 	// Store info
 	gameDesc = pMsg->specificInfo;
+	manualPlacement.clear();
 	szSessionName = pMsg->info.szSessionName;
 	if ( pMsg->info.bPwdReq )
 	{
@@ -101,6 +102,7 @@ bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 			bFound = true;
 			// Init all necessary data
 			gameDesc = SB2GameSpecificData();
+			manualPlacement.clear();
 			gameDesc.nPlayers = game.nMaxPlayers;
 			gameDesc.eType = static_cast<SB2GameSpecificData::EGameType>( game.nGameType );
 			slots.clear();
@@ -184,6 +186,15 @@ bool CMPManagerMode::OnUpdateGameListMessage( SMPUIGameListMessage *pMsg )
 		}
 	}
 	gamesUpdate.bUpdating = pMsg->bSendUpdates;
+	return true;
+}
+
+bool CMPManagerMode::OnManualPlacementMessage( SMPUIManualPlacementMessage *pMsg )
+{
+	if ( IsInGameRoom() && IsGameHost() && SetManualPlacement( pMsg->manualPlacement ) )
+	{
+		pClient->SendGamePacket( new CB2ManualPlacementPacket( 0, manualPlacement ), true );
+	}
 	return true;
 }
 

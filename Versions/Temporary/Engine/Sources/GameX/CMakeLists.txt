@@ -59,6 +59,7 @@ set(SOURCES
     InterfaceMPCreateCustomGame.cpp
     InterfaceMPCustomGame.cpp
     InterfaceMPGameRoom.cpp
+    InterfaceMPGameRoomPlacement.cpp
     InterfaceMPLadderGame.cpp
     InterfaceMPLadderStatistics.cpp
     InterfaceMPLoading.cpp

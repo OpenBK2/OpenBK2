@@ -78,6 +78,18 @@ add_unit_test(MPDifficultySelection GameX UI libdb System Misc Main AILogic Stat
 target_compile_definitions(MPDifficultySelection_test PRIVATE
     MP_DIFFICULTY_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 add_unit_test(UnitTransferUI UI 3Dmotor libdb System Misc gr2)
+add_unit_test(ManualPlacementUI UI 3Dmotor libdb System Misc gr2)
+add_unit_test(ManualPlacementDrag GameX UISpecificB2 UI SceneB2 3Dmotor Input Main libdb System Misc Stats_B2_M1 zlib gr2
+    SOURCES ../MultiplayerCommandProcessor.cpp)
+foreach(target ManualPlacementUI_test ManualPlacementDrag_test)
+    target_compile_definitions(${target} PRIVATE
+        PLACEMENT_UI_GAME_DATA="${CMAKE_SOURCE_DIR}/Versions/Current/Data"
+        PLACEMENT_UI_PAK="${CMAKE_SOURCE_DIR}/OBK2_Examples/ManualPlacement/manual_placement.pak")
+endforeach()
+if(WIN32)
+    set_tests_properties(ManualPlacementUI_test ManualPlacementDrag_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
 # Resolve the flags of an installed game's sides, when one is named (see the source).
 add_unit_test(MPSideFlags GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 target_compile_definitions(UnitTransferUI_test PRIVATE

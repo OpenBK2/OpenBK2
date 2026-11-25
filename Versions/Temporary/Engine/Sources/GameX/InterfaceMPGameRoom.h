@@ -5,8 +5,15 @@
 #include "GameRoomData.h"
 #include "InterfaceMPBase.h"
 
+#include "GameX_export.h"
+
+#include <cstdint>
+#include <string>
+#include <vector>
+
 class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {
+	friend class CManualPlacementTestAccess;
 	OBJECT_NOCOPY_METHODS( CInterfaceMPGameRoom );
 
 	struct SUISlot
@@ -31,7 +38,7 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, public IProgrammedRe
 	CPtr<ITextView> pTechLevel;
 	CPtr<ITextView> pNumPlayers;
 	CPtr<ITextView> pMapName;
-	CPtr<IWindow> pMinimap;
+	CPtr<IMiniMap> pMinimap;
 	CPtr<ITextView> pTimeLimit;
 	CPtr<ITextView> pCaptureTime;
 	CPtr<ITextView> pGameSpeed;
@@ -54,16 +61,32 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, public IProgrammedRe
 	CPtr<CChatControlWrapper> pChatWrapper;
 
 	CPtr<IWindow> pWaitMessage;
-	bool bConnected;
+	bool bConnected = false;
 
 	SB2GameSpecificData gameDesc;
-	bool bHost;
+	bool bHost = false;
 	int nRequestedSlotChangeIndex;
 	bool bRequestedSlotChangeClosed;
 	CPtr<IWindow> pAdvancedPopup;
 	CPtr<ITextView> pCantStartAccept;
 	CPtr<ITextView> pCantStartSide;
 	CPtr<ITextView> pCantStartColour;
+
+	// Each marker belongs to its original lobby slot, including vacancies beyond the room capacity.
+	struct SPlacementMarker
+	{
+		CPtr<IWindow> pFlag;
+		CPtr<ITextView> pName;
+		CPtr<CColorBackground> pPlayerColor;
+		std::wstring wszBotName;
+	};
+
+	CPtr<IWindow> pPlacementPanel;
+	CPtr<IButton> pPlacementToggle;
+	std::vector<SPlacementMarker> placementMarkers;
+	std::vector<uint8_t> manualPlacement;
+	int nDraggedSlot = -1;
+	CVec2 vDragOffset = VNULL2;
 
 public:
 	ZEND int operator&( IBinSaver &f ) override
@@ -97,6 +120,17 @@ private:
 	void RegisterObservers();
 
 	void InitControls();
+	GAMEX_EXPORT void InitPlacementControls();
+	void UpdatePlacementMarkers();
+	void PositionPlacementMarker( int nSlot, const CVec2 &vCenter );
+	void RestorePlacementMarker( int nSlot );
+	void CancelPlacementDrag();
+	int FindPlacementMarker( const CVec2 &vPos, bool bOccupiedOnly ) const;
+	bool OnPlacementPress( const SGameMessage &msg );
+	bool OnPlacementMove( const SGameMessage &msg );
+	bool OnPlacementRelease( const SGameMessage &msg );
+	bool OnManualPlacementMessage( const SMPUIManualPlacementMessage *pMsg );
+	bool ToggleManualPlacement();
 	void UpdateMapName();
 	void SetControls();
 	void UpdateInterior();

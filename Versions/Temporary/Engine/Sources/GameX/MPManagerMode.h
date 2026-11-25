@@ -9,6 +9,7 @@
 
 #include <array>
 #include <cstdint>
+#include <vector>
 
 struct IServerClient;
 class CLANTester;
@@ -127,6 +128,8 @@ protected:
 	uint32_t ulHostCheckSum;
 	uint32_t ulGameCheckSum;
 	std::vector<SMPSlot> slots;
+	// Lobby slot -> map start, including unoccupied starts. Empty uses the room's placement option.
+	std::vector<uint8_t> manualPlacement;
 	int nHostClientID;
 	int nOwnSlot;
 	int nSlotsUsed;
@@ -181,6 +184,8 @@ private:
 	bool OnStartGameMessage( SMPUIMessage *pMsg );
 	bool OnUpdateGameListMessage( SMPUIGameListMessage *pMsg );
 	bool OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg );
+	bool OnManualPlacementMessage( SMPUIManualPlacementMessage *pMsg );
+	bool SetManualPlacement( const std::vector<uint8_t> &order );
 	bool OnLagMessage( SMPUILagMessage *pMsg );
 	bool OnPauseMessage( SMPUIMessage *pMsg );
 	void SetUserPause( bool bPauseOn );
@@ -192,6 +197,7 @@ private:
 	bool OnGameKilled( class CGameKilled *pPacket );
 	bool OnConnectGameFailedPacket( class CConnectGameFailed *pPacket );
 	bool OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket );
+	bool OnB2ManualPlacementPacket( class CB2ManualPlacementPacket *pPacket );
 	bool OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePacket *pPacket );
 	bool OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket *pPacket );
 	bool OnChatPacket( class CChatPacket *pPacket );

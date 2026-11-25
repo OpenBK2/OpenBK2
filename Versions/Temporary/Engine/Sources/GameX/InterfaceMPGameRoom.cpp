@@ -63,6 +63,8 @@ CInterfaceMPGameRoom::CInterfaceMPGameRoom()
 	REGISTER_MPUI_MESSAGE_HANDLER(
 			EMUI_GAME_ROOM_INIT, SMPUIGameRoomInitMessage, &CInterfaceMPGameRoom::OnGameRoomInitMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_SLOT, SMPUIUpdateSlotMessage, &CInterfaceMPGameRoom::OnUpdateSlotMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_MANUAL_PLACEMENT, SMPUIManualPlacementMessage, &CInterfaceMPGameRoom::OnManualPlacementMessage );
 }
 
 CInterfaceMPGameRoom::~CInterfaceMPGameRoom()
@@ -105,6 +107,9 @@ void CInterfaceMPGameRoom::RegisterObservers()
 {
 	AddObserver( "message_box_ok", &CInterfaceMPGameRoom::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceMPGameRoom::MsgCancel );
+	AddImportantObserver( "win_left_button_down", &CInterfaceMPGameRoom::OnPlacementPress );
+	AddImportantObserver( "win_mouse_move", &CInterfaceMPGameRoom::OnPlacementMove );
+	AddImportantObserver( "win_left_button_up", &CInterfaceMPGameRoom::OnPlacementRelease );
 }
 
 void CInterfaceMPGameRoom::InitControls()
@@ -160,11 +165,17 @@ void CInterfaceMPGameRoom::SetControls()
 
 void CInterfaceMPGameRoom::OnGetFocus( bool bFocus )
 {
+	CancelPlacementDrag();
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 }
 
 bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::string &szReaction )
 {
+	if ( szReaction == "ToggleManualPlacement" )
+	{
+		return ToggleManualPlacement();
+	}
+
 	if ( szReaction == "react_on_back" )
 	{
 		return OnBackReaction();
@@ -426,6 +437,7 @@ void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 	pMsg->info = slots[nSlot].info;
 	pMsg->nSlot = nSlot;
 	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );
+	UpdatePlacementMarkers();
 }
 
 bool CInterfaceMPGameRoom::ProcessEvent( const SGameMessage &msg )
@@ -685,6 +697,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	pWaitMessage->ShowWindow( false );
 	pChatInput->SetFocus( true );
 	bConnected = true;
+	InitPlacementControls();
 
 	if ( pMsg->bHost )
 	{
@@ -703,7 +716,14 @@ bool CInterfaceMPGameRoom::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 		pPopup->ShowWindow( false );
 	}
 
+	const auto &previous = slots[pMsg->nSlot].info;
+	const bool bMarkerChanged = previous.bPresent != pMsg->info.bPresent || previous.nTeam != pMsg->info.nTeam ||
+	                            previous.nColour != pMsg->info.nColour || previous.szName != pMsg->info.szName;
 	slots[pMsg->nSlot].info = pMsg->info;
+	if ( bMarkerChanged )
+	{
+		UpdatePlacementMarkers();
+	}
 
 	UpdateInterior();
 	CheckStartConditions();
@@ -820,20 +840,6 @@ void CInterfaceMPGameRoom::UpdateInterior()
 			}
 		}
 		slot.pPing->SetTooltip( wszPingTooltip );
-	}
-
-	const NDb::SMapInfo *pMapInfo = gameDesc.pMPMap->pMap;
-	if ( pMapInfo )
-	{
-		const NDb::SMaterial *pMaterial = pMapInfo->pMiniMap;
-		CPtr<IMiniMap> pWindowMiniMap = GetChildChecked<IMiniMap>( pMain, "Minimap", true );
-		if ( pWindowMiniMap )
-		{
-			pWindowMiniMap->SetLoadingMapParams( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-			                                     pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
-			pWindowMiniMap->SetMaterial( pMapInfo->pMiniMap );
-			pWindowMiniMap->ShowWindow( true );
-		}
 	}
 }
 
