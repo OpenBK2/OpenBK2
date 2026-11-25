@@ -51,9 +51,10 @@ class VirtualFileSystem(VirtualFileSystemBaseClass):
 		return self.contains_file(item)
 
 	def open_file(self, item):
-		item = utils.formatted_path(item)
-		if item in self.cache:
-			return io.BytesIO(self.cache[item])
+		item = item.replace("\\", "/")
+		key = utils.formatted_path(item)
+		if key in self.cache:
+			return io.BytesIO(self.cache[key])
 		ret = None
 		time = None
 		for system in self.systems:
@@ -67,13 +68,16 @@ class VirtualFileSystem(VirtualFileSystemBaseClass):
 					ret = system.open_file(item)
 					time = t
 		if ret is not None:
-			self.cache[item] = ret.read()
+			self.cache[key] = ret.read()
 			ret.close()
-			ret = io.BytesIO(self.cache[item])
+			ret = io.BytesIO(self.cache[key])
 		return ret
 
 	def read_file_bytes(self, path: str) -> bytes:
-		with self.open_file(path) as stream:
+		stream = self.open_file(path)
+		if stream is None:
+			raise FileNotFoundError(path)
+		with stream:
 			return stream.read()
 
 	def read_text_file(self, path: str):
