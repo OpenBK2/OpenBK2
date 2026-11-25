@@ -75,6 +75,7 @@ jobs:
             Versions/Current/Data/Fonts
             Versions/Current/Data/bin/fonts
             Versions/Current/Data/Consts/Game/Tags
+            Versions/Current/Data/Consts/Test
             Versions/Current/Data/Citations
             Versions/Current/Data/UI/Game/Common
             Versions/Current/Data/UI/Game/Menu/Common
@@ -193,6 +194,7 @@ jobs:
             Versions/Current/Data/Fonts
             Versions/Current/Data/bin/fonts
             Versions/Current/Data/Consts/Game/Tags
+            Versions/Current/Data/Consts/Test
             Versions/Current/Data/Citations
             Versions/Current/Data/UI/Game/Common
             Versions/Current/Data/UI/Game/Menu/Common

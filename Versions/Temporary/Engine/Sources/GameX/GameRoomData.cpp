@@ -89,31 +89,33 @@ void CTextureViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDat
 
 	if ( pWnd )
 	{
-		// The combo box redraws its selected line through this viewer for every
-		// item it shows, so the same window can go from a flag to a plain texture
-		// (the random country icon) and back: the vector background is installed
-		// over the window's own one, and that one is put back when it is not needed.
-		CDynamicCast<CBackgroundVectorImage> pVector( pWnd->GetBackground() );
-		if ( !pInfo->szVectorImage.empty() )
+		NMPSetData::SetFlagImage( pWnd, pInfo->pTexture, pInfo->szVectorImage );
+		pWnd->SetTooltip( pInfo->wszTooltip );
+	}
+}
+
+void NMPSetData::SetFlagImage( CWindow *pWindow, const NDb::STexture *pTexture, const std::string &szVectorImage )
+{
+	// Both the selector and map marker can switch between SVG and stock texture artwork.
+	CDynamicCast<CBackgroundVectorImage> pVector( pWindow->GetBackground() );
+	if ( !szVectorImage.empty() )
+	{
+		if ( pVector )
 		{
-			if ( pVector )
-			{
-				pVector->SetFileName( pInfo->szVectorImage );
-			}
-			else
-			{
-				pWnd->SetBackground( new CBackgroundVectorImage( pInfo->szVectorImage, pWnd->GetBackground() ) );
-			}
+			pVector->SetFileName( szVectorImage );
 		}
 		else
 		{
-			if ( pVector )
-			{
-				pWnd->SetBackground( pVector->GetReplaced() );
-			}
-			pWnd->SetTexture( pInfo->pTexture );
+			pWindow->SetBackground( new CBackgroundVectorImage( szVectorImage, pWindow->GetBackground() ) );
 		}
-		pWnd->SetTooltip( pInfo->wszTooltip );
+	}
+	else
+	{
+		if ( pVector )
+		{
+			pWindow->SetBackground( pVector->GetReplaced() );
+		}
+		pWindow->SetTexture( pTexture );
 	}
 }
 

@@ -83,6 +83,7 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, public IProgrammedRe
 
 	CPtr<IWindow> pPlacementPanel;
 	CPtr<IButton> pPlacementToggle;
+	float fPlacementToggleInsetY = -1.0f;
 	std::vector<SPlacementMarker> placementMarkers;
 	std::vector<uint8_t> manualPlacement;
 	int nDraggedSlot = -1;
@@ -121,7 +122,9 @@ private:
 
 	void InitControls();
 	GAMEX_EXPORT void InitPlacementControls();
+	void PositionPlacementToggle();
 	void UpdatePlacementMarkers();
+	void UpdatePlacementCountry( int nSlot );
 	void PositionPlacementMarker( int nSlot, const CVec2 &vCenter );
 	void RestorePlacementMarker( int nSlot );
 	void CancelPlacementDrag();
@@ -171,6 +174,7 @@ private:
 	void TryInitThisPlayerSideAndColor();
 
 protected:
+	bool StepLocal( bool bAppActive ) override;
 	~CInterfaceMPGameRoom() override;
 
 public:
