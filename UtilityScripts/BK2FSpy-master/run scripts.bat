@@ -1,0 +1,1 @@
+python all_used_units.py "D:\Spiele\Schlachtenstrategie\Das letzte Gefecht\Run\Data" "D:\Spiele\Schlachtenstrategie\Das letzte Gefecht\Run\Mods\Universal MOD-18 X" "Custom\Missions\AllUsedUnits_NATIONS" 
