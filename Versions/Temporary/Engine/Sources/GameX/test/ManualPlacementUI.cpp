@@ -8,6 +8,8 @@
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
 
+#include <memory>
+
 #include <gtest/gtest.h>
 
 namespace
@@ -70,14 +72,29 @@ TEST_F( ManualPlacementUI, DiceStatesSendTheSameReactionAndKeepTheSelectedTintOn
 		const auto &state = pShared->visualStates[i];
 		const auto *pBackground = state.normal.pBackground.GetPtr();
 		ASSERT_NE( pBackground, nullptr );
-		CheckTexture( pBackground, "UI/Game/Menu/MPGameRoom/Countries/FlagRandom_Texture.xdb" );
+		CheckTexture( pBackground, "UI/Game/Menu/MPGameRoom/Placement/DiceRounded_Texture.xdb" );
 		EXPECT_EQ( static_cast<uint32_t>( pBackground->nColor ), i == 0 ? 0xffffffffu : 0xff808080u );
 		EXPECT_EQ( state.mouseOver.pBackground.GetPtr(), pBackground );
 		EXPECT_EQ( state.pushed.pBackground.GetPtr(), pShared->visualStates[1].normal.pBackground.GetPtr() );
 	}
+	// Both tints use the same rounded alpha edge, while the straight top edge stays opaque.
+	const auto *pDice = Load<NDb::STexture>( "DiceRounded_Texture" );
+	ASSERT_NE( pDice, nullptr );
+	ASSERT_EQ( pDice->nWidth, 32 );
+	ASSERT_EQ( pDice->nHeight, 22 );
+	std::unique_ptr<CDataStream> stream( vfs->OpenFile( pDice->szDestName ) );
+	ASSERT_NE( stream, nullptr );
+	ASSERT_EQ( stream->GetSize(), 128 + 32 * 22 * 4 );
+	stream->Seek( 128 );
+	uint8_t row[32 * 4];
+	stream->Read( row, sizeof( row ) );
+	EXPECT_LT( row[3], 32 );
+	EXPECT_GT( row[7], row[3] );
+	EXPECT_EQ( row[15], 255 );
+	EXPECT_EQ( row[31 * 4 + 3], row[3] );
 }
 
-TEST_F( ManualPlacementUI, FlagsCombineTheLoadingScreenTeamAndPlayerColourAndProvideANeutralStart )
+TEST_F( ManualPlacementUI, FlagsCombineTeamPlayerColourAndNationAndProvideANeutralStart )
 {
 	const auto *pFlag = Load<NDb::SWindowSimple>( "Flag_WindowSimple" );
 	ASSERT_NE( pFlag, nullptr );
@@ -89,12 +106,15 @@ TEST_F( ManualPlacementUI, FlagsCombineTheLoadingScreenTeamAndPlayerColourAndPro
 		{ "Team1", "UI/Game/Menu/MPStatistics/StatsList/StatsItem/TeamColourGreen_Texture.xdb" },
 		{ "Team2", "UI/Game/Menu/MPStatistics/StatsList/StatsItem/TeamColourRed_Texture.xdb" },
 		{ "Empty", "Scene/TexAndMats/All/UI/Mission/Minimap/MP/MinimapFlagGrey_Texture.xdb" } };
-	ASSERT_EQ( pShared->children.size(), 4 );
+	ASSERT_EQ( pShared->children.size(), 5 );
+	const auto *pIcon = dynamic_cast<const NDb::SWindowSimple *>( pShared->children.back().GetPtr() );
+	ASSERT_NE( pIcon, nullptr );
 	for ( int i = 0; i < 4; ++i )
 	{
 		const auto *pLayer = dynamic_cast<const NDb::SWindowSimple *>( pShared->children[i].GetPtr() );
 		ASSERT_NE( pLayer, nullptr );
 		EXPECT_EQ( pLayer->szName, layers[i].first );
+		EXPECT_LT( pLayer->nPriority, pIcon->nPriority );
 		const auto *pLayerShared = dynamic_cast<const NDb::SWindowSimpleShared *>( pLayer->pShared.GetPtr() );
 		ASSERT_NE( pLayerShared, nullptr );
 		if ( layers[i].second )
@@ -103,6 +123,18 @@ TEST_F( ManualPlacementUI, FlagsCombineTheLoadingScreenTeamAndPlayerColourAndPro
 			EXPECT_GT( pLayer->nPriority, 0 );
 		}
 	}
+	// A separate texture layer lets the room change the nation while preserving the team and colour below it.
+	EXPECT_EQ( pIcon->szName, "Icon" );
+	EXPECT_FALSE( pIcon->bVisible );
+	EXPECT_EQ( pIcon->placement.position.Get(), CVec2( 1, 1 ) );
+	EXPECT_EQ( pIcon->placement.size.Get(), CVec2( 16, 11 ) );
+	const auto *pIconShared = dynamic_cast<const NDb::SWindowSimpleShared *>( pIcon->pShared.GetPtr() );
+	ASSERT_NE( pIconShared, nullptr );
+	const auto *pIconArt =
+			dynamic_cast<const NDb::SBackgroundSimpleScallingTexture *>( pIconShared->pBackground.GetPtr() );
+	ASSERT_NE( pIconArt, nullptr );
+	EXPECT_EQ( pIconArt->pTexture.GetPtr(), nullptr );
+	EXPECT_EQ( static_cast<uint32_t>( pIconArt->nColor ), 0xffffffffu );
 	const auto *pName = Load<NDb::SWindowTextView>( "Name_WindowTextView" );
 	ASSERT_NE( pName, nullptr );
 	ASSERT_NE( pName->pTextFormat.GetPtr(), nullptr );

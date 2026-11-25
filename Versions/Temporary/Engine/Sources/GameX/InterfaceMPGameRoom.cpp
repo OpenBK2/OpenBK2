@@ -437,6 +437,7 @@ void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 	pMsg->info = slots[nSlot].info;
 	pMsg->nSlot = nSlot;
 	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );
+	UpdatePlacementCountry( nSlot );
 	UpdatePlacementMarkers();
 }
 
@@ -717,15 +718,23 @@ bool CInterfaceMPGameRoom::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 	}
 
 	const auto &previous = slots[pMsg->nSlot].info;
-	const bool bMarkerChanged = previous.bPresent != pMsg->info.bPresent || previous.nTeam != pMsg->info.nTeam ||
+	const bool bPresenceChanged = previous.bPresent != pMsg->info.bPresent;
+	const int nPreviousCountry = previous.nCountry;
+	const bool bPreviouslyRandom = previous.bRandomCountry;
+	const bool bMarkerChanged = bPresenceChanged || previous.nTeam != pMsg->info.nTeam ||
 	                            previous.nColour != pMsg->info.nColour || previous.szName != pMsg->info.szName;
 	slots[pMsg->nSlot].info = pMsg->info;
+	UpdateInterior();
+	const auto &updated = slots[pMsg->nSlot].info;
+	if ( bPresenceChanged || nPreviousCountry != updated.nCountry || bPreviouslyRandom != updated.bRandomCountry )
+	{
+		UpdatePlacementCountry( pMsg->nSlot );
+	}
 	if ( bMarkerChanged )
 	{
 		UpdatePlacementMarkers();
 	}
 
-	UpdateInterior();
 	CheckStartConditions();
 
 	return true;

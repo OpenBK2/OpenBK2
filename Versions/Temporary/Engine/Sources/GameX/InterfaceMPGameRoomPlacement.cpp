@@ -9,6 +9,7 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/Vis2AI.h"
 #include "UI/DBUserInterface.h"
+#include "UI/Window.h"
 
 #include <algorithm>
 #include <cmath>
@@ -78,6 +79,7 @@ void CInterfaceMPGameRoom::InitPlacementControls()
 				marker.pPlayerColor = new CColorBackground();
 				pBlock->SetBackground( marker.pPlayerColor );
 			}
+			UpdatePlacementCountry( i );
 		}
 	}
 	if ( bHost )
@@ -87,9 +89,40 @@ void CInterfaceMPGameRoom::InitPlacementControls()
 		if ( pToggleDesc )
 		{
 			pPlacementToggle = dynamic_cast<IButton *>( AddWindowCopy( pPlacementPanel, pToggleDesc ) );
+			PositionPlacementToggle();
 		}
 	}
 	UpdatePlacementMarkers();
+}
+
+void CInterfaceMPGameRoom::PositionPlacementToggle()
+{
+	if ( !pPlacementToggle )
+	{
+		return;
+	}
+	// The GUI scales each axis independently. Convert the left gap to an equally tall gap in screen pixels.
+	constexpr float fInset = 6.0f;
+	CTRect<float> inset( 0.0f, 0.0f, fInset, fInset );
+	VirtualToScreen( &inset );
+	if ( inset.Width() <= 0.0f || inset.Height() <= 0.0f )
+	{
+		return;
+	}
+	const float fInsetY = fInset * inset.Width() / inset.Height();
+	if ( fInsetY != fPlacementToggleInsetY )
+	{
+		const auto *pDesc = checked_cast<const NDb::SWindowMSButton *>( pPlacementToggle->GetDesc() );
+		const CVec2 &corner = pDesc->placement.position.Get();
+		pPlacementToggle->SetPlacement( corner.x + fInset, corner.y - fInsetY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+		fPlacementToggleInsetY = fInsetY;
+	}
+}
+
+bool CInterfaceMPGameRoom::StepLocal( bool bAppActive )
+{
+	PositionPlacementToggle();
+	return CInterfaceMPScreenBase::StepLocal( bAppActive );
 }
 
 void CInterfaceMPGameRoom::PositionPlacementMarker( int nSlot, const CVec2 &vCenter )
@@ -114,6 +147,53 @@ void CInterfaceMPGameRoom::RestorePlacementMarker( int nSlot )
 	const auto &mapPlayer = gameDesc.pMPMap->pMap->players[manualPlacement[nSlot]];
 	const auto rect = pMinimap->GetWindowRect();
 	PositionPlacementMarker( nSlot, CVec2( rect.left, rect.top ) + pMinimap->GetAIToScreen( mapPlayer.vMPStartPos ) );
+}
+
+void CInterfaceMPGameRoom::UpdatePlacementCountry( int nSlot )
+{
+	if ( nSlot < 0 || nSlot >= placementMarkers.size() || !placementMarkers[nSlot].pFlag )
+	{
+		return;
+	}
+	const auto &marker = placementMarkers[nSlot];
+	auto *pIcon = dynamic_cast<CWindow *>( marker.pFlag->GetChild( "Icon", false ) );
+	if ( !pIcon )
+	{
+		return;
+	}
+
+	const NDb::STexture *pTexture = nullptr;
+	std::string szVectorImage;
+	if ( nSlot < slots.size() && slots[nSlot].info.bPresent )
+	{
+		const auto &player = slots[nSlot].info;
+		const auto *pConsts = NGameX::GetMPConsts();
+		if ( player.bRandomCountry && pConsts )
+		{
+			// Random has a resolved country for launch, but the lobby shows the player's dice selection.
+			pTexture = pConsts->pRandomCountryIcon;
+			szVectorImage = NGameX::GetRandomCountryImage( pConsts );
+		}
+		else if ( const auto *pSide = NGameX::GetMultiplayerSide( pConsts, player.nCountry ) )
+		{
+			pTexture = pSide->pListItemIcon;
+			szVectorImage = NGameX::GetSideFlagImage( pConsts, player.nCountry, gameDesc.nTechLevel );
+		}
+	}
+	else if ( !marker.wszBotName.empty() )
+	{
+		const auto &party = gameDesc.pMPMap->pMap->players[nSlot].pPartyInfo;
+		if ( party )
+		{
+			pTexture = party->pMinimapKeyObjectIcon;
+		}
+	}
+	const bool bHasImage = pTexture || !szVectorImage.empty();
+	pIcon->ShowWindow( bHasImage );
+	if ( bHasImage )
+	{
+		NMPSetData::SetFlagImage( pIcon, pTexture, szVectorImage );
+	}
 }
 
 void CInterfaceMPGameRoom::UpdatePlacementMarkers()

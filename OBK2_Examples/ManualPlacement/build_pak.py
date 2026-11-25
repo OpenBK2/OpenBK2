@@ -1,6 +1,7 @@
 """Build the game room's optional placement controls with retail artwork."""
 
 from pathlib import Path
+from struct import unpack_from
 import xml.etree.ElementTree as ET
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED, ZIP_STORED
 
@@ -9,6 +10,7 @@ BASE = "UI/Game/Menu/MPGameRoom/Placement/"
 MENU = "/UI/Game/Menu/"
 TEAM = MENU + "MPStatistics/StatsList/StatsItem/TeamColour"
 DICE = MENU + "MPGameRoom/Countries/FlagRandom_Texture"
+GAME_DATA = Path(__file__).resolve().parents[2] / "Versions/Current/Data"
 GREY = "/Scene/TexAndMats/All/UI/Mission/Minimap/MP/MinimapFlagGrey_Texture"
 WINDOW_CLASSES = {"WindowSimple": 285700801, "WindowMSButton": 285694855, "WindowTextView": 285694860}
 
@@ -21,13 +23,13 @@ def ref(parent, tag, path, kind):
     ET.SubElement(parent, tag, href=f"{path}.xdb#xpointer(/{kind})")
 
 
-def window(kind, shared, name, x, y, width, height, priority=0):
+def window(kind, shared, name, x, y, width, height, priority=0, visible=True):
     root = ET.Element(kind)
     node(root, "ClassTypeID", WINDOW_CLASSES[kind])
     ref(root, "Shared", shared, kind + "Shared")
     node(root, "Name", name)
     node(root, "Priority", priority)
-    node(root, "Visible", "true")
+    node(root, "Visible", "true" if visible else "false")
     node(root, "Enabled", "true")
     placement = ET.SubElement(root, "Placement")
     for field, a, b in (("Position", x, y), ("Size", width, height)):
@@ -52,9 +54,33 @@ def shared(kind, transparent=True):
 def background(texture, tint=-1):
     root = ET.Element("BackgroundSimpleScallingTexture")
     node(root, "ClassTypeID", 0x11075B40)
-    ref(root, "Texture", texture, "Texture")
+    if texture:
+        ref(root, "Texture", texture, "Texture")
     node(root, "Color", tint)
     return root
+
+
+def rounded_dice():
+    # The retail dice is a single uncompressed BGRA mip. Preserve its colours
+    # and apply an antialiased three-texel radius only to the lobby button.
+    path = GAME_DATA / (DICE.lstrip("/") + ".dds")
+    dds = bytearray(path.read_bytes())
+    height, width = unpack_from("<II", dds, 12)
+    if (dds[:4] != b"DDS " or unpack_from("<III", dds, 80) != (0x41, 0, 32)
+            or unpack_from("<I", dds, 104)[0] != 0xff000000 or len(dds) != 128 + width * height * 4):
+        raise ValueError(f"Expected a single 32-bit BGRA texture in {path}")
+    radius, samples = 3, 8
+    for y in range(radius):
+        for x in range(radius):
+            coverage = sum(
+                (x + (sx + 0.5) / samples - radius) ** 2 + (y + (sy + 0.5) / samples - radius) ** 2 <= radius ** 2
+                for sy in range(samples) for sx in range(samples)
+            )
+            for corner_y in (y, height - 1 - y):
+                for corner_x in (x, width - 1 - x):
+                    alpha = 128 + 4 * (width * corner_y + corner_x) + 3
+                    dds[alpha] = round(dds[alpha] * coverage / (samples * samples))
+    return bytes(dds)
 
 
 def build():
@@ -64,11 +90,16 @@ def build():
         ET.indent(root, space="\t")
         files[BASE + name + ".xdb"] = ET.tostring(root, encoding="utf-8", xml_declaration=True) + b"\n"
 
-    # Both states use the country's original dice. Tint the selected state in the
-    # renderer so the two states also pick up reskinned versions of that texture.
-    xml("Dice", background(DICE))
-    xml("DiceDark", background(DICE, -8355712))  # opaque 0xff808080
-    button = window("WindowMSButton", "Toggle_Shared", "ManualPlacement", 19, 236, 32, 22, 10)
+    texture = ET.parse(GAME_DATA / (DICE.lstrip("/") + ".xdb")).getroot()
+    texture.attrib.clear()
+    texture.find("DestName").set("href", "DiceRounded.dds")
+    xml("DiceRounded_Texture", texture)
+    files[BASE + "DiceRounded.dds"] = rounded_dice()
+    xml("Dice", background("DiceRounded_Texture"))
+    xml("DiceDark", background("DiceRounded_Texture", -8355712))  # opaque 0xff808080
+    # The black interior starts at x=19 and ends at y=260 in MinimapBack_Texture.
+    # The room adds equal screen-space margins to this flush lower-left position.
+    button = window("WindowMSButton", "Toggle_Shared", "ManualPlacement", 19, 238, 32, 22, 10)
     ET.SubElement(button, "TooltipFileRef", href="Toggle.txt")
     button_shared = shared("WindowMSButton", transparent=False)
     node(button_shared, "TriggerMode", "BCST_ON_RELEASE")
@@ -110,6 +141,15 @@ def build():
             xml(name + "_Art", background(texture))
             ref(layer, "Background", name + "_Art", "BackgroundSimpleScallingTexture")
         xml(name + "_Shared", layer)
+
+    # The loading screen places its nation icon over the upper-left of the team
+    # pennant. Leave room for the team shape and player colour around the lobby flag.
+    ref(children, "Item", "Icon", "WindowSimple")
+    xml("Icon", window("WindowSimple", "Icon_Shared", "Icon", 1, 1, 16, 11, 2, visible=False))
+    icon_shared = shared("WindowSimple")
+    ref(icon_shared, "Background", "Icon_Art", "BackgroundSimpleScallingTexture")
+    xml("Icon_Shared", icon_shared)
+    xml("Icon_Art", background(None))
     xml("Flag_Shared", flag)
     xml("Flag_WindowSimple", window("WindowSimple", "Flag_Shared", "PlacementFlag", 0, 0, 32, 19, 3))
     xml("Name_Shared", shared("WindowTextView"))

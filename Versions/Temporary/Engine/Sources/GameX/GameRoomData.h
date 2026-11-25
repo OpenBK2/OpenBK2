@@ -2,11 +2,14 @@
 #include "InterfaceMPBase.h"
 #include "UI/Background.h"
 
+class CWindow;
+
 namespace NMPSetData
 {
 void SetText( ITextView *pText, const std::wstring &szText );
 void SetNum( ITextView *pWindow, int nText );
 void SetChildText( IListControlItem *pItem, const std::string &szName, const std::wstring &szText );
+void SetFlagImage( CWindow *pWindow, const NDb::STexture *pTexture, const std::string &szVectorImage );
 }; // namespace NMPSetData
 
 class CColorData : public CObjectBase

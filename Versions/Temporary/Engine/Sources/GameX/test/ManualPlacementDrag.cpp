@@ -1,5 +1,8 @@
 #include "../stdafx.h"
 
+#include "3Dmotor/DBScene.h"
+#include "GameX/DBMPConsts.h"
+#include "GameX/GetConsts.h"
 #include "GameX/InterfaceMPGameRoom.h"
 #include "GameX/InterfaceState.h"
 #include "GameX/MPCoopRules.h"
@@ -11,8 +14,11 @@
 #include "Stats_B2_M1/Vis2AI.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
+#include "UI/BackgroundVectorImage.h"
 #include "UI/DBUserInterface.h"
 #include "UI/test/MakeDescription.h"
+#include "UI/UIVisitor.h"
+#include "UI/Window.h"
 #include "UISpecificB2/DBUISpecificB2.h"
 
 #include <gtest/gtest.h>
@@ -69,11 +75,63 @@ CVec2 Center( const IWindow *pWindow )
 	const auto rect = pWindow->GetWindowRect();
 	return CVec2( rect.left + rect.Width() * 0.5f, rect.top + rect.Height() * 0.5f );
 }
+
+// Capture the stock bitmap path without a graphics device. Vector skins expose their source file directly.
+class CIconVisitor : public IUIVisitor
+{
+public:
+	const NDb::STexture *pTexture = nullptr;
+
+	void ClipSet( const CTRect<float> & ) override {}
+
+	void ClipRestore() override {}
+
+	void VisitZClearRect( const CRectLayout &, const CTPoint<float> &, const CTRect<float> &, float ) override {}
+
+	void VisitUIRect( const NDb::STexture *pDesc, int, const CRectLayout & ) override
+	{
+		pTexture = pDesc;
+	}
+
+	void
+	VisitUIRect( const NDb::STexture *, int, const CVec2 *, const NGfx::SPixel8888 *, const CTRect<float> & ) override
+	{
+	}
+
+	void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *, int, const CRectLayout & ) override {}
+
+	void VisitUIText( IML *, const CTPoint<float> &, const CTRect<float> & ) override {}
+};
+
+void CheckCountryIcon( IWindow *pIcon, const std::string &szImage, const NDb::STexture *pStockTexture )
+{
+	ASSERT_TRUE( pIcon->IsVisible() );
+	const auto *pVector =
+			dynamic_cast<const CBackgroundVectorImage *>( dynamic_cast<CWindow *>( pIcon )->GetBackground() );
+	if ( !szImage.empty() )
+	{
+		ASSERT_NE( pVector, nullptr );
+		EXPECT_EQ( pVector->GetFileName(), szImage );
+	}
+	else
+	{
+		ASSERT_EQ( pVector, nullptr );
+		ASSERT_NE( pStockTexture, nullptr );
+		CIconVisitor visitor;
+		pIcon->Visit( &visitor );
+		EXPECT_EQ( visitor.pTexture, pStockTexture );
+	}
+}
 } // namespace
 
 class CManualPlacementTestAccess
 {
 public:
+	static void StepRoom( CInterfaceMPGameRoom *pRoom )
+	{
+		pRoom->StepLocal( true );
+	}
+
 	static void Prepare( CInterfaceMPGameRoom *pRoom, IWindow *pPanel, bool bHost )
 	{
 		pRoom->bConnected = true;
@@ -115,6 +173,14 @@ public:
 	static IWindow *Flag( CInterfaceMPGameRoom *pRoom, int nSlot )
 	{
 		return pRoom->placementMarkers[nSlot].pFlag;
+	}
+
+	static void AddStartButton( CInterfaceMPGameRoom *pRoom, IWindow *pPanel )
+	{
+		// A slot update reevaluates the real Begin Game button after refreshing the preview.
+		pRoom->pButtonBeginGame = dynamic_cast<IButton *>(
+				AddWindowCopy( pPanel, LoadControl<NDb::SWindowMSButton>( "Toggle_WindowMSButton" ) ) );
+		pRoom->pButtonBeginGame->SetName( "ButtonBeginGame" );
 	}
 };
 
@@ -160,6 +226,7 @@ protected:
 		room = nullptr;
 		panel = nullptr;
 		sink = nullptr;
+		NGlobal::RemoveVar( "mp_consts" );
 		NDb::CloseDatabase();
 		NVFS::SetMainVFS( nullptr );
 		for ( int id : std::initializer_list<int>{ IMPToUIManager::tidTypeID,
@@ -189,6 +256,26 @@ protected:
 		ASSERT_TRUE( room->HandleMessage( &snapshot ) );
 	}
 };
+
+TEST_F( ManualPlacementDrag, DiceKeepsEqualScreenMarginsWhenTheAspectRatioChanges )
+{
+	CManualPlacementTestAccess::Prepare( room, panel, true );
+	const IWindow *pButton = panel->GetChild( "ManualPlacement", false );
+	ASSERT_NE( pButton, nullptr );
+	for ( int nWidth : { 2048, 2560 } )
+	{
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( nWidth, 1440 );
+		CManualPlacementTestAccess::StepRoom( room );
+		const auto origin = panel->GetWindowRect();
+		// Straight inner edges of the stock MinimapBack frame.
+		CVec2 corner( origin.left + 19, origin.top + 260 );
+		VirtualToScreen( &corner );
+		auto button = pButton->GetWindowRect();
+		VirtualToScreen( &button );
+		EXPECT_GT( button.left, corner.x );
+		EXPECT_NEAR( button.left - corner.x, corner.y - button.bottom, 0.01f );
+	}
+}
 
 TEST_F( ManualPlacementDrag, HostSwapsOccupiedAndEmptyStartsAndCanTurnThePreviewOff )
 {
@@ -254,4 +341,46 @@ TEST_F( ManualPlacementDrag, GuestReceivesSwapsAndCannotSubmitADragOrRoll )
 	EXPECT_EQ( Center( pSource ), target );
 	EXPECT_EQ( Center( pTarget ), source );
 }
+
+class ManualPlacementCountries : public ManualPlacementDrag, public testing::WithParamInterface<bool>
+{
+};
+
+TEST_P( ManualPlacementCountries, CountryOnlyUpdatesRedrawTheFlagAndRandomKeepsItsRolledNationPrivate )
+{
+	const char *pszConsts = "Consts/Test/Test_MultiplayerConsts.xdb";
+	NGlobal::SetVar( "mp_consts", pszConsts );
+	const auto *pConsts = NDb::Get<NDb::SMultiplayerConsts>( CDBID( pszConsts ) );
+	ASSERT_NE( pConsts, nullptr );
+	ASSERT_GE( pConsts->sides.size(), 2u );
+	CManualPlacementTestAccess::Prepare( room, panel, GetParam() );
+	CManualPlacementTestAccess::AddStartButton( room, panel );
+	Apply( { 2, 1, 0 } );
+	auto *pFlag = CManualPlacementTestAccess::Flag( room, 0 );
+	auto *pIcon = pFlag->GetChild( "Icon", false );
+	ASSERT_NE( pIcon, nullptr );
+	auto *pVacant = CManualPlacementTestAccess::Flag( room, 2 )->GetChild( "Icon", false );
+	ASSERT_NE( pVacant, nullptr );
+	EXPECT_FALSE( pVacant->IsVisible() );
+
+	SMPUIUpdateSlotMessage update;
+	update.nSlot = 0;
+	update.info.bPresent = true;
+	update.info.bRandomCountry = false;
+	for ( int nCountry : { 0, 1 } )
+	{
+		update.info.nCountry = nCountry;
+		ASSERT_TRUE( room->HandleMessage( &update ) );
+		CheckCountryIcon( pIcon, NGameX::GetSideFlagImage( pConsts, nCountry, 0 ), pConsts->sides[nCountry].pListItemIcon );
+	}
+	update.info.bRandomCountry = true;
+	ASSERT_TRUE( room->HandleMessage( &update ) );
+	CheckCountryIcon( pIcon, NGameX::GetRandomCountryImage( pConsts ), pConsts->pRandomCountryIcon );
+	update.info.bPresent = false;
+	ASSERT_TRUE( room->HandleMessage( &update ) );
+	EXPECT_FALSE( pIcon->IsVisible() );
+	EXPECT_TRUE( pFlag->GetChild( "Empty", false )->IsVisible() );
+}
+
+INSTANTIATE_TEST_SUITE_P( HostAndGuest, ManualPlacementCountries, testing::Bool() );
 } // namespace
