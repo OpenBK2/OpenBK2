@@ -64,39 +64,68 @@ class YearMapsTest(unittest.TestCase):
         return [(o.find("Object").get("href"), float(o.findtext("Pos/x")), float(o.findtext("Pos/y"))) for o in objects]
 
     def test_shared_rows(self):
-        run = self.generate("--row", "b", "2", "--row", "A")
+        run = self.generate("--row", "c", "1")
         self.assertEqual((run.returncode, run.stderr), (0, ""))
+
         def flag(name):
             return f"/Parties/Flags/{name}.xdb#xpointer(/ObjectRPGStats)"
 
         unit = "/Forces/squad.xdb#xpointer(/SquadRPGStats)"
-        self.assertEqual(self.placements(1), [(flag("B"), 700, 700), (unit, 8450, 700),
-                                             (flag("A"), 700, 8450), (unit, 8450, 8450)])
-        self.assertEqual(self.placements(2), [(flag("C"), 700, 700), (unit, 8450, 700)])
-        self.assertEqual(self.placements(3), [(flag("C"), 700, 700)])
+        self.assertEqual(self.placements(1), [(flag("A"), 700, 700), (unit, 8450, 700),
+                                             (flag("B"), 700, 8450), (unit, 8450, 8450)])
+        self.assertEqual(self.placements(2), [(flag("C"), 700, 8450), (unit, 8450, 8450)])
+        self.assertEqual(self.placements(3), [(flag("C"), 700, 8450)])
         self.assertEqual(self.placements(4), [])
         self.assertEqual(ET.parse(self.maps / "mapinfo2.xdb").find("Players/Item/PartyInfo").get("href"),
                          "/Parties/C.xdb")
         reinfs = ET.parse(self.maps / "mapinfo2.xdb").findall("Players/Item/ReinforcementTypes/Item")
         self.assertEqual([r.get("href") for r in reinfs], ["/Forces/units.xdb"])
 
-    def test_default_compacts_enabled_nations(self):
+    def test_default_packs_nations_with_the_same_spacing_in_busy_and_quiet_years(self):
+        root = ET.parse(self.consts)
+        _, b, c = root.findall("Sides/Item")
+        # Include flag-only nations. A/B/C are enabled in 1940 and only B/C in 1941.
+        c.findall("TechLevels/Item")[0].clear()
+        b.findall("TechLevels/Item")[1].clear()
+        root.write(self.consts)
         run = self.generate()
         self.assertEqual((run.returncode, run.stderr), (0, ""))
         self.assertIn("/A.xdb#", self.placements(1)[0][0])
-        self.assertIn("/B.xdb#", self.placements(1)[2][0])
-        self.assertEqual(self.placements(2)[0][1:], (700, 700))
+        second_row_y = 700 + 15500 / 3
+        self.assertEqual(self.placements(1)[2][1:], (700, second_row_y))
+        quiet_year = self.placements(2)
+        self.assertIn("/B.xdb#", quiet_year[0][0])
+        self.assertEqual(quiet_year[0][1:], (700, 700))
+        self.assertIn("/C.xdb#", quiet_year[1][0])
+        self.assertEqual(quiet_year[1][1:], (700, second_row_y))
+        self.assertEqual(self.placements(3)[0][1:], (700, 700))
         self.assertEqual(self.placements(4), [])
 
     def test_late_conflict_leaves_output_untouched(self):
         root = ET.parse(self.consts)
         root.findall("Sides/Item")[1].findall("TechLevels/Item")[1].find("Disabled").text = "false"
         root.write(self.consts)
-        run = self.generate("--row", "B", "C")
+        run = self.generate("--row", "B", "1", "--row", "C", "1")
         self.assertNotEqual(run.returncode, 0)
-        for detail in ("tech level 2 (1941)", "B (side 1)", "C (side 2)"):
+        for detail in ("Row 1", "tech level 2 (1941)", "B (side 1)", "C (side 2)"):
             self.assertIn(detail, run.stderr)
         self.assertFalse(self.maps.exists())
+
+    def test_row_must_be_inside_peak_grid(self):
+        for row in ("-1", "2", "France"):
+            with self.subTest(row=row):
+                run = self.generate("--row", "C", row)
+                self.assertNotEqual(run.returncode, 0)
+                self.assertIn(row, run.stderr)
+                self.assertFalse(self.maps.exists())
+
+    def test_unassigned_nation_fills_around_pins(self):
+        run = self.generate("--row", "B", "0", "--row", "2", "0")
+        self.assertEqual((run.returncode, run.stderr), (0, ""))
+        self.assertIn("/B.xdb#", self.placements(1)[0][0])
+        self.assertIn("/A.xdb#", self.placements(1)[2][0])
+        self.assertIn("/C.xdb#", self.placements(2)[0][0])
+        self.assertEqual(self.placements(2)[0][1:], (700, 700))
 
     def test_preserves_existing_objects_and_link_ids(self):
         maps = self.mod / "maps"

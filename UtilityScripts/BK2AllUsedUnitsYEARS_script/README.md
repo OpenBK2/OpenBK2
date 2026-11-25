@@ -1,9 +1,12 @@
 # Multiplayer unit maps by tech level
 
-This script makes one map for each multiplayer tech level. Each row shows one
-enabled nation. Its flagstaff stands in the first column, and its units appear
-to the right, grouped by reinforcement type. If you just want gaps from disabled
-nations removed, run the script with its default layout.
+This script makes one map for each multiplayer tech level. Count the enabled
+nations in the busiest tech level to get the number of rows on every map. If
+the busiest level has five nations, all maps have five equally spaced rows.
+By default, in a year with only two enabled nations, they take the first two rows in
+multiplayer side order and the last three stay empty. Each nation's flagstaff
+stands in the first column, with its units grouped by reinforcement type to
+the right.
 
 ## Generate your first maps
 
@@ -33,35 +36,34 @@ tech level, `mapinfo2.xdb` and `name2.txt` for the second, and so on.
 Running the command again updates those numbered files. Each map starts from
 the original `mapinfo.xdb`.
 
-## Let two nations use the same row
+## Move a nation to a free row
 
-Suppose your mod enables France in 1940 and Italy in 1942, and they are never
-enabled together. To give both the same place on every map, run this after
-setting the paths in `run.bat`. With the Python command above, append the
-same `--row France Italy` option.
+Use `--row NATION_TAG FREE_MAP_ROW_INDEX`. Count rows from **0**. For example,
+to put Australia in the **fifth row** whenever it is enabled, append
+`--row Australia 4` to the Python command above. On Windows you can use the
+batch file after setting its paths.
 
 ```powershell
-.\run.bat --row France Italy
+.\run.bat --row Australia 4
 ```
 
-| Nations enabled in that tech level | What appears in the first row |
-| --- | --- |
-| France only | French flag and French units |
-| Italy only | Italian flag and Italian units |
-| Neither | The reserved row stays empty |
-| Both | The script reports both nations and the tech level before writing any maps |
+When Australia is enabled, the generator puts it at index 4 and fills the
+other rows from the top with the remaining enabled nations. When Australia
+is disabled, another nation can use index 4. An enabled nation with an empty
+reinforcement list still counts toward the grid size and gets its flagstaff.
 
-Each `--row` reserves one row, in the order you give it. To keep France and
-Italy on **separate** rows, use `--row France --row Italy`. Other enabled
-nations fill the rows below in multiplayer side order. An enabled nation with
-an empty reinforcement list still gets its flag.
+Repeat `--row` for each nation you want to pin. For example,
+`--row France 4 --row Italy 4` lets France and Italy use the same row in
+different years. If both are enabled in any tech level, the generator reports
+the row, nations and tech level before writing any maps. Choose a different
+index for one of them. A five-row map accepts indices 0 through 4.
 
-## Where do “France” and “Italy” come from?
+## Where do I find the nation tag?
 
 1. Open `Consts/Test/Test_MultiplayerConsts.xdb` in the game or mod data
    you're using. Find `<Sides>`, then the `<Item>` for the nation you want.
-   The base game's list contains Germany, USA and USSR. The France/Italy
-   example needs a mod that includes those sides.
+   The base game's list contains Germany, USA and USSR. Names such as Australia,
+   France or Italy work when your mod includes those sides.
 2. Inside that item, find `<PartyInfo href="..."/>`. Open the XDB file named
    in the quotes. The file path ends at `.xdb`, before `#xpointer`.
 3. Copy the text inside `<GeneralPartyName>`. For example,
@@ -73,5 +75,5 @@ an empty reinforcement list still gets its flag.
 
 If two sides use the same `GeneralPartyName`, use their positions in the
 multiplayer `<Sides>` list. Count the first `<Item>` as `0`, the second as
-`1`, and so on. For example, `--row 1 4` lets the second and fifth sides
-share a row if they are enabled in different tech levels.
+`1`, and so on. For example, `--row 1 4` moves the second side to the fifth
+map row.
