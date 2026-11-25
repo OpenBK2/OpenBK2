@@ -1,0 +1,1 @@
+python all_used_units_per_year.py --datafolder "D:\Spiele\Schlachtenstrategie\Das letzte Gefecht\Run\data" --modfolder "D:\Spiele\Schlachtenstrategie\Das letzte Gefecht\Run\Mods\Universal MOD-18 X" --mapfolder "Custom\Missions\AllUsedUnits_YEARS"
