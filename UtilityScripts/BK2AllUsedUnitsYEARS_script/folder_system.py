@@ -19,12 +19,26 @@ class FolderSystem(VirtualFileSystemBaseClass):
 	def add_directory(self, new_directory: str):
 		self.directories.append(full_path(new_directory))
 
+	@staticmethod
+	def _disk_path(directory, path):
+		candidate = Path(directory, path.replace("\\", "/"))
+		if os.name == "nt" or candidate.exists():
+			return candidate
+		# Game hrefs are case-insensitive even in a mixed-case loose data tree on Linux.
+		parent = Path(candidate.anchor)
+		for part in candidate.parts[1:]:
+			exact = parent / part
+			if not exact.exists() and parent.is_dir():
+				exact = next((p for p in parent.iterdir() if p.name.casefold() == part.casefold()), exact)
+			parent = exact
+		return parent
+
 	def get_newest_file(self, path: str) -> (str, datetime):
 		file = None
 		file_mtime = None
 		for directory in self.directories:
-			directory_path = full_path(os.path.join(directory, path))
-			if os.path.exists(directory_path):
+			directory_path = self._disk_path(directory, path)
+			if directory_path.is_file():
 				if file is None:
 					file = directory_path
 					file_mtime = os.path.getmtime(directory_path)
@@ -32,12 +46,11 @@ class FolderSystem(VirtualFileSystemBaseClass):
 				file_new_mtime = os.path.getmtime(directory_path)
 				if file_mtime < file_new_mtime:
 					file, file_mtime = directory_path, file_new_mtime
-		return file, datetime.fromtimestamp(file_mtime)
+		return file, datetime.fromtimestamp(file_mtime) if file is not None else None
 
 	def contains_file(self, path: str) -> bool:
 		for directory in self.directories:
-			directory_path = full_path(os.path.join(directory, path))
-			if os.path.exists(directory_path):
+			if self._disk_path(directory, path).is_file():
 				return True
 		return False
 
@@ -77,7 +90,8 @@ class FolderSystem(VirtualFileSystemBaseClass):
 			return file.read()
 
 	def write_to_file(self, path: str, content: typing.Union[str, bytes, bytearray]):
-		path = os.path.join(self.default_directory, path)
+		path = self._disk_path(self.default_directory, path)
+		path.parent.mkdir(parents=True, exist_ok=True)
 		args = {"file": path, "mode": "w", "encoding": "utf-16-le", "newline": ""}
 		if isinstance(content, bytes) or isinstance(content, bytearray):
 			args["mode"] = "wb"

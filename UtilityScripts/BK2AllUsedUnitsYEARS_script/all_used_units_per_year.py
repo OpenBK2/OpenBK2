@@ -1,230 +1,223 @@
+import argparse
+from dataclasses import dataclass
+from itertools import count
 import math
 import os
-import utils
-from folder_system import FolderSystem
-from pak_loader import PakLoader
-from console_logger import ConsoleLogger
-from virtual_file_system import VirtualFileSystem
-from lxml import objectify
-from utils import tuple_sum, tuple_sub, tuple_average
+import posixpath
+import sys
+
+from lxml import etree
+
 import bk2_map_xml_utils
 import bk2_xml_utils
-import argparse
+from console_logger import ConsoleLogger
+from folder_system import FolderSystem
+from pak_loader import PakLoader
+from utils import string_to_utf16_le
+from virtual_file_system import VirtualFileSystem
 
 
-CUSTOM_REINF_ORDER_PRIOTITIES = {
-	"RT_HEAVY_TANKS": -4,
-	"RT_TANK_DESTROYERS": -3,
-	"RT_TANKS": -2,
-	"RT_LIGHT_TANKS": -1,
-	"RT_MAIN_INFANTRY": 0,
-	"RT_ASSAULT_INFANTRY": 1,
-	"RT_PARATROOPS": 2,
-	"RT_ELITE_INFANTRY": 3,
-	"RT_ENGINEERING": 4,
-	"RT_ARTILLERY_ANTITANK": 5,
-	"RT_LIGHT_AAA": 6,
-	"RT_HEAVY_AAA": 7,
-	"RT_ARTILLERY": 8,
-	"RT_ASSAULT_GUNS": 9,
-	"RT_HEAVY_ARTILLERY": 10,
-	"RT_ARTILLERY_ROCKET": 11,
-	"RT_FIGHTERS": 12,
-	"RT_GROUND_ATTACK_PLANES": 13,
-	"RT_BOMBERS": 14,
-	"RT_RECON": 15,
-}
+MP_CONSTS = "Consts/Test/Test_MultiplayerConsts.xdb"
+REINF_ORDER = (
+    "RT_HEAVY_TANKS", "RT_TANK_DESTROYERS", "RT_TANKS", "RT_LIGHT_TANKS",
+    "RT_MAIN_INFANTRY", "RT_ASSAULT_INFANTRY", "RT_PARATROOPS", "RT_ELITE_INFANTRY",
+    "RT_ENGINEERING", "RT_ARTILLERY_ANTITANK", "RT_LIGHT_AAA", "RT_HEAVY_AAA",
+    "RT_ARTILLERY", "RT_ASSAULT_GUNS", "RT_HEAVY_ARTILLERY", "RT_ARTILLERY_ROCKET",
+    "RT_FIGHTERS", "RT_GROUND_ATTACK_PLANES", "RT_BOMBERS", "RT_RECON",
+)
 
 
-class UnitPositioning:
-
-	spawn_pos_start = (700, 700, 0)
-
-	unit_span = (15500, 15500)
-
-	unit_spacing_x = 120
-	unit_spacing_y = 210
-
-	@staticmethod
-	def __place_unit(unit, map, pos, direction=32768, player=0):
-		bk2_map_xml_utils.add_object_on_map(map, unit.attrib["href"], pos, direction, player)
-
-	@staticmethod
-	def __get_placement_pattern(unit_count: int, center_position: tuple) -> list[tuple[float]]:
-		# generate pattern
-		side = math.floor(math.sqrt(unit_count))
-		width = math.ceil(unit_count / side)
-		counter = 0
-		result = []
-		for column in range(side):
-			tmp = []
-			for row in range(width):
-				if counter >= unit_count:
-					break
-				tmp.append((row * UnitPositioning.unit_spacing_x, column * UnitPositioning.unit_spacing_y, 0))
-				counter += 1
-			# center the row around center_position.x
-			avg = tuple_average(tmp)
-			for i in range(len(tmp)):
-				# tmp[i][0] -= avg[0]
-				tmp[i] = (tmp[i][0] - avg[0], tmp[i][1], tmp[i][2])
-			result.extend(tmp)
-
-		# place result on the center_position
-		avg = tuple_average(result)
-		diff = tuple_sub(center_position, avg)
-		for i in range(len(result)):
-			result[i] = tuple_sum(result[i], diff)
-
-		return result
-
-	@staticmethod
-	def __get_position(tech_level: int, reinf: int, unit: int, unit_count: int, x_prog: float, y_prog: float)\
-			-> (float, float, float):
-		base_position = (reinf * x_prog, tech_level * y_prog, 0.0)
-		# result = (reinf * x_prog + unit * UnitPositioning.unit_spacing, tech_level * y_prog, 0.0)
-
-		pattern = UnitPositioning.__get_placement_pattern(unit_count, base_position)
-		result = pattern[unit]
-		# result = base_position
-
-		result = tuple_sum(result, UnitPositioning.spawn_pos_start)
-		return result
-
-	@staticmethod
-	def place_units(units: list[list[list]], reinf_types: list[str], map):
-		y_progression = UnitPositioning.unit_span[1] / len(units)
-		for i, side in enumerate(units):
-			if len(side) < 1:
-				continue
-			x_progression = UnitPositioning.unit_span[0] / len(side)
-			for j, reinf in enumerate(side):
-				for k, unit in enumerate(side[reinf]):
-					position = UnitPositioning.__get_position(i, j, k, len(side[reinf]), x_progression, y_progression)
-					UnitPositioning.__place_unit(unit, map, position)
-		return
+def resolve_href(fs, element, source):
+    """Rebase a reference from its owning XDB so it also works in the output map."""
+    href = element.get("href", "").strip() if element is not None else ""
+    if not href:
+        return None
+    path, fragment, pointer = href.replace("\\", "/").partition("#")
+    source_dir = posixpath.dirname(source.partition("#")[0])
+    for candidate in (posixpath.join(source_dir, path), path):
+        rooted = posixpath.normpath("/" + candidate.lstrip("/"))
+        if fs.contains_file(rooted[1:]):
+            return rooted + fragment + pointer
+    print(f"Warning: {source} references missing file {href}", file=sys.stderr)
+    return None
 
 
-def sort_reinfs_by_type(fs: VirtualFileSystem, reinfs: list[str]) -> list[str]:
-	ret = []
-	for reinf_ref in reinfs:
-		reinf_content = bk2_xml_utils.href_get_binary_file_contents(reinf_ref, fs)
-		reinf = objectify.fromstring(reinf_content)
-		reinf_type = str(reinf.Type)
-		ret.append((reinf_ref, reinf_type))
-	return ret
+def read_xml(fs, href):
+    path = href.lstrip("/").partition("#")[0]
+    try:
+        return bk2_xml_utils.load_xml_file(fs, path)
+    except etree.XMLSyntaxError as error:
+        raise ValueError(f"{path}: {error}") from error
 
 
-def custom_reinf_sorting(a):
-	if a in CUSTOM_REINF_ORDER_PRIOTITIES:
-		return CUSTOM_REINF_ORDER_PRIOTITIES[a]
-	return 0
+@dataclass
+class Side:
+    name: str
+    party_href: str | None
+    flag_href: str | None
+    levels: list
+
+    def available(self, level):
+        # The game defaults Disabled to false, but a missing tech level is unavailable.
+        if level >= len(self.levels):
+            return False
+        disabled = self.levels[level].findtext("Disabled", "false")
+        return disabled.strip().lower() not in ("true", "1")
 
 
-def get_all_used_reinf_types(fs: VirtualFileSystem, consts, t) -> list[str]:
-	ret = set()
-	for i, side in enumerate(consts.Sides.Item):
-		level = side.TechLevels.Item[t]
-		reinfs = level.Reinforcements.Item
-		for reinf_ref in reinfs:
-			reinf_content = bk2_xml_utils.href_get_binary_file_contents(reinf_ref, fs)
-			reinf = objectify.fromstring(reinf_content)
-			reinf_type = str(reinf.Type)
-			ret.add(reinf_type)
-	return list(sorted(ret, key=custom_reinf_sorting))
+def read_sides(fs, consts):
+    sides = []
+    for index, item in enumerate(consts.findall("Sides/Item")):
+        name = f"Side {index}"
+        party_href = resolve_href(fs, item.find("PartyInfo"), MP_CONSTS)
+        flag_href = None
+        if party_href:
+            party = read_xml(fs, party_href)
+            name = party.findtext("GeneralPartyName") or name
+            flag_href = resolve_href(fs, party.find("KeyBuildingFlag"), party_href)
+        side = Side(name, party_href, flag_href, item.findall("TechLevels/Item"))
+        if not flag_href and any(side.available(i) for i in range(len(side.levels))):
+            print(f"Warning: {name} (side {index}) has no usable KeyBuildingFlag", file=sys.stderr)
+        sides.append(side)
+    return sides
+
+
+def plan_rows(sides, level_names, row_options):
+    groups = []
+    assigned = set()
+    for options in row_options:
+        group = []
+        for token in options:
+            if token.isdecimal():
+                index = int(token)
+                if index >= len(sides):
+                    raise ValueError(f"Unknown side index {index} (there are {len(sides)} sides)")
+            else:
+                matches = [i for i, side in enumerate(sides) if side.name.casefold() == token.casefold()]
+                if len(matches) != 1:
+                    raise ValueError(f"Unknown or ambiguous nation {token!r}. Use its zero-based Sides/Item index.")
+                index = matches[0]
+            if index in assigned:
+                raise ValueError(f"{sides[index].name} (side {index}) occurs more than once in --row")
+            assigned.add(index)
+            group.append(index)
+        groups.append(group)
+
+    # Validate every year before writing the first map. Configured rows keep their
+    # slots across years, and the other enabled nations fill in below them.
+    layouts = []
+    for level, name in enumerate(level_names):
+        rows = []
+        for row, group in enumerate(groups, start=1):
+            active = [i for i in group if sides[i].available(level)]
+            if len(active) > 1:
+                nations = ", ".join(f"{sides[i].name} (side {i})" for i in active)
+                raise ValueError(f"Row {row} has multiple enabled nations at tech level {level + 1} ({name}): {nations}")
+            rows.append(active[0] if active else None)
+        rows.extend(i for i, side in enumerate(sides) if i not in assigned and side.available(level))
+        layouts.append(rows)
+    return layouts
+
+
+def collect_units(fs, level, player):
+    units = {}
+    for ref in level.findall("Reinforcements/Item"):
+        href = resolve_href(fs, ref, MP_CONSTS)
+        if not href:
+            continue
+        reinf = read_xml(fs, href)
+        reinf_type = reinf.findtext("Type", "RT_TANKS")  # SReinforcement's database default.
+        bk2_map_xml_utils.add_reinf_type(player, href)
+        cell = units.setdefault(reinf_type, [])
+        for entry in reinf.findall("Entries/Item"):
+            for field in ("MechUnit", "Squad"):
+                unit = resolve_href(fs, entry.find(field), href)
+                if unit:
+                    cell.append(unit)
+                    break
+    return units
+
+
+def unit_positions(size, x, y):
+    # Center each line horizontally and the whole formation vertically, as in the original map.
+    width = math.ceil(size / math.isqrt(size))
+    mean_line = sum(i // width for i in range(size)) / size
+    for start in range(0, size, width):
+        length = min(width, size - start)
+        for column in range(length):
+            yield (x + (column - (length - 1) / 2) * 120, y + (start // width - mean_line) * 210, 0)
+
+
+def populate_map(fs, map_xml, sides, rows, row_count, level):
+    player = map_xml.find("Players/Item")
+    if player is None:
+        raise ValueError("The map template needs a player in Players/Item")
+
+    # Keep the original player and reinforcement ordering even when rows are reordered.
+    units = {}
+    for index in sorted(i for i in rows if i is not None):
+        side = sides[index]
+        if side.party_href:
+            bk2_map_xml_utils.child(player, "PartyInfo").set("href", side.party_href)
+        units[index] = collect_units(fs, side.levels[level], player)
+
+    types = {kind for nation in units.values() for kind in nation}
+    columns = [kind for kind in REINF_ORDER if kind in types] + sorted(types.difference(REINF_ORDER))
+    x_step = 15500 / (len(columns) + 1)  # Column zero holds the nation's flagstaff.
+    objects = bk2_map_xml_utils.child(map_xml, "Objects")
+    link_ids = count(1 + max((int(link.text) for link in objects.iterfind("Item/Link/LinkID")), default=0))
+    for row, index in enumerate(rows):
+        if index is None:
+            continue
+        y = 700 + row * 15500 / row_count
+        if sides[index].flag_href:
+            bk2_map_xml_utils.add_object_on_map(objects, sides[index].flag_href, (700, y, 0), next(link_ids))
+        for column, kind in enumerate(columns, start=1):
+            cell = units[index].get(kind)
+            if cell:
+                for href, pos in zip(cell, unit_positions(len(cell), 700 + column * x_step, y)):
+                    bk2_map_xml_utils.add_object_on_map(objects, href, pos, next(link_ids))
 
 
 def main(args):
+    folder = FolderSystem(args.modfolder or args.datafolder)
+    paks = PakLoader(args.datafolder, ConsoleLogger())
+    if args.modfolder:
+        folder.add_directory(args.datafolder)
+        paks.open_directory(args.modfolder)
+    fs = VirtualFileSystem(folder)
+    fs.add_system(paks)
 
-	path1 = args.datafolder
-	path2 = args.modfolder
-	map_folder = args.mapfolder
-
-	map_template = os.path.join(map_folder, 'mapinfo.xdb')
-
-	logger = ConsoleLogger()
-
-
-	if path2 is not None:
-		folder = FolderSystem(path2)
-		folder.add_directory(path1)
-	else:
-		folder = FolderSystem(path1)
-
-	fs = VirtualFileSystem(folder)
-	pk = PakLoader(path1, logger)
-	if path2 is not None:
-		pk.open_directory(path2)
-	fs.add_system(pk)
-
-	consts = bk2_xml_utils.load_xml_file(fs, "Consts/Test/Test_MultiplayerConsts.xdb")
-
-	map_name = "AllUsedUnitsPerYear"
-
-	counter = 0
-	for t, tech_level in enumerate(consts.TechLevels.Item):
-		counter += 1
-		units = []
-		map = bk2_xml_utils.load_xml_file(fs, map_template)
-		used_reinf_types = get_all_used_reinf_types(fs, consts, t)
-		for i, side in enumerate(consts.Sides.Item):
-			units.append([])
-			map.Players.Item[0].PartyInfo.attrib["href"] = side.PartyInfo.attrib["href"]
-			level = side.TechLevels.Item[t]
-			reinfs = level.Reinforcements.Item
-			reinfs = sort_reinfs_by_type(fs, reinfs)
-			# print(f"Side: {i}, reinfs: ")
-
-			units[i] = dict()
-			for used_type in used_reinf_types:
-				if used_type not in units[i].keys():
-					units[i][used_type] = []
-
-			for k, reinf_pair in enumerate(reinfs):
-				reinf_ref = reinf_pair[0]
-				reinf_type: str = reinf_pair[1]
-
-				bk2_map_xml_utils.add_reinf_type(map, reinf_ref.attrib["href"], 0)
-				reinf_content = bk2_xml_utils.href_get_binary_file_contents(reinf_ref, fs)
-				# print(f"Reinf content type: {type(reinf_content)}, path: {reinf_ref.attrib['href']}")
-				reinf = objectify.fromstring(reinf_content)
-				try:
-					reinf_items = reinf.Entries.Item
-				except Exception as e:
-					print(f"Error: {str(e)} for file {reinf_ref.attrib['href']}")
-					continue
-				for j, unit in enumerate(reinf_items):
-					if bk2_xml_utils.href_file_exists(unit.MechUnit, fs):
-						units[i][reinf_type].append(unit.MechUnit)
-						continue
-					if bk2_xml_utils.href_file_exists(unit.Squad, fs):
-						units[i][reinf_type].append(unit.Squad)
-						continue
-
-		UnitPositioning.place_units(units, used_reinf_types, map)
-		tech_level_name = bk2_xml_utils.href_get_file_contents(tech_level.NameFileRef, fs, "Consts/Test")
-		map_name_bytes = utils.string_to_utf16_le(f"{map_name} {tech_level_name}")
-		bk2_xml_utils.add_and_write_href_file(
-			fs,
-			map.LocalizedNameFileRef,
-			f"name{counter}.txt",
-			map_name_bytes,
-			map_folder
-		)
-		output_path = os.path.join(map_folder, f"mapinfo{counter}.xdb")
-		bk2_xml_utils.save_object_as_xml(map, fs, output_path)
-	return 0
+    consts = read_xml(fs, MP_CONSTS)
+    sides = read_sides(fs, consts)
+    level_names = []
+    for level in consts.findall("TechLevels/Item"):
+        href = resolve_href(fs, level.find("NameFileRef"), MP_CONSTS)
+        name = fs.read_text_file(href[1:]) if href else f"Tech level {len(level_names) + 1}"
+        level_names.append(name)
+    layouts = plan_rows(sides, level_names, args.row)
+    max_rows = max(map(len, layouts), default=0)
+    template = os.path.join(args.mapfolder, "mapinfo.xdb")
+    for level, rows in enumerate(layouts):
+        map_xml = bk2_xml_utils.load_xml_file(fs, template)
+        populate_map(fs, map_xml, sides, rows, max_rows if args.row else len(rows), level)
+        number = level + 1
+        bk2_xml_utils.add_and_write_href_file(
+            fs, bk2_map_xml_utils.child(map_xml, "LocalizedNameFileRef"), f"name{number}.txt",
+            string_to_utf16_le(f"AllUsedUnitsPerYear {level_names[level]}"), args.mapfolder,
+        )
+        bk2_xml_utils.save_object_as_xml(map_xml, fs, os.path.join(args.mapfolder, f"mapinfo{number}.xdb"))
 
 
-if __name__ == '__main__':
-	parser = argparse.ArgumentParser(
-		prog='All Used Units',
-		description="Generates a list of all used units in separate map files per years."
-	)
-	parser.add_argument("--datafolder")
-	parser.add_argument("-m", "--modfolder", default=None, type=str)
-	# parser.add_argument("-t", "--techlevel", default=None, type=int)
-	parser.add_argument("--mapfolder")
-
-	args = parser.parse_args()
-	main(args)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate a multiplayer unit documentation map for each tech level.")
+    parser.add_argument("--datafolder", required=True)
+    parser.add_argument("-m", "--modfolder")
+    parser.add_argument("--mapfolder", required=True, help="Folder containing the template mapinfo.xdb")
+    parser.add_argument("--row", action="append", nargs="+", metavar="SIDE", default=[],
+                        help="Reserve one row for these mutually exclusive nations (GeneralPartyName or zero-based "
+                             "Sides/Item index). Repeat for more rows. Other active nations follow in side order.")
+    try:
+        main(parser.parse_args())
+    except (ValueError, OSError) as error:
+        parser.exit(1, f"{parser.prog}: {error}\n")

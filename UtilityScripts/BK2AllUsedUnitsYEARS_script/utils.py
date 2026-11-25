@@ -3,7 +3,7 @@ import codecs
 
 
 def full_path(path: str):
-	return os.path.abspath(path).lower().replace("\\", "/")
+	return os.path.abspath(path).replace("\\", "/")
 
 
 def formatted_path(path: str):
@@ -15,11 +15,10 @@ def path_folder(path: str):
 
 
 def decode_bytes_string(string: bytes):
-	encoding = "utf-8"
-	# UTF-16 LE BOM detection
-	if string[0] == 255 and string[1] == 254:
-		encoding = "utf-16-le"
-	return string.decode(encoding)
+	# Consume the BOM so it is not embedded in the middle of the generated name.
+	if string.startswith(codecs.BOM_UTF16_LE):
+		return string.decode("utf-16")
+	return string.decode("utf-8-sig")
 
 
 def string_to_utf16_le(string: str):

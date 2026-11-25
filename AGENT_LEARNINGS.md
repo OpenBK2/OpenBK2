@@ -1,6 +1,10 @@
 
 # AGENT LEARNINGS
 
+- When copying a unit or flagstaff reference into a generated map, resolve the
+  href relative to the reinforcement or party XDB first. Write the game-root
+  path with its original xpointer so moving the reference preserves its target.
+
 - Exercise departure with the final sequenced frame still in the shared accepting
   driver. A fixture that starts at the individual connection queue skips the
   ordering race with the lobby. During a route change, test each direction of
