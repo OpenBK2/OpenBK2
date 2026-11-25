@@ -1115,6 +1115,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	           "NNet Ladder Invite: Map Index exceeds bounds",
 	           return true );
 	// Matchmaking bypasses OnJoinGameMessage, but is also a new MP attempt.
+	manualPlacement.clear();
 	NGameX::GetGameConsts()->RecalculateMPDataVersionChecksum();
 	nGameID = pPacket->nGameID;
 	int nTeam1Size = pPacket->team1.size();

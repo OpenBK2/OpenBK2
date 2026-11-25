@@ -33,6 +33,38 @@ public:
 	}
 };
 
+class CB2ManualPlacementPacket : public CNetPacket
+{
+	OBJECT_NOCOPY_METHODS( CB2ManualPlacementPacket );
+
+public:
+	std::vector<uint8_t> manualPlacement;
+
+	CB2ManualPlacementPacket() {}
+
+	CB2ManualPlacementPacket( int nClientID, const std::vector<uint8_t> &order )
+		: CNetPacket( nClientID )
+		, manualPlacement( order )
+	{
+	}
+
+	int operator&( IBinSaver &f ) override
+	{
+		// A lobby has at most 16 starts. Bound the wire length before allocating on a receiver.
+		uint8_t nSize = static_cast<uint8_t>( manualPlacement.size() );
+		f.Add( 2, &nSize );
+		if ( f.IsReading() )
+		{
+			manualPlacement.resize( nSize );
+		}
+		if ( nSize )
+		{
+			f.AddRawData( 3, manualPlacement.data(), nSize );
+		}
+		return 0;
+	}
+};
+
 class CB2GameSpecificInfoPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CB2GameSpecificInfoPacket );
@@ -60,6 +92,7 @@ public:
 	std::vector<SMPSlot> slots;
 	std::vector<uint8_t> slotRehash;
 	bool bBaseReinforcementBonuses = true;
+	bool bManualPlacement = false;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -67,6 +100,7 @@ public:
 		f.Add( 4, &slots );
 		f.Add( 3, &slotRehash );
 		f.Add( 5, &bBaseReinforcementBonuses );
+		f.Add( 6, &bManualPlacement );
 		return 0;
 	}
 

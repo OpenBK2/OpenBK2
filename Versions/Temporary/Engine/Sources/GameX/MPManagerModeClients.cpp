@@ -56,6 +56,11 @@ bool CMPManagerMode::HostAssignNewClient( int nClientID )
 			pGameInfoPkt->nClientID = nClientID;
 			pGameInfoPkt->info = gameDesc;
 			pClient->SendGamePacket( pGameInfoPkt, false );
+			if ( !manualPlacement.empty() )
+			{
+				// The joiner can validate the snapshot as soon as it has the map settings.
+				pClient->SendGamePacket( new CB2ManualPlacementPacket( nClientID, manualPlacement ), false );
+			}
 
 			// Send closed slots
 			for ( int nSlot = 0; nSlot < slots.size(); ++nSlot )

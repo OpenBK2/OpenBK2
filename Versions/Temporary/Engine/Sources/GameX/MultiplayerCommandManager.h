@@ -5,6 +5,7 @@
 #include "Server_Client_Common/LadderStatistics.h"
 
 #include <cstdint>
+#include <vector>
 
 namespace NDb
 {
@@ -69,6 +70,7 @@ enum EMPUIMessageType : int
 	EMUI_CHANGE_FRIEND_IGNORE,
 	EMUI_NIVAL_NET_LADDER_STATS,
 	EMUI_NIVAL_NET_LADDER, //
+	EMUI_MANUAL_PLACEMENT, // Host edits and shared game room minimap updates.
 };
 
 struct SMPUIMessage : public CObjectBase
@@ -310,6 +312,27 @@ public:
 		: SMPUIMessage( EMUI_UPDATE_SLOT )
 		, nSlot( -1 )
 	{
+	}
+};
+
+struct SMPUIManualPlacementMessage : public SMPUIMessage
+{
+	OBJECT_NOCOPY_METHODS( SMPUIManualPlacementMessage );
+
+public:
+	std::vector<uint8_t> manualPlacement;
+
+	explicit SMPUIManualPlacementMessage( const std::vector<uint8_t> &order = {} )
+		: SMPUIMessage( EMUI_MANUAL_PLACEMENT )
+		, manualPlacement( order )
+	{
+	}
+
+	int operator&( IBinSaver &f ) override
+	{
+		f.Add( 1, (SMPUIMessage *)this );
+		f.Add( 2, &manualPlacement );
+		return 0;
 	}
 };
 

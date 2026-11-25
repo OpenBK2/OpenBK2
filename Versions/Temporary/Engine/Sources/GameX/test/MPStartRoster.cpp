@@ -10,6 +10,7 @@
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/NetSaver.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/ConsoleBuffer.h"
 #include "System/VFSOperations.h"
@@ -247,8 +248,10 @@ public:
 		manager->nMyClientID = host ? HOST_ID : LOCAL_ID;
 		manager->bHost = host;
 		manager->bLadderGame = false;
+		manager->bGameRoomInit = true;
 		manager->pClient = client;
 		manager->gameDesc = game;
+		manager->manualPlacement.clear();
 		std::vector<SMPSlot> snapshot( slots );
 		manager->slots.swap( snapshot );
 		manager->nOwnSlot = ownSlot;
@@ -388,7 +391,7 @@ protected:
 	{
 		CObj<CB2GameRoomStartGamePacket> packet = new CB2GameRoomStartGamePacket( HOST_ID );
 		packet->slotRehash = order;
-		packet->slots.resize( hostSlots.size() );
+		packet->slots.resize( order.size() );
 		for ( int i = 0; i < hostSlots.size(); ++i )
 		{
 			packet->slots[order[i]] = hostSlots[i];
@@ -421,6 +424,18 @@ protected:
 		CPacketProcessorBase *processor = manager;
 		EXPECT_TRUE( processor->ProcessPacket( packet ) );
 	}
+
+	CB2GameRoomStartGamePacket *GetSentStart() const
+	{
+		for ( const auto &packet : client->sent )
+		{
+			if ( auto *start = dynamic_cast<CB2GameRoomStartGamePacket *>( packet.GetPtr() ) )
+			{
+				return start;
+			}
+		}
+		return nullptr;
+	}
 };
 
 TEST_F( MPStartRoster, WireSnapshotPreservesEveryStartFieldAndClientIdentity )
@@ -445,6 +460,101 @@ TEST_F( MPStartRoster, WireSnapshotPreservesEveryStartFieldAndClientIdentity )
 		EXPECT_EQ( received.bAccept, sent.bAccept );
 		EXPECT_EQ( received.bRandomCountry, sent.bRandomCountry );
 	}
+}
+
+TEST_F( MPStartRoster, HostBroadcastsPlacementAndSendsItsCurrentLayoutToALateJoiner )
+{
+	const std::vector<uint8_t> order{ 2, 0, 1 };
+	hostSlots[2].Clear();
+	CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 0, true );
+	CMPUIMessageTranslator *translator = manager;
+	CObj<SMPUIManualPlacementMessage> enable = new SMPUIManualPlacementMessage( order );
+	ASSERT_TRUE( translator->HandleMessage( enable ) );
+	ASSERT_EQ( client->sent.size(), 1u );
+	auto *broadcast = dynamic_cast<CB2ManualPlacementPacket *>( client->sent.front().GetPtr() );
+	ASSERT_NE( broadcast, nullptr );
+	EXPECT_EQ( broadcast->manualPlacement, order );
+	// LAN transports chunked packets, and the online peer channel uses sequential NetSaver packets.
+	for ( const bool online : { false, true } )
+	{
+		SCOPED_TRACE( online );
+		CMemoryStream stream;
+		auto makeSaver = [&]( ESaverMode mode )
+		{ return online ? CreateNetSaver( &stream, mode ) : CreateBinSaver( &stream, mode ); };
+		{
+			CObj<IBinSaver> saver = makeSaver( SAVER_MODE_WRITE );
+			saver->Add( 1, &client->sent.front() );
+		}
+		stream.Seek( 0 );
+		CPtr<CNetPacket> received;
+		{
+			CObj<IBinSaver> saver = makeSaver( SAVER_MODE_READ );
+			saver->Add( 1, &received );
+		}
+		auto *decoded = dynamic_cast<CB2ManualPlacementPacket *>( received.GetPtr() );
+		ASSERT_NE( decoded, nullptr );
+		EXPECT_EQ( decoded->manualPlacement, order );
+	}
+
+	client->sent.clear();
+	CObj<CNewGameClient> join = new CNewGameClient( OTHER_ID );
+	Dispatch( join );
+	bool receivedSettings = false;
+	bool receivedPlacement = false;
+	for ( const auto &packet : client->sent )
+	{
+		if ( auto *settings = dynamic_cast<CB2GameSpecificInfoPacket *>( packet.GetPtr() ) )
+		{
+			receivedSettings = settings->nClientID == OTHER_ID;
+		}
+		if ( auto *placement = dynamic_cast<CB2ManualPlacementPacket *>( packet.GetPtr() ) )
+		{
+			EXPECT_TRUE( receivedSettings );
+			EXPECT_EQ( placement->nClientID, OTHER_ID );
+			EXPECT_EQ( placement->manualPlacement, order );
+			receivedPlacement = true;
+		}
+	}
+	EXPECT_TRUE( receivedPlacement );
+
+	client->sent.clear();
+	CObj<SMPUIManualPlacementMessage> disable = new SMPUIManualPlacementMessage;
+	ASSERT_TRUE( translator->HandleMessage( disable ) );
+	ASSERT_EQ( client->sent.size(), 1u );
+	auto *disabled = dynamic_cast<CB2ManualPlacementPacket *>( client->sent.front().GetPtr() );
+	ASSERT_NE( disabled, nullptr );
+	EXPECT_TRUE( disabled->manualPlacement.empty() );
+}
+
+TEST_F( MPStartRoster, GuestDisplaysOnlyValidPlacementUpdatesSentByTheHost )
+{
+	const std::vector<uint8_t> order{ 2, 0, 1 };
+	CObj<SMPUIManualPlacementMessage> localEdit = new SMPUIManualPlacementMessage( order );
+	CMPUIMessageTranslator *translator = manager;
+	ASSERT_TRUE( translator->HandleMessage( localEdit ) );
+	EXPECT_TRUE( client->sent.empty() );
+	EXPECT_EQ( manager->PeekMessage(), nullptr );
+
+	CObj<CB2ManualPlacementPacket> placement = new CB2ManualPlacementPacket( OTHER_ID, order );
+	Dispatch( placement );
+	EXPECT_EQ( manager->PeekMessage(), nullptr );
+	placement->nClientID = HOST_ID;
+	placement->manualPlacement = { 0, 0, 1 };
+	Dispatch( placement );
+	EXPECT_EQ( manager->PeekMessage(), nullptr );
+
+	placement->manualPlacement = order;
+	Dispatch( placement );
+	CPtr<SMPUIMessage> update = manager->GetMessage();
+	auto *preview = dynamic_cast<SMPUIManualPlacementMessage *>( update.GetPtr() );
+	ASSERT_NE( preview, nullptr );
+	EXPECT_EQ( preview->manualPlacement, order );
+	placement->manualPlacement.clear();
+	Dispatch( placement );
+	update = manager->GetMessage();
+	preview = dynamic_cast<SMPUIManualPlacementMessage *>( update.GetPtr() );
+	ASSERT_NE( preview, nullptr );
+	EXPECT_TRUE( preview->manualPlacement.empty() );
 }
 
 TEST_F( MPStartRoster, HostPacketOvertakesAnotherPeersColourAndReadyUpdates )
@@ -588,6 +698,100 @@ TEST_F( MPStartRoster, RejectsForeignMalformedAndInvalidRostersBeforeCommit )
 	}
 }
 
+TEST_F( MPStartRoster, ManualPlacementCommitsPreviewBeyondRoomCapacityOnHostAndPeer )
+{
+	game.nPlayers = 2;
+	hostSlots.resize( 2 );
+	hostSlots[1].nTeam = 1;
+	const std::vector<uint8_t> order{ 1, 2, 0 };
+	for ( bool bRandom : { false, true } )
+	{
+		SCOPED_TRACE( bRandom );
+		game.bRandomPlacement = bRandom;
+		CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 0, true );
+		CMPUIMessageTranslator *translator = manager;
+		CObj<SMPUIMessage> placement = new SMPUIManualPlacementMessage( order );
+		ASSERT_TRUE( translator->HandleMessage( placement ) );
+		CObj<SMPUIMessage> message = new SMPUISimpleMessage( EMUI_START_GAME );
+		EXPECT_THROW( translator->HandleMessage( message ), SStartReached );
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetOwnSlot( manager ), 1 );
+		auto *start = GetSentStart();
+		ASSERT_NE( start, nullptr );
+		ASSERT_TRUE( start->bManualPlacement );
+		ASSERT_EQ( start->slotRehash, order );
+		ASSERT_EQ( start->slots.size(), 3u );
+		EXPECT_FALSE( start->slots[0].bPresent );
+		EXPECT_EQ( start->slots[1].nClientID, HOST_ID );
+		EXPECT_EQ( start->slots[2].nClientID, LOCAL_ID );
+
+		// A peer can still have the pre-toggle preview when the final authoritative roster arrives.
+		CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 1 );
+		auto incoming = RoundTrip( start );
+		incoming->nClientID = HOST_ID;
+		EXPECT_THROW( Dispatch( incoming ), SStartReached );
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetOwnSlot( manager ), 2 );
+		const auto &committed = CMPPlayerDropTestAccess::GetSlots( manager );
+		ASSERT_EQ( committed.size(), 3u );
+		EXPECT_EQ( committed[1].szName, hostSlots[0].szName );
+		EXPECT_EQ( committed[2].nColour, hostSlots[1].nColour );
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetPlayerCount( manager ), 2 );
+		client->sent.clear();
+	}
+}
+
+TEST_F( MPStartRoster, ManualCoopStartUsesUnoccupiedHumanRoleAndKeepsScriptedSlots )
+{
+	map->eGameType = NDb::COOP;
+	game.nPlayers = 2;
+	mission->players.resize( 5 );
+	for ( int i = 0; i < 4; ++i )
+	{
+		mission->players[i].nDiplomacySide = i == 1 ? 1 : 0;
+		mission->players[i].ePlayerType = i == 1 ? NDb::AI_BOT : NDb::HUMAN;
+	}
+	mission->players.back().nDiplomacySide = 2;
+	SMPSlot local( hostSlots[1] );
+	hostSlots.resize( 5 );
+	hostSlots[1].Clear();
+	hostSlots[2] = local;
+	hostSlots[2].nClientID = LOCAL_ID;
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 2 );
+	// The third human role is a legal destination even when only two peers may join.
+	auto start = MakeStart( { 2, 1, 3, 0, 4 } );
+	start->bManualPlacement = true;
+	EXPECT_THROW( Dispatch( start ), SStartReached );
+	const auto &committed = CMPPlayerDropTestAccess::GetSlots( manager );
+	ASSERT_EQ( committed.size(), 5u );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetOwnSlot( manager ), 3 );
+	EXPECT_EQ( committed[2].nClientID, HOST_ID );
+	for ( int i : { 0, 1, 4 } )
+	{
+		EXPECT_FALSE( committed[i].bPresent );
+	}
+}
+
+TEST_F( MPStartRoster, TurningPreviewOffRestoresTheOriginalFixedRoomPlacement )
+{
+	game.bRandomPlacement = false;
+	game.nPlayers = 2;
+	hostSlots.resize( 2 );
+	hostSlots[1].nTeam = 1;
+	CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 0, true );
+	CMPUIMessageTranslator *translator = manager;
+	CObj<SMPUIMessage> enable = new SMPUIManualPlacementMessage( { 2, 1, 0 } );
+	CObj<SMPUIMessage> disable = new SMPUIManualPlacementMessage;
+	ASSERT_TRUE( translator->HandleMessage( enable ) );
+	ASSERT_TRUE( translator->HandleMessage( disable ) );
+	CObj<SMPUIMessage> message = new SMPUISimpleMessage( EMUI_START_GAME );
+	EXPECT_THROW( translator->HandleMessage( message ), SStartReached );
+	auto *start = GetSentStart();
+	ASSERT_NE( start, nullptr );
+	EXPECT_FALSE( start->bManualPlacement );
+	EXPECT_EQ( start->slotRehash, ( std::vector<uint8_t>{ 0, 1 } ) );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetOwnSlot( manager ), 0 );
+}
+
 TEST_F( MPStartRoster, HostBroadcastContainsCompletePostShuffleRoster )
 {
 	game.bRandomPlacement = true;
@@ -601,14 +805,7 @@ TEST_F( MPStartRoster, HostBroadcastContainsCompletePostShuffleRoster )
 	CObj<SMPUIMessage> message = new SMPUISimpleMessage( EMUI_START_GAME );
 	CMPUIMessageTranslator *translator = manager;
 	EXPECT_THROW( translator->HandleMessage( message ), SStartReached );
-	CPtr<CB2GameRoomStartGamePacket> start;
-	for ( const auto &packet : client->sent )
-	{
-		if ( auto *candidate = dynamic_cast<CB2GameRoomStartGamePacket *>( packet.GetPtr() ) )
-		{
-			start = candidate;
-		}
-	}
+	auto *start = GetSentStart();
 	ASSERT_NE( start, nullptr );
 	ASSERT_EQ( start->slots.size(), hostSlots.size() );
 	for ( int i = 0; i < hostSlots.size(); ++i )

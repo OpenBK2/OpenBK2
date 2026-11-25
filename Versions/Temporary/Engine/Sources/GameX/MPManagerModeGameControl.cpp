@@ -878,6 +878,12 @@ void CMPManagerMode::AnalyzeLaggers()
 
 void CMPManagerMode::CreateRehash( std::vector<uint8_t> *pOrder )
 {
+	if ( !manualPlacement.empty() )
+	{
+		// Commit exactly what everyone saw in the room, including moves into unused map starts.
+		*pOrder = manualPlacement;
+		return;
+	}
 	std::vector<uint8_t> &order = *pOrder;
 	int nSize = slots.size();
 	order.resize( nSize, -1 );
@@ -901,8 +907,8 @@ void CMPManagerMode::CreateRehash( std::vector<uint8_t> *pOrder )
 
 void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 {
-	// COOP scripts address authored map player IDs, which must never be shuffled.
-	if ( NGameX::IsCoopGame( gameDesc ) )
+	// Without an explicit layout COOP retains the authored player IDs.
+	if ( NGameX::IsCoopGame( gameDesc ) && manualPlacement.empty() )
 	{
 		return;
 	}
@@ -913,20 +919,18 @@ void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 	}
 	DebugTrace( "%s", szDebugOut.c_str() );
 
-	std::vector<SMPSlot> newSlots;
-	newSlots.resize( slots.size() );
+	std::vector<SMPSlot> newSlots( order.size() );
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		newSlots[order[i]] = slots[i];
 		newSlots[order[i]].nClientID = slots[i].nClientID;
 	}
 	nOwnSlot = order[nOwnSlot];
+	slots.swap( newSlots );
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		SMPSlot &slot = slots[i];
-		slot = newSlots[i];
-		slot.nClientID = newSlots[i].nClientID;
-		if ( NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
+		if ( manualPlacement.empty() && NGameX::IsMultiplayerNationSelectionDisabled( gameDesc ) )
 		{
 			// CLASSIC random placement changes map player IDs, so the destination slot owns the authored nation.
 			const auto nations = NGameX::GetAllowedMultiplayerNationsForSlot( gameDesc, i );

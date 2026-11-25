@@ -58,6 +58,11 @@ jobs:
             Versions/Current/Data/UI/Game/Mission/Panels/RightPanel
             OBK2_Examples/GLB_format_usage
             OBK2_Examples/AIPropertyConsts
+            Versions/Current/Data/UI/Game/Menu/MPGameRoom/Countries
+            Versions/Current/Data/UI/Game/Menu/MPLoading2
+            Versions/Current/Data/UI/Game/Menu/MPStatistics/StatsList/StatsItem
+            Versions/Current/Data/Scene/TexAndMats/All/UI/Mission/Minimap/MP
+            OBK2_Examples/ManualPlacement
             OBK2_Examples/UnitTransferImpl
             OBK2_Examples/MessageParts
 

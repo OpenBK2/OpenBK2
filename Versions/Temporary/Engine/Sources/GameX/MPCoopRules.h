@@ -2,6 +2,7 @@
 
 #include "GameX_export.h"
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -20,6 +21,11 @@ GAMEX_EXPORT bool IsCoopGame( const SB2GameSpecificData &game );
 GAMEX_EXPORT bool IsMultiplayerNationSelectionDisabled( const SB2GameSpecificData &game );
 GAMEX_EXPORT int GetMultiplayerSlotCount( const SB2GameSpecificData &game );
 GAMEX_EXPORT bool IsHumanMultiplayerSlot( const SB2GameSpecificData &game, int nSlot );
+// The preview maps each lobby index to an authored map player ID. Unused starts can receive a player too.
+GAMEX_EXPORT int GetManualPlacementSize( const SB2GameSpecificData &game );
+GAMEX_EXPORT bool IsManualPlacementStart( const SB2GameSpecificData &game, int nSlot );
+GAMEX_EXPORT bool IsValidManualPlacement( const SB2GameSpecificData &game, const std::vector<uint8_t> &order );
+GAMEX_EXPORT std::vector<uint8_t> GenerateManualPlacement( const SB2GameSpecificData &game );
 GAMEX_EXPORT int GetPresentMultiplayerPlayerCount( const std::vector<SMPSlot> &slots );
 GAMEX_EXPORT int FindAvailableMultiplayerSlot( const SB2GameSpecificData &game, const std::vector<SMPSlot> &slots );
 GAMEX_EXPORT std::vector<int> GetAllowedMultiplayerNations( const SB2GameSpecificData &game,
