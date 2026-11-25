@@ -83,38 +83,47 @@ def read_sides(fs, consts):
 
 
 def plan_rows(sides, level_names, row_options):
-    groups = []
-    assigned = set()
-    for options in row_options:
-        group = []
-        for token in options:
-            if token.isdecimal():
-                index = int(token)
-                if index >= len(sides):
-                    raise ValueError(f"Unknown side index {index} (there are {len(sides)} sides)")
-            else:
-                matches = [i for i, side in enumerate(sides) if side.name.casefold() == token.casefold()]
-                if len(matches) != 1:
-                    raise ValueError(f"Unknown or ambiguous nation {token!r}. Use its zero-based Sides/Item index.")
-                index = matches[0]
-            if index in assigned:
-                raise ValueError(f"{sides[index].name} (side {index}) occurs more than once in --row")
-            assigned.add(index)
-            group.append(index)
-        groups.append(group)
+    enabled = [[i for i, side in enumerate(sides) if side.available(level)] for level in range(len(level_names))]
+    row_count = max(map(len, enabled), default=0)
+    overrides = {}
+    for nation, row_number in row_options:
+        if nation.isdecimal():
+            index = int(nation)
+            if index >= len(sides):
+                raise ValueError(f"Unknown side index {index} (there are {len(sides)} sides)")
+        else:
+            matches = [i for i, side in enumerate(sides) if side.name.casefold() == nation.casefold()]
+            if len(matches) != 1:
+                raise ValueError(f"Unknown or ambiguous nation {nation!r}. Use its zero-based Sides/Item index.")
+            index = matches[0]
+        if index in overrides:
+            raise ValueError(f"{sides[index].name} (side {index}) occurs more than once in --row")
+        if not row_number.isdecimal():
+            raise ValueError(f"Invalid map row {row_number!r} for {nation!r}. Use a zero-based, nonnegative integer.")
+        row = int(row_number)
+        if row >= row_count:
+            raise ValueError(f"Row {row} for {nation!r} is outside the {row_count}-row grid. Rows count from zero.")
+        overrides[index] = row
 
-    # Validate every year before writing the first map. Configured rows keep their
-    # slots across years, and the other enabled nations fill in below them.
+    # Every year has the same grid. Place its enabled pinned nations first, then fill the gaps.
     layouts = []
-    for level, name in enumerate(level_names):
-        rows = []
-        for row, group in enumerate(groups, start=1):
-            active = [i for i in group if sides[i].available(level)]
-            if len(active) > 1:
-                nations = ", ".join(f"{sides[i].name} (side {i})" for i in active)
-                raise ValueError(f"Row {row} has multiple enabled nations at tech level {level + 1} ({name}): {nations}")
-            rows.append(active[0] if active else None)
-        rows.extend(i for i, side in enumerate(sides) if i not in assigned and side.available(level))
+    for level, active in enumerate(enabled):
+        rows = [None] * row_count
+        unassigned = []
+        for index in active:
+            if index not in overrides:
+                unassigned.append(index)
+                continue
+            row = overrides[index]
+            other = rows[row]
+            if other is not None:
+                raise ValueError(f"Row {row} has multiple enabled nations at tech level {level + 1} "
+                                 f"({level_names[level]}): {sides[other].name} (side {other}), "
+                                 f"{sides[index].name} (side {index})")
+            rows[row] = index
+        free_rows = (row for row, occupant in enumerate(rows) if occupant is None)
+        for row, index in zip(free_rows, unassigned):
+            rows[row] = index
         layouts.append(rows)
     return layouts
 
@@ -148,7 +157,7 @@ def unit_positions(size, x, y):
             yield (x + (column - (length - 1) / 2) * 120, y + (start // width - mean_line) * 210, 0)
 
 
-def populate_map(fs, map_xml, sides, rows, row_count, level):
+def populate_map(fs, map_xml, sides, rows, level):
     player = map_xml.find("Players/Item")
     if player is None:
         raise ValueError("The map template needs a player in Players/Item")
@@ -169,7 +178,7 @@ def populate_map(fs, map_xml, sides, rows, row_count, level):
     for row, index in enumerate(rows):
         if index is None:
             continue
-        y = 700 + row * 15500 / row_count
+        y = 700 + row * 15500 / len(rows)
         if sides[index].flag_href:
             bk2_map_xml_utils.add_object_on_map(objects, sides[index].flag_href, (700, y, 0), next(link_ids))
         for column, kind in enumerate(columns, start=1):
@@ -196,11 +205,10 @@ def main(args):
         name = fs.read_text_file(href[1:]) if href else f"Tech level {len(level_names) + 1}"
         level_names.append(name)
     layouts = plan_rows(sides, level_names, args.row)
-    max_rows = max(map(len, layouts), default=0)
     template = os.path.join(args.mapfolder, "mapinfo.xdb")
     for level, rows in enumerate(layouts):
         map_xml = bk2_xml_utils.load_xml_file(fs, template)
-        populate_map(fs, map_xml, sides, rows, max_rows if args.row else len(rows), level)
+        populate_map(fs, map_xml, sides, rows, level)
         number = level + 1
         bk2_xml_utils.add_and_write_href_file(
             fs, bk2_map_xml_utils.child(map_xml, "LocalizedNameFileRef"), f"name{number}.txt",
@@ -214,9 +222,9 @@ if __name__ == "__main__":
     parser.add_argument("--datafolder", required=True)
     parser.add_argument("-m", "--modfolder")
     parser.add_argument("--mapfolder", required=True, help="Folder containing the template mapinfo.xdb")
-    parser.add_argument("--row", action="append", nargs="+", metavar="SIDE", default=[],
-                        help="Reserve one row for these mutually exclusive nations (GeneralPartyName or zero-based "
-                             "Sides/Item index). Repeat for more rows. Other active nations follow in side order.")
+    parser.add_argument("--row", action="append", nargs=2, metavar=("NATION_TAG", "FREE_MAP_ROW_INDEX"), default=[],
+                        help="Move a nation (GeneralPartyName or zero-based side index) to a zero-based map row. "
+                             "Every map has as many rows as the busiest tech level has enabled nations.")
     try:
         main(parser.parse_args())
     except (ValueError, OSError) as error:
