@@ -5228,14 +5228,14 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 		return;
 	}
 
-	// A replay is watched as one of the players who were in it. The number comes
-	// from the console command or --replay-player as typed, and both the map's
-	// player list and the diplomacy are indexed by it, so a player the map does
-	// not have, or a slot that was empty in the recorded game, is refused here
-	// rather than played as.
-	if ( bReplay && nPlayerForWarFog >= 0 &&
-	     ( nPlayerForWarFog >= static_cast<int>( pMap->players.size() ) ||
-	       !pAIScenarioTracker->IsPlayerPresent( nPlayerForWarFog ) ) )
+	if ( nPlayerForWarFog < 0 )
+	{
+		// For multiplayer replays the tracker defaults to the first recorded human.
+		nPlayerForWarFog = pAIScenarioTracker->GetLocalPlayer();
+	}
+	// Validate the viewer against the recorded game before using its map or diplomacy index.
+	if ( bReplay && ( nPlayerForWarFog < 0 || nPlayerForWarFog >= static_cast<int>( pMap->players.size() ) ||
+	                  !pAIScenarioTracker->IsPlayerPresent( nPlayerForWarFog ) ) )
 	{
 		const auto message = fmt::format( "replay \"{}\" has no player {} to watch as; pick one who was in the game",
 		                                  szReplayFileName,
@@ -5254,14 +5254,7 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 		return;
 	}
 
-	if ( nPlayerForWarFog < 0 )
-	{
-		nPlayerForWarFog = pAIScenarioTracker->GetLocalPlayer();
-	}
-	else
-	{
-		pAIScenarioTracker->SetLocalPlayer( nPlayerForWarFog );
-	}
+	pAIScenarioTracker->SetLocalPlayer( nPlayerForWarFog );
 	// The mission command knows whether it actually loaded a replay; local config cannot change this decision.
 	Scene()->SetLiveMultiplayer( pAIScenarioTracker->IsMultiplayer() && !bReplay );
 	if ( Scene()->IsLiveMultiplayer() )
@@ -5337,9 +5330,10 @@ void CICMission::Configure( const char *pszConfig )
 		pMap = 0;
 		bReplay = true;
 		szReplayFileName = szStrings[1];
-		// Omitted by a caller that did not name a player. ReplayHistory passes
-		// "0" in that case, so default to the same value.
-		nPlayerForWarFog = szStrings.size() > 2 ? NStr::ToInt( szStrings[2] ) : 0;
+		if ( szStrings.size() > 2 )
+		{
+			nPlayerForWarFog = NStr::ToInt( szStrings[2] );
+		}
 	}
 	else
 	{
@@ -5518,12 +5512,11 @@ void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &pa
 	}
 
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
-	std::string szPlayerForWarFog = "0";
+	std::string command = "replay;" + szVal;
 	if ( paramsSet.size() >= 2 )
 	{
-		szPlayerForWarFog = NStr::ToMBCS( paramsSet[1] );
+		command += ";" + NStr::ToMBCS( paramsSet[1] );
 	}
-	const auto command = fmt::format( "replay;{};{}", szVal, szPlayerForWarFog );
 	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 #ifndef _FINALRELEASE

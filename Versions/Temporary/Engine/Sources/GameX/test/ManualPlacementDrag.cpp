@@ -6,6 +6,7 @@
 #include "GameX/InterfaceMPGameRoom.h"
 #include "GameX/InterfaceState.h"
 #include "GameX/MPCoopRules.h"
+#include "Input/Input.h"
 #include "libdb/Db.h"
 #include "SceneB2/Camera.h"
 #include "SceneB2/Cursor.h"
@@ -13,6 +14,7 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/Vis2AI.h"
 #include "System/VFSOperations.h"
+#include "System/WinFrame.h"
 #include "System/WinVFS.h"
 #include "UI/BackgroundVectorImage.h"
 #include "UI/DBUserInterface.h"
@@ -340,6 +342,38 @@ TEST_F( ManualPlacementDrag, GuestReceivesSwapsAndCannotSubmitADragOrRoll )
 	Apply( { 2, 1, 0 } );
 	EXPECT_EQ( Center( pSource ), target );
 	EXPECT_EQ( Center( pTarget ), source );
+}
+
+TEST_F( ManualPlacementDrag, LosingMouseFocusRestoresFlagAndIgnoresTheLateRelease )
+{
+	CManualPlacementTestAccess::Prepare( room, panel, true );
+	Apply( { 0, 1, 2 } );
+	auto *pFlag = CManualPlacementTestAccess::Flag( room, 0 );
+	const CVec2 origin = Center( pFlag );
+	const CVec2 target = Center( CManualPlacementTestAccess::Flag( room, 1 ) );
+	Mouse( "win_left_button_down", origin );
+	Mouse( "win_mouse_move", target );
+	ASSERT_NE( Center( pFlag ), origin );
+
+	// Both native window backends send this before input resumes in the game window.
+	NWinFrame::SWindowsMsg cancel;
+	cancel.msg = NWinFrame::SWindowsMsg::MOUSE_CANCEL;
+	std::string event;
+	int first = 0, second = 0, count = 0;
+	NInput::EControlType type = NInput::CT_UNKNOWN;
+	ASSERT_TRUE( NInput::ConvertMessage( cancel, &event, &first, &second, &count, &type ) );
+	ASSERT_EQ( type, NInput::CT_WINDOWS );
+	ASSERT_EQ( count, 1 );
+	NInput::PostWinEvent( event, first, second );
+	SGameMessage message;
+	ASSERT_TRUE( NInput::GetEvent( &message ) );
+	room->ProcessEvent( message );
+	EXPECT_EQ( Center( pFlag ), origin );
+
+	Mouse( "win_mouse_move", target );
+	EXPECT_EQ( Center( pFlag ), origin );
+	Mouse( "win_left_button_up", target );
+	EXPECT_EQ( sink->message, nullptr );
 }
 
 class ManualPlacementCountries : public ManualPlacementDrag, public testing::WithParamInterface<bool>

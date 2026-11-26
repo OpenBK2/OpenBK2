@@ -550,7 +550,7 @@ int CMPManagerMode::GetTeamWithLowestScore()
 
 	if ( nScores[0] == nScores[1] )
 	{
-		nScores[slots[0].nTeam] += 1;
+		return nScoreTiebreakTeam == 0 ? 1 : 0;
 	}
 
 	if ( nScores[0] > nScores[1] )

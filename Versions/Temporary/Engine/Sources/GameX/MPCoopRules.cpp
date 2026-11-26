@@ -5,9 +5,9 @@
 #include "MPCoopRules.h"
 #include "MPInterfaceData.h"
 #include "Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/Vis2AI.h"
 
 #include <algorithm>
-#include <cmath>
 #include <numeric>
 #include <random>
 
@@ -70,20 +70,35 @@ int GetManualPlacementSize( const SB2GameSpecificData &game )
 	{
 		return 0;
 	}
-	const auto &players = game.pMPMap->pMap->players;
+	const auto &map = *game.pMPMap->pMap;
+	const auto &players = map.players;
 	const int nSize = IsCoopGame( game ) ? int( players.size() ) : game.pMPMap->nPlayers;
 	// Lobby connectivity uses a 16-bit player-ID mask on both transports.
-	if ( nSize < game.nPlayers || nSize < 2 || nSize > 16 || nSize > players.size() )
+	if ( nSize < game.nPlayers || nSize < 2 || nSize > 16 || nSize > players.size() || map.nNumPatchesX <= 0 ||
+	     map.nNumPatchesY <= 0 )
 	{
 		return 0;
 	}
+	const float fWidth = float( map.nNumPatchesX ) * AI_TILES_IN_PATCH * AI_TILE_SIZE;
+	const float fHeight = float( map.nNumPatchesY ) * AI_TILES_IN_PATCH * AI_TILE_SIZE;
 	for ( int i = 0; i < nSize; ++i )
 	{
-		const auto &pos = players[i].vMPStartPos;
-		if ( IsAuthoredPlacementStart( game, i ) && ( !std::isfinite( pos.x ) || !std::isfinite( pos.y ) ) )
+		if ( !IsAuthoredPlacementStart( game, i ) )
 		{
-			// A layout could put a player on this start without a visible or draggable marker.
+			continue;
+		}
+		const auto &pos = players[i].vMPStartPos;
+		// Every selectable flag needs a distinct position inside the minimap, including vacant starts.
+		if ( !( pos.x >= 0 && pos.x <= fWidth && pos.y >= 0 && pos.y <= fHeight ) )
+		{
 			return 0;
+		}
+		for ( int j = 0; j < i; ++j )
+		{
+			if ( pos == players[j].vMPStartPos && IsAuthoredPlacementStart( game, j ) )
+			{
+				return 0;
+			}
 		}
 	}
 	return nSize;

@@ -731,6 +731,9 @@ context. Read `git diff` of every touched file before building.
   SMPSlot assignment deliberately omits client IDs: use copy construction and
   swap when adopting an authoritative roster, and test the serialized packet
   through the actual handler with stale local fields and shuffled slots.
+- For replay viewer tests, leave map player zero vacant and put a scripted bot
+  before the first recorded human. A COOP tracker reports the bot as present,
+  while the recorded lobby roster identifies the humans who played.
 - The game room's Minimap window is centered inside a frame that draws its
   foreground after its children. Attach preview overlays beside that frame and
   use the minimap's window rectangle for its actual origin. GetPlacement gives

@@ -617,7 +617,8 @@ leaves the conclusion to whoever knows which comparison they meant.
 
 ### as which player
 
-a replay is played as player 0 unless told otherwise. `--replay-player N` plays it as
+a multiplayer replay defaults to the first recorded human in map player ID order.
+single-player replays default to player 0. `--replay-player N` plays the recording as
 player N, the way picking a team on the replay screen does, and `Game` takes it as
 `--replay-player=N`. the console form is `replay "my_replay" N`.
 

@@ -83,7 +83,7 @@ static std::string szEditorMod;
 // --replay=, kept here for the same reason.
 static std::string szReplayFile;
 // --replay-player=, the player a --replay= is watched as. -1 when not given,
-// which plays it as player 0, the same as the console command with no player.
+// so the replay loader chooses the first recorded human.
 static int nReplayPlayer = -1;
 // --mission= and --campaign=, which start a mission straight from the command
 // line so nobody has to edit a config file to do it. Kept here and applied at

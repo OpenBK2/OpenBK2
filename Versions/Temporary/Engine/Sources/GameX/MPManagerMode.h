@@ -7,6 +7,8 @@
 #include "Net/NetDriver.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
+#include "GameX_export.h"
+
 #include <array>
 #include <cstdint>
 #include <vector>
@@ -159,6 +161,7 @@ protected:
 
 	// In-game state
 	NTimer::STime timeEndMatch;
+	int nScoreTiebreakTeam = 0;
 	int nWinningSide;
 	NTimer::STime timeResolution;
 	NTimer::STime timeNextInstaLoseCheck;
@@ -219,7 +222,7 @@ protected:
 	bool CheckScoreWinLose();
 	bool CheckKeyBuildingsWinLose();
 	bool CheckInstantLose();
-	int GetTeamWithLowestScore();
+	GAMEX_EXPORT int GetTeamWithLowestScore();
 	void ShowWaitWindow( bool bShow );
 	void SendLagInfo();
 	void AnalyzeLaggers();
@@ -254,6 +257,7 @@ protected:
 	void BroadcastDeparturePackets( const char *szReason );
 	void BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason );
 	void SendStartGamePacket();
+	void ApplyStartSettings( const CB2GameRoomStartGamePacket &start );
 	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );
 	void UpdateMyConnectivityMask();
 
@@ -272,6 +276,12 @@ protected:
 
 	virtual const int GetOwnClientID() = 0;
 	virtual const bool IsInGameRoom() const = 0;
+
+	virtual bool AllowsManualPlacement() const
+	{
+		return IsInGameRoom();
+	}
+
 	virtual const bool IsGameRunning() const = 0;
 	virtual const bool IsGameHost() const = 0;
 

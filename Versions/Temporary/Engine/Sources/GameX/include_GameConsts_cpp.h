@@ -93,8 +93,8 @@ uint32_t SGameConsts::GetMPDataVersionChecksumWithMap( CDBPtr<NDb::SMultiplayerM
 	// per attempt; selecting another map also requires a fresh map checksum.
 	if ( !bMPMapChecksumValid || pMPChecksumMap != map )
 	{
-		// Peers must understand the shared placement preview and the host's complete map-start roster.
-		constexpr uint32_t nMatchProtocolVersion = 3;
+		// Peers must agree on eligible starts and the timeout tiebreak after manual placement.
+		constexpr uint32_t nMatchProtocolVersion = 4;
 		nMPDataVersionChecksumWithMap = CalculateChecksum( base, map->CalcCheckSum(), nMatchProtocolVersion );
 		if ( map->eGameType == NDb::COOP )
 		{

@@ -197,7 +197,7 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 	}
 	if ( pPacket->bManualPlacement )
 	{
-		if ( !NGameX::IsValidManualPlacement( gameDesc, order ) )
+		if ( !AllowsManualPlacement() || !NGameX::IsValidManualPlacement( gameDesc, order ) )
 		{
 			return true;
 		}
@@ -283,7 +283,7 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 	}
 	// Swap preserves every authoritative client ID without SMPSlot's partial assignment.
 	slots.swap( startSlots );
-	bBaseReinforcementBonuses = pPacket->bBaseReinforcementBonuses;
+	ApplyStartSettings( *pPacket );
 	nOwnSlot = nNewOwnSlot;
 	nSlotsUsed = NGameX::GetPresentMultiplayerPlayerCount( slots );
 	StartGame();
@@ -693,14 +693,15 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 
 bool CMPManagerMode::OnPingPacket( class CPingPacket *pPacket )
 {
-	if ( pPacket->nFromID != nOwnSlot ) // Pong
+	// A lobby seat ID may no longer belong to either peer after starting the match.
+	if ( !IsInGameRoom() )
 	{
-		pClient->SendGamePacket( new CPingPacket( pPacket->nClientID, pPacket->nFromID, pPacket->nSendTime ), false );
 		return true;
 	}
 
-	if ( !IsInGameRoom() )
+	if ( pPacket->nFromID != nOwnSlot ) // Pong
 	{
+		pClient->SendGamePacket( new CPingPacket( pPacket->nClientID, pPacket->nFromID, pPacket->nSendTime ), false );
 		return true;
 	}
 

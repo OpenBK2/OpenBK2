@@ -337,6 +337,12 @@ void CInterfaceMPGameRoom::CancelPlacementDrag()
 	}
 }
 
+bool CInterfaceMPGameRoom::OnPlacementCancel( const SGameMessage & )
+{
+	CancelPlacementDrag();
+	return false;
+}
+
 bool CInterfaceMPGameRoom::OnPlacementRelease( const SGameMessage &msg )
 {
 	if ( nDraggedSlot < 0 )

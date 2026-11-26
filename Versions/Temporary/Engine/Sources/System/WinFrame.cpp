@@ -715,6 +715,13 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			}
 			break;
 
+		case WM_KILLFOCUS:
+		case WM_CANCELMODE:
+		case WM_CAPTURECHANGED:
+		case WM_MOUSELEAVE:
+			// A release can go to another window even while the game keeps running in the background.
+			AddMsg( SWindowsMsg::MOUSE_CANCEL, 0, 0, 0 );
+			break;
 		case WM_MOUSEMOVE:
 			AddMsg( SWindowsMsg::MOUSE_MOVE, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
@@ -728,8 +735,13 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			AddMsg( SWindowsMsg::RB_DBLCLK, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_LBUTTONDOWN:
+		{
+			// An unconfined window can lose the button release without losing keyboard focus or capture.
+			TRACKMOUSEEVENT track = { sizeof( TRACKMOUSEEVENT ), TME_LEAVE, hWnd, 0 };
+			TrackMouseEvent( &track );
 			AddMsg( SWindowsMsg::LB_DOWN, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
+		}
 		case WM_LBUTTONUP:
 			AddMsg( SWindowsMsg::LB_UP, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
@@ -1094,10 +1106,18 @@ void NWinFrame::PumpMessages()
 			case SDL_EVENT_WINDOW_RESTORED:
 			case SDL_EVENT_WINDOW_FOCUS_GAINED:
 			case SDL_EVENT_WINDOW_FOCUS_LOST:
+			case SDL_EVENT_WINDOW_MOUSE_LEAVE:
 				// Release on focus loss and restore the requested bounds on return.
 				if ( hWnd && event.window.windowID == SDL_GetWindowID( AsSdlWindow( hWnd ) ) )
 				{
-					ApplyMouseBounds();
+					if ( event.type == SDL_EVENT_WINDOW_FOCUS_LOST || event.type == SDL_EVENT_WINDOW_MOUSE_LEAVE )
+					{
+						AddMsg( SWindowsMsg::MOUSE_CANCEL, 0, 0, 0 );
+					}
+					if ( event.type != SDL_EVENT_WINDOW_MOUSE_LEAVE )
+					{
+						ApplyMouseBounds();
+					}
 				}
 				break;
 
