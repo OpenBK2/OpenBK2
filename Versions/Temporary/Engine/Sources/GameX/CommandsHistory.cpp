@@ -470,6 +470,11 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		scenarioPlayer.wszRank = L"";
 	}
 	pScenarioTracker->SetMultiplayerInfo( scenarioInfo );
+	// The roster is in map ID order and contains only recorded humans, even on COOP maps with bots.
+	if ( !scenarioInfo.players.empty() )
+	{
+		pScenarioTracker->SetLocalPlayer( scenarioInfo.players.front().nIndex );
+	}
 
 	NGlobal::SetVar( "AI.MultiplayerCaptureTime", replayInfo.nCaptureTime * 1000 );
 	NGlobal::SetVar( "multiplayer_unit_experience", replayInfo.bUnitExperience ? 1 : 0 );

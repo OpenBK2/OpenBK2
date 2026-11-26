@@ -4,8 +4,12 @@
 #include "Common_RTS_AI/Checksums.h"
 #include "GameX/CommandsHistory.h"
 #include "GameX/CoopPlayerInfo.h"
+#include "GameX/CoopScriptChecksum.h"
 #include "GameX/DBConsts.h"
 #include "GameX/DBMPConsts.h"
+#include "GameX/GameXClassIDs.h"
+#include "GameX/InterfaceMissionInternal.h"
+#include "GameX/InterfaceState.h"
 #include "GameX/MPStatistics.h"
 #include "GameX/ReplayPlayerInfo.h"
 #include "GameX/ScenarioTracker.h"
@@ -13,7 +17,9 @@
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "Main/GameTimer.h"
+#include "Main/Profiles.h"
 #include "Stats_B2_M1/DBMapInfo.h"
+#include "System/GeneralSettings.h"
 #include "System/Text.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
@@ -40,7 +46,7 @@ protected:
 	NDb::SMultiplayerConsts *multiplayerConsts = nullptr;
 
 	template <class T>
-	T *CreateRecord( const char *pszClass )
+	T *CreateRecord( const char *pszClass, std::string name = {} )
 	{
 		CObj<NDb::IObjMan> record = NDb::CreateNewObject( pszClass );
 		EXPECT_NE( record, nullptr );
@@ -50,7 +56,10 @@ protected:
 		}
 		T *object = dynamic_cast<T *>( record->GetObject() );
 		records.push_back( record );
-		const std::string name = std::to_string( records.size() ) + ".xdb";
+		if ( name.empty() )
+		{
+			name = std::to_string( records.size() ) + ".xdb";
+		}
 		EXPECT_TRUE( NDb::AddNewObject( name, CDBID( name ), record ) );
 		return object;
 	}
@@ -71,7 +80,7 @@ protected:
 		constants->pAI = CreateRecord<NDb::SAIGameConsts>( "AIGameConsts" );
 		multiplayerConsts = CreateRecord<NDb::SMultiplayerConsts>( "MultiplayerConsts" );
 		constants->pMultiplayer = multiplayerConsts;
-		map = CreateRecord<NDb::SMapInfo>( "MapInfo" );
+		map = CreateRecord<NDb::SMapInfo>( "MapInfo", "Maps/Sparse/map.xdb" );
 		botParty = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
 		botReinforcement = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
 		ASSERT_NE( map, nullptr );
@@ -1061,5 +1070,95 @@ TEST_F( CoopScenario, ReplayCompletionChecksResultBetweenChecksumSamples )
 			EXPECT_EQ( concreteHistory->HasCheckSumMismatch(), nExpectedOutcome != nActualOutcome );
 		}
 	}
+}
+
+class SparseReplay : public CoopScenario
+{
+protected:
+	void SetUp() override
+	{
+		CoopScenario::SetUp();
+		const auto profiles = directory / "User" / "Profiles";
+		std::filesystem::create_directories( profiles / "default_profile" );
+		for ( const char *name : { "startup.cfg", "default_profile/input.cfg", "default_profile/user.cfg" } )
+		{
+			ASSERT_TRUE( std::ofstream( profiles / name ).good() );
+		}
+		std::string error;
+		ASSERT_TRUE( NSettings::InitializeGeneralSettings(
+				NSettings::CGeneralSettings( directory.u8string(), profiles.u8string() ), &error ) )
+				<< error;
+		const std::filesystem::path replays = std::filesystem::u8path( NProfile::GetReplayDir() );
+		std::filesystem::create_directories( replays );
+		SMultiplayerReplayInfo info;
+		info.pMap = map;
+		info.nMultiplayerMode = 1;
+		info.uScriptCheckSum =
+				NGameX::CalculateCoopScriptChecksum( map, NDb::Get<NDb::SGameConsts>( CDBID( "1.xdb" ) )->pAI );
+		info.slots.resize( 3 );
+		info.slots[2].bPresent = true;
+		CFileStream stream( ( replays / "sparse.replay" ).u8string(), CFileStream::WIN_CREATE );
+		ASSERT_TRUE( stream.IsOk() );
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		ASSERT_NE( saver, nullptr );
+		saver->Add( 2, &info );
+		NSingleton::RegisterSingleton( NObjectFactory::MakeObject( 0x300C8D44 ), IInterfaceState::tidTypeID );
+		NSingleton::RegisterSingleton( NObjectFactory::MakeObject( 0x300C8D40 ), IConsoleBuffer::tidTypeID );
+		NGlobal::SetVar( "Replay.ExitWhenFinished", 1 );
+	}
+
+	void TearDown() override
+	{
+		NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
+		NSingleton::UnRegisterSingleton( IAIScenarioTracker::tidTypeID );
+		NSingleton::UnRegisterSingleton( IInterfaceState::tidTypeID );
+		NSingleton::UnRegisterSingleton( IConsoleBuffer::tidTypeID );
+		NGlobal::RemoveVar( "Replay.ExitWhenFinished" );
+		NGlobal::RemoveVar( "History.Playing" );
+		NGlobal::RemoveVar( "AI.MultiplayerCaptureTime" );
+		NGlobal::RemoveVar( "multiplayer_unit_experience" );
+		CoopScenario::TearDown();
+	}
+};
+
+TEST_F( SparseReplay, OmittedViewerDefaultsToFirstRecordedHuman )
+{
+	CObj<CICMission> command = MakeObject<CICMission>( ML_COMMAND_MISSION );
+	ASSERT_NE( command, nullptr );
+	command->Configure( "replay;sparse" );
+	EXPECT_EQ( command->nPlayerForWarFog, -1 );
+	// The missing terrain stops startup after the replay loader restores its roster and before a scene is needed.
+	command->PostCreate( nullptr );
+	ASSERT_EQ( command->pMap.GetPtr(), map );
+	const auto *loaded = Singleton<IScenarioTracker>();
+	ASSERT_NE( loaded, nullptr );
+	EXPECT_FALSE( loaded->IsPlayerPresent( 0 ) );
+	EXPECT_TRUE( loaded->IsPlayerPresent( 1 ) );
+	EXPECT_TRUE( loaded->IsPlayerPresent( 2 ) );
+	EXPECT_EQ( loaded->GetLocalPlayer(), 2 );
+}
+
+TEST_F( SparseReplay, ExplicitZeroIsRejectedWhenPlayerZeroIsAbsent )
+{
+	// The viewer check only needs the terrain to exist. It must reject player zero before loading the scene.
+	const auto terrain = directory / NDb::GetFolderName( map->GetDBID() ) / "map.b2m";
+	std::filesystem::create_directories( terrain.parent_path() );
+	ASSERT_TRUE( std::ofstream( terrain ).good() );
+	CObj<CICMission> command = MakeObject<CICMission>( ML_COMMAND_MISSION );
+	ASSERT_NE( command, nullptr );
+	command->Configure( "replay;sparse;0" );
+	ASSERT_EQ( command->nPlayerForWarFog, 0 );
+	command->PostCreate( nullptr );
+	IConsoleBuffer::SConsoleLine line;
+	int sequence = 0;
+	bool rejected = false;
+	while ( Singleton<IConsoleBuffer>()->GetNextLine( &line, &sequence ) )
+	{
+		if ( line.szText.find( L"has no player 0 to watch as" ) != std::wstring::npos )
+		{
+			rejected = true;
+		}
+	}
+	EXPECT_TRUE( rejected );
 }
 } // namespace

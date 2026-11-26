@@ -110,6 +110,7 @@ void CInterfaceMPGameRoom::RegisterObservers()
 	AddImportantObserver( "win_left_button_down", &CInterfaceMPGameRoom::OnPlacementPress );
 	AddImportantObserver( "win_mouse_move", &CInterfaceMPGameRoom::OnPlacementMove );
 	AddImportantObserver( "win_left_button_up", &CInterfaceMPGameRoom::OnPlacementRelease );
+	AddImportantObserver( "win_mouse_cancel", &CInterfaceMPGameRoom::OnPlacementCancel );
 }
 
 void CInterfaceMPGameRoom::InitControls()

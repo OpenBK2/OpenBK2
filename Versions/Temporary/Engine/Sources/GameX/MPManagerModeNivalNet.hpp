@@ -54,6 +54,12 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 		return ( eState == EGS_GAME_STARTED );
 	}
 
+	bool AllowsManualPlacement() const override
+	{
+		// Ladder clients also wait in a game room, but matchmaking owns their starting roster.
+		return IsInGameRoom() && !bLadderGame;
+	}
+
 	const bool IsGameHost() const override
 	{
 		return ( eState == EGS_GAME_ROOM && bHost );

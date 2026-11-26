@@ -2220,6 +2220,10 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg,
 	}
 	switch ( rWindowMsg.msg )
 	{
+		case NWinFrame::SWindowsMsg::MOUSE_CANCEL:
+			*pszGameMessage = "win_mouse_cancel";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
 		case NWinFrame::SWindowsMsg::MOUSE_MOVE:
 			( *pszGameMessage ) = "win_mouse_move";
 			*peControlType = NInput::CT_WINDOWS;

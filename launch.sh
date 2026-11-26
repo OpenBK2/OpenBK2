@@ -83,11 +83,10 @@ usage()
 	                         e.g. Scenario/Campaigns/GER/Campaign.xdb;0;0;normal
 	  -r, --replay FILE      play a recorded replay instead of showing the menus,
 	                         by passing --replay= to the game
-	      --replay-player N  watch the replay as player N rather than player 0,
-	                         by passing --replay-player= to the game. The
-	                         simulation must play out the same whoever watches,
-	                         so --verify as each player in turn is a check of
-	                         its own. Needs --replay.
+	      --replay-player N  watch the replay as player N. The default is the
+	                         first recorded human. Use --verify with each player
+	                         in turn to check that playback is independent of
+	                         the viewer. Needs --replay.
 	      --verify           play the replay out and exit, reporting through the
 	                         exit status: 0 if it reached the last recorded
 	                         segment and every recorded checksum matched, 1 for

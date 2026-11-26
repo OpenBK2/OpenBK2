@@ -132,6 +132,7 @@ private:
 	bool OnPlacementPress( const SGameMessage &msg );
 	bool OnPlacementMove( const SGameMessage &msg );
 	bool OnPlacementRelease( const SGameMessage &msg );
+	bool OnPlacementCancel( const SGameMessage &msg );
 	bool OnManualPlacementMessage( const SMPUIManualPlacementMessage *pMsg );
 	bool ToggleManualPlacement();
 	void UpdateMapName();

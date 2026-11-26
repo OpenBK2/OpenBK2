@@ -32,6 +32,7 @@ struct SWindowsMsg
 		CHAR,
 		TIME,
 		CLOSE,
+		MOUSE_CANCEL,
 	};
 
 	NHPTimer::STime time = 0;

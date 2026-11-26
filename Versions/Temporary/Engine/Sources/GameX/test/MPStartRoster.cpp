@@ -6,6 +6,7 @@
 #include "GameX/MPCoopRules.h"
 #include "GameX/MPManagerModeNivalNet.hpp"
 #include "GameX/MultiplayerNetPackets.h"
+#include "GameX/ScenarioTracker.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
@@ -275,9 +276,20 @@ public:
 		return manager->nSlotsUsed;
 	}
 
+	static int GetTeamWithLowestScore( CMPManagerMode *manager )
+	{
+		return manager->GetTeamWithLowestScore();
+	}
+
 	static bool HasStarted( const CMPManagerModeNivalNet *manager )
 	{
 		return manager->eState == CMPManagerModeNivalNet::EGS_GAME_STARTED;
+	}
+
+	static void WaitForLadderStart( CMPManagerModeNivalNet *manager )
+	{
+		manager->eState = CMPManagerModeNivalNet::EGS_LADDER_WAIT_CLIENTS;
+		manager->bLadderGame = true;
 	}
 };
 
@@ -341,10 +353,13 @@ protected:
 		NGlobal::SetVar( "mp_consts", constantsName );
 		map->pMap = mission;
 		map->nPlayers = 3;
+		mission->nNumPatchesX = 4;
+		mission->nNumPatchesY = 4;
 		mission->players.resize( 4 );
-		for ( auto &player : mission->players )
+		for ( int i = 0; i < mission->players.size(); ++i )
 		{
-			player.pPartyInfo = party;
+			mission->players[i].pPartyInfo = party;
+			mission->players[i].vMPStartPos = CVec2( 512.0f * ( i + 1 ), 1024.0f );
 		}
 		mission->players.back().nDiplomacySide = 2;
 		game.pMPMap = map;
@@ -378,6 +393,7 @@ protected:
 	{
 		manager = nullptr;
 		client = nullptr;
+		NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
 		NSingleton::UnRegisterSingleton( IInterfaceState::tidTypeID );
 		NSingleton::UnRegisterSingleton( IConsoleBuffer::tidTypeID );
 		game.pMPMap = nullptr;
@@ -423,6 +439,15 @@ protected:
 	{
 		CPacketProcessorBase *processor = manager;
 		EXPECT_TRUE( processor->ProcessPacket( packet ) );
+	}
+
+	void ExpectNoReplyToLobbyPing( int nSender )
+	{
+		// The fixture stops before creating a transceiver. Dispatch directly to the registered lobby handler.
+		const size_t nBefore = client->sent.size();
+		CObj<CPingPacket> ping = new CPingPacket( nSender, 0, 100 );
+		EXPECT_TRUE( manager->CPacketProcessorBase::ProcessPacket( ping ) );
+		EXPECT_EQ( client->sent.size(), nBefore );
 	}
 
 	CB2GameRoomStartGamePacket *GetSentStart() const
@@ -555,6 +580,30 @@ TEST_F( MPStartRoster, GuestDisplaysOnlyValidPlacementUpdatesSentByTheHost )
 	preview = dynamic_cast<SMPUIManualPlacementMessage *>( update.GetPtr() );
 	ASSERT_NE( preview, nullptr );
 	EXPECT_TRUE( preview->manualPlacement.empty() );
+}
+
+TEST_F( MPStartRoster, LadderIgnoresManualPreviewAndStartButAcceptsTheOrdinaryStart )
+{
+	game.nPlayers = 2;
+	hostSlots.resize( 2 );
+	hostSlots[1].nTeam = 1;
+	CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 1 );
+	CMPPlayerDropTestAccess::WaitForLadderStart( manager );
+
+	const std::vector<uint8_t> order{ 1, 2, 0 };
+	ASSERT_TRUE( NGameX::IsValidManualPlacement( game, order ) );
+	CObj<CB2ManualPlacementPacket> preview = new CB2ManualPlacementPacket( HOST_ID, order );
+	Dispatch( preview );
+	auto start = MakeStart( order );
+	start->bManualPlacement = true;
+	Dispatch( start );
+	EXPECT_EQ( manager->PeekMessage(), nullptr );
+	EXPECT_FALSE( CMPPlayerDropTestAccess::HasStarted( manager ) );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetOwnSlot( manager ), 1 );
+
+	auto ordinaryStart = MakeStart( { 1, 0 } );
+	EXPECT_THROW( Dispatch( ordinaryStart ), SStartReached );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetOwnSlot( manager ), 0 );
 }
 
 TEST_F( MPStartRoster, HostPacketOvertakesAnotherPeersColourAndReadyUpdates )
@@ -723,6 +772,7 @@ TEST_F( MPStartRoster, ManualPlacementCommitsPreviewBeyondRoomCapacityOnHostAndP
 		EXPECT_FALSE( start->slots[0].bPresent );
 		EXPECT_EQ( start->slots[1].nClientID, HOST_ID );
 		EXPECT_EQ( start->slots[2].nClientID, LOCAL_ID );
+		ExpectNoReplyToLobbyPing( LOCAL_ID );
 
 		// A peer can still have the pre-toggle preview when the final authoritative roster arrives.
 		CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 1 );
@@ -735,8 +785,54 @@ TEST_F( MPStartRoster, ManualPlacementCommitsPreviewBeyondRoomCapacityOnHostAndP
 		EXPECT_EQ( committed[1].szName, hostSlots[0].szName );
 		EXPECT_EQ( committed[2].nColour, hostSlots[1].nColour );
 		EXPECT_EQ( CMPPlayerDropTestAccess::GetPlayerCount( manager ), 2 );
+		ExpectNoReplyToLobbyPing( HOST_ID );
 		client->sent.clear();
 	}
+}
+
+TEST_F( MPStartRoster, TimedScoreTiebreakStaysWithTheOriginalLobbyTeamAcrossManualPlacements )
+{
+	game.nPlayers = 2;
+	hostSlots.resize( 2 );
+	hostSlots[0].nTeam = 1;
+	hostSlots[1].nTeam = 0;
+	CObj<IScenarioTracker> tracker = dynamic_cast<IScenarioTracker *>( NObjectFactory::MakeObject( 0x1117BB00 ) );
+	ASSERT_NE( tracker, nullptr );
+	NSingleton::RegisterSingleton( tracker, IScenarioTracker::tidTypeID );
+	// All map starts score equally, whichever pair is occupied.
+	for ( int i = 0; i < map->nPlayers; ++i )
+	{
+		tracker->SetStatistics( i, IScenarioTracker::ESK_SCORE, 5 );
+	}
+	const std::vector<std::vector<uint8_t>> orders{ { 0, 1, 2 }, { 1, 0, 2 }, { 1, 2, 0 } };
+	for ( const auto &order : orders )
+	{
+		SCOPED_TRACE( testing::PrintToString( order ) );
+		CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 0, true );
+		CMPUIMessageTranslator *translator = manager;
+		CObj<SMPUIMessage> placement = new SMPUIManualPlacementMessage( order );
+		ASSERT_TRUE( translator->HandleMessage( placement ) );
+		CObj<SMPUIMessage> begin = new SMPUISimpleMessage( EMUI_START_GAME );
+		EXPECT_THROW( translator->HandleMessage( begin ), SStartReached );
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetTeamWithLowestScore( manager ), 0 );
+		auto *start = GetSentStart();
+		ASSERT_NE( start, nullptr );
+		auto incoming = RoundTrip( start );
+		incoming->nClientID = HOST_ID;
+		// A guest may still have an older team update when the final roster arrives.
+		std::vector<SMPSlot> stale( hostSlots );
+		stale[0].nTeam = 0;
+		CMPPlayerDropTestAccess::Initialize( manager, client, game, stale, 1 );
+		EXPECT_THROW( Dispatch( incoming ), SStartReached );
+		EXPECT_EQ( CMPPlayerDropTestAccess::GetTeamWithLowestScore( manager ), 0 );
+		client->sent.clear();
+	}
+
+	// Ordinary placement still gives map slot zero's team the tiebreak.
+	CMPPlayerDropTestAccess::Initialize( manager, client, game, hostSlots, 1 );
+	auto ordinary = MakeStart( { 1, 0 } );
+	EXPECT_THROW( Dispatch( ordinary ), SStartReached );
+	EXPECT_EQ( CMPPlayerDropTestAccess::GetTeamWithLowestScore( manager ), 1 );
 }
 
 TEST_F( MPStartRoster, ManualCoopStartUsesUnoccupiedHumanRoleAndKeepsScriptedSlots )

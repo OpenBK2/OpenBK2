@@ -282,7 +282,8 @@ void CMPManagerMode::SendGameRoomInitMessages()
 
 bool CMPManagerMode::SetManualPlacement( const std::vector<uint8_t> &order )
 {
-	if ( manualPlacement == order || ( !order.empty() && !NGameX::IsValidManualPlacement( gameDesc, order ) ) )
+	if ( !AllowsManualPlacement() || manualPlacement == order ||
+	     ( !order.empty() && !NGameX::IsValidManualPlacement( gameDesc, order ) ) )
 	{
 		return false;
 	}
@@ -349,8 +350,7 @@ void CMPManagerMode::SendStartGamePacket()
 
 	CPtr<CB2GameRoomStartGamePacket> pStartPkt = new CB2GameRoomStartGamePacket( 0 );
 	// Only the host resolves this profile setting, once, for every player in the match.
-	bBaseReinforcementBonuses = NGlobal::GetVar( "multiplayer_flag_calls_bonus", 0 ) == 1;
-	pStartPkt->bBaseReinforcementBonuses = bBaseReinforcementBonuses;
+	pStartPkt->bBaseReinforcementBonuses = NGlobal::GetVar( "multiplayer_flag_calls_bonus", 0 ) == 1;
 	pStartPkt->bManualPlacement = !manualPlacement.empty();
 	CreateRehash( &( pStartPkt->slotRehash ) );
 	RehashSlots( pStartPkt->slotRehash );
@@ -359,7 +359,27 @@ void CMPManagerMode::SendStartGamePacket()
 		// Copy construction includes client IDs; SMPSlot::operator= deliberately omits them.
 		pStartPkt->slots.push_back( slot );
 	}
+	ApplyStartSettings( *pStartPkt );
 	pClient->SendGamePacket( pStartPkt, true );
+}
+
+void CMPManagerMode::ApplyStartSettings( const CB2GameRoomStartGamePacket &start )
+{
+	bBaseReinforcementBonuses = start.bBaseReinforcementBonuses;
+	// Ordinary games award a tied score to map slot zero's team. Manual moves keep the
+	// first occupied lobby seat's team, even if the host drags that player to another start.
+	nScoreTiebreakTeam = start.slots.front().nTeam;
+	if ( start.bManualPlacement )
+	{
+		for ( const int nMapSlot : start.slotRehash )
+		{
+			if ( start.slots[nMapSlot].bPresent )
+			{
+				nScoreTiebreakTeam = start.slots[nMapSlot].nTeam;
+				break;
+			}
+		}
+	}
 }
 
 void CMPManagerMode::AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &src )

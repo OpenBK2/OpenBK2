@@ -8,6 +8,7 @@
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/Vis2AI.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 #include "UI/DBUserInterface.h"
@@ -69,11 +70,14 @@ protected:
 		map->pMap = mission;
 		map->eGameType = NDb::COOP;
 		map->nPlayers = 3;
+		mission->nNumPatchesX = 4;
+		mission->nNumPatchesY = 3;
 		// Resize through the editor binding so its per-element metadata follows the C++ array.
 		ASSERT_TRUE( missionRecord->SetValue( "Players", 6 ) );
 		for ( int i = 0; i < 5; ++i )
 		{
 			const bool bBot = i == 0 || i == 2;
+			mission->players[i].vMPStartPos = CVec2( 512.0f * ( i + 1 ), 1024.0f );
 			mission->players[i].ePlayerType = bBot ? NDb::AI_BOT : NDb::HUMAN;
 			mission->players[i].nDiplomacySide = bBot ? 1 : 0;
 		}
@@ -479,6 +483,47 @@ TEST_F( MPCoopRules, NonFiniteHumanStartDisablesPreviewWithoutAffectingOrdinaryP
 	EXPECT_EQ( NGameX::GetManualPlacementSize( game ), 0 );
 	EXPECT_TRUE( NGameX::GenerateManualPlacement( game ).empty() );
 	EXPECT_FALSE( NGameX::IsValidManualPlacement( game, { 0, 1, 2, 3, 4, 5 } ) );
+	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( game, ReadySlots(), &error, constants ) ) << error;
+}
+
+TEST_F( MPCoopRules, CoincidentClassicStartsDisableOnlyManualPlacement )
+{
+	map->eGameType = NDb::CLASSIC;
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	ASSERT_EQ( NGameX::GetManualPlacementSize( game ), 3 );
+	// Some stock maps leave every MPStartPos at the origin, including seats beyond the room capacity.
+	mission->players[0].vMPStartPos = VNULL2;
+	mission->players[2].vMPStartPos = VNULL2;
+	EXPECT_EQ( NGameX::GetManualPlacementSize( game ), 0 );
+	EXPECT_TRUE( NGameX::GenerateManualPlacement( game ).empty() );
+	EXPECT_FALSE( NGameX::IsValidManualPlacement( game, { 0, 1, 2 } ) );
+	std::vector<SMPSlot> slots( game.nPlayers );
+	for ( int i = 0; i < slots.size(); ++i )
+	{
+		slots[i].bPresent = true;
+		slots[i].bAccept = true;
+		slots[i].nCountry = 1;
+		slots[i].nTeam = i;
+		slots[i].nColour = i;
+	}
+	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( game, slots, &error, constants ) ) << error;
+}
+
+TEST_F( MPCoopRules, SelectableStartsMustBeWithinBothMapDimensions )
+{
+	ASSERT_TRUE( NGameX::ResolveMultiplayerMapRules( &game, &error, constants ) ) << error;
+	const float fWidth = mission->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE;
+	const float fHeight = mission->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE;
+	// The bot can share a human's position because its marker cannot be picked up or used as a target.
+	mission->players[0].vMPStartPos = mission->players[1].vMPStartPos;
+	auto &pos = mission->players[4].vMPStartPos;
+	pos = CVec2( fWidth, fHeight );
+	EXPECT_EQ( NGameX::GetManualPlacementSize( game ), 6 );
+	for ( const CVec2 &outside : { CVec2( -1, 0 ), CVec2( 0, -1 ), CVec2( fWidth + 1, 0 ), CVec2( 0, fHeight + 1 ) } )
+	{
+		pos = outside;
+		EXPECT_EQ( NGameX::GetManualPlacementSize( game ), 0 );
+	}
 	EXPECT_TRUE( NGameX::ValidateMultiplayerLobby( game, ReadySlots(), &error, constants ) ) << error;
 }
 } // namespace
