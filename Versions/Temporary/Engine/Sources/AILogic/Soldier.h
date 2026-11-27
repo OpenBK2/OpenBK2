@@ -341,7 +341,6 @@ public:
 	class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) override;
 
 	void GetFogInfo( SWarFogUnitInfo *pInfo ) const override;
-	void WarFogChanged() override;
 
 	void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const override;
 	float GetMaxFireRange() const override;

@@ -2405,21 +2405,11 @@ void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 
 void CAIUnit::WarFogChanged()
 {
-	if ( IsAlive() )
+	if ( IsAlive() && GetParty() < 2 )
 	{
-		bool bShouldUpdateWarfog = true;
-		if ( CFormation *pFormation = GetFormation() )
-		{
-			IUnitState *pState = pFormation->GetState();
-			bShouldUpdateWarfog = !pState || pState->GetName() != EUSN_GUN_CREW_STATE;
-		}
-
-		if ( bShouldUpdateWarfog && GetParty() < 2 )
-		{
-			SWarFogUnitInfo fogInfo;
-			GetFogInfo( &fogInfo );
-			theWarFog.UpdateUnit( GetUniqueId(), fogInfo );
-		}
+		SWarFogUnitInfo fogInfo;
+		GetFogInfo( &fogInfo );
+		theWarFog.UpdateUnit( GetUniqueId(), fogInfo );
 	}
 }
 

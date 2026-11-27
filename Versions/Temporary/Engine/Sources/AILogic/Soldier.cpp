@@ -137,18 +137,6 @@ CMilitaryCar *CSoldier::GetTransportUnit() const
 	return checked_cast<CMilitaryCar *>( pObjInside );
 }
 
-void CSoldier::WarFogChanged()
-{
-	IUnitState *pState = GetFormation()->GetState();
-
-	if ( ( !pState || pState->GetName() != EUSN_GUN_CREW_STATE ) && GetParty() < 2 )
-	{
-		SWarFogUnitInfo fogInfo;
-		GetFogInfo( &fogInfo );
-		theWarFog.UpdateUnit( GetUniqueId(), fogInfo );
-	}
-}
-
 void CSoldier::SetInBuilding( CBuilding *pBuilding )
 {
 	UpdateFormationStatsForInsideType( EOIO_BUILDING );
@@ -904,7 +892,12 @@ void CSoldier::RevealNearestMines( const bool bIncludingAP )
 
 void CSoldier::SetFormation( CFormation *_pFormation )
 {
+	const bool bWasServing = pFormation && pFormation->IsServingArtillery();
 	pFormation = _pFormation;
+	if ( bWasServing != ( pFormation && pFormation->IsServingArtillery() ) )
+	{
+		WarFogChanged();
+	}
 }
 
 void CSoldier::Die( const bool fromExplosion, const float fDamage )
@@ -973,6 +966,12 @@ void CSoldier::Die( const bool fromExplosion, const float fDamage )
 
 void CSoldier::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 {
+	if ( pFormation && pFormation->IsServingArtillery() )
+	{
+		// The gun provides sight. Keep the empty footprint fixed so crew movement does not queue fog updates.
+		*pInfo = SWarFogUnitInfo();
+		return;
+	}
 	pInfo->fSpyDiscoveryRange = GetStats()->fSpyDiscoveryRange;
 	pInfo->specialSights.clear();
 	if ( !IsInSolidPlace() )

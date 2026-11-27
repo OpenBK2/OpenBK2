@@ -108,6 +108,9 @@ class CFormation : public CCommonUnit
 		}
 	};
 
+	bool bRefreshCrewSightAfterLoad = false;
+	void RefreshCrewSight();
+
 	ZDATA_( CCommonUnit )
 	float fPass = {};
 
@@ -186,6 +189,11 @@ public:
 		f.Add( 28, &nBoundTileRadius );
 		f.Add( 29, &timeLastCatchArt );
 		f.Add( 30, &dwCatchArtFlag );
+		if ( f.IsReading() )
+		{
+			// The fog and soldiers can still be loading. Reconcile stationary crews on their first segment.
+			bRefreshCrewSightAfterLoad = true;
+		}
 		return 0;
 	}
 
@@ -268,6 +276,8 @@ public:
 	virtual void ForceGoByRightDir() {}
 
 	struct IStatesFactory *GetStatesFactory() const override;
+	AILOGIC_EXPORT void SetCurState( IUnitState *pState ) override;
+	AILOGIC_EXPORT bool IsServingArtillery() const;
 
 	const int Size() const
 	{

@@ -14,7 +14,7 @@ CDecksSet<CObj<CAICommand>> CQueueUnit::cmds( SConsts::AI_START_VECTOR_SIZE );
 void CQueueUnit::Init()
 {
 	bCmdFinished = false;
-	pState = GetStatesFactory()->ProduceRestState( this );
+	SetCurState( GetStatesFactory()->ProduceRestState( this ) );
 	pCmdCurrent = 0;
 	lastChangeStateTime = 0;
 	bCommandAdded = true;
@@ -336,7 +336,7 @@ void CQueueUnit::Segment()
 						NullSegmTime();
 					}
 
-					pState = 0;
+					SetCurState( nullptr );
 					//					DebugTrace( "pState = 0 in CQueueUnit::Segment()" );
 				}
 				else if ( CanCommandBeExecuted( pCmd ) )
@@ -365,7 +365,7 @@ void CQueueUnit::Segment()
 			}
 		} while ( pNewState == 0 );
 
-		pState = pNewState;
+		SetCurState( pNewState );
 		bCmdFinished = false;
 	}
 	else
@@ -402,7 +402,7 @@ void CQueueUnit::KillStatesAndCmdsInfo()
 {
 	DelCmdQueue( GetUniqueIdQU() );
 	pCmdCurrent = 0;
-	pState = 0;
+	SetCurState( nullptr );
 	//	DebugTrace( "pState = 0 in CQueueUnit::KillStatesAndCmdsInfo()" );
 	bCmdFinished = false;
 }

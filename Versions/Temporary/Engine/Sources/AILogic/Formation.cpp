@@ -339,6 +339,14 @@ void CFormation::Init( const SSquadRPGStats *_pStats,
 
 void CFormation::Segment()
 {
+	if ( bRefreshCrewSightAfterLoad )
+	{
+		bRefreshCrewSightAfterLoad = false;
+		if ( IsServingArtillery() )
+		{
+			RefreshCrewSight();
+		}
+	}
 	if ( !bDisabled )
 	{
 		CQueueUnit::Segment();
@@ -377,6 +385,33 @@ void CFormation::Segment()
 IStatesFactory *CFormation::GetStatesFactory() const
 {
 	return CFormationStatesFactory::Instance();
+}
+
+bool CFormation::IsServingArtillery() const
+{
+	return GetState() && GetState()->GetName() == EUSN_GUN_CREW_STATE;
+}
+
+void CFormation::SetCurState( IUnitState *pState )
+{
+	const bool bWasServing = IsServingArtillery();
+	CQueueUnit::SetCurState( pState );
+	if ( IsServingArtillery() != bWasServing )
+	{
+		// State constructors and interrupts still see the previous state. Publish sight after the switch.
+		RefreshCrewSight();
+	}
+}
+
+void CFormation::RefreshCrewSight()
+{
+	for ( const CPtr<CSoldier> &pSoldier : soldiers )
+	{
+		if ( IsValidObj( pSoldier ) && pSoldier->GetFormation() == this )
+		{
+			pSoldier->WarFogChanged();
+		}
+	}
 }
 
 const bool CFormation::IsIdle() const

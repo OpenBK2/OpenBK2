@@ -13,6 +13,7 @@
 #include "../Units.h"
 #include "../UnitStates.h"
 #include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/CommonPathFinder.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
@@ -50,13 +51,14 @@ class ArtilleryCaptureVisibility : public testing::TestWithParam<int>
 	std::vector<CObj<CObjectBase>> objects;
 	std::vector<SBinSaverExternalObject> external;
 	CObj<CAIMap> map;
+	CMemoryStream updaterState;
 	CPtr<IAILogic> logic;
-	CPtr<CFormation> crew;
 	CPtr<CUnitGuns> guns;
 	CDBPtr<NDb::SMechUnitRPGStats> stats;
 	CPtr<NDb::SUnitStatsModifier> modifier;
 
 protected:
+	CPtr<CFormation> crew;
 	CPtr<CArtillery> artillery;
 	CPtr<CSoldier> soldier;
 
@@ -123,6 +125,23 @@ protected:
 
 	void SetUp() override
 	{
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &updaterState, SAVER_MODE_WRITE );
+			saver->Add( 1, &updater );
+		}
+		// Neither party has a rendering grid when the headless fixture applies its fog updates.
+		CMemoryStream observerStream;
+		int neutralParty = 2;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &observerStream, SAVER_MODE_WRITE );
+			saver->Add( 10, &neutralParty );
+		}
+		observerStream.Seek( 0 );
+		{
+			CPtr<IBinSaver> loader = CreateBinSaver( &observerStream, SAVER_MODE_READ );
+			updater.operator&( *loader );
+		}
+		NSingleton::RegisterSingleton( new CCommonPathFinder(), CCommonPathFinder::tidTypeID );
 		logic = MakeObject<IAILogic>( 0x1108D441 );
 		NSingleton::RegisterSingleton( logic, IAILogic::tidTypeID );
 		logic->SetNPlayers( 2 );
@@ -160,10 +179,15 @@ protected:
 
 	void TearDown() override
 	{
+		theWarFog.Clear();
+		updaterState.Seek( 0 );
+		CPtr<IBinSaver> loader = CreateBinSaver( &updaterState, SAVER_MODE_READ );
+		loader->Add( 1, &updater );
 		units.Clear();
 		NSingleton::UnRegisterSingleton( IAILogic::tidTypeID );
 		objects.clear();
 		SetAIMap( nullptr );
+		NSingleton::UnRegisterSingleton( CCommonPathFinder::tidTypeID );
 	}
 
 	void SetVisibilitySnapshot( bool bGunVisible, bool bCrewVisible, bool bAlreadyOwned = false )
@@ -201,6 +225,46 @@ protected:
 		SFields soldierFields{ [&]( IBinSaver &saver ) { saver.Add( 1, &soldierAI ); } };
 		LoadFields( soldier, [&]( IBinSaver &saver ) { saver.Add( 1, &soldierFields ); } );
 		artillery->SetCurState( MakeObject<IUnitState>( 0x1508D494 ) );
+	}
+
+	void PrepareSoldierObserver()
+	{
+		auto *infantryStats = MakeRecord<NDb::SInfantryRPGStats>( "InfantryRPGStats" );
+		infantryStats->fSight = 12;
+		infantryStats->fSpyDiscoveryRange = 12;
+		CDBPtr<NDb::SInfantryRPGStats> statsPointer = infantryStats;
+		CUnitStatsModifiers modifiers;
+		modifiers.Set( "test.fixture", modifier );
+		SFields ai{ [&]( IBinSaver &saver ) { saver.Add( 58, &modifiers ); } };
+		float ownSight = -1;
+		SAIAngle maxAngle( 65535 );
+		SFields infantry{ [&]( IBinSaver &saver )
+		                  {
+												saver.Add( 1, &ai );
+												saver.Add( 4, &statsPointer );
+												saver.Add( 9, &maxAngle );
+												saver.Add( 10, &ownSight );
+												saver.Add( 18, &crew );
+											} };
+		LoadFields( soldier, [&]( IBinSaver &saver ) { saver.Add( 1, &infantry ); } );
+		soldier->SetVisionAngle( 32768 );
+		ASSERT_TRUE( soldier->IsAlive() );
+		ASSERT_EQ( soldier->GetFormation(), crew.GetPtr() );
+	}
+
+	void PlaceObserver( CAIUnit *unit, SVector tile )
+	{
+		// Load the completed movement without running pathfinding or the rendering world.
+		CMemoryStream stream;
+		CVec3 position( tile.x * AI_TILE_SIZE, tile.y * AI_TILE_SIZE, 0 );
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->Add( 9, &position );
+			saver->Add( 10, &tile );
+		}
+		stream.Seek( 0 );
+		CPtr<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+		unit->CBasePathUnit::operator&( *loader );
 	}
 
 	void CaptureAndCheckClient( bool bExpectedVisible )
@@ -269,6 +333,82 @@ TEST_P( ArtilleryCaptureVisibility, ReattachingCrewAlsoRefreshesVisibilityWithou
 {
 	SetVisibilitySnapshot( true, false, true );
 	CaptureAndCheckClient( true );
+}
+
+TEST_P( ArtilleryCaptureVisibility, ServingCrewWithdrawsPersonalSightAndRestoresItAtTheDetachPosition )
+{
+	const SVector captureTile( 16, 16 );
+	const SVector destination( 44, 44 );
+	const SVector beyondGunSight( 8, 0 );
+	const int party = theDipl.GetNParty( crew->GetPlayer() );
+	PrepareSoldierObserver();
+	PlaceObserver( soldier, captureTile );
+	PlaceObserver( artillery, captureTile );
+	SWarFogUnitInfo info;
+	soldier->GetFogInfo( &info );
+	ASSERT_EQ( info.nRadius, 6 );
+	ASSERT_EQ( info.vPos, SVector( 8, 8 ) );
+	ASSERT_TRUE( info.sector.IsWholeCircle() );
+	theWarFog.AddUnit( soldier->GetUniqueId(), info, party );
+	artillery->SetCrew( crew, false );
+	theWarFog.Segment();
+	ASSERT_TRUE( theWarFog.IsTileVisible( captureTile + beyondGunSight, party ) );
+	ASSERT_TRUE( theWarFog.IsUnitVisible( captureTile + beyondGunSight, party, true ) );
+
+	// The stationary gun sees less far than its new gunner.
+	CPtr<IUnitState> serving = MakeObject<IUnitState>( 0x1108D4BF );
+	LoadFields( serving, [&]( IBinSaver &saver ) { saver.Add( 8, &artillery ); } );
+	crew->SetCurState( serving );
+	theWarFog.Segment();
+	EXPECT_TRUE( theWarFog.IsTileVisible( captureTile, party ) );
+	EXPECT_FALSE( theWarFog.IsTileVisible( captureTile + beyondGunSight, party ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( captureTile + beyondGunSight, party, true ) );
+
+	PlaceObserver( soldier, destination );
+	PlaceObserver( artillery, destination );
+	soldier->WarFogChanged();
+	artillery->WarFogChanged();
+	theWarFog.Segment();
+	EXPECT_FALSE( theWarFog.IsTileVisible( captureTile, party ) );
+	EXPECT_TRUE( theWarFog.IsTileVisible( destination, party ) );
+	EXPECT_FALSE( theWarFog.IsTileVisible( destination + beyondGunSight, party ) );
+
+	crew->SetCurState( nullptr );
+	theWarFog.Segment();
+	EXPECT_TRUE( theWarFog.IsTileVisible( destination + beyondGunSight, party ) );
+	EXPECT_TRUE( theWarFog.IsUnitVisible( destination + beyondGunSight, party, true ) );
+	EXPECT_FALSE( theWarFog.IsTileVisible( captureTile, party ) );
+}
+
+TEST_P( ArtilleryCaptureVisibility, LoadedStationaryCrewWithdrawsLegacySightAtItsOldPosition )
+{
+	const SVector oldTile( 16, 16 );
+	const int party = theDipl.GetNParty( crew->GetPlayer() );
+	PrepareSoldierObserver();
+	PlaceObserver( soldier, oldTile );
+	SWarFogUnitInfo info;
+	soldier->GetFogInfo( &info );
+	theWarFog.AddUnit( soldier->GetUniqueId(), info, party );
+	theWarFog.Segment();
+	ASSERT_TRUE( theWarFog.IsTileVisible( oldTile, party ) );
+
+	// Old saves can contain a fully applied observer at the capture point while the gunner is already elsewhere.
+	PlaceObserver( soldier, SVector( 44, 44 ) );
+	CPtr<IUnitState> serving = MakeObject<IUnitState>( 0x1108D4BF );
+	SFields queue{ [&]( IBinSaver &saver ) { saver.Add( 2, &serving ); } };
+	SFields common{ [&]( IBinSaver &saver ) { saver.Add( 3, &queue ); } };
+	bool disabled = true;
+	LoadFields( crew,
+	            [&]( IBinSaver &saver )
+	            {
+								saver.Add( 1, &common );
+								saver.Add( 9, &disabled );
+							} );
+	ASSERT_EQ( crew->GetState(), serving.GetPtr() );
+	crew->Segment();
+	theWarFog.Segment();
+	EXPECT_FALSE( theWarFog.IsTileVisible( oldTile, party ) );
+	EXPECT_FALSE( theWarFog.IsUnitVisible( oldTile, party, true ) );
 }
 
 INSTANTIATE_TEST_SUITE_P( BothHumanViewpoints, ArtilleryCaptureVisibility, testing::Values( 0, 1 ) );

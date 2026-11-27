@@ -483,6 +483,10 @@ context. Read `git diff` of every touched file before building.
   visibility sync for every party, plus the normal client notification, even if the
   gun's visibility did not change. Recalculate after ownership changes so the new
   owner sees its crew immediately.
+- For terrain that stays visible, compare the party's tile counts with the applied
+  masks of individual observers. A crewman can leave sight at the capture site
+  even when the abandoned gun and its original crew have all stopped spotting.
+  Check the crewman's sight both when the serving state takes effect and when it ends.
 - The infantry factory creates `CInfantry`, a subclass of `CSoldier`. Serialized
   fixtures need both base-class chunks before the `CAIUnit` visibility fields.
 - A Windows DLL-only relink can leave the test directory's copied DLL stale when
