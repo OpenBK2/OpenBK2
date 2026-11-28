@@ -152,6 +152,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 	}
 
 	void FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<uint16_t> &bbIndices );
+	virtual void GetVisualBounds( CVec3 *pCenter, CVec3 *pHalfSize ) const;
 	void UpdateBBPolyLine( NGScene::IGameView *pGScene );
 	void UpdateSrcBind() override;
 	//
@@ -191,6 +192,7 @@ public:
 	UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale ) override;
 	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace ) override;
 	void MoveAfterUpdatePlacement( NGScene::IGameView *pGScene );
+	virtual CObjectBase *CreateStaticMesh( NGScene::IGameView *pGScene );
 
 	const SFBTransform &GetPlacement() const override
 	{

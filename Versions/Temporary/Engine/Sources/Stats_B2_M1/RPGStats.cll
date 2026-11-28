@@ -712,6 +712,21 @@ class SDynamicDebrisSet
 	SDynamicDebrisDesc _Debris[];
 };
 
+// The concrete recipe selects the generator. Its shape varies with the map placement seed.
+[export; no_checksum]
+class SProceduralObjectRecipe
+{
+};
+
+[typeID = 0x51C3B401; export; no_checksum]
+class SProceduralRockRecipe : public SProceduralObjectRecipe
+{
+	// Full local dimensions of the rock in scene units, with its base at ground level.
+	CVec3 _Size;
+	// Irregularity of the rock's outline and facets.
+	Percent1 _Roughness = 0.6;
+};
+
 class SObjectBaseRPGStats : public SStaticObjectRPGStats
 {
 	[noCode] struct SStaticDebris
@@ -777,6 +792,8 @@ class SObjectBaseRPGStats : public SStaticObjectRPGStats
 	SComplexSeasonedEffect *_SeasonedEffectDeath;
 	// Seasoned version of falling effect, if it is setted, simple fall effect is ignored
 	SComplexSeasonedEffect *_SeasonedFallEffect;
+	// Optional procedural visual shape, textured with the seasonal model's first material.
+	[no_checksum] SProceduralObjectRecipe *_ProceduralRecipe;
 
 	#include "include_ObjectBaseRPGStats.h"
 };

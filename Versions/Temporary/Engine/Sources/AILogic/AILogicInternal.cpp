@@ -458,8 +458,14 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 			{
 				CDBPtr<SBuildingRPGStats> pStats = checked_cast<const SBuildingRPGStats *>( object.pObject.GetPtr() );
 
-				pResult = theStatObjs.AddNewBuilding(
-						pStats, object.fHP, object.vPos, object.nDir, object.nFrameIndex, nPlayer, object.link.nLinkID );
+				pResult = theStatObjs.AddNewBuilding( pStats,
+				                                      object.fHP,
+				                                      object.vPos,
+				                                      object.nDir,
+				                                      object.nFrameIndex,
+				                                      nPlayer,
+				                                      object.link.nLinkID,
+				                                      object.nProceduralSeed );
 				scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 				break;
 			}
@@ -590,7 +596,8 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 				{
 					return 0;
 				}
-				pResult = theStatObjs.AddNewStaticObject( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
+				pResult = theStatObjs.AddNewStaticObject(
+						pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex, object.nProceduralSeed );
 				scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 			}
 

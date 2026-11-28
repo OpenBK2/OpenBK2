@@ -21,8 +21,10 @@ class CSimpleObjectState : public CMapObjectState
 	CSceneObjectList sceneObjectlist;
 	std::string szRPGStatsTypeName;
 	CDBID rpgStatsDBID;
+	int nProceduralSeed = 0;
 	//
 	void ClearData();
+	void CreatePreview( CVec3 vPosition );
 
 	//конструкторы и операторы присваивания
 	CSimpleObjectState( CMapObjectMultiState *_pParentState = 0 )

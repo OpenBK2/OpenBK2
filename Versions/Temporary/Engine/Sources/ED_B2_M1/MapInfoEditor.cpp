@@ -1668,6 +1668,10 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 								{
 									posControllerChangeInfo->nFlags |= FRAME_INDEX_CHANGED;
 								}
+								else if ( szPostfix == "ProceduralSeed" )
+								{
+									posControllerChangeInfo->nFlags |= PROCEDURAL_SEED_CHANGED;
+								}
 							}
 						}
 					}
@@ -1827,6 +1831,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					CManipulatorManager::GetValue(
 							&( objectLoadInfo.nFrameIndex ), pManipulator, szObjectPrefix + ".FrameIndex" );
 					CManipulatorManager::GetValue( &( objectLoadInfo.fHP ), pManipulator, szObjectPrefix + ".HP" );
+					CManipulatorManager::GetValue(
+							&objectLoadInfo.nProceduralSeed, pManipulator, szObjectPrefix + ".ProceduralSeed" );
 					CManipulatorManager::GetVec3<CVec3, float>(
 							&( objectLoadInfo.vPosition ), pManipulator, szObjectPrefix + ".Pos" );
 					uint16_t wDirection = 0;

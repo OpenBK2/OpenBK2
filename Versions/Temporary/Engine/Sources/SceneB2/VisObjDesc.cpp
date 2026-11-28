@@ -73,17 +73,22 @@ void SModelVisObjDesc::Visit( IAIVisitor *pVisitor )
 	}
 }
 
+void SModelVisObjDesc::GetVisualBounds( CVec3 *pCenter, CVec3 *pHalfSize ) const
+{
+	*pCenter = pModel->pGeometry->vCenter;
+	*pHalfSize = pModel->pGeometry->vSize * 0.5f;
+}
+
 void SModelVisObjDesc::FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<uint16_t> &bbIndices )
 {
 	if ( pModel != 0 && pModel->pGeometry != 0 )
 	{
 		CVec3 vCenter, vSize;
-		if ( s_bGeomAABB )
+		if ( s_bGeomAABB || !pModel->pGeometry->pAIGeometry )
 		{
-			vCenter = pModel->pGeometry->vCenter;
-			vSize = pModel->pGeometry->vSize * 0.5f;
+			GetVisualBounds( &vCenter, &vSize );
 		}
-		else if ( pModel->pGeometry->pAIGeometry != 0 )
+		else
 		{
 			vCenter = pModel->pGeometry->pAIGeometry->vAABBCenter;
 			vSize = pModel->pGeometry->pAIGeometry->vAABBHalfSize;
@@ -222,15 +227,20 @@ void SModelVisObjDesc::ClearAttached( const ESceneSubObjType eType )
 // **
 // ************************************************************************************************************************ //
 
+CObjectBase *SStaticVisObjDesc::CreateStaticMesh( NGScene::IGameView *pGScene )
+{
+	NGScene::IGameView::SMeshInfo meshInfo;
+	pGScene->CreateMeshInfo( pModel, &meshInfo, false );
+	return pGScene->CreateMesh( meshInfo, transform, 0, 0 );
+}
+
 void SStaticVisObjDesc::MoveAfterUpdatePlacement( NGScene::IGameView *pGScene )
 {
 	if ( bHidden || pObj == 0 || pModel == 0 )
 	{
 		return;
 	}
-	NGScene::IGameView::SMeshInfo meshInfo;
-	pGScene->CreateMeshInfo( pModel, &meshInfo, false );
-	if ( CObjectBase *_pObj = pGScene->CreateMesh( meshInfo, transform, 0, 0 ) )
+	if ( CObjectBase *_pObj = CreateStaticMesh( pGScene ) )
 	{
 		pObj = _pObj;
 		if ( fFade != -1.0f )
@@ -288,9 +298,7 @@ void SStaticVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
 	{
 		return;
 	}
-	NGScene::IGameView::SMeshInfo meshInfo;
-	pGScene->CreateMeshInfo( pModel, &meshInfo, false );
-	if ( CObjectBase *_pObj = pGScene->CreateMesh( meshInfo, transform, 0, 0 ) )
+	if ( CObjectBase *_pObj = CreateStaticMesh( pGScene ) )
 	{
 		pObj = _pObj;
 		if ( pModel->pGeometry->pAIGeometry && pSyncSrc )

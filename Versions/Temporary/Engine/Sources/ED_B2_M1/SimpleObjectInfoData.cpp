@@ -2,6 +2,7 @@
 
 #include "MapEditorLib/MultiManipulator.h"
 #include "Misc/2Darray.h"
+#include "Misc/Win32Random.h"
 #include "SceneB2/Scene.h"
 #include "SimpleObjectInfoData.h"
 #include "Stats_B2_M1/IconsSet.h"
@@ -14,6 +15,19 @@
 
 namespace NMapInfoEditor
 {
+int SSimpleObjectInfo::NewProceduralSeed( const NDb::SHPObjectRPGStats *pStats )
+{
+	const auto *pObject = dynamic_cast<const NDb::SObjectBaseRPGStats *>( pStats );
+	if ( pObject && pObject->pProceduralRecipe )
+	{
+		// Each editor draw has 15 bits. Keep a nonzero seed for the placement preview.
+		const unsigned high = NWin32Random::Random();
+		const unsigned low = NWin32Random::Random();
+		return static_cast<int>( ( high << 15 ) | low ) + 1;
+	}
+	return 0;
+}
+
 bool SSimpleObjectInfo::NeedMakeOrientation()
 {
 	if ( !mapInfoElementMap.empty() )
@@ -81,6 +95,7 @@ bool SSimpleObjectInfo::Load( const SObjectLoadInfo *pObjectLoadInfo,
 			mapInfoElement.szRPGStatsTypeName = pObjectLoadInfo->szRPGStatsTypeName;
 			mapInfoElement.rpgStatsDBID = pObjectLoadInfo->rpgStatsDBID;
 			mapInfoElement.nFrameIndex = pObjectLoadInfo->nFrameIndex;
+			mapInfoElement.nProceduralSeed = pObjectLoadInfo->nProceduralSeed;
 			mapInfoElement.nPlayer = pObjectLoadInfo->nPlayer;
 			mapInfoElement.fHP = pObjectLoadInfo->fHP;
 			vPosition = pObjectLoadInfo->vPosition;
@@ -96,6 +111,8 @@ bool SSimpleObjectInfo::Load( const SObjectLoadInfo *pObjectLoadInfo,
 															 szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 			mapInfoElement.szRPGStatsTypeName = szRPGStatsTypeName;
 			mapInfoElement.rpgStatsDBID = CDBID( szRPGStatsName );
+			bResult = bResult && CManipulatorManager::GetValue(
+															 &mapInfoElement.nProceduralSeed, pManipulator, szObjectPrefix + ".ProceduralSeed" );
 			bResult = bResult && CManipulatorManager::GetValue(
 															 &( mapInfoElement.nFrameIndex ), pManipulator, szObjectPrefix + ".FrameIndex" );
 			bResult = bResult &&
@@ -162,6 +179,7 @@ bool SSimpleObjectInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 		mapInfoElement.szRPGStatsTypeName = pObjectCreateInfo->szRPGStatsTypeName;
 		mapInfoElement.rpgStatsDBID = pObjectCreateInfo->rpgStatsDBID;
 		mapInfoElement.nFrameIndex = pObjectCreateInfo->nFrameIndex;
+		mapInfoElement.nProceduralSeed = pObjectCreateInfo->nProceduralSeed;
 		mapInfoElement.nPlayer = pObjectCreateInfo->nPlayer;
 		mapInfoElement.fHP = pObjectCreateInfo->fHP;
 		//
@@ -174,6 +192,11 @@ bool SSimpleObjectInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 		const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 		// Insert
 		bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
+		if ( mapInfoElement.nProceduralSeed != 0 )
+		{
+			bResult = bResult && pObjectController->AddChangeOperation(
+															 szObjectPrefix + ".ProceduralSeed", mapInfoElement.nProceduralSeed, pManipulator );
+		}
 		//Change
 		bResult = bResult && pObjectController->AddChangeOperation(
 														 szObjectPrefix + ".Object", mapInfoElement.rpgStatsDBID.ToString(), pManipulator );

@@ -20,6 +20,7 @@ struct SObjectInfo : public CObjectBase
 		unsigned nFrameIndex; // Frame index
 		unsigned nPlayer;     // Player
 		float fHP;            // Hit points ( 0.0f ... 1.0f )
+		int nProceduralSeed = 0;
 		//
 		CVec3 vPosition;  // Относительная позиция объекта (в AI точках)
 		float fDirection; // Относительное направление объекта (в радианах)
@@ -50,6 +51,7 @@ struct SObjectInfo : public CObjectBase
 			, nFrameIndex( rMapInfoElement.nFrameIndex )
 			, nPlayer( rMapInfoElement.nPlayer )
 			, fHP( rMapInfoElement.fHP )
+			, nProceduralSeed( rMapInfoElement.nProceduralSeed )
 			, vPosition( rMapInfoElement.vPosition )
 			, fDirection( rMapInfoElement.fDirection )
 			, vAdditionalPosition( rMapInfoElement.vAdditionalPosition )
@@ -68,6 +70,7 @@ struct SObjectInfo : public CObjectBase
 				nFrameIndex = rMapInfoElement.nFrameIndex;
 				nPlayer = rMapInfoElement.nPlayer;
 				fHP = rMapInfoElement.fHP;
+				nProceduralSeed = rMapInfoElement.nProceduralSeed;
 				vPosition = rMapInfoElement.vPosition;
 				fDirection = rMapInfoElement.fDirection;
 				vAdditionalPosition = rMapInfoElement.vAdditionalPosition;

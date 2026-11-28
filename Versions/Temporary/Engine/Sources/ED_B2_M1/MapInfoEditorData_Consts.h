@@ -13,6 +13,7 @@
 #define LINK_CHANGED 0x04
 #define PLAYER_CHANGED 0x08
 #define FRAME_INDEX_CHANGED 0x10
+#define PROCEDURAL_SEED_CHANGED 0x20
 
 namespace NMapInfoEditor
 {
@@ -143,6 +144,7 @@ struct SObjectLoadInfo
 	CVec3 vPosition;
 	float fDirection;
 	unsigned nFrameIndex;
+	int nProceduralSeed = 0;
 	unsigned nPlayer;
 	float fHP;
 
@@ -176,6 +178,7 @@ struct SObjectCreateInfo
 	CDBID rpgStatsDBID;
 	//
 	unsigned nFrameIndex;
+	int nProceduralSeed = 0;
 	unsigned nPlayer;
 	float fHP;
 	//

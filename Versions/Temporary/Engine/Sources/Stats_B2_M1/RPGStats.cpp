@@ -2032,6 +2032,57 @@ int SDynamicDebrisSet::operator&( IBinSaver &saver )
 
 
 
+void SProceduralObjectRecipe::ReportMetaInfo() const
+{
+	uint8_t *pThis = (uint8_t*)this;
+}
+
+int SProceduralObjectRecipe::operator&( IXmlSaver &saver )
+{
+
+	return 0;
+}
+
+int SProceduralObjectRecipe::operator&( IBinSaver &saver )
+{
+
+	return 0;
+}
+
+
+
+void SProceduralRockRecipe::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "ProceduralRockRecipe", typeID, sizeof(*this) );
+	SProceduralObjectRecipe::ReportMetaInfo();
+
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportStructMetaInfo( "Size", &vSize, pThis );
+	NMetaInfo::ReportMetaInfo( "Roughness", (uint8_t*)&fRoughness - pThis, sizeof(fRoughness), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SProceduralRockRecipe::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+	saver.AddTypedSuper( (SProceduralObjectRecipe*)(this) );
+	saver.Add( "Size", &vSize );
+	saver.Add( "Roughness", &fRoughness );
+
+	return 0;
+}
+
+int SProceduralRockRecipe::operator&( IBinSaver &saver )
+{
+	saver.Add( 1, (SProceduralObjectRecipe*)this );
+	saver.Add( 2, &vSize );
+	saver.Add( 3, &fRoughness );
+
+	return 0;
+}
+
+
+
 void SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
@@ -2188,6 +2239,7 @@ void SObjectBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "SeasonedEffectExplosion", (uint8_t*)&pSeasonedEffectExplosion - pThis, sizeof(pSeasonedEffectExplosion), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "SeasonedEffectDeath", (uint8_t*)&pSeasonedEffectDeath - pThis, sizeof(pSeasonedEffectDeath), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "SeasonedFallEffect", (uint8_t*)&pSeasonedFallEffect - pThis, sizeof(pSeasonedFallEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ProceduralRecipe", (uint8_t*)&pProceduralRecipe - pThis, sizeof(pProceduralRecipe), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SObjectBaseRPGStats::operator&( IXmlSaver &saver )
@@ -2212,6 +2264,7 @@ int SObjectBaseRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "SeasonedEffectExplosion", &pSeasonedEffectExplosion );
 	saver.Add( "SeasonedEffectDeath", &pSeasonedEffectDeath );
 	saver.Add( "SeasonedFallEffect", &pSeasonedFallEffect );
+	saver.Add( "ProceduralRecipe", &pProceduralRecipe );
 
 	return 0;
 }
@@ -2238,6 +2291,7 @@ int SObjectBaseRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 19, &pSeasonedEffectExplosion );
 	saver.Add( 20, &pSeasonedEffectDeath );
 	saver.Add( 21, &pSeasonedFallEffect );
+	saver.Add( 22, &pProceduralRecipe );
 
 	return 0;
 }
@@ -7019,6 +7073,8 @@ REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B80, SProjectile )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B81, SMissleParams )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B82, SWeaponRPGStats )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x140BAB41, SDynamicDebrisSet )
+BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SProceduralObjectRecipe )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x51C3B401, SProceduralRockRecipe )
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SObjectBaseRPGStats )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC1, STerraObjSetRPGStats )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC4, SObjectRPGStats )

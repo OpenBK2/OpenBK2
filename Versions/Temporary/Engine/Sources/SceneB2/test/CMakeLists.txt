@@ -7,9 +7,10 @@ add_unit_test(UnitIconRendering SceneB2 3Dmotor Stats_B2_M1 libdb System Misc gr
 target_compile_definitions(UnitIconRendering_test PRIVATE NOMINMAX
     ICON_CAMERA_SCHEMA="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
 add_unit_test(MultiplayerSceneDebug SceneB2 Stats_B2_M1 System Misc zlib gr2)
+add_unit_test(ProceduralRock SceneB2 3DLib Stats_B2_M1 libdb System Misc zlib gr2)
 if(WIN32)
     set_property(TARGET UnitIconRendering_test APPEND PROPERTY LINK_DEPENDS
         $<TARGET_FILE:SceneB2> $<TARGET_FILE:libdb> $<TARGET_FILE:System>)
-    set_tests_properties(UnitIconRendering_test MultiplayerSceneDebug_test PROPERTIES ENVIRONMENT_MODIFICATION
+    set_tests_properties(UnitIconRendering_test MultiplayerSceneDebug_test ProceduralRock_test PROPERTIES ENVIRONMENT_MODIFICATION
         "PATH=path_list_prepend:$<TARGET_FILE_DIR:ffmpeg::avcodec>")
 endif()

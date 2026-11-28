@@ -541,6 +541,7 @@ void CMapInfoState::Enter()
 				objectLoadInfo.szRPGStatsTypeName = szObjectRPGStatsTypeName;
 				objectLoadInfo.rpgStatsDBID = objectRPGStatsDBID;
 				objectLoadInfo.nFrameIndex = pMapInfoEditor->pMapInfo->objects[nObjectIndex].nFrameIndex;
+				objectLoadInfo.nProceduralSeed = pMapInfoEditor->pMapInfo->objects[nObjectIndex].nProceduralSeed;
 				objectLoadInfo.nPlayer = pMapInfoEditor->pMapInfo->objects[nObjectIndex].nPlayer;
 				objectLoadInfo.fHP = pMapInfoEditor->pMapInfo->objects[nObjectIndex].fHP;
 				objectLoadInfo.vPosition = pMapInfoEditor->pMapInfo->objects[nObjectIndex].vPos;

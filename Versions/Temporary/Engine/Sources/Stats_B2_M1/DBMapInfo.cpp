@@ -601,6 +601,7 @@ void SMapObjectInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThi
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Link", &link, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Object", (uint8_t*)&pObject - pThis, sizeof(pObject), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "ConstructorProfile", (uint8_t*)&pConstructorProfile - pThis, sizeof(pConstructorProfile), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "ProceduralSeed", (uint8_t*)&nProceduralSeed - pThis, sizeof(nProceduralSeed), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SMapObjectInfo::operator&( IXmlSaver &saver )
@@ -614,6 +615,7 @@ int SMapObjectInfo::operator&( IXmlSaver &saver )
 	saver.Add( "Link", &link );
 	saver.Add( "Object", &pObject );
 	saver.Add( "ConstructorProfile", &pConstructorProfile );
+	saver.Add( "ProceduralSeed", &nProceduralSeed );
 
 	return 0;
 }
@@ -629,6 +631,7 @@ int SMapObjectInfo::operator&( IBinSaver &saver )
 	saver.Add( 8, &link );
 	saver.Add( 9, &pObject );
 	saver.Add( 10, &pConstructorProfile );
+	saver.Add( 11, &nProceduralSeed );
 
 	return 0;
 }

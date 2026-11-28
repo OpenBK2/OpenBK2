@@ -174,6 +174,7 @@ class CExistingObject : public CStaticObject
 
 protected:
 	float fHP = {};
+	int nProceduralSeed = 0;
 
 public:
 	ZEND int operator&( IBinSaver &f ) override
@@ -184,6 +185,7 @@ public:
 		f.Add( 4, &bTrampled );
 		f.Add( 5, &nFrameIndex );
 		f.Add( 6, &fHP );
+		f.Add( 7, &nProceduralSeed );
 		return 0;
 	}
 
@@ -226,6 +228,11 @@ public:
 	void SetTrampled()
 	{
 		bTrampled = true;
+	}
+
+	void SetProceduralSeed( int nSeed )
+	{
+		nProceduralSeed = nSeed;
 	}
 
 	bool IsTrampled() const

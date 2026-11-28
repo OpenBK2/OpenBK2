@@ -58,6 +58,21 @@ bool CMOObject::CreateSceneObject( const int nUniqueID,
 			{
 				return true;
 			}
+			if ( pObjectStats->pProceduralRecipe )
+			{
+				// The seasonal model supplies the material and picking hull for this generated mesh.
+				const NDb::SModel *pIntactModel = GetModel( pObjectStats->pvisualObject, eSeason );
+				if ( Scene()->AddProceduralObject( nUniqueID,
+				                                   pModel,
+				                                   pIntactModel,
+				                                   pObjectStats->pProceduralRecipe,
+				                                   pUpdate->info.nProceduralSeed,
+				                                   vPos,
+				                                   qRot ) != -1 )
+				{
+					return true;
+				}
+			}
 		}
 
 		if ( pStats->bCanFall )

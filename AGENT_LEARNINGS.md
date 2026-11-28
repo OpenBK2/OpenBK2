@@ -418,6 +418,11 @@ context. Read `git diff` of every touched file before building.
 
 ## Editor resource paths and deletion
 
+- A probe that opened the game database and then the editor database found the
+  correct XDB in the property manipulator while its C++ fields held defaults.
+  Opening game mode discards the reflection metadata used by editor bindings.
+  Exercise editor mode first or run each database mode in a fresh process.
+
 - A file picker can succeed while the property parser silently rejects its
   result. Check the complete picker-to-controller path, including Windows drive
   colons, and resolve game-relative sources against both the active mod and Data.

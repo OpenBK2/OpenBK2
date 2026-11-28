@@ -340,6 +340,7 @@ namespace NDb
 		SLinkInfo link;
 		CDBPtr< SHPObjectRPGStats > pObject;
 		CDBPtr< SDBConstructorProfile > pConstructorProfile;
+		int nProceduralSeed;
 
 		SMapObjectInfo() :
 			__dwCheckSum( 0 ),
@@ -348,7 +349,8 @@ namespace NDb
 			nPlayer( 0 ),
 			nScriptID( -1 ),
 			fHP( 1 ),
-			nFrameIndex( -1 )
+			nFrameIndex( -1 ),
+			nProceduralSeed( 0 )
 		{ }
 		//
 		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;

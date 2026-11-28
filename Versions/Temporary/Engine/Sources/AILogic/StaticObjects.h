@@ -198,7 +198,8 @@ public:
 	                                         const float fHPFactor,
 	                                         const CVec3 &center,
 	                                         const uint16_t wDir,
-	                                         const int nFrameIndex );
+	                                         const int nFrameIndex,
+	                                         int nProceduralSeed = 0 );
 	class CStaticObject *AddNewTerraObj( const SObjectBaseRPGStats *pStats,
 	                                     const float fHPFactor,
 	                                     const CVec3 &center,
@@ -215,7 +216,8 @@ public:
 	                                     const uint16_t wDir,
 	                                     const int nFrameIndex,
 	                                     int nPlayer,
-	                                     int nLinkID );
+	                                     int nLinkID,
+	                                     int nProceduralSeed );
 	void AddStorage( class CBuilding *pObj );
 	class CStaticObject *AddNewEntrencmentPart( const SEntrenchmentRPGStats *pStats,
 	                                            const float fHPFactor,

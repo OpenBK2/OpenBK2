@@ -16,6 +16,7 @@ struct SGameMessage;
 namespace NDb
 {
 struct SModel;
+struct SProceduralObjectRecipe;
 struct SAmbientLight;
 struct SEffect;
 struct SMaterial;
@@ -158,6 +159,13 @@ struct IScene : public CObjectBase
 	                       ESceneObjAnimMode eAnimMode,
 	                       NGScene::IGameView::SMeshInfo *pMeshInfo,
 	                       const bool bNeedReflection = false ) = 0;
+	virtual int AddProceduralObject( int nID,
+	                                 const NDb::SModel *pModel,
+	                                 const NDb::SModel *pIntactModel,
+	                                 const NDb::SProceduralObjectRecipe *pRecipe,
+	                                 int nSeed,
+	                                 const CVec3 &vPos,
+	                                 const CQuat &qRot ) = 0;
 
 	// CRAP - ugly, should to pass a special object to screen
 	virtual void AddInterfaceObject( struct IWindow *pScreen,

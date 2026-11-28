@@ -671,6 +671,7 @@ void SObjectInfo::CreateSceneObjects( IEditorScene *pEditorScene,
 				pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
 				pUpdate->info.nObjUniqueID = nSceneID;
 				pUpdate->info.pStats = NDb::Get<NDb::SHPObjectRPGStats>( itMapInfoElement->second.rpgStatsDBID );
+				pUpdate->info.nProceduralSeed = itMapInfoElement->second.nProceduralSeed;
 				pUpdate->nUpdateTime = Singleton<IGameTimer>()->GetGameTime();
 				pUpdate->info.bNewFormat = true;
 				pUpdate->info.vPlacement = vObjectScenePosition;
@@ -1365,6 +1366,17 @@ void SObjectInfo::UpdateByController( unsigned nLinkID,
 		{
 			UpdateScene( pEditorScene );
 		}
+		if ( nFlags & PROCEDURAL_SEED_CHANGED )
+		{
+			int nSeed = 0;
+			if ( CManipulatorManager::GetValue( &nSeed, pManipulator, szObjectPrefix + ".ProceduralSeed" ) &&
+			     nSeed != pMapInfoElement->nProceduralSeed )
+			{
+				pMapInfoElement->nProceduralSeed = nSeed;
+				RemoveFromScene( pEditorScene, true );
+				CreateSceneObjects( pEditorScene, pManipulator, true );
+			}
+		}
 	}
 }
 
@@ -1387,6 +1399,12 @@ void SObjectInfo::InsertMaskManipulators( CMultiManipulator *pPropertyManipulato
 			pMaskManipulator->AddName( "ScriptID", false, "", INVALID_NODE_ID, false );
 			pMaskManipulator->AddName( "HP", false, "", INVALID_NODE_ID, false );
 			pMaskManipulator->AddName( "FrameIndex", false, "", INVALID_NODE_ID, false );
+			const auto *pStats =
+					dynamic_cast<const NDb::SObjectBaseRPGStats *>( NDb::GetResource( itMapInfoElement->second.rpgStatsDBID ) );
+			if ( pStats && pStats->pProceduralRecipe )
+			{
+				pMaskManipulator->AddName( "ProceduralSeed", false, "", INVALID_NODE_ID, false );
+			}
 			pMaskManipulator->AddName( "Link.LinkID", false, "", INVALID_NODE_ID, false );
 			pMaskManipulator->AddName( "Link.LinkWith", false, "", INVALID_NODE_ID, false );
 			pMaskManipulator->AddName( "Link.Intention", false, "", INVALID_NODE_ID, false );
@@ -1498,6 +1516,11 @@ bool SObjectInfo::PasteSelf( CLinkIDMap *pNew2OldLinkIDMap,
 		const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 		// Insert
 		bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
+		if ( rMapInfoElement.nProceduralSeed != 0 )
+		{
+			bResult = bResult && pObjectController->AddChangeOperation(
+															 szObjectPrefix + ".ProceduralSeed", rMapInfoElement.nProceduralSeed, pManipulator );
+		}
 		//Change
 		bResult = bResult && pObjectController->AddChangeOperation(
 														 szObjectPrefix + ".Object", rMapInfoElement.rpgStatsDBID.ToString(), pManipulator );

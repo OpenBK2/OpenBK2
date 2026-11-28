@@ -333,6 +333,7 @@ struct SNewUnitInfo : public SAINotifyPlacement
 	int nExpLevel = {};   // XP level of current unit
 	NDb::EReinforcementType eReinfType = {};
 	CDBPtr<NDb::SHPObjectRPGStats> pStats;
+	int nProceduralSeed = 0;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -346,6 +347,7 @@ struct SNewUnitInfo : public SAINotifyPlacement
 		f.Add( 10, &nExpLevel );
 		f.Add( 11, &eReinfType );
 		f.Add( 12, &pStats );
+		f.Add( 13, &nProceduralSeed );
 		return 0;
 	}
 

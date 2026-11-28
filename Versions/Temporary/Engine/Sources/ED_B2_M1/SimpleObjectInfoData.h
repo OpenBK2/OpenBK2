@@ -10,6 +10,7 @@ struct SSimpleObjectInfo : public SObjectInfo
 	OBJECT_BASIC_METHODS( SSimpleObjectInfo );
 
 public:
+	static int NewProceduralSeed( const NDb::SHPObjectRPGStats *pStats );
 	static const NDb::SModel *GetModel( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const NDb::ESeason eSeason );
 	static const NDb::SModel *
 	ChooseModelWithHP( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const float fHP, const NDb::ESeason eSeason );

@@ -293,10 +293,13 @@ CStaticObject *CStaticObjects::AddNewStaticObject( const SObjectBaseRPGStats *pS
                                                    const float fHPFactor,
                                                    const CVec3 &center,
                                                    const uint16_t wDir,
-                                                   const int nFrameIndex )
+                                                   const int nFrameIndex,
+                                                   int nProceduralSeed )
 {
 	CCommonStaticObject *pObj =
 			new CSimpleStaticObject( pStats, center, wDir, pStats->fMaxHP * fHPFactor, nFrameIndex, ESOT_COMMON );
+	// The creation update and subsequent visibility updates must describe the same shape.
+	pObj->SetProceduralSeed( nProceduralSeed );
 	pObj->Mem2UniqueIdObjs();
 	pObj->Init();
 
@@ -364,10 +367,12 @@ CStaticObject *CStaticObjects::AddNewBuilding( const SBuildingRPGStats *pStats,
                                                const uint16_t wDir,
                                                const int nFrameIndex,
                                                int nPlayer,
-                                               int nLinkID )
+                                               int nLinkID,
+                                               int nProceduralSeed )
 {
 	CBuildingSimple *pObj =
 			new CBuildingSimple( pStats, center, wDir, pStats->fMaxHP * fHPFactor, nFrameIndex, nPlayer, nLinkID );
+	pObj->SetProceduralSeed( nProceduralSeed );
 	pObj->Mem2UniqueIdObjs();
 	pObj->Init();
 

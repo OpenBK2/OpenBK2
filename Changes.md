@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Map authors can place rounded and flat procedural rocks from `Objects/SimpleObjects/ProceduralRocks`. Each placement's `ProceduralSeed` reproduces its rock shape in the editor and game. The rocks use the BigStone seasonal materials and gameplay footprints. [Map placements and example mod object](OBK2_Examples/ProceduralRocks/README.md)
+
 - Weapon reload shading now refreshes when reload bonuses change or expire during a cooldown, including mounted building weapons. It continues to use the gun's modified reload duration and existing random delay factor.
 
 - Weapon reload shading stays hidden during an active barrage (`AmmoPerBurst > 1`), then returns for the cooldown after its final shot. Interrupted barrages also refresh the remaining cooldown.

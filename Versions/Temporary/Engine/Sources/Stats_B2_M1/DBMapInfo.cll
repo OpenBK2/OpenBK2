@@ -193,6 +193,8 @@ struct SMapObjectInfo
 	SLinkInfo _Link;
 	SHPObjectRPGStats *_Object;
 	[hidden;unsafe] SDBConstructorProfile *_ConstructorProfile;
+	// Reuse this seed to reproduce the object's procedural shape at any position.
+	[no_checksum] int _ProceduralSeed = 0;
 };
 
 struct SEntrenchmentInfo

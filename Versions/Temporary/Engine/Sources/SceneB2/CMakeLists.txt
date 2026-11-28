@@ -35,6 +35,7 @@ set(SOURCES
     PerlinNoise.cpp
     PrecipicesManager.cpp
     PrecipicesRender.cpp
+    ProceduralRock.cpp
     RiversBuilder.cpp
     RoadsBuilder.cpp
     Scene.cpp
@@ -47,6 +48,7 @@ set(SOURCES
     SceneInternal.cpp
     ScenePick.cpp
     ScenePolylines.cpp
+    SceneProceduralObjects.cpp
     SceneStuff.cpp
     SceneVisObjs.cpp
     ShootAreaMesh.cpp

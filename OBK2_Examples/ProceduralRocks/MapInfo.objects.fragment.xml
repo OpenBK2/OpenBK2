@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Append these four Item elements to the Objects list in a map of your choice. -->
+<MapInfo>
+	<Objects>
+		<!-- Identical recipe, seed and direction at two positions. -->
+		<Item>
+			<Pos><x>1024</x><y>1024</y><z>0</z></Pos>
+			<Dir>0</Dir>
+			<Object href="/Objects/SimpleObjects/ProceduralRocks/Rounded/ObjectRPGStats.xdb#xpointer(/ObjectRPGStats)" />
+			<ProceduralSeed>7</ProceduralSeed>
+		</Item>
+		<Item>
+			<Pos><x>1152</x><y>1024</y><z>0</z></Pos>
+			<Dir>0</Dir>
+			<Object href="/Objects/SimpleObjects/ProceduralRocks/Rounded/ObjectRPGStats.xdb#xpointer(/ObjectRPGStats)" />
+			<ProceduralSeed>7</ProceduralSeed>
+		</Item>
+		<!-- Change just the seed, then just the recipe. -->
+		<Item>
+			<Pos><x>1280</x><y>1024</y><z>0</z></Pos>
+			<Dir>0</Dir>
+			<Object href="/Objects/SimpleObjects/ProceduralRocks/Rounded/ObjectRPGStats.xdb#xpointer(/ObjectRPGStats)" />
+			<ProceduralSeed>42</ProceduralSeed>
+		</Item>
+		<Item>
+			<Pos><x>1408</x><y>1024</y><z>0</z></Pos>
+			<Dir>0</Dir>
+			<Object href="/Objects/SimpleObjects/ProceduralRocks/Flat/ObjectRPGStats.xdb#xpointer(/ObjectRPGStats)" />
+			<ProceduralSeed>42</ProceduralSeed>
+		</Item>
+	</Objects>
+</MapInfo>

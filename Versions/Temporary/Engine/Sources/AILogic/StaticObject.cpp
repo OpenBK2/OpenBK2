@@ -154,6 +154,7 @@ void CExistingObject::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->pStats = GetStats();
 	pNewUnitInfo->eDipl = EDI_NEUTRAL;
 	pNewUnitInfo->nFrameIndex = GetFrameIndex();
+	pNewUnitInfo->nProceduralSeed = nProceduralSeed;
 	pNewUnitInfo->fHitPoints = GetHitPoints();
 	pNewUnitInfo->fResize = 1.0f;
 	pNewUnitInfo->nPlayer = GetPlayer();

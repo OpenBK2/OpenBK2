@@ -984,6 +984,41 @@ namespace NDb
 		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
+	struct STATS_B2_M1_EXPORT SProceduralObjectRecipe : public CResource
+	{
+	public:
+
+		SProceduralObjectRecipe() { }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
+	};
+
+	struct STATS_B2_M1_EXPORT SProceduralRockRecipe : public SProceduralObjectRecipe
+	{
+		OBJECT_BASIC_METHODS( SProceduralRockRecipe )
+	public:
+		enum { typeID = 0x51C3B401 };
+		CVec3 vSize;
+		float fRoughness;
+
+		SProceduralRockRecipe() :
+			vSize( VNULL3 ),
+			fRoughness( 0.6000f )
+		{ }
+		//
+		int GetTypeID() const override { return typeID; }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
+	};
+
 	struct SObjectBaseRPGStats : public SStaticObjectRPGStats
 	{
 	public:
@@ -1076,6 +1111,7 @@ namespace NDb
 		CDBPtr< SComplexSeasonedEffect > pSeasonedEffectExplosion;
 		CDBPtr< SComplexSeasonedEffect > pSeasonedEffectDeath;
 		CDBPtr< SComplexSeasonedEffect > pSeasonedFallEffect;
+		CDBPtr< SProceduralObjectRecipe > pProceduralRecipe;
 
 		#include "include_ObjectBaseRPGStats.h"
 

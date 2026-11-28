@@ -700,6 +700,13 @@ public:
 	               ESceneObjAnimMode eAnimMode,
 	               NGScene::IGameView::SMeshInfo *pMeshInfo,
 	               const bool bNeedReflection ) override;
+	int AddProceduralObject( int nID,
+	                         const NDb::SModel *pModel,
+	                         const NDb::SModel *pIntactModel,
+	                         const NDb::SProceduralObjectRecipe *pRecipe,
+	                         int nSeed,
+	                         const CVec3 &vPos,
+	                         const CQuat &qRot ) override;
 
 	bool ChangeModel( const int nObjectID, const NDb::SModel *pModel ) override;
 	NAnimation::ISkeletonAnimator *GetAnimator( const int nID, bool bRefreshAnimator = true ) override;

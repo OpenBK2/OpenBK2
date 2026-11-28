@@ -51,6 +51,7 @@ void CSimpleObjectState::ClearData()
 						pUpdate->bShowEffects = false;
 						//
 						GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
+						GetMapInfoEditor()->objectInfoCollector.sceneIDCollector.FreeID( itSceneObject->nID );
 					}
 				}
 			}
@@ -59,6 +60,7 @@ void CSimpleObjectState::ClearData()
 	sceneObjectlist.clear();
 	szRPGStatsTypeName.clear();
 	rpgStatsDBID.Clear();
+	nProceduralSeed = 0;
 }
 
 bool CSimpleObjectState::CanAddSimpleObject()
@@ -253,6 +255,7 @@ bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rT
 			objectCreateInfo.szRPGStatsTypeName = szRPGStatsTypeName;
 			objectCreateInfo.rpgStatsDBID = rpgStatsDBID;
 			objectCreateInfo.nFrameIndex = INVALID_NODE_ID;
+			objectCreateInfo.nProceduralSeed = nProceduralSeed;
 			objectCreateInfo.nPlayer = pEditParameters->nPlayerIndex;
 			objectCreateInfo.fHP = 1.0f;
 			objectCreateInfo.bRotateTo90Degree = GetMapInfoEditor()->editorSettings.bRotateTo90Degree;
@@ -268,6 +271,12 @@ bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rT
 					{
 						pObjectController->Redo( false, true, GetMapInfoEditor() );
 						Singleton<IControllerContainer>()->Add( pObjectController );
+						if ( nProceduralSeed != 0 )
+						{
+							// The placed object keeps the previewed shape. Show the next shape under the cursor.
+							CreatePreview( rTerrainPos );
+							return false;
+						}
 					}
 					else
 					{
@@ -311,13 +320,22 @@ bool CSimpleObjectState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, c
 
 void CSimpleObjectState::InsertObjectEnter()
 {
+	if ( ICamera *pCamera = Camera() )
+	{
+		CVec3 vPosition = pCamera->GetAnchor();
+		Vis2AI( &vPosition );
+		CreatePreview( vPosition );
+	}
+}
+
+void CSimpleObjectState::CreatePreview( CVec3 vPosition )
+{
 	if ( CanEdit() )
 	{
 		CMapObjectMultiState::SEditParameters *pEditParameters = GetParentState()->GetEditParameters();
 		IEditorScene *pScene = EditorScene();
-		ICamera *pCamera = Camera();
 		IManipulator *pManipulator = GetMapInfoEditor()->GetViewManipulator();
-		if ( ( pScene == 0 ) || ( pCamera == 0 ) || ( pManipulator == 0 ) )
+		if ( ( pScene == 0 ) || ( pManipulator == 0 ) )
 		{
 			return;
 		}
@@ -327,8 +345,6 @@ void CSimpleObjectState::InsertObjectEnter()
 			return;
 		}
 		//
-		CVec3 vPosition = pCamera->GetAnchor();
-		Vis2AI( &vPosition );
 		vPosition.z = GetTerrainHeight( vPosition.x, vPosition.y );
 		//
 		if ( pEditParameters->eDirectionType == CMapObjectMultiState::SEditParameters::DT_RANDOM )
@@ -363,6 +379,7 @@ void CSimpleObjectState::InsertObjectEnter()
 			{
 				return;
 			}
+			nProceduralSeed = SSimpleObjectInfo::NewProceduralSeed( pHPObjectRPGStats );
 			if ( szRPGStatsTypeName == "SquadRPGStats" )
 			{
 				if ( const NDb::SSquadRPGStats *pSquadRPGStats =
@@ -462,6 +479,7 @@ void CSimpleObjectState::InsertObjectEnter()
 					pUpdate->eUpdateType = ACTION_NOTIFY_NEW_ST_OBJ;
 					pUpdate->info.nObjUniqueID = nSceneID;
 					pUpdate->info.pStats = NDb::Get<NDb::SHPObjectRPGStats>( rpgStatsDBID );
+					pUpdate->info.nProceduralSeed = nProceduralSeed;
 					pUpdate->nUpdateTime = Singleton<IGameTimer>()->GetGameTime();
 					pUpdate->info.bNewFormat = true;
 					pUpdate->info.vPlacement = vPosition;

@@ -1054,6 +1054,8 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 											objectCreateInfo.szRPGStatsTypeName = NDb::GetClassTypeName( pHPObjectRPGStats->GetDBID() );
 											objectCreateInfo.rpgStatsDBID = pHPObjectRPGStats->GetDBID();
 											objectCreateInfo.nFrameIndex = INVALID_NODE_ID;
+											objectCreateInfo.nProceduralSeed =
+													NMapInfoEditor::SSimpleObjectInfo::NewProceduralSeed( pHPObjectRPGStats );
 											objectCreateInfo.nPlayer = 0;
 											objectCreateInfo.fHP = 1.0f;
 											objectCreateInfo.bRotateTo90Degree = pMapInfoEditor->editorSettings.bRotateTo90Degree;
